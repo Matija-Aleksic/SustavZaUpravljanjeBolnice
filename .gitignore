@@ -1,2 +1,6 @@
 /.idea/
 /target/
+/target/
+.gitignore
+app.log
+/target/*
