@@ -1,13 +1,27 @@
 package app;
 
 import entity.*;
+import exception.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Scanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+
+/**
+ * The type Main.
+ */
 public class Main {
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
 
@@ -24,41 +38,57 @@ public class Main {
         }
 
         for (int i = 0; i < doctors.length; i++) {
-            System.out.print("Upišite ime " + (i + 1) + ". doktora: ");
-            String firstName = input.nextLine();
-            System.out.print("Upišite prezime " + (i + 1) + ". doktora: ");
-            String lastName = input.nextLine();
+            try {
+                System.out.print("Ime doktora: ");
+                String firstName = input.nextLine();
 
-            LocalDate dob = readDate(input, "Upišite datum rođenja doktora (format: yyyy-MM-dd): ");
+                System.out.print("Prezime doktora: ");
+                String lastName = input.nextLine();
 
-            System.out.print("Upišite specijalizaciju: ");
-            String specialization = input.nextLine();
+                LocalDate dob = readDate(input, "Datum rođenja doktora (yyyy-MM-dd): ");
 
-            double baseSalary = readDouble(input, "Upišite osnovnu plaću doktora (npr. 2500.00): ");
+                System.out.print("Specijalizacija: ");
+                String specialization = input.nextLine();
 
-            doctors[i] = new Doctor(i + 1, firstName, lastName, dob, specialization, baseSalary);
-            hospitals[i % hospitals.length].addDoctor(doctors[i]);
+                double baseSalary = readDouble(input, "Osnovna plaća: ");
+                if (baseSalary < 0) throw new NegativeValueException("Plaća ne može biti negativna!");
+
+                doctors[i] = new Doctor(i + 1, firstName, lastName, dob, specialization, baseSalary);
+                hospitals[i % hospitals.length].addDoctor(doctors[i]);
+
+            } catch (Exception e) {
+                System.out.println("Greška: " + e.getMessage());
+                i--;
+            }
         }
 
         for (int i = 0; i < patients.length; i++) {
-            System.out.print("Upišite ime " + (i + 1) + ". pacijenta: ");
-            String firstName = input.nextLine();
-            System.out.print("Upišite prezime " + (i + 1) + ". pacijenta: ");
-            String lastName = input.nextLine();
+            try {
+                System.out.print("Ime pacijenta: ");
+                String firstName = input.nextLine();
 
-            LocalDate dob = readDate(input, "Upišite datum rođenja pacijenta (format: yyyy-MM-dd): ");
+                System.out.print("Prezime pacijenta: ");
+                String lastName = input.nextLine();
 
-            System.out.print("Upišite stanje pacijenta: ");
-            String condition = input.nextLine();
-            System.out.print("Upišite broj osiguranja: ");
-            String insurance = input.nextLine();
+                LocalDate dob = readDate(input, "Datum rođenja pacijenta (yyyy-MM-dd): ");
 
-            patients[i] = new Patient.Builder(i + 1, firstName, lastName, dob)
-                    .condition(condition)
-                    .insuranceNumber(insurance)
-                    .build();
+                System.out.print("Stanje pacijenta: ");
+                String condition = input.nextLine();
 
-            hospitals[i % hospitals.length].addPatient(patients[i]);
+                System.out.print("Broj osiguranja: ");
+                String insurance = input.nextLine();
+
+                patients[i] = new Patient.Builder(i + 1, firstName, lastName, dob)
+                        .condition(condition)
+                        .insuranceNumber(insurance)
+                        .build();
+
+                hospitals[i % hospitals.length].addPatient(patients[i]);
+
+            } catch (Exception e) {
+                System.out.println("Greška: " + e.getMessage());
+                i--;
+            }
         }
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -72,45 +102,53 @@ public class Main {
             System.out.println("5. Izađi");
             System.out.print("Odaberite opciju: ");
 
-            if (!input.hasNextInt()) {
-                System.out.println("Neispravan unos! Molimo unesite broj opcije.");
-                input.nextLine();
+            int choice;
+            try {
+                choice = readInt(input);
+            } catch (InvalidNumberInputException e) {
+                System.out.println(e.getMessage());
                 continue;
             }
 
-            int choice = input.nextInt();
-            input.nextLine();
-
             switch (choice) {
                 case 1 -> {
-                    System.out.println("Odaberite doktora:");
+                    System.out.println("Odabir doktora:");
                     for (int i = 0; i < doctors.length; i++) {
                         System.out.println((i + 1) + ". " + doctors[i]);
                     }
-                    System.out.print("Unesite broj: ");
-                    int docId = safeIndex(input, doctors.length);
-                    if (docId == -1) continue;
 
-                    System.out.println("Odaberite pacijenta:");
+                    int docId;
+                    try {
+                        docId = readIndex(input, doctors.length);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                        continue;
+                    }
+
+                    System.out.println("Odabir pacijenta:");
                     for (int i = 0; i < patients.length; i++) {
                         System.out.println((i + 1) + ". " + patients[i]);
                     }
-                    System.out.print("Unesite broj: ");
-                    int patId = safeIndex(input, patients.length);
-                    if (patId == -1) continue;
 
-                    System.out.print("Upišite datum i vrijeme (format: yyyy-MM-dd HH:mm): ");
-                    String dateTimeStr = input.nextLine();
+                    int patId;
+                    try {
+                        patId = readIndex(input, patients.length);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                        continue;
+                    }
+
+                    System.out.print("Datum i vrijeme (yyyy-MM-dd HH:mm): ");
                     LocalDateTime dateTime;
                     try {
-                        dateTime = LocalDateTime.parse(dateTimeStr, dtf);
-                    } catch (DateTimeParseException e) {
-                        System.out.println("Neispravan format datuma! Pokušajte ponovo (npr. 2025-10-20 14:30)");
+                        dateTime = readDateTime(input, dtf);
+                    } catch (InvalidDateFormatException e) {
+                        System.out.println(e.getMessage());
                         continue;
                     }
 
                     if (appointmentCount >= appointments.length) {
-                        System.out.println("Maksimalan broj pregleda dosegnut!");
+                        System.out.println("Maksimalan broj pregleda!");
                         continue;
                     }
 
@@ -120,30 +158,37 @@ public class Main {
                             patients[patId],
                             dateTime
                     );
-                    System.out.println("Pregled uspješno zakazan!");
+
+                    System.out.println("Pregled zakazan!");
                 }
 
                 case 2 -> {
-                    System.out.print("Upišite ime i prezime pacijenta: ");
+                    System.out.print("Ime i prezime pacijenta: ");
                     String name = input.nextLine().trim();
                     boolean found = false;
+
                     for (Patient p : patients) {
                         if (p.getFullName().equalsIgnoreCase(name)) {
                             System.out.println(p);
                             found = true;
                         }
                     }
-                    if (!found) System.out.println("Pacijent nije pronađen.");
+
+                    if (!found) throw new EntityNotFoundException("Pacijent nije pronađen.");
                 }
 
                 case 3 -> {
                     System.out.println("Odaberite doktora:");
-                    for (int i = 0; i < doctors.length; i++) {
+                    for (int i = 0; i < doctors.length; i++)
                         System.out.println((i + 1) + ". " + doctors[i]);
+
+                    int dId;
+                    try {
+                        dId = readIndex(input, doctors.length);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                        continue;
                     }
-                    System.out.print("Unesite broj: ");
-                    int dId = safeIndex(input, doctors.length);
-                    if (dId == -1) continue;
 
                     boolean hasAppointments = false;
                     for (int i = 0; i < appointmentCount; i++) {
@@ -152,42 +197,44 @@ public class Main {
                             hasAppointments = true;
                         }
                     }
-                    if (!hasAppointments) System.out.println("Nema zakazanih pregleda za tog doktora.");
+
+                    if (!hasAppointments)
+                        System.out.println("Nema pregleda za tog doktora.");
                 }
 
                 case 4 -> {
-                    if (appointmentCount == 0) {
-                        System.out.println("Nema zakazanih pregleda.");
-                    } else {
-                        for (int i = 0; i < appointmentCount; i++) {
+                    if (appointmentCount == 0)
+                        System.out.println("Nema pregleda.");
+                    else
+                        for (int i = 0; i < appointmentCount; i++)
                             System.out.println(appointments[i]);
-                        }
-                    }
                 }
 
                 case 5 -> {
-                    System.out.println("Izlaz iz programa...");
-                    input.close();
+                    System.out.println("👋 Izlaz iz programa...");
                     return;
                 }
 
-                default -> System.out.println("Neispravan unos, pokušajte ponovno.");
+                default -> System.out.println("Opcija ne postoji!");
             }
         }
     }
 
-    private static int safeIndex(Scanner input, int max) {
+
+    private static int readInt(Scanner input) throws InvalidNumberInputException {
         if (!input.hasNextInt()) {
-            System.out.println("Unos mora biti broj!");
             input.nextLine();
-            return -1;
+            throw new InvalidNumberInputException("Unesite brojčanu vrijednost!");
         }
-        int index = input.nextInt() - 1;
+        int value = input.nextInt();
         input.nextLine();
-        if (index < 0 || index >= max) {
-            System.out.println("Neispravan broj, pokušajte ponovno!");
-            return -1;
-        }
+        return value;
+    }
+
+    private static int readIndex(Scanner input, int max) throws InvalidNumberInputException {
+        int index = readInt(input) - 1;
+        if (index < 0 || index >= max)
+            throw new EntityNotFoundException("Ne postoji stavka pod tim brojem!");
         return index;
     }
 
@@ -195,24 +242,31 @@ public class Main {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         while (true) {
             System.out.print(prompt);
-            String s = input.nextLine().trim();
             try {
-                return LocalDate.parse(s, fmt);
-            } catch (DateTimeParseException e) {
-                System.out.println("Neispravan format datuma. Upotrijebite yyyy-MM-dd (npr. 1990-05-23).");
+                return LocalDate.parse(input.nextLine().trim(), fmt);
+            } catch (Exception e) {
+                System.out.println(" Format mora biti yyyy-MM-dd");
             }
         }
     }
 
-    private static double readDouble(Scanner input, String prompt) {
-        while (true) {
-            System.out.print(prompt);
-            String s = input.nextLine().trim();
-            try {
-                return Double.parseDouble(s);
-            } catch (NumberFormatException e) {
-                System.out.println("Neispravan broj. Pokušajte ponovno (npr. 2500.00).");
-            }
+    private static LocalDateTime readDateTime(Scanner input, DateTimeFormatter fmt)
+            throws InvalidDateFormatException {
+        try {
+            return LocalDateTime.parse(input.nextLine().trim(), fmt);
+        } catch (Exception e) {
+            throw new InvalidDateFormatException("Format mora biti yyyy-MM-dd HH:mm!");
+        }
+    }
+
+    private static double readDouble(Scanner input, String prompt) throws InvalidNumberInputException {
+        System.out.print(prompt);
+        try {
+            double value = Double.parseDouble(input.nextLine().trim());
+            if (value < 0) throw new NegativeValueException("Broj ne može biti negativan!");
+            return value;
+        } catch (NumberFormatException e) {
+            throw new InvalidNumberInputException("Unesite decimalni broj!");
         }
     }
 }

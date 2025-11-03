@@ -2,6 +2,9 @@ package entity;
 
 import java.time.LocalDate;
 
+/**
+ * The type Patient.
+ */
 public final class Patient extends Person implements Payable {
     private final String condition;
     private final String insuranceNumber;
@@ -12,7 +15,18 @@ public final class Patient extends Person implements Payable {
         this.insuranceNumber = builder.insuranceNumber;
     }
 
+    /**
+     * Gets condition.
+     *
+     * @return the condition
+     */
     public String getCondition() { return condition; }
+
+    /**
+     * Gets insurance number.
+     *
+     * @return the insurance number
+     */
     public String getInsuranceNumber() { return insuranceNumber; }
 
     @Override
@@ -28,6 +42,9 @@ public final class Patient extends Person implements Payable {
     }
 
 
+    /**
+     * The type Builder.
+     */
     public static class Builder {
         private int id;
         private String firstName;
@@ -36,6 +53,14 @@ public final class Patient extends Person implements Payable {
         private String condition;
         private String insuranceNumber;
 
+        /**
+         * Instantiates a new Builder.
+         *
+         * @param id          the id
+         * @param firstName   the first name
+         * @param lastName    the last name
+         * @param dateOfBirth the date of birth
+         */
         public Builder(int id, String firstName, String lastName, LocalDate dateOfBirth) {
             this.id = id;
             this.firstName = firstName;
@@ -43,16 +68,33 @@ public final class Patient extends Person implements Payable {
             this.dateOfBirth = dateOfBirth;
         }
 
+        /**
+         * Condition builder.
+         *
+         * @param condition the condition
+         * @return the builder
+         */
         public Builder condition(String condition) {
             this.condition = condition;
             return this;
         }
 
+        /**
+         * Insurance number builder.
+         *
+         * @param insuranceNumber the insurance number
+         * @return the builder
+         */
         public Builder insuranceNumber(String insuranceNumber) {
             this.insuranceNumber = insuranceNumber;
             return this;
         }
 
+        /**
+         * Build patient.
+         *
+         * @return the patient
+         */
         public Patient build() {
             return new Patient(this);
         }

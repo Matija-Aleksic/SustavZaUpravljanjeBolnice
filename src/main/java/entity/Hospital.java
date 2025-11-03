@@ -3,29 +3,70 @@ package entity;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Hospital.
+ */
 public class Hospital {
     private int id;
     private String name;
     private List<Doctor> doctors = new ArrayList<>();
     private List<Patient> patients = new ArrayList<>();
 
+    /**
+     * Instantiates a new Hospital.
+     *
+     * @param id   the id
+     * @param name the name
+     */
     public Hospital(int id, String name) {
         this.id = id;
         this.name = name;
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public int getId() { return id; }
+
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
     public String getName() { return name; }
 
+    /**
+     * Add doctor.
+     *
+     * @param doctor the doctor
+     */
     public void addDoctor(Doctor doctor) {
         doctors.add(doctor);
     }
 
+    /**
+     * Add patient.
+     *
+     * @param patient the patient
+     */
     public void addPatient(Patient patient) {
         patients.add(patient);
     }
 
+    /**
+     * Gets doctors.
+     *
+     * @return the doctors
+     */
     public List<Doctor> getDoctors() { return doctors; }
+
+    /**
+     * Gets patients.
+     *
+     * @return the patients
+     */
     public List<Patient> getPatients() { return patients; }
 
     @Override
