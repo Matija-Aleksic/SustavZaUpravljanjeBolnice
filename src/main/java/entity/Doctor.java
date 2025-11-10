@@ -35,12 +35,15 @@ public final class Doctor extends Person implements Payable {
 
     @Override
     public double calculatePay() {
-        // Plaća raste s godinama iskustva
         return baseSalary + getAge() * 50;
     }
 
     @Override
     public String toString() {
         return "Dr. %s (%s, plaća: %.2f€)".formatted(getFullName(), specialization, calculatePay());
+    }
+
+    public static double getBaseSalary(Object o) {
+        return 1000;
     }
 }

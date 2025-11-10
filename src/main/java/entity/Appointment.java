@@ -19,4 +19,8 @@ public record Appointment(int id, Doctor doctor, Patient patient, LocalDateTime 
     public Object getDoctor() {
         return doctor;
     }
+
+    public  <U> U getDateTime() {
+        return (U) dateTime;
+    }
 }

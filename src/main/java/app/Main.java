@@ -2,42 +2,35 @@ package app;
 
 import entity.*;
 import exception.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.*;
+import java.util.stream.Collectors;
 
-
-/**
- * The type Main.
- */
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
-    /**
-     * The entry point of application.
-     *
-     * @param args the input arguments
-     */
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
 
-        Hospital[] hospitals = new Hospital[3];
-        Doctor[] doctors = new Doctor[5];
-        Patient[] patients = new Patient[5];
-        Appointment[] appointments = new Appointment[20];
-        int appointmentCount = 0;
+        List<Hospital> hospitals = new ArrayList<>();
+        Set<Doctor> doctors = new HashSet<>();
+        List<Patient> patients = new ArrayList<>();
+        List<Appointment> appointments = new ArrayList<>();
 
-        for (int i = 0; i < hospitals.length; i++) {
-            System.out.print("Upišite ime " + (i + 1) + ". bolnice: ");
-            String name = input.nextLine();
-            hospitals[i] = new Hospital(i + 1, name);
+        logger.info("Pokretanje aplikacije...");
+
+        for (int i = 0; i < 3; i++) {
+            System.out.print("Ime bolnice: ");
+            String name = input.nextLine().trim();
+            hospitals.add(new Hospital(i + 1, name));
         }
 
-        for (int i = 0; i < doctors.length; i++) {
+        for (int i = 0; i < 5; i++) {
             try {
                 System.out.print("Ime doktora: ");
                 String firstName = input.nextLine();
@@ -53,16 +46,17 @@ public class Main {
                 double baseSalary = readDouble(input, "Osnovna plaća: ");
                 if (baseSalary < 0) throw new NegativeValueException("Plaća ne može biti negativna!");
 
-                doctors[i] = new Doctor(i + 1, firstName, lastName, dob, specialization, baseSalary);
-                hospitals[i % hospitals.length].addDoctor(doctors[i]);
-
+                Doctor d = new Doctor(i + 1, firstName, lastName, dob, specialization, baseSalary);
+                doctors.add(d);
+                hospitals.get(i % hospitals.size()).addDoctor(d);
             } catch (Exception e) {
-                System.out.println("Greška: " + e.getMessage());
+                logger.error("Greška kod unosa doktora: {}", e.getMessage());
+                System.out.println("Pogrešan unos: " + e.getMessage());
                 i--;
             }
         }
 
-        for (int i = 0; i < patients.length; i++) {
+        for (int i = 0; i < 5; i++) {
             try {
                 System.out.print("Ime pacijenta: ");
                 String firstName = input.nextLine();
@@ -72,21 +66,22 @@ public class Main {
 
                 LocalDate dob = readDate(input, "Datum rođenja pacijenta (yyyy-MM-dd): ");
 
-                System.out.print("Stanje pacijenta: ");
-                String condition = input.nextLine();
+                System.out.print("Stanje (STABLE, CRITICAL, RECOVERING, UNKNOWN): ");
+                ConditionStatus condition = ConditionStatus.valueOf(input.nextLine().trim().toUpperCase());
 
                 System.out.print("Broj osiguranja: ");
                 String insurance = input.nextLine();
 
-                patients[i] = new Patient.Builder(i + 1, firstName, lastName, dob)
-                        .condition(condition)
+                Patient p = new Patient.Builder(i + 1, firstName, lastName, dob)
+                        .condition(condition.name())
                         .insuranceNumber(insurance)
                         .build();
 
-                hospitals[i % hospitals.length].addPatient(patients[i]);
-
+                patients.add(p);
+                hospitals.get(i % hospitals.size()).addPatient(p);
             } catch (Exception e) {
-                System.out.println("Greška: " + e.getMessage());
+                logger.error("Greška kod unosa pacijenta: {}", e.getMessage());
+                System.out.println("Pogrešan unos: " + e.getMessage());
                 i--;
             }
         }
@@ -98,7 +93,7 @@ public class Main {
             System.out.println("1. Zakaži pregled");
             System.out.println("2. Prikaži pacijenta po imenu");
             System.out.println("3. Prikaži preglede po doktoru");
-            System.out.println("4. Prikaži sve preglede");
+            System.out.println("4. Statistika");
             System.out.println("5. Izađi");
             System.out.print("Odaberite opciju: ");
 
@@ -106,33 +101,33 @@ public class Main {
             try {
                 choice = readInt(input);
             } catch (InvalidNumberInputException e) {
+                logger.warn("Neispravan unos opcije: {}", e.getMessage());
                 System.out.println(e.getMessage());
                 continue;
             }
 
             switch (choice) {
                 case 1 -> {
-                    System.out.println("Odabir doktora:");
-                    for (int i = 0; i < doctors.length; i++) {
-                        System.out.println((i + 1) + ". " + doctors[i]);
-                    }
+                    System.out.println("Odaberite doktora:");
+                    List<Doctor> doctorList = new ArrayList<>(doctors);
+                    for (int i = 0; i < doctorList.size(); i++)
+                        System.out.println((i + 1) + ". " + doctorList.get(i));
 
                     int docId;
                     try {
-                        docId = readIndex(input, doctors.length);
+                        docId = readIndex(input, doctorList.size());
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                         continue;
                     }
 
-                    System.out.println("Odabir pacijenta:");
-                    for (int i = 0; i < patients.length; i++) {
-                        System.out.println((i + 1) + ". " + patients[i]);
-                    }
+                    System.out.println("Odaberite pacijenta:");
+                    for (int i = 0; i < patients.size(); i++)
+                        System.out.println((i + 1) + ". " + patients.get(i));
 
                     int patId;
                     try {
-                        patId = readIndex(input, patients.length);
+                        patId = readIndex(input, patients.size());
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                         continue;
@@ -147,75 +142,87 @@ public class Main {
                         continue;
                     }
 
-                    if (appointmentCount >= appointments.length) {
-                        System.out.println("Maksimalan broj pregleda!");
-                        continue;
-                    }
-
-                    appointments[appointmentCount++] = new Appointment(
-                            appointmentCount,
-                            doctors[docId],
-                            patients[patId],
+                    Appointment a = new Appointment(
+                            appointments.size() + 1,
+                            doctorList.get(docId),
+                            patients.get(patId),
                             dateTime
                     );
-
-                    System.out.println("Pregled zakazan!");
+                    appointments.add(a);
+                    logger.info("Zakazan novi pregled: {}", a);
+                    System.out.println("✅ Pregled zakazan!");
                 }
 
                 case 2 -> {
                     System.out.print("Ime i prezime pacijenta: ");
                     String name = input.nextLine().trim();
-                    boolean found = false;
 
-                    for (Patient p : patients) {
-                        if (p.getFullName().equalsIgnoreCase(name)) {
-                            System.out.println(p);
-                            found = true;
-                        }
-                    }
-
-                    if (!found) throw new EntityNotFoundException("Pacijent nije pronađen.");
+                    patients.stream()
+                            .filter(p -> p.getFullName().equalsIgnoreCase(name))
+                            .findFirst()
+                            .ifPresentOrElse(
+                                    System.out::println,
+                                    () -> {
+                                        throw new EntityNotFoundException("Pacijent nije pronađen.");
+                                    }
+                            );
                 }
 
                 case 3 -> {
                     System.out.println("Odaberite doktora:");
-                    for (int i = 0; i < doctors.length; i++)
-                        System.out.println((i + 1) + ". " + doctors[i]);
+                    List<Doctor> doctorList = new ArrayList<>(doctors);
+                    for (int i = 0; i < doctorList.size(); i++)
+                        System.out.println((i + 1) + ". " + doctorList.get(i));
 
                     int dId;
                     try {
-                        dId = readIndex(input, doctors.length);
+                        dId = readIndex(input, doctorList.size());
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                         continue;
                     }
 
-                    boolean hasAppointments = false;
-                    for (int i = 0; i < appointmentCount; i++) {
-                        if (appointments[i].getDoctor().equals(doctors[dId])) {
-                            System.out.println(appointments[i]);
-                            hasAppointments = true;
-                        }
-                    }
+                    Doctor selectedDoctor = doctorList.get(dId);
 
-                    if (!hasAppointments)
-                        System.out.println("Nema pregleda za tog doktora.");
+                    List<Appointment> docAppointments = appointments.stream()
+                            .filter(a -> a.getDoctor().equals(selectedDoctor))
+                            .sorted(Comparator.comparing(Appointment::getDateTime))
+                            .toList();
+
+                    if (docAppointments.isEmpty())
+                        System.out.println("Nema pregleda za ovog doktora.");
+                    else
+                        docAppointments.forEach(System.out::println);
                 }
 
                 case 4 -> {
-                    if (appointmentCount == 0)
-                        System.out.println("Nema pregleda.");
-                    else
-                        for (int i = 0; i < appointmentCount; i++)
-                            System.out.println(appointments[i]);
+                    System.out.println("\n--- Doktori sortirani po plaći ---");
+                    doctors.stream()
+                            .sorted(Comparator.comparingDouble(Doctor::getBaseSalary).reversed())
+                            .forEach(System.out::println);
+
+                    System.out.println("\n--- Grupiranje pacijenata po stanju ---");
+                    Map<String, List<Patient>> grouped = patients.stream()
+                            .collect(Collectors.groupingBy(Patient::getCondition));
+                    grouped.forEach((cond, plist) -> {
+                        System.out.println(cond + ": " + plist.size() + " pacijenata");
+                    });
+
+                    System.out.println("\n--- Kritični vs ostali pacijenti ---");
+                    Map<Boolean, List<Patient>> partitioned =
+                            patients.stream().collect(Collectors.partitioningBy(
+                                    p -> p.getCondition().equalsIgnoreCase("CRITICAL")));
+                    System.out.println("Kritični: " + partitioned.get(true).size());
+                    System.out.println("Ostali: " + partitioned.get(false).size());
                 }
 
                 case 5 -> {
+                    logger.info("Aplikacija završena od strane korisnika.");
                     System.out.println("👋 Izlaz iz programa...");
                     return;
                 }
 
-                default -> System.out.println("Opcija ne postoji!");
+                default -> System.out.println("Nepostojeća opcija.");
             }
         }
     }
