@@ -2,6 +2,7 @@ package app;
 
 import entity.*;
 import exception.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,7 +10,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
@@ -18,7 +22,7 @@ public class Main {
         Scanner input = new Scanner(System.in);
 
         List<Hospital> hospitals = new ArrayList<>();
-        Set<Doctor> doctors = new HashSet<>();
+        Set<Doctor> doctors = new LinkedHashSet<>();
         List<Patient> patients = new ArrayList<>();
         List<Appointment> appointments = new ArrayList<>();
 
@@ -49,6 +53,8 @@ public class Main {
                 Doctor d = new Doctor(i + 1, firstName, lastName, dob, specialization, baseSalary);
                 doctors.add(d);
                 hospitals.get(i % hospitals.size()).addDoctor(d);
+
+                logger.debug("Dodano: {}", d);
             } catch (Exception e) {
                 logger.error("Greška kod unosa doktora: {}", e.getMessage());
                 System.out.println("Pogrešan unos: " + e.getMessage());
@@ -67,7 +73,8 @@ public class Main {
                 LocalDate dob = readDate(input, "Datum rođenja pacijenta (yyyy-MM-dd): ");
 
                 System.out.print("Stanje (STABLE, CRITICAL, RECOVERING, UNKNOWN): ");
-                ConditionStatus condition = ConditionStatus.valueOf(input.nextLine().trim().toUpperCase());
+                String condRaw = input.nextLine().trim().toUpperCase();
+                ConditionStatus condition = ConditionStatus.valueOf(condRaw);
 
                 System.out.print("Broj osiguranja: ");
                 String insurance = input.nextLine();
@@ -79,6 +86,12 @@ public class Main {
 
                 patients.add(p);
                 hospitals.get(i % hospitals.size()).addPatient(p);
+
+                logger.debug("Dodano: {}", p);
+            } catch (IllegalArgumentException iae) {
+                logger.warn("Neispravan enum unos: {}", iae.getMessage());
+                System.out.println("Neispravan unos stanja. Koristite STABLE, CRITICAL, RECOVERING, UNKNOWN.");
+                i--;
             } catch (Exception e) {
                 logger.error("Greška kod unosa pacijenta: {}", e.getMessage());
                 System.out.println("Pogrešan unos: " + e.getMessage());
@@ -86,15 +99,27 @@ public class Main {
             }
         }
 
+        List<Hospital> hospitalsReadOnly = List.copyOf(hospitals);
+        List<Doctor> doctorListImmutable = List.copyOf(doctors);
+        List<Patient> patientListImmutable = List.copyOf(patients);
+
+        // Demonstrate generic PECS helper usage
+        List<Doctor> mutableDoctorSink = new ArrayList<>();
+        addAllDoctors(mutableDoctorSink, doctorListImmutable);
+        logger.debug("Doctors copied to mutable sink (PECS example): {}", mutableDoctorSink.size());
+
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+        menuLoop:
         while (true) {
             System.out.println("\n--- IZBORNIK ---");
             System.out.println("1. Zakaži pregled");
-            System.out.println("2. Prikaži pacijenta po imenu");
-            System.out.println("3. Prikaži preglede po doktoru");
-            System.out.println("4. Statistika");
-            System.out.println("5. Izađi");
+            System.out.println("2. Prikaži pacijenta po imenu (Optional)");
+            System.out.println("3. Prikaži preglede po doktoru (sortirano)");
+            System.out.println("4. Statistika (group/partition/reduce)");
+            System.out.println("5. Demonstracija Stream immutable/mutable");
+            System.out.println("6. Generics demo (PECS / bounds)");
+            System.out.println("7. Izađi");
             System.out.print("Odaberite opciju: ");
 
             int choice;
@@ -107,27 +132,28 @@ public class Main {
             }
 
             switch (choice) {
-                case 1 -> {
+                case 1 -> { // schedule appointment
                     System.out.println("Odaberite doktora:");
-                    List<Doctor> doctorList = new ArrayList<>(doctors);
-                    for (int i = 0; i < doctorList.size(); i++)
-                        System.out.println((i + 1) + ". " + doctorList.get(i));
+                    List<Doctor> doctorMenu = List.copyOf(doctors).stream().toList();
+                    for (int i = 0; i < doctorMenu.size(); i++)
+                        System.out.println((i + 1) + ". " + doctorMenu.get(i));
 
                     int docId;
                     try {
-                        docId = readIndex(input, doctorList.size());
+                        docId = readIndex(input, doctorMenu.size());
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                         continue;
                     }
 
                     System.out.println("Odaberite pacijenta:");
-                    for (int i = 0; i < patients.size(); i++)
-                        System.out.println((i + 1) + ". " + patients.get(i));
+                    List<Patient> patientMenu = List.copyOf(patients);
+                    for (int i = 0; i < patientMenu.size(); i++)
+                        System.out.println((i + 1) + ". " + patientMenu.get(i));
 
                     int patId;
                     try {
-                        patId = readIndex(input, patients.size());
+                        patId = readIndex(input, patientMenu.size());
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                         continue;
@@ -142,89 +168,152 @@ public class Main {
                         continue;
                     }
 
-                    Appointment a = new Appointment(
-                            appointments.size() + 1,
-                            doctorList.get(docId),
-                            patients.get(patId),
-                            dateTime
-                    );
+                    Appointment a = new Appointment(appointments.size() + 1, doctorMenu.get(docId), patientMenu.get(patId), dateTime);
                     appointments.add(a);
                     logger.info("Zakazan novi pregled: {}", a);
-                    System.out.println("✅ Pregled zakazan!");
+                    System.out.println("Pregled zakazan!");
                 }
 
-                case 2 -> {
+                case 2 -> { // search patient by name
                     System.out.print("Ime i prezime pacijenta: ");
                     String name = input.nextLine().trim();
 
-                    patients.stream()
+                    Optional<Patient> found = patients.stream()
                             .filter(p -> p.getFullName().equalsIgnoreCase(name))
-                            .findFirst()
-                            .ifPresentOrElse(
-                                    System.out::println,
-                                    () -> {
-                                        throw new EntityNotFoundException("Pacijent nije pronađen.");
-                                    }
-                            );
+                            .findFirst();
+
+                    found.ifPresentOrElse(
+                            p -> System.out.println("Pronađeno: " + p),
+                            () -> System.out.println("Pacijent nije pronađen.")
+                    );
                 }
 
-                case 3 -> {
+                case 3 -> { // show appointments by doctor
                     System.out.println("Odaberite doktora:");
-                    List<Doctor> doctorList = new ArrayList<>(doctors);
-                    for (int i = 0; i < doctorList.size(); i++)
-                        System.out.println((i + 1) + ". " + doctorList.get(i));
+                    List<Doctor> doctorMenu = List.copyOf(doctors).stream().toList();
+                    for (int i = 0; i < doctorMenu.size(); i++)
+                        System.out.println((i + 1) + ". " + doctorMenu.get(i));
 
                     int dId;
                     try {
-                        dId = readIndex(input, doctorList.size());
+                        dId = readIndex(input, doctorMenu.size());
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                         continue;
                     }
 
-                    Doctor selectedDoctor = doctorList.get(dId);
+                    Doctor selected = doctorMenu.get(dId);
 
                     List<Appointment> docAppointments = appointments.stream()
-                            .filter(a -> a.getDoctor().equals(selectedDoctor))
-                            .sorted(Comparator.comparing(Appointment::getDateTime))
-                            .toList();
+                            .filter(ap -> ap.doctor().equals(selected))
+                            .sorted(Comparator.comparing(Appointment::dateTime))
+                            .collect(Collectors.toUnmodifiableList());
 
-                    if (docAppointments.isEmpty())
+                    if (docAppointments.isEmpty()) {
                         System.out.println("Nema pregleda za ovog doktora.");
-                    else
+                    } else {
                         docAppointments.forEach(System.out::println);
+                    }
                 }
 
-                case 4 -> {
-                    System.out.println("\n--- Doktori sortirani po plaći ---");
+                case 4 -> { // statistics: grouping, partitioning, reducing
+                    System.out.println("\n--- Doktori sortirani po osnovnoj plaći (desc) ---");
                     doctors.stream()
-                            .sorted(Comparator.comparingDouble(Doctor::getBaseSalary).reversed())
+                            .sorted(Comparator.comparingDouble(d -> -d.calculatePay()))
                             .forEach(System.out::println);
 
                     System.out.println("\n--- Grupiranje pacijenata po stanju ---");
                     Map<String, List<Patient>> grouped = patients.stream()
                             .collect(Collectors.groupingBy(Patient::getCondition));
-                    grouped.forEach((cond, plist) -> {
-                        System.out.println(cond + ": " + plist.size() + " pacijenata");
-                    });
+                    grouped.forEach((cond, plist) -> System.out.println(cond + ": " + plist.size()));
 
-                    System.out.println("\n--- Kritični vs ostali pacijenti ---");
-                    Map<Boolean, List<Patient>> partitioned =
-                            patients.stream().collect(Collectors.partitioningBy(
-                                    p -> p.getCondition().equalsIgnoreCase("CRITICAL")));
+                    System.out.println("\n--- Particioniranje: CRITICAL ---");
+                    Map<Boolean, List<Patient>> partitioned = patients.stream()
+                            .collect(Collectors.partitioningBy(p -> {
+                                String c = Optional.ofNullable(p.getCondition()).orElse("UNKNOWN");
+                                return c.equalsIgnoreCase("CRITICAL");
+                            }));
                     System.out.println("Kritični: " + partitioned.get(true).size());
                     System.out.println("Ostali: " + partitioned.get(false).size());
+
+                    double totalDoctorPay = sumPay(doctors);
+                    System.out.println("Ukupna procijenjena plaća doktora (reduce): " + totalDoctorPay);
+
+                    Map<String, Long> hospitalPatientCounts = hospitals.stream()
+                            .collect(Collectors.toMap(Hospital::getName,
+                                    h -> (long) h.getPatients().size()));
+                    System.out.println("Pacijenti po bolnici: " + hospitalPatientCounts);
                 }
 
-                case 5 -> {
+                case 5 -> { // demonstrate immutable vs mutable
+                    System.out.println("\n--- Immutable snapshot of doctors ---");
+                    List<Doctor> immDoctors = doctors.stream().collect(Collectors.toUnmodifiableList());
+                    System.out.println("Immutable doctors size: " + immDoctors.size());
+
+                    System.out.println("\n--- Mutable view (new ArrayList) ---");
+                    List<Doctor> mutDoctors = new ArrayList<>(immDoctors);
+                    mutDoctors.add(new Doctor(999, "Temp", "Doc", LocalDate.now(), "TMP", 0.0));
+                    System.out.println("Mutable doctors size after add: " + mutDoctors.size());
+                }
+
+                case 6 -> { // generics demo
+                    System.out.println("\n--- Generics demo: addAllDoctors (PECS) ---");
+                    List<Doctor> dest = new ArrayList<>();
+                    addAllDoctors(dest, doctors); // ? extends Doctor source
+                    System.out.println("Dest size after addAllDoctors: " + dest.size());
+
+                    System.out.println("\n--- Generics demo: printAges (upper bounded, multiple bounds) ---");
+                    List<Person> people = Stream.concat(doctors.stream(), patients.stream()).collect(Collectors.toList());
+                    printAges(people);
+
+                    System.out.println("\n--- Generics demo: lower bounded addPatients ---");
+                    List<Object> objSink = new ArrayList<>();
+                    addPatients(objSink, patients); // ? super Patient
+                    System.out.println("objSink size: " + objSink.size());
+                }
+
+                case 7 -> {
                     logger.info("Aplikacija završena od strane korisnika.");
-                    System.out.println("👋 Izlaz iz programa...");
-                    return;
+                    System.out.println("Izlaz iz programa...");
+                    break menuLoop;
                 }
 
                 default -> System.out.println("Nepostojeća opcija.");
             }
         }
+
+        input.close();
+    }
+
+
+    /**
+     * PECS example: copy all doctors from src (<? extends Doctor>) to dst (<? super Doctor>)
+     */
+    public static void addAllDoctors(Collection<? super Doctor> dst, Collection<? extends Doctor> src) {
+        src.forEach(dst::add);
+    }
+
+    /**
+     * Lower bounded example: add patients to a sink that accepts Patient or its super types
+     */
+    public static void addPatients(Collection<? super Patient> dst, Collection<? extends Patient> src) {
+        src.forEach(dst::add);
+    }
+
+    /**
+     * Upper bounded + multiple bounds example: print ages of Persons who are Ageable
+     */
+    public static <T extends Person & Ageable> void printAges(Collection<T> people) {
+        people.forEach(p -> System.out.println(p.getFullName() + " - " + p.getAge()));
+    }
+
+    /**
+     * Upper bounded wildcard: sum pay of any collection of Payable (Doctor, Patient, etc.)
+     */
+    public static double sumPay(Collection<? extends Payable> payables) {
+        return payables.stream()
+                .mapToDouble(Payable::calculatePay)
+                .sum();
     }
 
 
@@ -252,7 +341,7 @@ public class Main {
             try {
                 return LocalDate.parse(input.nextLine().trim(), fmt);
             } catch (Exception e) {
-                System.out.println(" Format mora biti yyyy-MM-dd");
+                System.out.println("Format mora biti yyyy-MM-dd");
             }
         }
     }
