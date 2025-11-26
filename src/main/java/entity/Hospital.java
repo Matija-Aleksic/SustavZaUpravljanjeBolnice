@@ -1,16 +1,17 @@
 package entity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * The type Hospital.
  */
 public class Hospital {
-    private int id;
-    private String name;
-    private List<Doctor> doctors = new ArrayList<>();
-    private List<Patient> patients = new ArrayList<>();
+    private final int id;
+    private final String name;
+    private final List<Doctor> doctors = new ArrayList<>();
+    private final List<Patient> patients = new ArrayList<>();
 
     /**
      * Instantiates a new Hospital.
@@ -60,14 +61,14 @@ public class Hospital {
      *
      * @return the doctors
      */
-    public List<Doctor> getDoctors() { return doctors; }
+    public List<Doctor> getDoctors() { return Collections.unmodifiableList(doctors); }
 
     /**
      * Gets patients.
      *
      * @return the patients
      */
-    public List<Patient> getPatients() { return patients; }
+    public List<Patient> getPatients() { return Collections.unmodifiableList(patients); }
 
     @Override
     public String toString() {

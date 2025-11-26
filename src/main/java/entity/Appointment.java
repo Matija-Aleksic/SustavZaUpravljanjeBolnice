@@ -1,6 +1,7 @@
 package entity;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * The type Appointment.
@@ -12,15 +13,12 @@ public record Appointment(int id, Doctor doctor, Patient patient, LocalDateTime 
     }
 
     /**
-     * Gets doctor.
+     * Format the dateTime using a provided formatter.
      *
-     * @return the doctor
+     * @param formatter formatter to apply
+     * @return formatted date-time string
      */
-    public Object getDoctor() {
-        return doctor;
-    }
-
-    public  <U> U getDateTime() {
-        return (U) dateTime;
+    public String formattedDateTime(DateTimeFormatter formatter) {
+        return dateTime.format(formatter);
     }
 }

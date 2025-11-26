@@ -6,6 +6,8 @@ import java.time.LocalDate;
  * The type Patient.
  */
 public final class Patient extends Person implements Payable {
+    private static final double OPERATION_COST = 200.0; // extracted constants for Sonar
+    private static final double DEFAULT_COST = 50.0;
     private final String condition;
     private final String insuranceNumber;
 
@@ -31,8 +33,7 @@ public final class Patient extends Person implements Payable {
 
     @Override
     public double calculatePay() {
-        // Pacijent "plaća" bolnici trošak pregleda (npr. ovisno o stanju)
-        return condition != null && condition.toLowerCase().contains("operacija") ? 200.0 : 50.0;
+        return condition != null && condition.toLowerCase().contains("operacija") ? OPERATION_COST : DEFAULT_COST;
     }
 
     @Override
@@ -46,12 +47,12 @@ public final class Patient extends Person implements Payable {
      * The type Builder.
      */
     public static class Builder {
-        private int id;
-        private String firstName;
-        private String lastName;
-        private LocalDate dateOfBirth;
-        private String condition;
-        private String insuranceNumber;
+        private final int id;
+        private final String firstName;
+        private final String lastName;
+        private final LocalDate dateOfBirth;
+        private  String condition;
+        private  String insuranceNumber;
 
         /**
          * Instantiates a new Builder.
