@@ -1,24 +1,22 @@
 package entity;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 /**
  * The type Employee.
  */
 public final class Employee extends Person implements Payable {
-    private double salary;
-
+    private final double salary;
 
     /**
      * Instantiates a new Employee.
      *
-     * @param name    the name
-     * @param age     the age
-     * @param address the address
-     * @param salary  the salary
+     * @param name   the name
+     * @param salary the salary
      */
-    public Employee(String name, int age, Address address, double salary) {
-        super(1, name, name, LocalDate.ofEpochDay(age));
+    public Employee(String name, double salary) {
+        super(1, name, name, LocalDate.now());
         this.salary = salary;
     }
 
@@ -27,17 +25,17 @@ public final class Employee extends Person implements Payable {
      *
      * @return the salary
      */
-    public double getSalary() { return salary; }
+    public double getSalary() {
+        return salary;
+    }
 
     @Override
     public double calculatePay() {
         return salary;
     }
 
-
-
     @Override
     public int getAge() {
-        return 0;
+        return Period.between(dateOfBirth, LocalDate.now()).getYears();
     }
 }

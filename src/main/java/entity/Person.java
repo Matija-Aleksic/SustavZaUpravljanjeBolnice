@@ -1,5 +1,6 @@
 package entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Objects;
@@ -7,7 +8,9 @@ import java.util.Objects;
 /**
  * The type Person.
  */
-public abstract class Person implements Ageable {
+public abstract class Person implements Serializable {
+
+
     /**
      * The Id.
      */
@@ -33,7 +36,7 @@ public abstract class Person implements Ageable {
      * @param lastName    the last name
      * @param dateOfBirth the date of birth
      */
-    public Person(int id, String firstName, String lastName, LocalDate dateOfBirth) {
+    protected Person(int id, String firstName, String lastName, LocalDate dateOfBirth) {
         if (id <= 0) throw new IllegalArgumentException("ID mora biti pozitivan!");
         this.id = id;
         this.firstName = Objects.requireNonNull(firstName, "Ime ne može biti null");
@@ -47,28 +50,28 @@ public abstract class Person implements Ageable {
      *
      * @return the first name
      */
-    public String getFirstName() { return firstName; }
+    public String getFirstName() {
+        return firstName;
+    }
 
     /**
-     * Gets last name.
+     * Gets id.
      *
-     * @return the last name
+     * @return the id
      */
-    public String getLastName() { return lastName; }
+    public int getId() {
+        return id;
+    }
 
     /**
      * Gets full name.
      *
      * @return the full name
      */
-    public String getFullName() { return firstName + " " + lastName; }
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 
-    /**
-     * Gets date of birth.
-     *
-     * @return the date of birth
-     */
-    public LocalDate getDateOfBirth() { return dateOfBirth; }
 
     public int getAge() {
         return Period.between(dateOfBirth, LocalDate.now()).getYears();

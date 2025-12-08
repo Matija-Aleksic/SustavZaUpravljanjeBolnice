@@ -1,0 +1,81 @@
+[
+  {
+    "id": 1,
+    "name": "General Hospital",
+    "doctors": [
+      {
+        "specialization": "Cardiology",
+        "baseSalary": 5000.0,
+        "id": 1,
+        "firstName": "John",
+        "lastName": "Smith",
+        "dateOfBirth": "1980-05-15"
+      },
+      {
+        "specialization": "ortho",
+        "baseSalary": 5000.0,
+        "id": 4,
+        "firstName": "alex",
+        "lastName": "alexic",
+        "dateOfBirth": "2002-05-13"
+      }
+    ],
+    "patients": [
+      {
+        "condition": "STABLE",
+        "insuranceNumber": "INS001",
+        "id": 1,
+        "firstName": "Emma",
+        "lastName": "Wilson",
+        "dateOfBirth": "1990-06-20"
+      },
+      {
+        "condition": "STABLE",
+        "insuranceNumber": "3",
+        "id": 3,
+        "firstName": "fico",
+        "lastName": "fizo",
+        "dateOfBirth": "2002-11-23"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "City Medical Center",
+    "doctors": [
+      {
+        "specialization": "Neurology",
+        "baseSalary": 5500.0,
+        "id": 2,
+        "firstName": "Sarah",
+        "lastName": "Johnson",
+        "dateOfBirth": "1985-08-22"
+      }
+    ],
+    "patients": [
+      {
+        "condition": "CRITICAL",
+        "insuranceNumber": "INS002",
+        "id": 2,
+        "firstName": "James",
+        "lastName": "Davis",
+        "dateOfBirth": "1975-11-08"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Regional Clinic",
+    "doctors": [
+      {
+        "specialization": "Pediatrics",
+        "baseSalary": 4800.0,
+        "id": 3,
+        "firstName": "Michael",
+        "lastName": "Brown",
+        "dateOfBirth": "1978-03-10"
+      }
+    ],
+    "patients": []
+  }
+]

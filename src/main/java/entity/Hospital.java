@@ -1,5 +1,6 @@
 package entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,7 +8,9 @@ import java.util.List;
 /**
  * The type Hospital.
  */
-public class Hospital {
+public class Hospital implements Serializable {
+    
+
     private final int id;
     private final String name;
     private final List<Doctor> doctors = new ArrayList<>();
@@ -29,14 +32,18 @@ public class Hospital {
      *
      * @return the id
      */
-    public int getId() { return id; }
+    public int getId() {
+        return id;
+    }
 
     /**
      * Gets name.
      *
      * @return the name
      */
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
     /**
      * Add doctor.
@@ -61,14 +68,18 @@ public class Hospital {
      *
      * @return the doctors
      */
-    public List<Doctor> getDoctors() { return Collections.unmodifiableList(doctors); }
+    public List<Doctor> getDoctors() {
+        return Collections.unmodifiableList(doctors);
+    }
 
     /**
      * Gets patients.
      *
      * @return the patients
      */
-    public List<Patient> getPatients() { return Collections.unmodifiableList(patients); }
+    public List<Patient> getPatients() {
+        return Collections.unmodifiableList(patients);
+    }
 
     @Override
     public String toString() {

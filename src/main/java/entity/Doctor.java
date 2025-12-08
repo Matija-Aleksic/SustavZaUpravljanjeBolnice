@@ -6,7 +6,7 @@ import java.time.LocalDate;
  * The type Doctor.
  */
 public final class Doctor extends Person implements Payable {
-    private static final double AGE_BONUS_PER_YEAR = 50.0; // Sonar: magic number extracted
+    private static final double AGE_BONUS_PER_YEAR = 50.0;
     private final String specialization;
     private final double baseSalary;
 
@@ -32,7 +32,9 @@ public final class Doctor extends Person implements Payable {
      *
      * @return the specialization
      */
-    public String getSpecialization() { return specialization; }
+    public String getSpecialization() {
+        return specialization;
+    }
 
     @Override
     public double calculatePay() {
@@ -44,5 +46,7 @@ public final class Doctor extends Person implements Payable {
         return "Dr. %s (%s, plaća: %.2f€)".formatted(getFullName(), specialization, calculatePay());
     }
 
-    public double getBaseSalary() { return baseSalary; }
+    public double getBaseSalary() {
+        return baseSalary;
+    }
 }
