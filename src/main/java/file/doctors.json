@@ -30,5 +30,13 @@
     "firstName": "alex",
     "lastName": "alexic",
     "dateOfBirth": "2002-05-13"
+  },
+  {
+    "specialization": "asd",
+    "baseSalary": 5454.0,
+    "id": 5,
+    "firstName": "asd",
+    "lastName": "dsa",
+    "dateOfBirth": "2002-12-12"
   }
 ]
