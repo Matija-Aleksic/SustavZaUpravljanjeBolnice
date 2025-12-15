@@ -2,21 +2,21 @@
   {
     "id": 1,
     "doctor": {
-      "specialization": "ortho",
+      "specialization": "Cardiology",
       "baseSalary": 5000.0,
-      "id": 4,
-      "firstName": "alex",
-      "lastName": "alexic",
-      "dateOfBirth": "2002-05-13"
+      "id": 1,
+      "firstName": "John",
+      "lastName": "Doe",
+      "dateOfBirth": "1980-01-01"
     },
     "patient": {
       "condition": "STABLE",
-      "insuranceNumber": "3",
-      "id": 3,
-      "firstName": "fico",
-      "lastName": "fizo",
-      "dateOfBirth": "2002-11-23"
+      "insuranceNumber": "INS001",
+      "id": 1,
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "dateOfBirth": "1990-01-01"
     },
-    "dateTime": "2032-11-12T13:33:00"
+    "dateTime": "2025-12-08T18:11:41.080442758"
   }
 ]

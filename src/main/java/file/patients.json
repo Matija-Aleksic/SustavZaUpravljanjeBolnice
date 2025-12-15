@@ -3,24 +3,8 @@
     "condition": "STABLE",
     "insuranceNumber": "INS001",
     "id": 1,
-    "firstName": "Emma",
-    "lastName": "Wilson",
-    "dateOfBirth": "1990-06-20"
-  },
-  {
-    "condition": "CRITICAL",
-    "insuranceNumber": "INS002",
-    "id": 2,
-    "firstName": "James",
-    "lastName": "Davis",
-    "dateOfBirth": "1975-11-08"
-  },
-  {
-    "condition": "STABLE",
-    "insuranceNumber": "3",
-    "id": 3,
-    "firstName": "fico",
-    "lastName": "fizo",
-    "dateOfBirth": "2002-11-23"
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "dateOfBirth": "1990-01-01"
   }
 ]
