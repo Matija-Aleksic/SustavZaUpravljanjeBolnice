@@ -17,6 +17,86 @@
       "lastName": "Smith",
       "dateOfBirth": "1990-01-01"
     },
-    "dateTime": "2025-12-08T18:11:41.080442758"
+    "dateTime": "2024-03-15T10:30:00"
+  },
+  {
+    "id": 2,
+    "doctor": {
+      "specialization": "Neurology",
+      "baseSalary": 5500.0,
+      "id": 2,
+      "firstName": "Sarah",
+      "lastName": "Johnson",
+      "dateOfBirth": "1982-05-15"
+    },
+    "patient": {
+      "condition": "Migrena",
+      "insuranceNumber": "INS005",
+      "id": 5,
+      "firstName": "Emma",
+      "lastName": "White",
+      "dateOfBirth": "1992-04-18"
+    },
+    "dateTime": "2024-03-16T14:00:00"
+  },
+  {
+    "id": 3,
+    "doctor": {
+      "specialization": "Pediatrics",
+      "baseSalary": 4500.0,
+      "id": 3,
+      "firstName": "Michael",
+      "lastName": "Brown",
+      "dateOfBirth": "1985-08-22"
+    },
+    "patient": {
+      "condition": "Hypertension",
+      "insuranceNumber": "INS002",
+      "id": 2,
+      "firstName": "David",
+      "lastName": "Martinez",
+      "dateOfBirth": "1975-06-10"
+    },
+    "dateTime": "2024-03-17T09:15:00"
+  },
+  {
+    "id": 4,
+    "doctor": {
+      "specialization": "Orthopedics",
+      "baseSalary": 5200.0,
+      "id": 4,
+      "firstName": "Emily",
+      "lastName": "Davis",
+      "dateOfBirth": "1979-11-30"
+    },
+    "patient": {
+      "condition": "Operacija - Appendektomija",
+      "insuranceNumber": "INS004",
+      "id": 4,
+      "firstName": "James",
+      "lastName": "Taylor",
+      "dateOfBirth": "1995-12-05"
+    },
+    "dateTime": "2024-03-18T11:45:00"
+  },
+  {
+    "id": 5,
+    "doctor": {
+      "specialization": "Dermatology",
+      "baseSalary": 4800.0,
+      "id": 5,
+      "firstName": "Robert",
+      "lastName": "Wilson",
+      "dateOfBirth": "1983-03-17"
+    },
+    "patient": {
+      "condition": "Diabetes Type 2",
+      "insuranceNumber": "INS003",
+      "id": 3,
+      "firstName": "Lisa",
+      "lastName": "Anderson",
+      "dateOfBirth": "1988-09-25"
+    },
+    "dateTime": "2024-03-19T15:30:00"
   }
 ]

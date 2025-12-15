@@ -1,26 +1,26 @@
 [
   {
     "id": 1,
-    "name": "Test Hospital",
-    "doctors": [
-      {
-        "specialization": "Cardiology",
-        "baseSalary": 5000.0,
-        "id": 1,
-        "firstName": "John",
-        "lastName": "Doe",
-        "dateOfBirth": "1980-01-01"
-      }
-    ],
-    "patients": [
-      {
-        "condition": "STABLE",
-        "insuranceNumber": "INS001",
-        "id": 1,
-        "firstName": "Jane",
-        "lastName": "Smith",
-        "dateOfBirth": "1990-01-01"
-      }
-    ]
+    "name": "City General Hospital",
+    "doctors": [],
+    "patients": []
+  },
+  {
+    "id": 2,
+    "name": "St. Mary's Medical Center",
+    "doctors": [],
+    "patients": []
+  },
+  {
+    "id": 3,
+    "name": "University Hospital",
+    "doctors": [],
+    "patients": []
+  },
+  {
+    "id": 4,
+    "name": "Memorial Health System",
+    "doctors": [],
+    "patients": []
   }
 ]

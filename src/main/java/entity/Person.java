@@ -55,6 +55,24 @@ public abstract class Person implements Serializable {
     }
 
     /**
+     * Gets last name.
+     *
+     * @return the last name
+     */
+    public String getLastName() {
+        return lastName;
+    }
+
+    /**
+     * Gets date of birth.
+     *
+     * @return the date of birth
+     */
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    /**
      * Gets id.
      *
      * @return the id
