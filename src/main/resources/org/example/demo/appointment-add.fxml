@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.demo.AppointmentAddController" alignment="CENTER" spacing="10.0">
+    <padding>
+        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+    </padding>
+    <Label text="Add New Appointment">
+        <font>
+            <Font name="System Bold" size="18.0"/>
+        </font>
+    </Label>
+    <ComboBox fx:id="doctorComboBox" promptText="Doctor"/>
+    <ComboBox fx:id="patientComboBox" promptText="Patient"/>
+    <DatePicker fx:id="datePicker" promptText="Date"/>
+    <TextField fx:id="timeField" promptText="Time (HH:mm)"/>
+    <HBox spacing="10.0">
+        <Button text="Save" onAction="#onSave"/>
+        <Button text="Cancel" onAction="#onCancel"/>
+    </HBox>
+</VBox>

@@ -39,6 +39,16 @@
     <Button text="Restore Backup" onAction="#onRestoreBackup" prefWidth="250.0" styleClass="menu-button"/>
     <Button text="View Activity Logs" onAction="#onViewLogs" prefWidth="250.0" styleClass="menu-button"/>
 
+    <Label text="Add New Entity" style="-fx-padding: 10 0 0 0;">
+        <font>
+            <Font size="14.0"/>
+        </font>
+    </Label>
+
+    <Button text="Add Hospital" onAction="#onAddHospital" prefWidth="250.0" styleClass="menu-button"/>
+    <Button text="Add Doctor" onAction="#onAddDoctor" prefWidth="250.0" styleClass="menu-button"/>
+    <Button text="Add Patient" onAction="#onAddPatient" prefWidth="250.0" styleClass="menu-button"/>
+    <Button text="Add Appointment" onAction="#onAddAppointment" prefWidth="250.0" styleClass="menu-button"/>
+
     <Button text="Exit" onAction="#onExit" prefWidth="250.0" style="-fx-background-color: #d9534f; -fx-text-fill: white; -fx-padding: 10;"/>
 </VBox>
-

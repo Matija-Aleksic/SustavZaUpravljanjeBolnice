@@ -90,6 +90,33 @@ public class DataManager {
     }
 
     /**
+     * Add a hospital, doctor, patient, or appointment entity and save to JSON
+     */
+    public static void addHospital(Hospital hospital) {
+        List<Hospital> hospitals = loadAllData().hospitals();
+        hospitals.add(hospital);
+        saveHospitals(hospitals);
+    }
+
+    public static void addDoctor(Doctor doctor) {
+        List<Doctor> doctors = loadAllData().doctors();
+        doctors.add(doctor);
+        saveDoctors(doctors);
+    }
+
+    public static void addPatient(Patient patient) {
+        List<Patient> patients = loadAllData().patients();
+        patients.add(patient);
+        savePatients(patients);
+    }
+
+    public static void addAppointment(Appointment appointment) {
+        List<Appointment> appointments = loadAllData().appointments();
+        appointments.add(appointment);
+        saveAppointments(appointments);
+    }
+
+    /**
      * Data container for all entities
      */
     public record AllData(List<Hospital> hospitals, List<Doctor> doctors, List<Patient> patients,

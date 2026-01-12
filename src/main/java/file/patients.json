@@ -38,5 +38,13 @@
     "firstName": "Emma",
     "lastName": "White",
     "dateOfBirth": "1992-04-18"
+  },
+  {
+    "condition": "STABLE",
+    "insuranceNumber": "dasdasd",
+    "id": 6,
+    "firstName": "asgrtgsrt",
+    "lastName": "shrth",
+    "dateOfBirth": "2025-12-29"
   }
 ]

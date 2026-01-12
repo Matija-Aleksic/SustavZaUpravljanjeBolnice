@@ -86,6 +86,30 @@ public class MainMenuController {
         Platform.exit();
     }
 
+    @FXML
+    protected void onAddHospital() {
+        XmlLogger.logAction("MENU_ADD_HOSPITAL", "User selected add hospital");
+        openWindow("hospital-add.fxml", "Add Hospital");
+    }
+
+    @FXML
+    protected void onAddDoctor() {
+        XmlLogger.logAction("MENU_ADD_DOCTOR", "User selected add doctor");
+        openWindow("doctor-add.fxml", "Add Doctor");
+    }
+
+    @FXML
+    protected void onAddPatient() {
+        XmlLogger.logAction("MENU_ADD_PATIENT", "User selected add patient");
+        openWindow("patient-add.fxml", "Add Patient");
+    }
+
+    @FXML
+    protected void onAddAppointment() {
+        XmlLogger.logAction("MENU_ADD_APPOINTMENT", "User selected add appointment");
+        openWindow("appointment-add.fxml", "Add Appointment");
+    }
+
     private void openWindow(String fxmlFile, String title) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
@@ -99,4 +123,3 @@ public class MainMenuController {
         }
     }
 }
-
