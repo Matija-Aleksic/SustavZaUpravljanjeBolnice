@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Gson adapter for LocalDate serialization/deserialization
+ * The type Local date adapter.
  */
 public class LocalDateAdapter extends TypeAdapter<LocalDate> {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;

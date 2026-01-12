@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Manager class for handling all entity data persistence
+ * The type Data manager.
  */
 public class DataManager {
     private static final Logger logger = LoggerFactory.getLogger(DataManager.class);
@@ -28,7 +28,12 @@ public class DataManager {
     }
 
     /**
-     * Save all data to JSON files
+     * Save all data.
+     *
+     * @param hospitals    the hospitals
+     * @param doctors      the doctors
+     * @param patients     the patients
+     * @param appointments the appointments
      */
     public static void saveAllData(List<Hospital> hospitals, List<Doctor> doctors,
                                    List<Patient> patients, List<Appointment> appointments) {
@@ -40,7 +45,9 @@ public class DataManager {
     }
 
     /**
-     * Load all data from JSON files
+     * Load all data all data.
+     *
+     * @return the all data
      */
     public static AllData loadAllData() {
         Type hospitalType = new TypeToken<ArrayList<Hospital>>() {
@@ -62,35 +69,45 @@ public class DataManager {
     }
 
     /**
-     * Save hospitals to JSON
+     * Save hospitals.
+     *
+     * @param hospitals the hospitals
      */
     public static void saveHospitals(List<Hospital> hospitals) {
         JsonFileManager.saveToJson(HOSPITALS_FILE, hospitals);
     }
 
     /**
-     * Save doctors to JSON
+     * Save doctors.
+     *
+     * @param doctors the doctors
      */
     public static void saveDoctors(List<Doctor> doctors) {
         JsonFileManager.saveToJson(DOCTORS_FILE, doctors);
     }
 
     /**
-     * Save patients to JSON
+     * Save patients.
+     *
+     * @param patients the patients
      */
     public static void savePatients(List<Patient> patients) {
         JsonFileManager.saveToJson(PATIENTS_FILE, patients);
     }
 
     /**
-     * Save appointments to JSON
+     * Save appointments.
+     *
+     * @param appointments the appointments
      */
     public static void saveAppointments(List<Appointment> appointments) {
         JsonFileManager.saveToJson(APPOINTMENTS_FILE, appointments);
     }
 
     /**
-     * Add a hospital, doctor, patient, or appointment entity and save to JSON
+     * Add hospital.
+     *
+     * @param hospital the hospital
      */
     public static void addHospital(Hospital hospital) {
         List<Hospital> hospitals = loadAllData().hospitals();
@@ -98,18 +115,33 @@ public class DataManager {
         saveHospitals(hospitals);
     }
 
+    /**
+     * Add doctor.
+     *
+     * @param doctor the doctor
+     */
     public static void addDoctor(Doctor doctor) {
         List<Doctor> doctors = loadAllData().doctors();
         doctors.add(doctor);
         saveDoctors(doctors);
     }
 
+    /**
+     * Add patient.
+     *
+     * @param patient the patient
+     */
     public static void addPatient(Patient patient) {
         List<Patient> patients = loadAllData().patients();
         patients.add(patient);
         savePatients(patients);
     }
 
+    /**
+     * Add appointment.
+     *
+     * @param appointment the appointment
+     */
     public static void addAppointment(Appointment appointment) {
         List<Appointment> appointments = loadAllData().appointments();
         appointments.add(appointment);
@@ -117,7 +149,7 @@ public class DataManager {
     }
 
     /**
-     * Data container for all entities
+     * The type All data.
      */
     public record AllData(List<Hospital> hospitals, List<Doctor> doctors, List<Patient> patients,
                           List<Appointment> appointments) {

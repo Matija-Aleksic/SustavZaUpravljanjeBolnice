@@ -14,18 +14,29 @@ public record Appointment(int id, Doctor doctor, Patient patient, LocalDateTime 
     }
 
     /**
-     * Format the dateTime using a provided formatter.
+     * Formatted date time string.
      *
-     * @param formatter formatter to apply
-     * @return formatted date-time string
+     * @param formatter the formatter
+     * @return the string
      */
     public String formattedDateTime(DateTimeFormatter formatter) {
         return dateTime.format(formatter);
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public int getId() {
         return id();
     }
+
+    /**
+     * Gets date time.
+     *
+     * @return the date time
+     */
     public LocalDateTime getDateTime() {
         return dateTime();
     }

@@ -13,9 +13,11 @@ import util.XmlLogger;
 import java.io.IOException;
 
 /**
- * The type Main menu controller.
+ * The type Menubar controller.
  */
-public class MainMenuController {
+public class MenubarController {
+    @FXML
+    private javafx.scene.layout.BorderPane mainBorderPane;
 
     /**
      * On search hospitals.
@@ -54,63 +56,6 @@ public class MainMenuController {
     }
 
     /**
-     * On create backup.
-     */
-    @FXML
-    protected void onCreateBackup() {
-        XmlLogger.logAction("MENU_BACKUP", "User requested backup creation");
-        try {
-            DataManager.AllData data = DataManager.loadAllData();
-            BackupManager.createBackup(data.hospitals(), data.doctors(),
-                    data.patients(), data.appointments());
-            DialogUtils.showInfo("Backup", "Backup created successfully!");
-        } catch (Exception e) {
-            DialogUtils.showError("Backup Error", "Failed to create backup: " + e.getMessage());
-        }
-    }
-
-    /**
-     * On restore backup.
-     */
-    @FXML
-    protected void onRestoreBackup() {
-        XmlLogger.logAction("MENU_RESTORE", "User requested backup restoration");
-        if (DialogUtils.showConfirmation("Restore Backup",
-                "This will replace all current data. Continue?")) {
-            try {
-                BackupManager.BackupData backup = BackupManager.restoreBackup();
-                if (backup != null) {
-                    DataManager.saveAllData(backup.hospitals(), backup.doctors(),
-                            backup.patients(), backup.appointments());
-                    DialogUtils.showInfo("Restore", "Backup restored successfully!");
-                } else {
-                    DialogUtils.showError("Restore Error", "Backup file not found or empty");
-                }
-            } catch (Exception e) {
-                DialogUtils.showError("Restore Error", "Failed to restore backup: " + e.getMessage());
-            }
-        }
-    }
-
-    /**
-     * On view logs.
-     */
-    @FXML
-    protected void onViewLogs() {
-        XmlLogger.logAction("MENU_VIEW_LOGS", "User requested to view logs");
-        XmlLogger.displayLogs();
-    }
-
-    /**
-     * On exit.
-     */
-    @FXML
-    protected void onExit() {
-        XmlLogger.logAction("MENU_EXIT", "User exited application");
-        Platform.exit();
-    }
-
-    /**
      * On add hospital.
      */
     @FXML
@@ -146,6 +91,72 @@ public class MainMenuController {
         openWindow("appointment-add.fxml", "Add Appointment");
     }
 
+    /**
+     * On create backup.
+     */
+    @FXML
+    protected void onCreateBackup() {
+        XmlLogger.logAction("MENU_BACKUP", "User requested backup creation");
+        try {
+            DataManager.AllData data = DataManager.loadAllData();
+            BackupManager.createBackup(data.hospitals(), data.doctors(), data.patients(), data.appointments());
+            DialogUtils.showInfo("Backup", "Backup created successfully!");
+        } catch (Exception e) {
+            DialogUtils.showError("Backup Error", "Failed to create backup: " + e.getMessage());
+        }
+    }
+
+    /**
+     * On restore backup.
+     */
+    @FXML
+    protected void onRestoreBackup() {
+        XmlLogger.logAction("MENU_RESTORE", "User requested backup restoration");
+        if (DialogUtils.showConfirmation("Restore Backup", "This will replace all current data. Continue?")) {
+            try {
+                BackupManager.BackupData backup = BackupManager.restoreBackup();
+                if (backup != null) {
+                    DataManager.saveAllData(backup.hospitals(), backup.doctors(), backup.patients(), backup.appointments());
+                    DialogUtils.showInfo("Restore", "Backup restored successfully!");
+                } else {
+                    DialogUtils.showError("Restore Error", "Backup file not found or empty");
+                }
+            } catch (Exception e) {
+                DialogUtils.showError("Restore Error", "Failed to restore backup: " + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * On view logs.
+     */
+    @FXML
+    protected void onViewLogs() {
+        XmlLogger.logAction("MENU_VIEW_LOGS", "User requested to view logs");
+        openWindow("logs-view.fxml", "Logs");
+
+
+    }
+
+    /**
+     * On delete logs.
+     */
+    @FXML
+    protected void onDeleteLogs() {
+        XmlLogger.logAction("MENU_DELETE_LOGS", "User requested to delete logs");
+        XmlLogger.deleteLogs();
+        DialogUtils.showInfo("Logs Deleted", "All logs have been deleted.");
+    }
+
+    /**
+     * On exit.
+     */
+    @FXML
+    protected void onExit() {
+        XmlLogger.logAction("MENU_EXIT", "User exited application");
+        Platform.exit();
+    }
+
     private void openWindow(String fxmlFile, String title) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
@@ -159,3 +170,4 @@ public class MainMenuController {
         }
     }
 }
+

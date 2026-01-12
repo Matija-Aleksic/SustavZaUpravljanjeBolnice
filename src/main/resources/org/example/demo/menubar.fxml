@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25"
+            fx:controller="org.example.demo.MenubarController">
+    <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Menu text="Patients">
+            <MenuItem onAction="#onSearchPatients" text="View"/>
+            <MenuItem onAction="#onAddPatient" text="Add"/>
+        </Menu>
+        <Menu text="Doctors">
+            <MenuItem onAction="#onSearchDoctors" text="View"/>
+            <MenuItem onAction="#onAddDoctor" text="Add"/>
+        </Menu>
+        <Menu text="Hospitals">
+            <MenuItem onAction="#onSearchHospitals" text="View"/>
+            <MenuItem onAction="#onAddHospital" text="Add"/>
+        </Menu>
+        <Menu text="Appointments">
+            <MenuItem onAction="#onSearchAppointments" text="View"/>
+            <MenuItem onAction="#onAddAppointment" text="Add"/>
+        </Menu>
+        <Menu text="Backup">
+            <MenuItem onAction="#onCreateBackup" text="Create Backup"/>
+            <MenuItem onAction="#onRestoreBackup" text="Restore Backup"/>
+        </Menu>
+        <Menu text="Logs">
+            <MenuItem onAction="#onViewLogs" text="View Logs"/>
+            <MenuItem onAction="#onDeleteLogs" text="Delete Logs"/>
+        </Menu>
+        <Menu text="Exit">
+            <MenuItem onAction="#onExit" text="Save And Exit"/>
+        </Menu>
+    </MenuBar>
+</AnchorPane>

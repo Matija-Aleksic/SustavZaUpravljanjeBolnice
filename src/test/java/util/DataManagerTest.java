@@ -6,6 +6,7 @@ import entity.Hospital;
 import entity.Patient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.time.LocalDate;
@@ -13,8 +14,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
- * Test class for DataManager
+ * The type Data manager test.
  */
 class DataManagerTest {
 
@@ -28,6 +31,9 @@ class DataManagerTest {
     private List<Patient> patients;
     private List<Appointment> appointments;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     void setUp() {
         hospitals = new ArrayList<>();
@@ -57,6 +63,9 @@ class DataManagerTest {
         DataManager.saveAllData(hospitals, doctors, patients, appointments);
     }
 
+    /**
+     * Tear down.
+     */
     @AfterEach
     void tearDown() {
         // Clean up test files
@@ -66,68 +75,68 @@ class DataManagerTest {
         deleteFileIfExists(ABSOLUTE_APPOINTMENTS_FILE);
     }
 
-//    @Test
-//    void testSaveAndLoadAllData() {
-//        // Save data
-//        DataManager.saveAllData(hospitals, doctors, patients, appointments);
-//
-//        // Verify files exist
-//        assertTrue(new File(ABSOLUTE_HOSPITALS_FILE).exists());
-//        assertTrue(new File(ABSOLUTE_DOCTORS_FILE).exists());
-//        assertTrue(new File(ABSOLUTE_PATIENTS_FILE).exists());
-//        assertTrue(new File(ABSOLUTE_APPOINTMENTS_FILE).exists());
-//
-//        // Log file existence for debugging
-//        System.out.println("Hospitals file exists: " + new File(ABSOLUTE_HOSPITALS_FILE).exists());
-//        System.out.println("Doctors file exists: " + new File(ABSOLUTE_DOCTORS_FILE).exists());
-//        System.out.println("Patients file exists: " + new File(ABSOLUTE_PATIENTS_FILE).exists());
-//        System.out.println("Appointments file exists: " + new File(ABSOLUTE_APPOINTMENTS_FILE).exists());
-//
-//        // Load data
-//        DataManager.AllData loadedData = DataManager.loadAllData();
-//
-//        // Verify loaded data
-//        assertNotNull(loadedData);
-//        assertEquals(1, loadedData.hospitals().size());
-//        assertEquals(1, loadedData.doctors().size());
-//        assertEquals(1, loadedData.patients().size());
-//        assertEquals(1, loadedData.appointments().size());
-//        assertEquals("Test Hospital", loadedData.hospitals().get(0).getName());
-//    }
+    @Test
+    void testSaveAndLoadAllData() {
+        // Save data
+        DataManager.saveAllData(hospitals, doctors, patients, appointments);
 
-//    @Test
-//    void testLoadAllDataWithNoFiles() {
-//        // Ensure no files exist
-//        deleteFileIfExists(ABSOLUTE_HOSPITALS_FILE);
-//        deleteFileIfExists(ABSOLUTE_DOCTORS_FILE);
-//        deleteFileIfExists(ABSOLUTE_PATIENTS_FILE);
-//        deleteFileIfExists(ABSOLUTE_APPOINTMENTS_FILE);
-//
-//        // Load data
-//        DataManager.AllData loadedData = DataManager.loadAllData();
-//
-//        // Verify empty lists are returned
-//        assertNotNull(loadedData);
-//        assertTrue(loadedData.hospitals().isEmpty());
-//        assertTrue(loadedData.doctors().isEmpty());
-//        assertTrue(loadedData.patients().isEmpty());
-//        assertTrue(loadedData.appointments().isEmpty());
-//    }
+        // Verify files exist
+        assertTrue(new File(ABSOLUTE_HOSPITALS_FILE).exists());
+        assertTrue(new File(ABSOLUTE_DOCTORS_FILE).exists());
+        assertTrue(new File(ABSOLUTE_PATIENTS_FILE).exists());
+        assertTrue(new File(ABSOLUTE_APPOINTMENTS_FILE).exists());
 
-//    @Test
-//    void testSaveIndividualEntities() {
-//        // Save individual entities
-//        DataManager.saveHospitals(hospitals);
-//        DataManager.saveDoctors(doctors);
-//        DataManager.savePatients(patients);
-//        DataManager.saveAppointments(appointments);
-//
-//        // Verify files exist
-//        assertTrue(new File(ABSOLUTE_HOSPITALS_FILE).exists());
-//        assertTrue(new File(ABSOLUTE_DOCTORS_FILE).exists());
-//        assertTrue(new File(ABSOLUTE_PATIENTS_FILE).exists());
-//        assertTrue(new File(ABSOLUTE_APPOINTMENTS_FILE).exists());
-//    }
+        // Log file existence for debugging
+        System.out.println("Hospitals file exists: " + new File(ABSOLUTE_HOSPITALS_FILE).exists());
+        System.out.println("Doctors file exists: " + new File(ABSOLUTE_DOCTORS_FILE).exists());
+        System.out.println("Patients file exists: " + new File(ABSOLUTE_PATIENTS_FILE).exists());
+        System.out.println("Appointments file exists: " + new File(ABSOLUTE_APPOINTMENTS_FILE).exists());
+
+        // Load data
+        DataManager.AllData loadedData = DataManager.loadAllData();
+
+        // Verify loaded data
+        assertNotNull(loadedData);
+        assertEquals(1, loadedData.hospitals().size());
+        assertEquals(1, loadedData.doctors().size());
+        assertEquals(1, loadedData.patients().size());
+        assertEquals(1, loadedData.appointments().size());
+        assertEquals("Test Hospital", loadedData.hospitals().get(0).getName());
+    }
+
+    @Test
+    void testLoadAllDataWithNoFiles() {
+        // Ensure no files exist
+        deleteFileIfExists(ABSOLUTE_HOSPITALS_FILE);
+        deleteFileIfExists(ABSOLUTE_DOCTORS_FILE);
+        deleteFileIfExists(ABSOLUTE_PATIENTS_FILE);
+        deleteFileIfExists(ABSOLUTE_APPOINTMENTS_FILE);
+
+        // Load data
+        DataManager.AllData loadedData = DataManager.loadAllData();
+
+        // Verify empty lists are returned
+        assertNotNull(loadedData);
+        assertTrue(loadedData.hospitals().isEmpty());
+        assertTrue(loadedData.doctors().isEmpty());
+        assertTrue(loadedData.patients().isEmpty());
+        assertTrue(loadedData.appointments().isEmpty());
+    }
+
+    @Test
+    void testSaveIndividualEntities() {
+        // Save individual entities
+        DataManager.saveHospitals(hospitals);
+        DataManager.saveDoctors(doctors);
+        DataManager.savePatients(patients);
+        DataManager.saveAppointments(appointments);
+
+        // Verify files exist
+        assertTrue(new File(ABSOLUTE_HOSPITALS_FILE).exists());
+        assertTrue(new File(ABSOLUTE_DOCTORS_FILE).exists());
+        assertTrue(new File(ABSOLUTE_PATIENTS_FILE).exists());
+        assertTrue(new File(ABSOLUTE_APPOINTMENTS_FILE).exists());
+    }
 
     private void deleteFileIfExists(String filename) {
         File file = new File(filename);

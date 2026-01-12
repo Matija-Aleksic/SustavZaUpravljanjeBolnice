@@ -18,11 +18,13 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
- * Utility class for logging user actions to XML
+ * The type Xml logger.
  */
 public class XmlLogger {
     private static final Logger logger = LoggerFactory.getLogger(XmlLogger.class);
@@ -34,10 +36,10 @@ public class XmlLogger {
     }
 
     /**
-     * Log a user action to XML file
+     * Log action.
      *
-     * @param action      the action name
-     * @param description the action description
+     * @param action      the action
+     * @param description the description
      */
     public static void logAction(String action, String description) {
         try {
@@ -80,7 +82,7 @@ public class XmlLogger {
     }
 
     /**
-     * Display all logged actions without XML tags
+     * Display logs.
      */
     public static void displayLogs() {
         try {
@@ -117,6 +119,49 @@ public class XmlLogger {
         }
     }
 
+    /**
+     * Gets log entries.
+     *
+     * @return the log entries
+     */
+    public static List<org.example.demo.LogsController.LogEntry> getLogEntries() {
+        List<org.example.demo.LogsController.LogEntry> entries = new java.util.ArrayList<>();
+        try {
+            File file = new File(LOG_FILE);
+            if (!file.exists()) return entries;
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(file);
+            NodeList actionNodes = doc.getElementsByTagName("Action");
+            for (int i = 0; i < actionNodes.getLength(); i++) {
+                Node actionNode = actionNodes.item(i);
+                if (actionNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element actionElement = (Element) actionNode;
+                    String timestamp = getElementText(actionElement, "Timestamp");
+                    String name = getElementText(actionElement, "Name");
+                    String description = getElementText(actionElement, "Description");
+                    entries.add(new org.example.demo.LogsController.LogEntry(timestamp, name, description));
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error reading XML logs", e);
+        }
+        return entries;
+    }
+
+    /**
+     * Delete logs.
+     */
+    public static void deleteLogs() {
+        File file = new File(LOG_FILE);
+        try {
+            if (file.exists()) java.nio.file.Files.delete(Path.of(LOG_FILE));
+        }
+        catch (IOException _){
+            logger.error("Error deleting XML logs");
+        }
+    }
+
     private static String getElementText(Element parent, String tagName) {
         NodeList nodeList = parent.getElementsByTagName(tagName);
         if (nodeList.getLength() > 0) {
@@ -140,4 +185,3 @@ public class XmlLogger {
         }
     }
 }
-

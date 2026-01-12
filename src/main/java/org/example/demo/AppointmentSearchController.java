@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Controller for appointment search screen
+ * The type Appointment search controller.
  */
 public class AppointmentSearchController {
 
@@ -49,21 +49,27 @@ public class AppointmentSearchController {
 
     private List<Appointment> allAppointments;
 
+    /**
+     * Initialize.
+     */
     @FXML
     public void initialize() {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         doctorColumn.setCellValueFactory(cellData ->
-            new javafx.beans.property.SimpleStringProperty(
-                cellData.getValue().doctor().getFullName()));
+                new javafx.beans.property.SimpleStringProperty(
+                        cellData.getValue().doctor().getFullName()));
         patientColumn.setCellValueFactory(cellData ->
-            new javafx.beans.property.SimpleStringProperty(
-                cellData.getValue().patient().getFullName()));
+                new javafx.beans.property.SimpleStringProperty(
+                        cellData.getValue().patient().getFullName()));
         dateTimeColumn.setCellValueFactory(new PropertyValueFactory<>("dateTime"));
 
         loadData();
         XmlLogger.logAction("APPOINTMENT_SEARCH_OPENED", "Appointment search screen opened");
     }
 
+    /**
+     * On search.
+     */
     @FXML
     protected void onSearch() {
         try {
@@ -74,38 +80,41 @@ public class AppointmentSearchController {
 
             LocalDateTime searchDate = null;
             if (!dateQuery.isEmpty()) {
-                    searchDate = ValidationUtils.parseDateTime(dateQuery, "yyyy-MM-dd HH:mm");
+                searchDate = ValidationUtils.parseDateTime(dateQuery, "yyyy-MM-dd HH:mm");
             }
 
             final LocalDateTime finalSearchDate = searchDate;
             List<Appointment> filtered = allAppointments.stream()
-                .filter(a -> doctorQuery.isEmpty() ||
-                    a.doctor().getFullName().toLowerCase().contains(doctorQuery))
-                .filter(a -> patientQuery.isEmpty() ||
-                    a.patient().getFullName().toLowerCase().contains(patientQuery))
-                .filter(a -> finalSearchDate == null ||
-                    a.dateTime().toLocalDate().equals(finalSearchDate.toLocalDate()))
-                .filter(a -> idQuery.isEmpty() || String.valueOf(a.id()).equals(idQuery))
-                .toList();
+                    .filter(a -> doctorQuery.isEmpty() ||
+                            a.doctor().getFullName().toLowerCase().contains(doctorQuery))
+                    .filter(a -> patientQuery.isEmpty() ||
+                            a.patient().getFullName().toLowerCase().contains(patientQuery))
+                    .filter(a -> finalSearchDate == null ||
+                            a.dateTime().toLocalDate().equals(finalSearchDate.toLocalDate()))
+                    .filter(a -> idQuery.isEmpty() || String.valueOf(a.id()).equals(idQuery))
+                    .toList();
 
             appointmentTable.setItems(FXCollections.observableArrayList(filtered));
             XmlLogger.logAction("APPOINTMENT_SEARCH",
-                String.format("Searched appointments: doctor=%s, patient=%s, date=%s, found=%d",
-                    doctorQuery, patientQuery, dateQuery, filtered.size()));
+                    String.format("Searched appointments: doctor=%s, patient=%s, date=%s, found=%d",
+                            doctorQuery, patientQuery, dateQuery, filtered.size()));
 
             if (filtered.isEmpty()) {
                 DialogUtils.showInfo("Search Results",
-                    "No appointments found matching the criteria");
+                        "No appointments found matching the criteria");
             }
         } catch (IllegalArgumentException illegalArgumentException) {
             DialogUtils.showError("Search Error",
-                "An error occurred during search: " + illegalArgumentException.getMessage());
+                    "An error occurred during search: " + illegalArgumentException.getMessage());
         } catch (Exception _) {
-        DialogUtils.showError("Invalid Date Format",
-                "Please enter date in format: yyyy-MM-dd HH:mm (e.g., 2024-03-15 10:30)");
-    }
+            DialogUtils.showError("Invalid Date Format",
+                    "Please enter date in format: yyyy-MM-dd HH:mm (e.g., 2024-03-15 10:30)");
+        }
     }
 
+    /**
+     * On clear.
+     */
     @FXML
     protected void onClear() {
         doctorNameField.clear();

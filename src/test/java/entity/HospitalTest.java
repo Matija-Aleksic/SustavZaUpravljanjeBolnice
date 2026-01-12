@@ -1,14 +1,22 @@
 package entity;
 
 import org.junit.jupiter.api.Test;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/**
+ * The type Hospital test.
+ */
 class HospitalTest {
+    /**
+     * Gets doctors returns unmodifiable list.
+     */
     @Test
     void getDoctors_returnsUnmodifiableList() {
         Hospital h = new Hospital(1, "Central");
@@ -21,6 +29,9 @@ class HospitalTest {
         assertThrows(UnsupportedOperationException.class, () -> docs.remove(d));
     }
 
+    /**
+     * Gets patients returns unmodifiable list.
+     */
     @Test
     void getPatients_returnsUnmodifiableList() {
         Hospital h = new Hospital(1, "Central");
@@ -39,6 +50,9 @@ class HospitalTest {
         assertThrows(UnsupportedOperationException.class, pts::clear);
     }
 
+    /**
+     * Appointment formatted date time works.
+     */
     @Test
     void appointmentFormattedDateTimeWorks() {
         Doctor d = new Doctor(1, "Ana", "Ivic", LocalDate.now().minusYears(10), "Pediatrija", 2000);

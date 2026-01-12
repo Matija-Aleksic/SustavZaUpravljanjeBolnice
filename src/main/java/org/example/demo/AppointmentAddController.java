@@ -1,5 +1,8 @@
 package org.example.demo;
 
+import entity.Appointment;
+import entity.Doctor;
+import entity.Patient;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -9,20 +12,28 @@ import javafx.stage.Stage;
 import util.DataManager;
 import util.DialogUtils;
 import util.XmlLogger;
-import entity.Appointment;
-import entity.Doctor;
-import entity.Patient;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
+/**
+ * The type Appointment add controller.
+ */
 public class AppointmentAddController {
-    @FXML private ComboBox<Doctor> doctorComboBox;
-    @FXML private ComboBox<Patient> patientComboBox;
-    @FXML private DatePicker datePicker;
-    @FXML private TextField timeField;
+    @FXML
+    private ComboBox<Doctor> doctorComboBox;
+    @FXML
+    private ComboBox<Patient> patientComboBox;
+    @FXML
+    private DatePicker datePicker;
+    @FXML
+    private TextField timeField;
 
+    /**
+     * Initialize.
+     */
     @FXML
     public void initialize() {
         List<Doctor> doctors = DataManager.loadAllData().doctors();
@@ -59,6 +70,9 @@ public class AppointmentAddController {
         });
     }
 
+    /**
+     * On save.
+     */
     @FXML
     protected void onSave() {
         Doctor doctor = doctorComboBox.getValue();
@@ -88,6 +102,9 @@ public class AppointmentAddController {
         return appointments.stream().mapToInt(Appointment::getId).max().orElse(0) + 1;
     }
 
+    /**
+     * On cancel.
+     */
     @FXML
     protected void onCancel() {
         closeWindow();

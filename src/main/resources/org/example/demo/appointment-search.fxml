@@ -4,14 +4,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.demo.AppointmentSearchController">
     <top>
-        <VBox spacing="10.0">
-            <padding>
-                <Insets bottom="10.0" left="20.0" right="20.0" top="20.0"/>
-            </padding>
-
+        <VBox spacing="10.0" alignment="TOP_LEFT">
             <Label text="Search Appointments">
                 <font>
                     <Font name="System Bold" size="18.0"/>
@@ -19,22 +14,34 @@
             </Label>
 
             <GridPane hgap="10.0" vgap="10.0">
+                <padding>
+                    <Insets top="10.0" right="20.0" bottom="10.0" left="30.0"/>
+                </padding>
                 <Label text="Doctor Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                <TextField fx:id="doctorNameField" promptText="Enter doctor name" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="200.0"/>
+                <TextField fx:id="doctorNameField" promptText="Enter doctor name" GridPane.columnIndex="1"
+                           GridPane.rowIndex="0" prefWidth="200.0"/>
 
                 <Label text="Patient Name:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                <TextField fx:id="patientNameField" promptText="Enter patient name" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="200.0"/>
+                <TextField fx:id="patientNameField" promptText="Enter patient name" GridPane.columnIndex="1"
+                           GridPane.rowIndex="1" prefWidth="200.0"/>
 
                 <Label text="Date (yyyy-MM-dd HH:mm):" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                <TextField fx:id="dateField" promptText="2024-03-15 10:30" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="200.0"/>
+                <TextField fx:id="dateField" promptText="2024-03-15 10:30" GridPane.columnIndex="1"
+                           GridPane.rowIndex="2" prefWidth="200.0"/>
 
                 <Label text="ID:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                <TextField fx:id="idField" promptText="Enter appointment ID" GridPane.columnIndex="1" GridPane.rowIndex="3" prefWidth="200.0"/>
+                <TextField fx:id="idField" promptText="Enter appointment ID" GridPane.columnIndex="1"
+                           GridPane.rowIndex="3" prefWidth="200.0"/>
             </GridPane>
 
             <HBox spacing="10.0">
-                <Button text="Search" onAction="#onSearch" style="-fx-background-color: #5cb85c; -fx-text-fill: white; -fx-padding: 8;"/>
-                <Button text="Clear" onAction="#onClear" style="-fx-background-color: #f0ad4e; -fx-text-fill: white; -fx-padding: 8;"/>
+                <padding>
+                    <Insets top="10.0" right="20.0" bottom="10.0" left="30.0"/>
+                </padding>
+                <Button text="Search" onAction="#onSearch"
+                        style="-fx-background-color: #5cb85c; -fx-text-fill: white; -fx-padding: 8;"/>
+                <Button text="Clear" onAction="#onClear"
+                        style="-fx-background-color: #f0ad4e; -fx-text-fill: white; -fx-padding: 8;"/>
             </HBox>
         </VBox>
     </top>
@@ -45,12 +52,11 @@
                 <TableColumn fx:id="idColumn" text="ID" prefWidth="60.0"/>
                 <TableColumn fx:id="doctorColumn" text="Doctor" prefWidth="150.0"/>
                 <TableColumn fx:id="patientColumn" text="Patient" prefWidth="150.0"/>
-                <TableColumn fx:id="dateTimeColumn" text="Date and Time" prefWidth="180.0"/>
+                <TableColumn fx:id="dateTimeColumn" text="Date &amp; Time" prefWidth="150.0"/>
             </columns>
             <BorderPane.margin>
-                <Insets bottom="20.0" left="20.0" right="20.0" top="10.0"/>
+                <Insets bottom="20.0" left="30.0" right="20.0" top="10.0"/>
             </BorderPane.margin>
         </TableView>
     </center>
 </BorderPane>
-

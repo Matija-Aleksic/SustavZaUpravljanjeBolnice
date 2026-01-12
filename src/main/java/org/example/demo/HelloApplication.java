@@ -10,7 +10,7 @@ import util.XmlLogger;
 import java.io.IOException;
 
 /**
- * Main JavaFX Application for Hospital Management System
+ * The type Hello application.
  */
 public class HelloApplication extends Application {
 

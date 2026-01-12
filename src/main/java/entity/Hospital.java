@@ -9,7 +9,7 @@ import java.util.List;
  * The type Hospital.
  */
 public class Hospital implements Serializable {
-    
+
 
     private final int id;
     private final String name;

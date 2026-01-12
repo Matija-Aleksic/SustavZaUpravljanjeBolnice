@@ -1,5 +1,6 @@
 package org.example.demo;
 
+import entity.Doctor;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
@@ -7,17 +8,28 @@ import javafx.stage.Stage;
 import util.DataManager;
 import util.DialogUtils;
 import util.XmlLogger;
-import entity.Doctor;
+
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * The type Doctor add controller.
+ */
 public class DoctorAddController {
-    @FXML private TextField firstNameField;
-    @FXML private TextField lastNameField;
-    @FXML private TextField specializationField;
-    @FXML private TextField baseSalaryField;
-    @FXML private DatePicker dateOfBirthPicker;
+    @FXML
+    private TextField firstNameField;
+    @FXML
+    private TextField lastNameField;
+    @FXML
+    private TextField specializationField;
+    @FXML
+    private TextField baseSalaryField;
+    @FXML
+    private DatePicker dateOfBirthPicker;
 
+    /**
+     * On save.
+     */
     @FXML
     protected void onSave() {
         String firstName = firstNameField.getText();
@@ -49,6 +61,9 @@ public class DoctorAddController {
         return doctors.stream().mapToInt(Doctor::getId).max().orElse(0) + 1;
     }
 
+    /**
+     * On cancel.
+     */
     @FXML
     protected void onCancel() {
         closeWindow();

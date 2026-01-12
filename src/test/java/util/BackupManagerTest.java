@@ -17,7 +17,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class for BackupManager
+ * The type Backup manager test.
  */
 class BackupManagerTest {
 
@@ -27,6 +27,9 @@ class BackupManagerTest {
     private List<Patient> patients;
     private List<Appointment> appointments;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     void setUp() {
         hospitals = new ArrayList<>();
@@ -51,6 +54,9 @@ class BackupManagerTest {
         appointments.add(a1);
     }
 
+    /**
+     * Tear down.
+     */
     @AfterEach
     void tearDown() {
         // Clean up backup file
@@ -60,6 +66,9 @@ class BackupManagerTest {
         }
     }
 
+    /**
+     * Test create backup.
+     */
     @Test
     void testCreateBackup() {
         // Create backup
@@ -70,6 +79,9 @@ class BackupManagerTest {
         assertTrue(new File(BACKUP_FILE).exists());
     }
 
+    /**
+     * Test restore backup.
+     */
     @Test
     void testRestoreBackup() {
         // Create backup
@@ -90,6 +102,9 @@ class BackupManagerTest {
         assertEquals("John", restoredData.doctors().get(0).getFirstName());
     }
 
+    /**
+     * Test backup exists when no file.
+     */
     @Test
     void testBackupExistsWhenNoFile() {
         // Ensure no backup file exists
@@ -102,6 +117,9 @@ class BackupManagerTest {
         assertFalse(BackupManager.backupExists());
     }
 
+    /**
+     * Test restore backup when no file.
+     */
     @Test
     void testRestoreBackupWhenNoFile() {
         // Ensure no backup file exists

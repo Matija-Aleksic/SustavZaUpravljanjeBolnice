@@ -5,6 +5,7 @@ A JavaFX-based hospital management application demonstrating advanced Java progr
 ## Purpose
 
 This project showcases various Java capabilities including:
+
 - Object-oriented design patterns
 - JavaFX GUI development
 - File I/O (JSON, XML, Binary)
@@ -25,18 +26,18 @@ This project showcases various Java capabilities including:
 ### Data Management
 
 - **JSON Persistence**: Automatic data loading/saving
-  - `hospitals.json` - Hospital records
-  - `doctors.json` - Doctor information
-  - `patients.json` - Patient data
-  - `appointments.json` - Appointment schedules
+    - `hospitals.json` - Hospital records
+    - `doctors.json` - Doctor information
+    - `patients.json` - Patient data
+    - `appointments.json` - Appointment schedules
 
 - **Backup System**: Binary serialization for data backup
-  - Create: Save complete system state to `backup.bin`
-  - Restore: Recover data from previous backups
+    - Create: Save complete system state to `backup.bin`
+    - Restore: Recover data from previous backups
 
 - **Activity Logging**: XML-based user action tracking
-  - Logs all user operations to `user_actions.xml`
-  - View formatted logs without XML tags
+    - Logs all user operations to `user_actions.xml`
+    - View formatted logs without XML tags
 
 ### Design Patterns
 
@@ -57,15 +58,16 @@ This project showcases various Java capabilities including:
 ## Running the Application
 
 ### Prerequisites
+
 - Java 25 or higher
 - Maven 3.6+
-
 
 ## Application Screens
 
 ### Main Menu
+
 - Search Hospitals
-- Search Doctors  
+- Search Doctors
 - Search Patients
 - Search Appointments
 - Create Backup
@@ -76,14 +78,16 @@ This project showcases various Java capabilities including:
 ### Search Functionality
 
 Each search screen allows filtering by:
+
 - **Hospitals**: Name, ID
-- **Doctors**: Name, specialization, ID  
+- **Doctors**: Name, specialization, ID
 - **Patients**: Name, condition, ID
 - **Appointments**: Doctor name, patient name, date/time, ID
 
 ## Data Files
 
 The application uses these files:
+
 - `hospitals.json` - Hospital data
 - `doctors.json` - Doctor records
 - `patients.json` - Patient information

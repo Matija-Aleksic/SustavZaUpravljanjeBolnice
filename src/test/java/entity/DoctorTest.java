@@ -1,10 +1,18 @@
 package entity;
 
 import org.junit.jupiter.api.Test;
-import java.time.LocalDate;
-import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+/**
+ * The type Doctor test.
+ */
 class DoctorTest {
+    /**
+     * Calculate pay includes age bonus.
+     */
     @Test
     void calculatePay_includesAgeBonus() {
         Doctor d = new Doctor(1, "Ana", "Ivic", LocalDate.now().minusYears(10), "Pediatrija", 2000);
@@ -12,6 +20,9 @@ class DoctorTest {
         assertEquals(2000 + 10 * 50, pay, 0.001);
     }
 
+    /**
+     * Gets base salary returns constructor value.
+     */
     @Test
     void getBaseSalary_returnsConstructorValue() {
         Doctor d = new Doctor(2, "Marko", "Peric", LocalDate.now(), "Opća", 1500);

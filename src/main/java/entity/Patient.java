@@ -22,21 +22,27 @@ public final class Patient extends Person implements Payable {
      *
      * @return the condition
      */
-    public ConditionStatus getCondition() { return condition; }
+    public ConditionStatus getCondition() {
+        return condition;
+    }
 
     /**
      * Gets insurance number.
      *
      * @return the insurance number
      */
-    public String getInsuranceNumber() { return insuranceNumber; }
+    public String getInsuranceNumber() {
+        return insuranceNumber;
+    }
 
     /**
-     * Gets condition name as String.
+     * Gets condition name.
      *
      * @return the condition name
      */
-    public String getConditionName() { return condition != null ? condition.name() : ""; }
+    public String getConditionName() {
+        return condition != null ? condition.name() : "";
+    }
 
     @Override
     public double calculatePay() {
@@ -86,6 +92,13 @@ public final class Patient extends Person implements Payable {
             this.condition = ConditionStatus.valueOf(condition);
             return this;
         }
+
+        /**
+         * Condition builder.
+         *
+         * @param condition the condition
+         * @return the builder
+         */
         public Builder condition(ConditionStatus condition) {
             this.condition = condition;
             return this;

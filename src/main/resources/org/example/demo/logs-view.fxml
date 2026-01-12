@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.demo.LogsController">
+    <top>
+        <Label text="User Action Logs" style="-fx-font-size: 18px; -fx-font-weight: bold;"
+               BorderPane.alignment="CENTER"/>
+    </top>
+    <center>
+        <TableView fx:id="logsTable" prefHeight="400.0" prefWidth="600.0">
+            <columns>
+                <TableColumn fx:id="timestampColumn" text="Timestamp" prefWidth="160.0"/>
+                <TableColumn fx:id="nameColumn" text="Action" prefWidth="160.0"/>
+                <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="280.0"/>
+            </columns>
+        </TableView>
+    </center>
+    <bottom>
+        <HBox spacing="10.0" alignment="CENTER" BorderPane.alignment="CENTER">
+            <Button text="Delete Logs" onAction="#onDeleteLogs"/>
+            <Button text="Close" onAction="#onClose"/>
+        </HBox>
+    </bottom>
+</BorderPane>
+

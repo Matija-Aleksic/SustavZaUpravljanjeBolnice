@@ -6,7 +6,7 @@ import javafx.scene.control.ButtonType;
 import java.util.Optional;
 
 /**
- * Utility class for displaying JavaFX dialogs
+ * The type Dialog utils.
  */
 public class DialogUtils {
 
@@ -15,9 +15,10 @@ public class DialogUtils {
     }
 
     /**
-     * Show error dialog with message
-     * @param title dialog title
-     * @param message error message
+     * Show error.
+     *
+     * @param title   the title
+     * @param message the message
      */
     public static void showError(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -29,9 +30,10 @@ public class DialogUtils {
     }
 
     /**
-     * Show info dialog with message
-     * @param title dialog title
-     * @param message info message
+     * Show info.
+     *
+     * @param title   the title
+     * @param message the message
      */
     public static void showInfo(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -43,9 +45,10 @@ public class DialogUtils {
     }
 
     /**
-     * Show warning dialog with message
-     * @param title dialog title
-     * @param message warning message
+     * Show warning.
+     *
+     * @param title   the title
+     * @param message the message
      */
     public static void showWarning(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -57,10 +60,11 @@ public class DialogUtils {
     }
 
     /**
-     * Show confirmation dialog
-     * @param title dialog title
-     * @param message confirmation message
-     * @return true if user confirmed
+     * Show confirmation boolean.
+     *
+     * @param title   the title
+     * @param message the message
+     * @return the boolean
      */
     public static boolean showConfirmation(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

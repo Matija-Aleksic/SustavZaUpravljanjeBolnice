@@ -2,10 +2,11 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.demo.PatientAddController" alignment="CENTER" spacing="10.0">
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.demo.PatientAddController" alignment="CENTER"
+      spacing="10.0">
     <padding>
         <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
     </padding>

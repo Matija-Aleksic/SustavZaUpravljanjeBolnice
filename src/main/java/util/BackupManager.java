@@ -11,7 +11,7 @@ import java.io.*;
 import java.util.List;
 
 /**
- * Utility class for creating and restoring binary backups
+ * The type Backup manager.
  */
 public class BackupManager {
     private static final Logger logger = LoggerFactory.getLogger(BackupManager.class);
@@ -22,7 +22,7 @@ public class BackupManager {
     }
 
     /**
-     * Create a backup of all data to a binary file
+     * Create backup.
      *
      * @param hospitals    the hospitals
      * @param doctors      the doctors
@@ -42,9 +42,9 @@ public class BackupManager {
     }
 
     /**
-     * Restore data from backup file
+     * Restore backup backup data.
      *
-     * @return the backup data or null if error occurs
+     * @return the backup data
      */
     public static BackupData restoreBackup() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(BACKUP_FILE))) {
@@ -58,20 +58,20 @@ public class BackupManager {
     }
 
     /**
-     * Check if backup file exists
+     * Backup exists boolean.
      *
-     * @return true if backup exists
+     * @return the boolean
      */
     public static boolean backupExists() {
         return new File(BACKUP_FILE).exists();
     }
 
     /**
-         * Data container for backup
-         */
-        public record BackupData(List<Hospital> hospitals, List<Doctor> doctors, List<Patient> patients,
-                                 List<Appointment> appointments) implements Serializable {
-            private static final long serialVersionUID = 1L;
+     * The type Backup data.
+     */
+    public record BackupData(List<Hospital> hospitals, List<Doctor> doctors, List<Patient> patients,
+                             List<Appointment> appointments) implements Serializable {
+        private static final long serialVersionUID = 1L;
 
     }
 }

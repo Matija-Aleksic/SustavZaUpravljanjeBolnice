@@ -14,7 +14,7 @@ import util.XmlLogger;
 import java.util.List;
 
 /**
- * Controller for doctor search screen
+ * The type Doctor search controller.
  */
 public class DoctorSearchController {
 
@@ -47,6 +47,9 @@ public class DoctorSearchController {
 
     private List<Doctor> allDoctors;
 
+    /**
+     * Initialize.
+     */
     @FXML
     public void initialize() {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -59,6 +62,9 @@ public class DoctorSearchController {
         XmlLogger.logAction("DOCTOR_SEARCH_OPENED", "Doctor search screen opened");
     }
 
+    /**
+     * On search.
+     */
     @FXML
     protected void onSearch() {
         try {
@@ -67,18 +73,18 @@ public class DoctorSearchController {
             String idQuery = idField.getText().trim();
 
             List<Doctor> filtered = allDoctors.stream()
-                .filter(d -> nameQuery.isEmpty() ||
-                    d.getFirstName().toLowerCase().contains(nameQuery) ||
-                    d.getFullName().toLowerCase().contains(nameQuery))
-                .filter(d -> specQuery.isEmpty() ||
-                    d.getSpecialization().toLowerCase().contains(specQuery))
-                .filter(d -> idQuery.isEmpty() || String.valueOf(d.getId()).equals(idQuery))
+                    .filter(d -> nameQuery.isEmpty() ||
+                            d.getFirstName().toLowerCase().contains(nameQuery) ||
+                            d.getFullName().toLowerCase().contains(nameQuery))
+                    .filter(d -> specQuery.isEmpty() ||
+                            d.getSpecialization().toLowerCase().contains(specQuery))
+                    .filter(d -> idQuery.isEmpty() || String.valueOf(d.getId()).equals(idQuery))
                     .toList();
 
             doctorTable.setItems(FXCollections.observableArrayList(filtered));
             XmlLogger.logAction("DOCTOR_SEARCH",
-                String.format("Searched doctors: name=%s, spec=%s, id=%s, found=%d",
-                    nameQuery, specQuery, idQuery, filtered.size()));
+                    String.format("Searched doctors: name=%s, spec=%s, id=%s, found=%d",
+                            nameQuery, specQuery, idQuery, filtered.size()));
 
             if (filtered.isEmpty()) {
                 DialogUtils.showInfo("Search Results", "No doctors found matching the criteria");
@@ -88,6 +94,9 @@ public class DoctorSearchController {
         }
     }
 
+    /**
+     * On clear.
+     */
     @FXML
     protected void onClear() {
         nameField.clear();

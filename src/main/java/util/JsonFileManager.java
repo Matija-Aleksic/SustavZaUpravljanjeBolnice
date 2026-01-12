@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Utility class for managing JSON file operations
+ * The type Json file manager.
  */
 public class JsonFileManager {
     private static final Logger logger = LoggerFactory.getLogger(JsonFileManager.class);
@@ -30,11 +30,11 @@ public class JsonFileManager {
     }
 
     /**
-     * Save a list of objects to a JSON file
+     * Save to json.
      *
+     * @param <T>      the type parameter
      * @param filePath the file path
-     * @param data     the data to save
-     * @param <T>      the type of objects
+     * @param data     the data
      */
     public static <T> void saveToJson(String filePath, List<T> data) {
         try (Writer writer = new FileWriter(filePath)) {
@@ -46,12 +46,12 @@ public class JsonFileManager {
     }
 
     /**
-     * Load a list of objects from a JSON file
+     * Load from json list.
      *
+     * @param <T>      the type parameter
      * @param filePath the file path
-     * @param type     the type of objects
-     * @param <T>      the type of objects
-     * @return the list of objects
+     * @param type     the type
+     * @return the list
      */
     public static <T> List<T> loadFromJson(String filePath, Type type) {
         try {
@@ -72,9 +72,9 @@ public class JsonFileManager {
     }
 
     /**
-     * Get the Gson instance
+     * Gets gson.
      *
-     * @return the Gson instance
+     * @return the gson
      */
     public static Gson getGson() {
         return gson;

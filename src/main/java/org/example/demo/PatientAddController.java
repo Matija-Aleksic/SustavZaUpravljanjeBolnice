@@ -1,5 +1,7 @@
 package org.example.demo;
 
+import entity.ConditionStatus;
+import entity.Patient;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -8,23 +10,36 @@ import javafx.stage.Stage;
 import util.DataManager;
 import util.DialogUtils;
 import util.XmlLogger;
-import entity.ConditionStatus;
-import entity.Patient;
+
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * The type Patient add controller.
+ */
 public class PatientAddController {
-    @FXML private TextField firstNameField;
-    @FXML private TextField lastNameField;
-    @FXML private ComboBox<ConditionStatus> conditionComboBox;
-    @FXML private TextField insuranceField;
-    @FXML private DatePicker dateOfBirthPicker;
+    @FXML
+    private TextField firstNameField;
+    @FXML
+    private TextField lastNameField;
+    @FXML
+    private ComboBox<ConditionStatus> conditionComboBox;
+    @FXML
+    private TextField insuranceField;
+    @FXML
+    private DatePicker dateOfBirthPicker;
 
+    /**
+     * Initialize.
+     */
     @FXML
     public void initialize() {
         conditionComboBox.getItems().setAll(ConditionStatus.values());
     }
 
+    /**
+     * On save.
+     */
     @FXML
     protected void onSave() {
         String firstName = firstNameField.getText();
@@ -39,9 +54,9 @@ public class PatientAddController {
         try {
             int id = getNextPatientId();
             Patient patient = new Patient.Builder(id, firstName, lastName, dob)
-                .condition(condition)
-                .insuranceNumber(insurance)
-                .build();
+                    .condition(condition)
+                    .insuranceNumber(insurance)
+                    .build();
             DataManager.addPatient(patient);
             XmlLogger.logAction("ADD_PATIENT", "Added patient: " + firstName + " " + lastName);
             DialogUtils.showInfo("Success", "Patient added successfully.");
@@ -58,6 +73,9 @@ public class PatientAddController {
         return patients.stream().mapToInt(Patient::getId).max().orElse(0) + 1;
     }
 
+    /**
+     * On cancel.
+     */
     @FXML
     protected void onCancel() {
         closeWindow();

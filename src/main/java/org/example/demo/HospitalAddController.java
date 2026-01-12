@@ -1,17 +1,25 @@
 package org.example.demo;
 
+import entity.Hospital;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import util.DataManager;
 import util.DialogUtils;
 import util.XmlLogger;
-import entity.Hospital;
+
 import java.util.List;
 
+/**
+ * The type Hospital add controller.
+ */
 public class HospitalAddController {
-    @FXML private TextField nameField;
+    @FXML
+    private TextField nameField;
 
+    /**
+     * On save.
+     */
     @FXML
     protected void onSave() {
         String name = nameField.getText();
@@ -36,6 +44,9 @@ public class HospitalAddController {
         return hospitals.stream().mapToInt(Hospital::getId).max().orElse(0) + 1;
     }
 
+    /**
+     * On cancel.
+     */
     @FXML
     protected void onCancel() {
         closeWindow();

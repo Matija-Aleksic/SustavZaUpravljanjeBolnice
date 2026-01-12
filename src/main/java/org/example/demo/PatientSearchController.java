@@ -15,7 +15,7 @@ import java.util.List;
 
 
 /**
- * Controller for patient search screen
+ * The type Patient search controller.
  */
 public class PatientSearchController {
 
@@ -48,6 +48,9 @@ public class PatientSearchController {
 
     private List<Patient> allPatients;
 
+    /**
+     * Initialize.
+     */
     @FXML
     public void initialize() {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -60,6 +63,9 @@ public class PatientSearchController {
         XmlLogger.logAction("PATIENT_SEARCH_OPENED", "Patient search screen opened");
     }
 
+    /**
+     * On search.
+     */
     @FXML
     protected void onSearch() {
         try {
@@ -68,18 +74,18 @@ public class PatientSearchController {
             String idQuery = idField.getText().trim();
 
             List<Patient> filtered = allPatients.stream()
-                .filter(p -> nameQuery.isEmpty() ||
-                    p.getFirstName().toLowerCase().contains(nameQuery) ||
-                    p.getFullName().toLowerCase().contains(nameQuery))
-                .filter(p -> condQuery.isEmpty() ||
-                    p.getCondition() != null && p.getCondition().name().toLowerCase().contains(condQuery))
-                .filter(p -> idQuery.isEmpty() || String.valueOf(p.getId()).equals(idQuery))
-                .toList();
+                    .filter(p -> nameQuery.isEmpty() ||
+                            p.getFirstName().toLowerCase().contains(nameQuery) ||
+                            p.getFullName().toLowerCase().contains(nameQuery))
+                    .filter(p -> condQuery.isEmpty() ||
+                            p.getCondition() != null && p.getCondition().name().toLowerCase().contains(condQuery))
+                    .filter(p -> idQuery.isEmpty() || String.valueOf(p.getId()).equals(idQuery))
+                    .toList();
 
             patientTable.setItems(FXCollections.observableArrayList(filtered));
             XmlLogger.logAction("PATIENT_SEARCH",
-                String.format("Searched patients: name=%s, condition=%s, id=%s, found=%d",
-                    nameQuery, condQuery, idQuery, filtered.size()));
+                    String.format("Searched patients: name=%s, condition=%s, id=%s, found=%d",
+                            nameQuery, condQuery, idQuery, filtered.size()));
 
             if (filtered.isEmpty()) {
                 DialogUtils.showInfo("Search Results", "No patients found matching the criteria");
@@ -89,6 +95,9 @@ public class PatientSearchController {
         }
     }
 
+    /**
+     * On clear.
+     */
     @FXML
     protected void onClear() {
         nameField.clear();

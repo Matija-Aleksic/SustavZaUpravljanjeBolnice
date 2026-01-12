@@ -91,6 +91,11 @@ public abstract class Person implements Serializable {
     }
 
 
+    /**
+     * Gets age.
+     *
+     * @return the age
+     */
     public int getAge() {
         return Period.between(dateOfBirth, LocalDate.now()).getYears();
     }

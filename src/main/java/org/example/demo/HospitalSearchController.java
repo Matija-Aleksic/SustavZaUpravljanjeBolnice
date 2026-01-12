@@ -15,7 +15,7 @@ import java.util.List;
 
 
 /**
- * Controller for hospital search screen
+ * The type Hospital search controller.
  */
 public class HospitalSearchController {
 
@@ -36,6 +36,9 @@ public class HospitalSearchController {
 
     private List<Hospital> allHospitals;
 
+    /**
+     * Initialize.
+     */
     @FXML
     public void initialize() {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -45,6 +48,9 @@ public class HospitalSearchController {
         XmlLogger.logAction("HOSPITAL_SEARCH_OPENED", "Hospital search screen opened");
     }
 
+    /**
+     * On search.
+     */
     @FXML
     protected void onSearch() {
         try {
@@ -52,14 +58,14 @@ public class HospitalSearchController {
             String idQuery = idField.getText().trim();
 
             List<Hospital> filtered = allHospitals.stream()
-                .filter(h -> nameQuery.isEmpty() || h.getName().toLowerCase().contains(nameQuery))
-                .filter(h -> idQuery.isEmpty() || String.valueOf(h.getId()).equals(idQuery))
-                .toList();
+                    .filter(h -> nameQuery.isEmpty() || h.getName().toLowerCase().contains(nameQuery))
+                    .filter(h -> idQuery.isEmpty() || String.valueOf(h.getId()).equals(idQuery))
+                    .toList();
 
             hospitalTable.setItems(FXCollections.observableArrayList(filtered));
             XmlLogger.logAction("HOSPITAL_SEARCH",
-                String.format("Searched hospitals: name=%s, id=%s, found=%d",
-                    nameQuery, idQuery, filtered.size()));
+                    String.format("Searched hospitals: name=%s, id=%s, found=%d",
+                            nameQuery, idQuery, filtered.size()));
 
             if (filtered.isEmpty()) {
                 DialogUtils.showInfo("Search Results", "No hospitals found matching the criteria");
@@ -69,6 +75,9 @@ public class HospitalSearchController {
         }
     }
 
+    /**
+     * On clear.
+     */
     @FXML
     protected void onClear() {
         nameField.clear();

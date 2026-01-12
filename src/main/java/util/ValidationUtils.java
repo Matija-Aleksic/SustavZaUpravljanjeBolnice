@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 /**
- * Utility class for input validation
+ * The type Validation utils.
  */
 public class ValidationUtils {
 
@@ -15,10 +15,10 @@ public class ValidationUtils {
     }
 
     /**
-     * Validate that string is not empty
-     * @param value string to validate
-     * @param fieldName field name for error message
-     * @throws IllegalArgumentException if validation fails
+     * Validate not empty.
+     *
+     * @param value     the value
+     * @param fieldName the field name
      */
     public static void validateNotEmpty(String value, String fieldName) {
         if (value == null || value.trim().isEmpty()) {
@@ -27,10 +27,10 @@ public class ValidationUtils {
     }
 
     /**
-     * Validate that number is positive
-     * @param value number to validate
-     * @param fieldName field name for error message
-     * @throws IllegalArgumentException if validation fails
+     * Validate positive.
+     *
+     * @param value     the value
+     * @param fieldName the field name
      */
     public static void validatePositive(double value, String fieldName) {
         if (value <= 0) {
@@ -39,10 +39,10 @@ public class ValidationUtils {
     }
 
     /**
-     * Validate that number is positive
-     * @param value number to validate
-     * @param fieldName field name for error message
-     * @throws IllegalArgumentException if validation fails
+     * Validate positive.
+     *
+     * @param value     the value
+     * @param fieldName the field name
      */
     public static void validatePositive(int value, String fieldName) {
         if (value <= 0) {
@@ -51,11 +51,11 @@ public class ValidationUtils {
     }
 
     /**
-     * Parse date from string
-     * @param dateStr date string
-     * @param pattern date pattern
-     * @return parsed LocalDate
-     * @throws IllegalArgumentException if parsing fails
+     * Parse date local date.
+     *
+     * @param dateStr the date str
+     * @param pattern the pattern
+     * @return the local date
      */
     public static LocalDate parseDate(String dateStr, String pattern) {
         try {
@@ -67,11 +67,11 @@ public class ValidationUtils {
     }
 
     /**
-     * Parse date-time from string
-     * @param dateTimeStr date-time string
-     * @param pattern date-time pattern
-     * @return parsed LocalDateTime
-     * @throws IllegalArgumentException if parsing fails
+     * Parse date time local date time.
+     *
+     * @param dateTimeStr the date time str
+     * @param pattern     the pattern
+     * @return the local date time
      */
     public static LocalDateTime parseDateTime(String dateTimeStr, String pattern) {
         try {
@@ -83,11 +83,11 @@ public class ValidationUtils {
     }
 
     /**
-     * Parse integer from string
-     * @param str string to parse
-     * @param fieldName field name for error message
-     * @return parsed integer
-     * @throws IllegalArgumentException if parsing fails
+     * Parse int int.
+     *
+     * @param str       the str
+     * @param fieldName the field name
+     * @return the int
      */
     public static int parseInt(String str, String fieldName) {
         try {
@@ -98,11 +98,11 @@ public class ValidationUtils {
     }
 
     /**
-     * Parse double from string
-     * @param str string to parse
-     * @param fieldName field name for error message
-     * @return parsed double
-     * @throws IllegalArgumentException if parsing fails
+     * Parse double double.
+     *
+     * @param str       the str
+     * @param fieldName the field name
+     * @return the double
      */
     public static double parseDouble(String str, String fieldName) {
         try {

@@ -46,6 +46,11 @@ public final class Doctor extends Person implements Payable {
         return "Dr. %s (%s, plaća: %.2f€)".formatted(getFullName(), specialization, calculatePay());
     }
 
+    /**
+     * Gets base salary.
+     *
+     * @return the base salary
+     */
     public double getBaseSalary() {
         return baseSalary;
     }
