@@ -22,4 +22,11 @@ public record Appointment(int id, Doctor doctor, Patient patient, LocalDateTime 
     public String formattedDateTime(DateTimeFormatter formatter) {
         return dateTime.format(formatter);
     }
+
+    public int getId() {
+        return id();
+    }
+    public LocalDateTime getDateTime() {
+        return dateTime();
+    }
 }

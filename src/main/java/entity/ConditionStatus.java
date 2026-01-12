@@ -4,5 +4,7 @@ public enum ConditionStatus {
     STABLE,
     CRITICAL,
     RECOVERING,
-    UNKNOWN
+    UNKNOWN,
+    RELEASED
+
 }

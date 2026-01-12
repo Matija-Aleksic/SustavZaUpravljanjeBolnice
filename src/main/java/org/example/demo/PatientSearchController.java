@@ -72,7 +72,7 @@ public class PatientSearchController {
                     p.getFirstName().toLowerCase().contains(nameQuery) ||
                     p.getFullName().toLowerCase().contains(nameQuery))
                 .filter(p -> condQuery.isEmpty() ||
-                    p.getCondition().toLowerCase().contains(condQuery))
+                    p.getCondition() != null && p.getCondition().name().toLowerCase().contains(condQuery))
                 .filter(p -> idQuery.isEmpty() || String.valueOf(p.getId()).equals(idQuery))
                 .toList();
 
@@ -104,4 +104,3 @@ public class PatientSearchController {
         patientTable.setItems(FXCollections.observableArrayList(allPatients));
     }
 }
-

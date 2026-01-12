@@ -12,7 +12,7 @@ class PatientTest {
                 .insuranceNumber("INS123")
                 .build();
         assertEquals("Ivana Kos", p.getFullName());
-        assertEquals("RECOVERING", p.getCondition());
+        assertEquals(ConditionStatus.RECOVERING, p.getCondition());
         assertEquals("INS123", p.getInsuranceNumber());
     }
 
@@ -34,4 +34,3 @@ class PatientTest {
         assertEquals(50.0, p.calculatePay(), 0.001);
     }
 }
-

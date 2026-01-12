@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public final class Patient extends Person implements Payable {
     private static final double OPERATION_COST = 200.0; // extracted constants for Sonar
     private static final double DEFAULT_COST = 50.0;
-    private final String condition;
+    private final ConditionStatus condition;
     private final String insuranceNumber;
 
     private Patient(Builder builder) {
@@ -22,7 +22,7 @@ public final class Patient extends Person implements Payable {
      *
      * @return the condition
      */
-    public String getCondition() { return condition; }
+    public ConditionStatus getCondition() { return condition; }
 
     /**
      * Gets insurance number.
@@ -31,9 +31,16 @@ public final class Patient extends Person implements Payable {
      */
     public String getInsuranceNumber() { return insuranceNumber; }
 
+    /**
+     * Gets condition name as String.
+     *
+     * @return the condition name
+     */
+    public String getConditionName() { return condition != null ? condition.name() : ""; }
+
     @Override
     public double calculatePay() {
-        return condition != null && condition.toLowerCase().contains("operacija") ? OPERATION_COST : DEFAULT_COST;
+        return condition != null && condition.name().toLowerCase().contains("operacija") ? OPERATION_COST : DEFAULT_COST;
     }
 
     @Override
@@ -51,8 +58,8 @@ public final class Patient extends Person implements Payable {
         private final String firstName;
         private final String lastName;
         private final LocalDate dateOfBirth;
-        private  String condition;
-        private  String insuranceNumber;
+        private ConditionStatus condition;
+        private String insuranceNumber;
 
         /**
          * Instantiates a new Builder.
@@ -76,6 +83,10 @@ public final class Patient extends Person implements Payable {
          * @return the builder
          */
         public Builder condition(String condition) {
+            this.condition = ConditionStatus.valueOf(condition);
+            return this;
+        }
+        public Builder condition(ConditionStatus condition) {
             this.condition = condition;
             return this;
         }

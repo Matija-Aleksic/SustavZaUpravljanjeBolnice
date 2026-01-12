@@ -8,7 +8,7 @@
     "dateOfBirth": "1990-01-01"
   },
   {
-    "condition": "Hypertension",
+    "condition": "CRITICAL",
     "insuranceNumber": "INS002",
     "id": 2,
     "firstName": "David",
@@ -16,7 +16,7 @@
     "dateOfBirth": "1975-06-10"
   },
   {
-    "condition": "Diabetes Type 2",
+    "condition": "RECOVERING",
     "insuranceNumber": "INS003",
     "id": 3,
     "firstName": "Lisa",
@@ -24,7 +24,7 @@
     "dateOfBirth": "1988-09-25"
   },
   {
-    "condition": "Operacija - Appendektomija",
+    "condition": "RELEASED",
     "insuranceNumber": "INS004",
     "id": 4,
     "firstName": "James",
@@ -32,7 +32,7 @@
     "dateOfBirth": "1995-12-05"
   },
   {
-    "condition": "Migrena",
+    "condition": "CRITICAL",
     "insuranceNumber": "INS005",
     "id": 5,
     "firstName": "Emma",
