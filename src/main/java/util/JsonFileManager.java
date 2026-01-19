@@ -30,7 +30,7 @@ public class JsonFileManager {
     }
 
     /**
-     * Save to json.
+     * Save to JSON.
      *
      * @param <T>      the type parameter
      * @param filePath the file path
@@ -46,7 +46,7 @@ public class JsonFileManager {
     }
 
     /**
-     * Load from json list.
+     * Load from JSON list.
      *
      * @param <T>      the type parameter
      * @param filePath the file path

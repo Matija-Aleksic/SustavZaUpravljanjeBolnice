@@ -159,7 +159,6 @@ public class MainMenuController {
 
     private void openWindow(String fxmlFile, String title) {
         try {
-            // Use absolute path for FXML files in resources
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/demo/" + fxmlFile));
             Scene scene = new Scene(loader.load());
             Stage stage = new Stage();
