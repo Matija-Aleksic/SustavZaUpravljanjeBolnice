@@ -4,11 +4,13 @@ import entity.Appointment;
 import entity.Doctor;
 import entity.Hospital;
 import entity.Patient;
+import entity.repository.DataRepositoryFactory;
+import entity.repository.db.DbRepositoryFactory;
+import entity.repository.file.FileRepositoryFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import entity.repository.DataRepositoryFactory;
-import entity.repository.file.FileRepositoryFactory;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -17,14 +19,88 @@ import java.util.List;
 public class DataManager {
     private static final Logger logger = LoggerFactory.getLogger(DataManager.class);
 
-    private static DataRepositoryFactory repositoryFactory = new FileRepositoryFactory();
+    private static DataRepositoryFactory repositoryFactory;
+    private static boolean useDatabase = true;
+
+    static {
+        initializeDefaultRepository();
+    }
 
     private DataManager() {
         throw new IllegalStateException("Utility class");
     }
 
-    public static void setRepositoryFactory(DataRepositoryFactory factory) {
+    /**
+     * Initialize the default repository (database by default).
+     */
+    private static void initializeDefaultRepository() {
+        if (useDatabase) {
+            try {
+                repositoryFactory = new DbRepositoryFactory();
+                DatabaseManager.initializeSchema();
+                logger.info("Database repository initialized");
+            } catch (SQLException e) {
+                logger.error("Failed to initialize database repository, falling back to file repository", e);
+                repositoryFactory = new FileRepositoryFactory();
+                useDatabase = false;
+                logger.info("File repository initialized as fallback");
+            }
+        } else {
+            repositoryFactory = new FileRepositoryFactory();
+            logger.info("File repository initialized");
+        }
+    }
+
+    /**
+     * Switch to database repository.
+     */
+    public static synchronized void switchToDatabase() {
+        if (useDatabase && repositoryFactory instanceof DbRepositoryFactory) {
+            logger.info("Already using database repository");
+            return;
+        }
+        try {
+            repositoryFactory = new DbRepositoryFactory();
+            DatabaseManager.initializeSchema();
+            useDatabase = true;
+            logger.info("Switched to database repository");
+        } catch (SQLException e) {
+            logger.error("Failed to switch to database repository", e);
+            throw new RuntimeException("Failed to switch to database repository", e);
+        }
+    }
+
+    /**
+     * Switch to file repository.
+     */
+    public static synchronized void switchToFileRepository() {
+        if (!useDatabase && repositoryFactory instanceof FileRepositoryFactory) {
+            logger.info("Already using file repository");
+            return;
+        }
+        repositoryFactory = new FileRepositoryFactory();
+        useDatabase = false;
+        logger.info("Switched to file repository");
+    }
+
+    /**
+     * Check if currently using database repository.
+     *
+     * @return true if using database, false if using file repository
+     */
+    public static boolean isUsingDatabase() {
+        return useDatabase;
+    }
+
+    /**
+     * Set the repository factory directly.
+     *
+     * @param factory the factory to use
+     */
+    public static synchronized void setRepositoryFactory(DataRepositoryFactory factory) {
         repositoryFactory = factory;
+        useDatabase = factory instanceof DbRepositoryFactory;
+        logger.info("Repository factory set to: {}", factory.getClass().getSimpleName());
     }
 
     /**

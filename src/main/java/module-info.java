@@ -8,8 +8,14 @@ module org.example.demo {
 
     opens org.example.demo to javafx.fxml;
     opens entity to com.google.gson, javafx.base;
+    opens util to com.google.gson;
 
     exports org.example.demo;
+    exports util;
+    exports entity;
+    exports entity.repository;
+    exports entity.repository.db;
+    exports entity.repository.file;
     exports org.example.demo.doctor;
     opens org.example.demo.doctor to javafx.fxml;
     exports org.example.demo.appointment;
