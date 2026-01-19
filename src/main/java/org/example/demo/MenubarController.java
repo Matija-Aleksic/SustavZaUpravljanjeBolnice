@@ -6,9 +6,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import util.BackupManager;
-import util.DataManager;
 import util.DialogUtils;
 import util.XmlLogger;
+import entity.repository.HospitalRepository;
+import entity.repository.DoctorRepository;
+import entity.repository.PatientRepository;
+import entity.repository.AppointmentRepository;
+import entity.repository.file.HospitalFileRepository;
+import entity.repository.file.DoctorFileRepository;
+import entity.repository.file.PatientFileRepository;
+import entity.repository.file.AppointmentFileRepository;
 
 import java.io.IOException;
 
@@ -18,6 +25,11 @@ import java.io.IOException;
 public class MenubarController {
     @FXML
     private javafx.scene.layout.BorderPane mainBorderPane;
+
+    private final HospitalRepository hospitalRepo = new HospitalFileRepository();
+    private final DoctorRepository doctorRepo = new DoctorFileRepository();
+    private final PatientRepository patientRepo = new PatientFileRepository();
+    private final AppointmentRepository appointmentRepo = new AppointmentFileRepository();
 
     /**
      * On search hospitals.
@@ -98,8 +110,12 @@ public class MenubarController {
     protected void onCreateBackup() {
         XmlLogger.logAction("MENU_BACKUP", "User requested backup creation");
         try {
-            DataManager.AllData data = DataManager.loadAllData();
-            BackupManager.createBackup(data.hospitals(), data.doctors(), data.patients(), data.appointments());
+            BackupManager.createBackup(
+                hospitalRepo.findAll(),
+                doctorRepo.findAll(),
+                patientRepo.findAll(),
+                appointmentRepo.findAll()
+            );
             DialogUtils.showInfo("Backup", "Backup created successfully!");
         } catch (Exception e) {
             DialogUtils.showError("Backup Error", "Failed to create backup: " + e.getMessage());
@@ -116,10 +132,13 @@ public class MenubarController {
             try {
                 BackupManager.BackupData backup = BackupManager.restoreBackup();
                 if (backup != null) {
-                    DataManager.saveAllData(backup.hospitals(), backup.doctors(), backup.patients(), backup.appointments());
+                    hospitalRepo.saveAll(backup.hospitals());
+                    doctorRepo.saveAll(backup.doctors());
+                    patientRepo.saveAll(backup.patients());
+                    appointmentRepo.saveAll(backup.appointments());
                     DialogUtils.showInfo("Restore", "Backup restored successfully!");
                 } else {
-                    DialogUtils.showError("Restore Error", "Backup file not found or empty");
+                    DialogUtils.showError("Restore Error", "No backup found or failed to restore.");
                 }
             } catch (Exception e) {
                 DialogUtils.showError("Restore Error", "Failed to restore backup: " + e.getMessage());

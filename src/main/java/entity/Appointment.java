@@ -8,6 +8,10 @@ import java.time.format.DateTimeFormatter;
  * The type Appointment.
  */
 public record Appointment(int id, Doctor doctor, Patient patient, LocalDateTime dateTime) implements Serializable {
+    public Appointment {
+        if (id <= 0) throw new exception.NegativeValueException("ID mora biti pozitivan!");
+    }
+
     @Override
     public String toString() {
         return "Pregled #" + id + " | " + doctor + " -> " + patient + " u " + dateTime;

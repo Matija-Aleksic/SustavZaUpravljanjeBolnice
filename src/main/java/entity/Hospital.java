@@ -23,6 +23,7 @@ public class Hospital implements Serializable {
      * @param name the name
      */
     public Hospital(int id, String name) {
+        if (id <= 0) throw new exception.NegativeValueException("ID mora biti pozitivan!");
         this.id = id;
         this.name = name;
     }

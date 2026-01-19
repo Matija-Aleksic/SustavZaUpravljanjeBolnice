@@ -4,39 +4,39 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import util.DialogUtils;
 import util.XmlLogger;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * The type Logs controller.
  */
 public class LogsController {
     @FXML
-    private TableView<LogEntry> logsTable;
+    private TableView<Map<String, String>> logsTable;
     @FXML
-    private TableColumn<LogEntry, String> timestampColumn;
+    private TableColumn<Map<String, String>, String> timestampColumn;
     @FXML
-    private TableColumn<LogEntry, String> nameColumn;
+    private TableColumn<Map<String, String>, String> nameColumn;
     @FXML
-    private TableColumn<LogEntry, String> descriptionColumn;
+    private TableColumn<Map<String, String>, String> descriptionColumn;
 
     /**
      * Initialize.
      */
     @FXML
     public void initialize() {
-        timestampColumn.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        timestampColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().get("timestamp")));
+        nameColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().get("name")));
+        descriptionColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().get("description")));
         loadLogs();
     }
 
     private void loadLogs() {
-        List<LogEntry> logs = XmlLogger.getLogEntries();
+        List<Map<String, String>> logs = util.XmlLogger.getLogEntries();
         logsTable.setItems(FXCollections.observableArrayList(logs));
     }
 
@@ -45,9 +45,9 @@ public class LogsController {
      */
     @FXML
     protected void onDeleteLogs() {
-        XmlLogger.deleteLogs();
+        util.XmlLogger.deleteLogs();
         loadLogs();
-        DialogUtils.showInfo("Logs Deleted", "All logs have been deleted.");
+        util.DialogUtils.showInfo("Logs Deleted", "All logs have been deleted.");
     }
 
     /**
@@ -58,11 +58,4 @@ public class LogsController {
         Stage stage = (Stage) logsTable.getScene().getWindow();
         stage.close();
     }
-
-    /**
-     * The type Log entry.
-     */
-    public record LogEntry(String timestamp, String name, String description) {
-    }
 }
-

@@ -76,6 +76,7 @@ public final class Patient extends Person implements Payable {
          * @param dateOfBirth the date of birth
          */
         public Builder(int id, String firstName, String lastName, LocalDate dateOfBirth) {
+            if (id <= 0) throw new exception.NegativeValueException("ID mora biti pozitivan!");
             this.id = id;
             this.firstName = firstName;
             this.lastName = lastName;

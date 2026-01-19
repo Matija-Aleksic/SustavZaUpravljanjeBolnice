@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The type Json file manager.
+ * The type JSON file manager.
  */
 public class JsonFileManager {
     private static final Logger logger = LoggerFactory.getLogger(JsonFileManager.class);
@@ -80,4 +80,3 @@ public class JsonFileManager {
         return gson;
     }
 }
-

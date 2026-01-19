@@ -1,5 +1,8 @@
 package util;
 
+import exception.InvalidDateFormatException;
+import exception.InvalidNumberInputException;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -34,7 +37,7 @@ public class ValidationUtils {
      */
     public static void validatePositive(double value, String fieldName) {
         if (value <= 0) {
-            throw new IllegalArgumentException(fieldName + " must be positive");
+            throw new exception.NegativeValueException(fieldName + " must be positive");
         }
     }
 
@@ -46,7 +49,7 @@ public class ValidationUtils {
      */
     public static void validatePositive(int value, String fieldName) {
         if (value <= 0) {
-            throw new IllegalArgumentException(fieldName + " must be positive");
+            throw new exception.NegativeValueException(fieldName + " must be positive");
         }
     }
 
@@ -57,12 +60,12 @@ public class ValidationUtils {
      * @param pattern the pattern
      * @return the local date
      */
-    public static LocalDate parseDate(String dateStr, String pattern) {
+    public static LocalDate parseDate(String dateStr, String pattern) throws InvalidDateFormatException {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
             return LocalDate.parse(dateStr, formatter);
         } catch (DateTimeParseException _) {
-            throw new IllegalArgumentException("Invalid date format. Expected: " + pattern);
+            throw new exception.InvalidDateFormatException("Invalid date format. Expected: " + pattern);
         }
     }
 
@@ -73,12 +76,12 @@ public class ValidationUtils {
      * @param pattern     the pattern
      * @return the local date time
      */
-    public static LocalDateTime parseDateTime(String dateTimeStr, String pattern) {
+    public static LocalDateTime parseDateTime(String dateTimeStr, String pattern) throws InvalidDateFormatException {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
             return LocalDateTime.parse(dateTimeStr, formatter);
         } catch (DateTimeParseException _) {
-            throw new IllegalArgumentException("Invalid date-time format. Expected: " + pattern);
+            throw new exception.InvalidDateFormatException("Invalid date-time format. Expected: " + pattern);
         }
     }
 
@@ -89,11 +92,11 @@ public class ValidationUtils {
      * @param fieldName the field name
      * @return the int
      */
-    public static int parseInt(String str, String fieldName) {
+    public static int parseInt(String str, String fieldName) throws InvalidNumberInputException {
         try {
             return Integer.parseInt(str.trim());
         } catch (NumberFormatException _) {
-            throw new IllegalArgumentException(fieldName + " must be a valid integer");
+            throw new exception.InvalidNumberInputException(fieldName + " must be a valid integer");
         }
     }
 
@@ -104,12 +107,11 @@ public class ValidationUtils {
      * @param fieldName the field name
      * @return the double
      */
-    public static double parseDouble(String str, String fieldName) {
+    public static double parseDouble(String str, String fieldName) throws InvalidNumberInputException {
         try {
             return Double.parseDouble(str.trim());
         } catch (NumberFormatException _) {
-            throw new IllegalArgumentException(fieldName + " must be a valid number");
+            throw new exception.InvalidNumberInputException(fieldName + " must be a valid number");
         }
     }
 }
-

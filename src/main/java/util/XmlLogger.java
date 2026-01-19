@@ -17,64 +17,69 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 /**
- * The type Xml logger.
+ * XML Logger for user actions. Logs actions to user_actions.xml in UTF-8 encoding.
+ * Uses secure XML features and robust exception handling. Method names preserved for compatibility.
  */
 public class XmlLogger {
     private static final Logger logger = LoggerFactory.getLogger(XmlLogger.class);
     private static final String LOG_FILE = "user_actions.xml";
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    private static final String ACTION_TAG = "Action";
+    private static final String TIMESTAMP_TAG = "Timestamp";
+    private static final String NAME_TAG = "Name";
+    private static final String DESCRIPTION_TAG = "Description";
+    private static final String USER_ACTIONS_TAG = "UserActions";
+
     private XmlLogger() {
         throw new IllegalStateException("Utility class");
     }
 
     /**
-     * Log action.
-     *
-     * @param action      the action
-     * @param description the description
+     * Log action to XML file.
+     * @param action      the action name
+     * @param description the action description
      */
     public static void logAction(String action, String description) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc;
             Element root;
-
             File file = new File(LOG_FILE);
             if (file.exists()) {
                 doc = builder.parse(file);
                 root = doc.getDocumentElement();
             } else {
                 doc = builder.newDocument();
-                root = doc.createElement("UserActions");
+                root = doc.createElement(USER_ACTIONS_TAG);
                 doc.appendChild(root);
             }
-
-            Element actionElement = doc.createElement("Action");
-
-            Element timestampElement = doc.createElement("Timestamp");
+            Element actionElement = doc.createElement(ACTION_TAG);
+            Element timestampElement = doc.createElement(TIMESTAMP_TAG);
             timestampElement.setTextContent(LocalDateTime.now().format(formatter));
             actionElement.appendChild(timestampElement);
-
-            Element nameElement = doc.createElement("Name");
+            Element nameElement = doc.createElement(NAME_TAG);
             nameElement.setTextContent(action);
             actionElement.appendChild(nameElement);
-
-            Element descElement = doc.createElement("Description");
+            Element descElement = doc.createElement(DESCRIPTION_TAG);
             descElement.setTextContent(description);
             actionElement.appendChild(descElement);
-
             root.appendChild(actionElement);
-
-            writeXmlToFile(doc, LOG_FILE);
+            writeXmlToFile(doc);
             logger.debug("Action logged to XML: {}", action);
         } catch (ParserConfigurationException | IOException | org.xml.sax.SAXException e) {
             logger.error("Error logging action to XML", e);
@@ -82,86 +87,100 @@ public class XmlLogger {
     }
 
     /**
-     * Display logs.
+     * Display logs in the logger output.
      */
     public static void displayLogs() {
         try {
             File file = new File(LOG_FILE);
             if (!file.exists()) {
-                System.out.println("No logs found.");
+                logger.info("No logs found.");
                 return;
             }
-
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(file);
-
-            NodeList actionNodes = doc.getElementsByTagName("Action");
-            System.out.println("\n=== User Action Log ===");
-            System.out.println("Total actions: " + actionNodes.getLength());
-            System.out.println();
-
+            Document doc = safeParseXmlFile(file);
+            if (doc == null) return;
+            NodeList actionNodes = doc.getElementsByTagName(ACTION_TAG);
+            logger.info("=== User Action Log ===");
+            logger.info("Total actions: {}", actionNodes.getLength());
             for (int i = 0; i < actionNodes.getLength(); i++) {
                 Node actionNode = actionNodes.item(i);
                 if (actionNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element actionElement = (Element) actionNode;
-
-                    String timestamp = getElementText(actionElement, "Timestamp");
-                    String name = getElementText(actionElement, "Name");
-                    String description = getElementText(actionElement, "Description");
-
-                    System.out.printf("[%s] %s: %s%n", timestamp, name, description);
+                    String timestamp = getElementText(actionElement, TIMESTAMP_TAG);
+                    String name = getElementText(actionElement, NAME_TAG);
+                    String description = getElementText(actionElement, DESCRIPTION_TAG);
+                    logger.info("[{}] {}: {}", timestamp, name, description);
                 }
             }
         } catch (Exception e) {
             logger.error("Error displaying XML logs", e);
-            System.out.println("Error reading logs: " + e.getMessage());
         }
     }
 
     /**
-     * Gets log entries.
-     *
-     * @return the log entries
+     * Get log entries for UI display as a list of maps.
+     * @return list of maps with log fields
      */
-    public static List<org.example.demo.LogsController.LogEntry> getLogEntries() {
-        List<org.example.demo.LogsController.LogEntry> entries = new java.util.ArrayList<>();
+    public static List<Map<String, String>> getLogEntries() {
+        List<Map<String, String>> entries = new java.util.ArrayList<>();
+        File file = new File(LOG_FILE);
+        if (!file.exists()) return entries;
+        Document doc;
         try {
-            File file = new File(LOG_FILE);
-            if (!file.exists()) return entries;
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(file);
-            NodeList actionNodes = doc.getElementsByTagName("Action");
-            for (int i = 0; i < actionNodes.getLength(); i++) {
-                Node actionNode = actionNodes.item(i);
-                if (actionNode.getNodeType() == Node.ELEMENT_NODE) {
-                    Element actionElement = (Element) actionNode;
-                    String timestamp = getElementText(actionElement, "Timestamp");
-                    String name = getElementText(actionElement, "Name");
-                    String description = getElementText(actionElement, "Description");
-                    entries.add(new org.example.demo.LogsController.LogEntry(timestamp, name, description));
-                }
-            }
-        } catch (Exception e) {
+            doc = parseXmlFile(file);
+        } catch (ParserConfigurationException | IOException | org.xml.sax.SAXException e) {
             logger.error("Error reading XML logs", e);
+            return entries;
+        }
+        NodeList actionNodes = doc.getElementsByTagName(ACTION_TAG);
+        for (int i = 0; i < actionNodes.getLength(); i++) {
+            Node actionNode = actionNodes.item(i);
+            if (actionNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element actionElement = (Element) actionNode;
+                String timestamp = getElementText(actionElement, TIMESTAMP_TAG);
+                String name = getElementText(actionElement, NAME_TAG);
+                String description = getElementText(actionElement, DESCRIPTION_TAG);
+                Map<String, String> logMap = new java.util.HashMap<>();
+                logMap.put("timestamp", timestamp);
+                logMap.put("name", name);
+                logMap.put("description", description);
+                entries.add(logMap);
+            }
         }
         return entries;
     }
 
     /**
-     * Delete logs.
+     * Delete all logs (removes XML file).
      */
     public static void deleteLogs() {
         File file = new File(LOG_FILE);
         try {
-            if (file.exists()) java.nio.file.Files.delete(Path.of(LOG_FILE));
-        }
-        catch (IOException _){
-            logger.error("Error deleting XML logs");
+            if (file.exists()) Files.delete(Path.of(LOG_FILE));
+        } catch (IOException e) {
+            logger.error("Error deleting XML logs", e);
         }
     }
 
+    // Secure XML parsing
+    private static Document parseXmlFile(File file) throws ParserConfigurationException, IOException, org.xml.sax.SAXException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        return builder.parse(file);
+    }
+
+    private static Document safeParseXmlFile(File file) {
+        try {
+            return parseXmlFile(file);
+        } catch (ParserConfigurationException | IOException | org.xml.sax.SAXException e) {
+            logger.error("Error reading XML logs", e);
+            return null;
+        }
+    }
+
+    // Get text content of a tag
     private static String getElementText(Element parent, String tagName) {
         NodeList nodeList = parent.getElementsByTagName(tagName);
         if (nodeList.getLength() > 0) {
@@ -170,17 +189,19 @@ public class XmlLogger {
         return "";
     }
 
-    private static void writeXmlToFile(Document doc, String filePath) {
-        try {
+    // Write XML to file with UTF-8 encoding and indentation
+    private static void writeXmlToFile(Document doc) {
+        try (FileOutputStream fos = new FileOutputStream(LOG_FILE)) {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            transformerFactory.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, true);
             Transformer transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File(filePath));
+            StreamResult result = new StreamResult(fos);
             transformer.transform(source, result);
-        } catch (TransformerException e) {
+        } catch (IOException | TransformerException e) {
             logger.error("Error writing XML to file", e);
         }
     }

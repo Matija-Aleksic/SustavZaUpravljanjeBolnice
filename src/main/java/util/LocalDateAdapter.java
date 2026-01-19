@@ -29,4 +29,3 @@ public class LocalDateAdapter extends TypeAdapter<LocalDate> {
         return dateStr == null || dateStr.isEmpty() ? null : LocalDate.parse(dateStr, formatter);
     }
 }
-

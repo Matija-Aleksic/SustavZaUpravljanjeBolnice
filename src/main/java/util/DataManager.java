@@ -1,15 +1,14 @@
 package util;
 
-import com.google.gson.reflect.TypeToken;
 import entity.Appointment;
 import entity.Doctor;
 import entity.Hospital;
 import entity.Patient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import entity.repository.DataRepositoryFactory;
+import entity.repository.file.FileRepositoryFactory;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,13 +17,14 @@ import java.util.List;
 public class DataManager {
     private static final Logger logger = LoggerFactory.getLogger(DataManager.class);
 
-    private static final String HOSPITALS_FILE = "src/main/java/file/hospitals.json";
-    private static final String DOCTORS_FILE = "src/main/java/file/doctors.json";
-    private static final String PATIENTS_FILE = "src/main/java/file/patients.json";
-    private static final String APPOINTMENTS_FILE = "src/main/java/file/appointments.json";
+    private static DataRepositoryFactory repositoryFactory = new FileRepositoryFactory();
 
     private DataManager() {
         throw new IllegalStateException("Utility class");
+    }
+
+    public static void setRepositoryFactory(DataRepositoryFactory factory) {
+        repositoryFactory = factory;
     }
 
     /**
@@ -37,11 +37,11 @@ public class DataManager {
      */
     public static void saveAllData(List<Hospital> hospitals, List<Doctor> doctors,
                                    List<Patient> patients, List<Appointment> appointments) {
-        JsonFileManager.saveToJson(HOSPITALS_FILE, hospitals);
-        JsonFileManager.saveToJson(DOCTORS_FILE, doctors);
-        JsonFileManager.saveToJson(PATIENTS_FILE, patients);
-        JsonFileManager.saveToJson(APPOINTMENTS_FILE, appointments);
-        logger.info("All data saved to JSON files");
+        repositoryFactory.getHospitalRepository().saveAll(hospitals);
+        repositoryFactory.getDoctorRepository().saveAll(doctors);
+        repositoryFactory.getPatientRepository().saveAll(patients);
+        repositoryFactory.getAppointmentRepository().saveAll(appointments);
+        logger.info("All data saved");
     }
 
     /**
@@ -50,21 +50,11 @@ public class DataManager {
      * @return the all data
      */
     public static AllData loadAllData() {
-        Type hospitalType = new TypeToken<ArrayList<Hospital>>() {
-        }.getType();
-        Type doctorType = new TypeToken<ArrayList<Doctor>>() {
-        }.getType();
-        Type patientType = new TypeToken<ArrayList<Patient>>() {
-        }.getType();
-        Type appointmentType = new TypeToken<ArrayList<Appointment>>() {
-        }.getType();
-
-        List<Hospital> hospitals = JsonFileManager.loadFromJson(HOSPITALS_FILE, hospitalType);
-        List<Doctor> doctors = JsonFileManager.loadFromJson(DOCTORS_FILE, doctorType);
-        List<Patient> patients = JsonFileManager.loadFromJson(PATIENTS_FILE, patientType);
-        List<Appointment> appointments = JsonFileManager.loadFromJson(APPOINTMENTS_FILE, appointmentType);
-
-        logger.info("All data loaded from JSON files");
+        List<Hospital> hospitals = repositoryFactory.getHospitalRepository().findAll();
+        List<Doctor> doctors = repositoryFactory.getDoctorRepository().findAll();
+        List<Patient> patients = repositoryFactory.getPatientRepository().findAll();
+        List<Appointment> appointments = repositoryFactory.getAppointmentRepository().findAll();
+        logger.info("All data loaded");
         return new AllData(hospitals, doctors, patients, appointments);
     }
 
@@ -74,7 +64,7 @@ public class DataManager {
      * @param hospitals the hospitals
      */
     public static void saveHospitals(List<Hospital> hospitals) {
-        JsonFileManager.saveToJson(HOSPITALS_FILE, hospitals);
+        repositoryFactory.getHospitalRepository().saveAll(hospitals);
     }
 
     /**
@@ -83,7 +73,7 @@ public class DataManager {
      * @param doctors the doctors
      */
     public static void saveDoctors(List<Doctor> doctors) {
-        JsonFileManager.saveToJson(DOCTORS_FILE, doctors);
+        repositoryFactory.getDoctorRepository().saveAll(doctors);
     }
 
     /**
@@ -92,7 +82,7 @@ public class DataManager {
      * @param patients the patients
      */
     public static void savePatients(List<Patient> patients) {
-        JsonFileManager.saveToJson(PATIENTS_FILE, patients);
+        repositoryFactory.getPatientRepository().saveAll(patients);
     }
 
     /**
@@ -101,7 +91,7 @@ public class DataManager {
      * @param appointments the appointments
      */
     public static void saveAppointments(List<Appointment> appointments) {
-        JsonFileManager.saveToJson(APPOINTMENTS_FILE, appointments);
+        repositoryFactory.getAppointmentRepository().saveAll(appointments);
     }
 
     /**
@@ -110,9 +100,7 @@ public class DataManager {
      * @param hospital the hospital
      */
     public static void addHospital(Hospital hospital) {
-        List<Hospital> hospitals = loadAllData().hospitals();
-        hospitals.add(hospital);
-        saveHospitals(hospitals);
+        repositoryFactory.getHospitalRepository().save(hospital);
     }
 
     /**
@@ -121,9 +109,7 @@ public class DataManager {
      * @param doctor the doctor
      */
     public static void addDoctor(Doctor doctor) {
-        List<Doctor> doctors = loadAllData().doctors();
-        doctors.add(doctor);
-        saveDoctors(doctors);
+        repositoryFactory.getDoctorRepository().save(doctor);
     }
 
     /**
@@ -132,9 +118,7 @@ public class DataManager {
      * @param patient the patient
      */
     public static void addPatient(Patient patient) {
-        List<Patient> patients = loadAllData().patients();
-        patients.add(patient);
-        savePatients(patients);
+        repositoryFactory.getPatientRepository().save(patient);
     }
 
     /**
@@ -143,9 +127,7 @@ public class DataManager {
      * @param appointment the appointment
      */
     public static void addAppointment(Appointment appointment) {
-        List<Appointment> appointments = loadAllData().appointments();
-        appointments.add(appointment);
-        saveAppointments(appointments);
+        repositoryFactory.getAppointmentRepository().save(appointment);
     }
 
     /**

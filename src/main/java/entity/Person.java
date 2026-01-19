@@ -37,7 +37,7 @@ public abstract class Person implements Serializable {
      * @param dateOfBirth the date of birth
      */
     protected Person(int id, String firstName, String lastName, LocalDate dateOfBirth) {
-        if (id <= 0) throw new IllegalArgumentException("ID mora biti pozitivan!");
+        if (id <= 0) throw new exception.NegativeValueException("ID mora biti pozitivan!");
         this.id = id;
         this.firstName = Objects.requireNonNull(firstName, "Ime ne može biti null");
         this.lastName = Objects.requireNonNull(lastName, "Prezime ne može biti null");
