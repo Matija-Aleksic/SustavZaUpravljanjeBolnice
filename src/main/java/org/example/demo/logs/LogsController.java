@@ -1,12 +1,10 @@
-package org.example.demo;
+package org.example.demo.logs;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
-import util.DialogUtils;
-import util.XmlLogger;
 
 import java.util.List;
 import java.util.Map;

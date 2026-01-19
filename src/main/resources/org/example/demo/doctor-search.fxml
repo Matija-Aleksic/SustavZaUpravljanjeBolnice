@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.demo.DoctorSearchController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.demo.doctor.DoctorSearchController">
     <top>
         <VBox spacing="10.0" alignment="TOP_LEFT">
             <fx:include source="menubar.fxml"/>

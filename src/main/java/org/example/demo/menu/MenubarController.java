@@ -1,4 +1,4 @@
-package org.example.demo;
+package org.example.demo.menu;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -178,7 +178,7 @@ public class MenubarController {
 
     private void openWindow(String fxmlFile, String title) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/demo/" + fxmlFile));
             Scene scene = new Scene(loader.load());
             Stage stage = new Stage();
             stage.setTitle(title);
@@ -189,4 +189,3 @@ public class MenubarController {
         }
     }
 }
-

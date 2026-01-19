@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.demo.HospitalSearchController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.demo.hospital.HospitalSearchController">
 
 
     <top>

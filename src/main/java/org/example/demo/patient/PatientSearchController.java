@@ -1,4 +1,4 @@
-package org.example.demo;
+package org.example.demo.patient;
 
 import entity.Patient;
 import javafx.collections.FXCollections;

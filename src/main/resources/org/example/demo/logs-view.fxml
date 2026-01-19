@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.demo.LogsController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.demo.logs.LogsController">
     <top>
         <Label text="User Action Logs" style="-fx-font-size: 18px; -fx-font-weight: bold;"
                BorderPane.alignment="CENTER"/>
@@ -24,4 +24,3 @@
         </HBox>
     </bottom>
 </BorderPane>
-

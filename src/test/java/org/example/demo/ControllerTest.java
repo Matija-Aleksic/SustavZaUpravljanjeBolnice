@@ -1,5 +1,10 @@
 package org.example.demo;
 
+import org.example.demo.appointment.AppointmentSearchController;
+import org.example.demo.doctor.DoctorSearchController;
+import org.example.demo.hospital.HospitalSearchController;
+import org.example.demo.menu.MainMenuController;
+import org.example.demo.patient.PatientSearchController;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;

@@ -1,4 +1,4 @@
-package org.example.demo;
+package org.example.demo.menu;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -98,7 +98,8 @@ public class MainMenuController {
     @FXML
     protected void onViewLogs() {
         XmlLogger.logAction("MENU_VIEW_LOGS", "User requested to view logs");
-        XmlLogger.displayLogs();
+        openWindow("logs-view.fxml", "Add Hospital");
+
     }
 
     /**
@@ -146,9 +147,20 @@ public class MainMenuController {
         openWindow("appointment-add.fxml", "Add Appointment");
     }
 
+    /**
+     * Handles deleting logs from the main menu.
+     */
+    @FXML
+    protected void onDeleteLogs() {
+        util.XmlLogger.logAction("MENU_DELETE_LOGS", "User requested to delete logs");
+        util.XmlLogger.deleteLogs();
+        util.DialogUtils.showInfo("Logs Deleted", "All logs have been deleted.");
+    }
+
     private void openWindow(String fxmlFile, String title) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+            // Use absolute path for FXML files in resources
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/demo/" + fxmlFile));
             Scene scene = new Scene(loader.load());
             Stage stage = new Stage();
             stage.setTitle(title);

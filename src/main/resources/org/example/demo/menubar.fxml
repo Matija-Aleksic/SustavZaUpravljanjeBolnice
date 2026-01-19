@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25"
-            fx:controller="org.example.demo.MenubarController">
+            fx:controller="org.example.demo.menu.MenubarController">
     <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <Menu text="Patients">
             <MenuItem onAction="#onSearchPatients" text="View"/>

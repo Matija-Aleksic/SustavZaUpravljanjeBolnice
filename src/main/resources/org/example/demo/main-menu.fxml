@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:id="mainBorderPane" fx:controller="org.example.demo.MenubarController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:id="mainBorderPane" fx:controller="org.example.demo.menu.MainMenuController">
     <top>
         <MenuBar>
             <Menu text="Patients">
