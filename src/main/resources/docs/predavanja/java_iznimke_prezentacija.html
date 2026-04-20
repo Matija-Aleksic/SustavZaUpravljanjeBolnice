@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Iznimke u Javi - Moderna Prezentacija</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+            color: #333;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+        }
+
+        .slide {
+            position: absolute;
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 60px;
+            display: none;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide h1 {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            text-align: center;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .slide h2 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+            animation: fadeInLeft 0.8s ease-out;
+        }
+
+        .slide h3 {
+            font-size: 1.8em;
+            color: #764ba2;
+            margin: 25px 0 15px 0;
+        }
+
+        .slide p, .slide li {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .slide ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .slide li {
+            padding-left: 30px;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .slide li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            overflow-x: auto;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .code-block:before {
+            content: "Java";
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 1em;
+            line-height: 1.6;
+            color: #d4d4d4;
+        }
+
+        .keyword {
+            color: #569cd6;
+            font-weight: bold;
+        }
+
+        .class-name {
+            color: #4ec9b0;
+            font-weight: bold;
+        }
+
+        .method {
+            color: #dcdcaa;
+        }
+
+        .string {
+            color: #ce9178;
+        }
+
+        .comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .number {
+            color: #b5cea8;
+        }
+
+        .operator {
+            color: #d4d4d4;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .badge.new {
+            background: #f093fb;
+        }
+
+        .badge.important {
+            background: #fa709a;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5em;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: #667eea;
+            color: white;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+            color: #667eea;
+            z-index: 1000;
+        }
+
+        .exception-hierarchy {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .hierarchy-item {
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-left: 20px;
+        }
+
+        .hierarchy-item.level-2 {
+            margin-left: 40px;
+            border-color: #764ba2;
+        }
+
+        .hierarchy-item.level-3 {
+            margin-left: 60px;
+            border-color: #fa709a;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .emoji {
+            font-size: 1.3em;
+            margin-right: 10px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .tip-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .tip-box:before {
+            content: "💡 PRO TIP: ";
+            font-weight: bold;
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+
+            .slide h1 {
+                font-size: 2.5em;
+            }
+
+            .slide h2 {
+                font-size: 1.8em;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="presentation">
+    <!-- Slide 1: Naslovnica -->
+    <div class="slide active">
+        <h1>🚀 Iznimke u Javi</h1>
+        <div style="text-align: center; margin-top: 50px;">
+            <p style="font-size: 1.5em; color: #667eea; margin-bottom: 30px;">
+                <span class="emoji">☕</span> Java 25 Edition
+            </p>
+            <p style="font-size: 1.2em; color: #666;">
+                Exception Handling kao profesionalci
+            </p>
+            <div style="margin-top: 50px;">
+                <span class="badge">Modern</span>
+                <span class="badge new">Updated</span>
+                <span class="badge important">Interactive</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 2: Sadržaj -->
+    <div class="slide">
+        <h2><span class="emoji">📋</span> Što nas čeka?</h2>
+        <div class="two-column">
+            <div>
+                <h3>Osnove</h3>
+                <ul>
+                    <li>Uvod u iznimke</li>
+                    <li>Try-catch-finally</li>
+                    <li>Multi-catch blok</li>
+                    <li>Try-with-resources</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Napredne teme</h3>
+                <ul>
+                    <li>Hijerarhija iznimaka</li>
+                    <li>Checked vs Unchecked</li>
+                    <li>Bacanje iznimaka</li>
+                    <li>Vlastite iznimke</li>
+                </ul>
+            </div>
+        </div>
+        <div class="tip-box">
+            Ova prezentacija je interaktivna - koristite strelice ili klikove za navigaciju!
+        </div>
+    </div>
+
+    <!-- Slide 3: Uvod u iznimke -->
+    <div class="slide">
+        <h2><span class="emoji">🎯</span> Što su to iznimke?</h2>
+        <div class="highlight-box">
+            <p><strong>Iznimka (Exception)</strong> je objekt koji predstavlja problem nastao tijekom izvođenja
+                programa.</p>
+        </div>
+        <ul>
+            <li><span class="emoji">🛡️</span> Omogućavaju razvoj robusnih aplikacija</li>
+            <li><span class="emoji">♻️</span> Program može nastaviti rad i nakon greške</li>
+            <li><span class="emoji">🎭</span> Predstavljene klasama koje nasljeđuju <code>Throwable</code></li>
+            <li><span class="emoji">🎣</span> Mogu se <strong>hvatati</strong> (catch) i <strong>bacati</strong> (throw)
+            </li>
+        </ul>
+        <div class="tip-box">
+            Exception handling nije samo za greške - koristi se i za kontrolu toka programa!
+        </div>
+    </div>
+
+    <!-- Slide 4: Problem bez exception handling -->
+    <div class="slide">
+        <h2><span class="emoji">❌</span> Problem: Bez obrade iznimki</h2>
+        <div class="code-block">
+                <pre><span class="keyword">public class</span> <span class="class-name">BezObradeIznimke</span> {
+    <span class="keyword">private static</span> <span class="keyword">int</span> <span
+                            class="method">podijeli</span>(<span class="keyword">int</span> djeljenik, <span
+                            class="keyword">int</span> djelitelj) {
+        <span class="keyword">return</span> djeljenik / djelitelj;  <span
+                            class="comment">// ⚠️ Što ako je djelitelj 0?</span>
+    }
+    
+    <span class="keyword">public static void</span> <span class="method">main</span>(String[] args) {
+        Scanner unos = <span class="keyword">new</span> <span class="class-name">Scanner</span>(System.in);
+        System.out.<span class="method">print</span>(<span class="string">"Unesite dva broja: "</span>);
+        
+        <span class="keyword">int</span> prvi = unos.<span class="method">nextInt</span>();
+        <span class="keyword">int</span> drugi = unos.<span class="method">nextInt</span>();
+        <span class="keyword">int</span> rezultat = <span class="method">podijeli</span>(prvi, drugi);
+        
+        System.out.<span class="method">println</span>(<span class="string">"Rezultat: "</span> + rezultat);
+        unos.<span class="method">close</span>();
+    }
+}</pre>
+        </div>
+        <div class="highlight-box" style="background: #fee; border-color: #f44336;">
+            <strong>Output (ako korisnik unese 5 i 0):</strong><br>
+            <code>Exception in thread "main" java.lang.ArithmeticException: / by zero</code>
+        </div>
+    </div>
+
+    <!-- Slide 5: Stack Trace -->
+    <div class="slide">
+        <h2><span class="emoji">🔍</span> Razumijevanje Stack Trace</h2>
+        <div class="code-block">
+                <pre>Exception in thread "main" java.lang.ArithmeticException: / by zero
+    at BezObradeIznimke.podijeli(BezObradeIznimke.java:8)
+    at BezObradeIznimke.main(BezObradeIznimke.java:18)</pre>
+        </div>
+        <div class="table-wrapper">
+            <table>
+                <tr>
+                    <th>Dio</th>
+                    <th>Opis</th>
+                </tr>
+                <tr>
+                    <td><strong>java.lang.ArithmeticException</strong></td>
+                    <td>Naziv iznimke</td>
+                </tr>
+                <tr>
+                    <td><strong>/ by zero</strong></td>
+                    <td>Opisna poruka</td>
+                </tr>
+                <tr>
+                    <td><strong>at BezObradeIznimke.podijeli(...)</strong></td>
+                    <td>Lokacija gdje se dogodila iznimka</td>
+                </tr>
+                <tr>
+                    <td><strong>(BezObradeIznimke.java:8)</strong></td>
+                    <td>Datoteka i broj linije</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Slide 6: Rješenje s try-catch -->
+    <div class="slide">
+        <h2><span class="emoji">✅</span> Rješenje: Try-Catch blok</h2>
+        <div class="code-block">
+                <pre><span class="keyword">boolean</span> nastaviPetlju;
+<span class="keyword">do</span> {
+    nastaviPetlju = <span class="keyword">false</span>;
+    <span class="keyword">try</span> {
+        <span class="comment">// Rizičan kod koji može baciti iznimku</span>
+        System.out.<span class="method">print</span>(<span class="string">"Unesite dva broja: "</span>);
+        <span class="keyword">int</span> prvi = unos.<span class="method">nextInt</span>();
+        <span class="keyword">int</span> drugi = unos.<span class="method">nextInt</span>();
+        <span class="keyword">int</span> rezultat = <span class="method">podijeli</span>(prvi, drugi);
+        System.out.<span class="method">println</span>(<span class="string">"Rezultat: "</span> + rezultat);
+        
+    } <span class="keyword">catch</span> (<span class="class-name">InputMismatchException</span> ex) {
+        <span class="comment">// Obrada pogrešnog unosa</span>
+        System.out.<span class="method">println</span>(<span
+                            class="string">"❌ Morate unijeti brojčane vrijednosti!"</span>);
+        unos.<span class="method">nextLine</span>();  <span class="comment">// Očisti buffer</span>
+        nastaviPetlju = <span class="keyword">true</span>;
+        
+    } <span class="keyword">catch</span> (<span class="class-name">ArithmeticException</span> ex) {
+        <span class="comment">// Obrada dijeljenja s nulom</span>
+        System.out.<span class="method">println</span>(<span class="string">"❌ Ne možete dijeliti s nulom!"</span>);
+        unos.<span class="method">nextLine</span>();
+        nastaviPetlju = <span class="keyword">true</span>;
+    }
+} <span class="keyword">while</span> (nastaviPetlju);</pre>
+        </div>
+    </div>
+
+    <!-- Slide 7: Try-Catch anatomija -->
+    <div class="slide">
+        <h2><span class="emoji">🔬</span> Anatomija Try-Catch bloka</h2>
+        <div class="highlight-box">
+            <h3>TRY blok</h3>
+            <p>Sadrži kod koji <strong>može</strong> baciti iznimku. Izvodi se sve dok ne dođe do iznimke.</p>
+        </div>
+        <div class="highlight-box">
+            <h3>CATCH blok</h3>
+            <p>Sadrži kod koji se izvodi <strong>samo</strong> ako se dogodi određena iznimka.</p>
+        </div>
+        <div class="tip-box">
+            Možete imati više catch blokova za različite tipove iznimaka!
+        </div>
+        <ul>
+            <li><span class="emoji">⚡</span> Try se izvodi linearno do iznimke</li>
+            <li><span class="emoji">🎯</span> Catch "hvata" samo svoj tip iznimke</li>
+            <li><span class="emoji">🔄</span> Nakon catch-a program normalno nastavlja</li>
+        </ul>
+    </div>
+
+    <!-- Slide 8: Multi-catch (Java 7+) -->
+    <div class="slide">
+        <h2><span class="emoji">🎭</span> Multi-Catch blok <span class="badge new">Java 7+</span></h2>
+        <p>Kada više iznimaka treba obrađivati na isti način:</p>
+        <div class="two-column">
+            <div>
+                <h3>❌ Stari način</h3>
+                <div class="code-block">
+                        <pre><span class="keyword">catch</span> (<span class="class-name">IOException</span> ex) {
+    logger.<span class="method">log</span>(ex);
+    <span class="method">showError</span>();
+}
+<span class="keyword">catch</span> (<span class="class-name">SQLException</span> ex) {
+    logger.<span class="method">log</span>(ex);
+    <span class="method">showError</span>();
+}</pre>
+                </div>
+            </div>
+            <div>
+                <h3>✅ Novi način</h3>
+                <div class="code-block">
+                        <pre><span class="keyword">catch</span> (<span class="class-name">IOException</span> | <span
+                                class="class-name">SQLException</span> ex) {
+    logger.<span class="method">log</span>(ex);
+    <span class="method">showError</span>();
+}</pre>
+                </div>
+            </div>
+        </div>
+        <div class="highlight-box">
+            <strong>Prednosti:</strong>
+            <ul>
+                <li>Manje dupliciranog koda</li>
+                <li>Čitljiviji i koncizniji kod</li>
+                <li>Lakše održavanje</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Slide 9: Finally blok -->
+    <div class="slide">
+        <h2><span class="emoji">🎬</span> Finally Blok - Uvijek se izvršava!</h2>
+        <div class="code-block">
+                <pre><span class="class-name">FileReader</span> reader = <span class="keyword">null</span>;
+<span class="keyword">try</span> {
+    reader = <span class="keyword">new</span> <span class="class-name">FileReader</span>(<span
+                            class="string">"data.txt"</span>);
+    <span class="comment">// Rad s datotekom...</span>
+    
+} <span class="keyword">catch</span> (<span class="class-name">IOException</span> ex) {
+    System.err.<span class="method">println</span>(<span class="string">"Greška čitanja: "</span> + ex.<span
+                            class="method">getMessage</span>());
+    
+} <span class="keyword">finally</span> {
+    <span class="comment">// Ovo se UVIJEK izvršava - iznimka ili ne!</span>
+    <span class="keyword">if</span> (reader != <span class="keyword">null</span>) {
+        <span class="keyword">try</span> {
+            reader.<span class="method">close</span>();
+            System.out.<span class="method">println</span>(<span class="string">"✅ Datoteka zatvorena"</span>);
+        } <span class="keyword">catch</span> (<span class="class-name">IOException</span> e) {
+            e.<span class="method">printStackTrace</span>();
+        }
+    }
+}</pre>
+        </div>
+        <div class="highlight-box">
+            <strong>Finally se izvršava:</strong> Nakon try bloka, nakon catch bloka, čak i ako postoji return u
+            try/catch!
+        </div>
+    </div>
+
+    <!-- Slide 10: Try-with-resources -->
+    <div class="slide">
+        <h2><span class="emoji">🚰</span> Try-with-Resources <span class="badge new">Java 7+</span></h2>
+        <p>Automatsko zatvaranje resursa - elegantnije i sigurnije!</p>
+        <div class="two-column">
+            <div>
+                <h3>❌ Stari način (verbozno)</h3>
+                <div class="code-block">
+                        <pre><span class="class-name">BufferedReader</span> br = <span class="keyword">null</span>;
+<span class="keyword">try</span> {
+    br = <span class="keyword">new</span> <span class="class-name">BufferedReader</span>(
+        <span class="keyword">new</span> <span class="class-name">FileReader</span>(<span
+                                    class="string">"file.txt"</span>)
+    );
+    <span class="keyword">return</span> br.<span class="method">readLine</span>();
+} <span class="keyword">finally</span> {
+    <span class="keyword">if</span> (br != <span class="keyword">null</span>) {
+        br.<span class="method">close</span>();
+    }
+}</pre>
+                </div>
+            </div>
+            <div>
+                <h3>✅ Novi način (clean)</h3>
+                <div class="code-block">
+                        <pre><span class="keyword">try</span> (<span class="class-name">BufferedReader</span> br = 
+        <span class="keyword">new</span> <span class="class-name">BufferedReader</span>(
+            <span class="keyword">new</span> <span class="class-name">FileReader</span>(<span
+                                    class="string">"file.txt"</span>)
+        )) {
+    <span class="keyword">return</span> br.<span class="method">readLine</span>();
+}
+<span class="comment">// Automatski zatvoreno! 🎉</span></pre>
+                </div>
+            </div>
+        </div>
+        <div class="tip-box">
+            Radi s bilo kojom klasom koja implementira AutoCloseable interface!
+        </div>
+    </div>
+
+    <!-- Slide 11: Hijerarhija iznimaka -->
+    <div class="slide">
+        <h2><span class="emoji">🌳</span> Hijerarhija iznimaka</h2>
+        <div class="exception-hierarchy">
+            <div class="hierarchy-item">
+                <strong>java.lang.Throwable</strong> - Korijen svega
+            </div>
+            <div class="hierarchy-item level-2">
+                <strong>Exception</strong> - Iznimke koje treba obrađivati
+                <div class="hierarchy-item level-3">
+                    <strong>RuntimeException</strong> - Neoznačene iznimke
+                    <div style="margin-top: 10px; font-size: 0.9em;">
+                        <span class="badge">ArithmeticException</span>
+                        <span class="badge">NullPointerException</span>
+                        <span class="badge">IndexOutOfBoundsException</span>
+                    </div>
+                </div>
+                <div class="hierarchy-item level-3">
+                    <strong>IOException</strong> - Označene iznimke
+                    <div style="margin-top: 10px; font-size: 0.9em;">
+                        <span class="badge">FileNotFoundException</span>
+                        <span class="badge">EOFException</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hierarchy-item level-2" style="border-color: #f44336;">
+                <strong>Error</strong> - Ozbiljne greške (NE OBRAĐIVATI!)
+                <div style="margin-top: 10px; font-size: 0.9em;">
+                    <span class="badge important">OutOfMemoryError</span>
+                    <span class="badge important">StackOverflowError</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 12: Checked vs Unchecked -->
+    <div class="slide">
+        <h2><span class="emoji">🏷️</span> Označene vs Neoznačene iznimke</h2>
+        <div class="two-column">
+            <div class="highlight-box" style="border-color: #4caf50;">
+                <h3>✅ Checked (Označene)</h3>
+                <ul>
+                    <li>Nasljeđuju <code>Exception</code></li>
+                    <li><strong>MORAJU</strong> se obrađivati</li>
+                    <li>Kompajler ih provjerava</li>
+                    <li>Za predvidive probleme</li>
+                </ul>
+                <div style="margin-top: 15px;">
+                    <span class="badge">IOException</span>
+                    <span class="badge">SQLException</span>
+                    <span class="badge">ClassNotFoundException</span>
+                </div>
+            </div>
+            <div class="highlight-box" style="border-color: #ff9800;">
+                <h3>⚠️ Unchecked (Neoznačene)</h3>
+                <ul>
+                    <li>Nasljeđuju <code>RuntimeException</code></li>
+                    <li>Ne moraju se obrađivati</li>
+                    <li>Kompajler ih ne provjerava</li>
+                    <li>Za programske greške</li>
+                </ul>
+                <div style="margin-top: 15px;">
+                    <span class="badge">NullPointerException</span>
+                    <span class="badge">ArithmeticException</span>
+                    <span class="badge">ArrayIndexOutOfBoundsException</span>
+                </div>
+            </div>
+        </div>
+        <div class="tip-box">
+            Pravilo: Ako možete spriječiti u kodu - unchecked. Ako ovisi o vanjskim faktorima - checked.
+        </div>
+    </div>
+
+    <!-- Slide 13: Throw - bacanje iznimaka -->
+    <div class="slide">
+        <h2><span class="emoji">🎾</span> Bacanje iznimaka - throw</h2>
+        <div class="code-block">
+                <pre><span class="keyword">public class</span> <span class="class-name">Korisnik</span> {
+    <span class="keyword">private</span> String email;
+    
+    <span class="keyword">public void</span> <span class="method">setEmail</span>(String email) {
+        <span class="comment">// Validacija emaila</span>
+        <span class="keyword">if</span> (email == <span class="keyword">null</span> || email.<span class="method">isEmpty</span>()) {
+            <span class="keyword">throw new</span> <span class="class-name">IllegalArgumentException</span>(
+                <span class="string">"Email ne može biti prazan! 📧"</span>
+            );
+        }
+        
+        <span class="keyword">if</span> (!email.<span class="method">contains</span>(<span class="string">"@"</span>)) {
+            <span class="keyword">throw new</span> <span class="class-name">IllegalArgumentException</span>(
+                <span class="string">"Email mora sadržavati @"</span>
+            );
+        }
+        
+        <span class="keyword">this</span>.email = email;
+    }
+}</pre>
+        </div>
+        <div class="highlight-box">
+            <strong>throw</strong> - baca novu iznimku (stvara objekt i prekida tok izvođenja)
+        </div>
+    </div>
+
+    <!-- Slide 14: Throws - deklaracija -->
+    <div class="slide">
+        <h2><span class="emoji">📢</span> Deklaracija iznimaka - throws</h2>
+        <p>Za checked iznimke morate ili: (1) uhvatiti ih ili (2) deklarirati da ih metoda baca</p>
+        <div class="code-block">
+                <pre><span class="keyword">public class</span> <span class="class-name">FileManager</span> {
+    
+    <span class="comment">// Metoda deklarira da baca IOException</span>
+    <span class="keyword">public</span> String <span class="method">readFile</span>(String path) 
+            <span class="keyword">throws</span> <span class="class-name">IOException</span> {
+        
+        <span class="class-name">BufferedReader</span> reader = <span class="keyword">new</span> <span
+                            class="class-name">BufferedReader</span>(
+            <span class="keyword">new</span> <span class="class-name">FileReader</span>(path)  <span class="comment">// Baca IOException</span>
+        );
+        
+        <span class="keyword">return</span> reader.<span class="method">readLine</span>();  <span class="comment">// Također baca IOException</span>
+    }
+    
+    <span class="keyword">public void</span> <span class="method">processFile</span>() {
+        <span class="keyword">try</span> {
+            String content = <span class="method">readFile</span>(<span class="string">"data.txt"</span>);
+            System.out.<span class="method">println</span>(content);
+        } <span class="keyword">catch</span> (<span class="class-name">IOException</span> e) {
+            System.err.<span class="method">println</span>(<span class="string">"❌ Greška: "</span> + e.<span
+                            class="method">getMessage</span>());
+        }
+    }
+}</pre>
+        </div>
+        <div class="tip-box">
+            throws = "ova metoda može baciti ove iznimke, pa ih ti obradi"
+        </div>
+    </div>
+
+    <!-- Slide 15: Vlastite iznimke -->
+    <div class="slide">
+        <h2><span class="emoji">🎨</span> Kreiranje vlastitih iznimaka</h2>
+        <div class="code-block">
+                <pre><span class="comment">// Checked iznimka (nasljeđuje Exception)</span>
+<span class="keyword">public class</span> <span class="class-name">InvalidEmailException</span> <span class="keyword">extends</span> <span
+                            class="class-name">Exception</span> {
+    
+    <span class="keyword">public</span> <span class="method">InvalidEmailException</span>() {
+        <span class="keyword">super</span>(<span class="string">"Email adresa nije valjana"</span>);
+    }
+    
+    <span class="keyword">public</span> <span class="method">InvalidEmailException</span>(String message) {
+        <span class="keyword">super</span>(message);
+    }
+    
+    <span class="keyword">public</span> <span class="method">InvalidEmailException</span>(String message, Throwable cause) {
+        <span class="keyword">super</span>(message, cause);
+    }
+    
+    <span class="keyword">public</span> <span class="method">InvalidEmailException</span>(Throwable cause) {
+        <span class="keyword">super</span>(cause);
+    }
+}</pre>
+        </div>
+        <div class="highlight-box">
+            <strong>Best Practice:</strong> Implementirajte sva 4 konstruktora za fleksibilnost!
+        </div>
+    </div>
+
+    <!-- Slide 16: Korištenje vlastite iznimke -->
+    <div class="slide">
+        <h2><span class="emoji">🎯</span> Korištenje vlastite iznimke</h2>
+        <div class="code-block">
+                <pre><span class="keyword">public class</span> <span class="class-name">EmailValidator</span> {
+    
+    <span class="keyword">public static void</span> <span class="method">validateEmail</span>(String email) 
+            <span class="keyword">throws</span> <span class="class-name">InvalidEmailException</span> {
+        
+        <span class="keyword">if</span> (email == <span class="keyword">null</span> || email.<span class="method">isEmpty</span>()) {
+            <span class="keyword">throw new</span> <span class="class-name">InvalidEmailException</span>(
+                <span class="string">"Email ne smije biti prazan"</span>
+            );
+        }
+        
+        <span class="keyword">if</span> (!email.<span class="method">matches</span>(<span class="string">"^[A-Za-z0-9+_.-]+@(.+)$"</span>)) {
+            <span class="keyword">throw new</span> <span class="class-name">InvalidEmailException</span>(
+                <span class="string">"Email format nije valjan: "</span> + email
+            );
+        }
+    }
+    
+    <span class="keyword">public static void</span> <span class="method">main</span>(String[] args) {
+        <span class="keyword">try</span> {
+            <span class="method">validateEmail</span>(<span class="string">"korisnik@primjer.com"</span>);
+            System.out.<span class="method">println</span>(<span class="string">"✅ Email je valjan!"</span>);
+            
+        } <span class="keyword">catch</span> (<span class="class-name">InvalidEmailException</span> e) {
+            System.err.<span class="method">println</span>(<span class="string">"❌ "</span> + e.<span class="method">getMessage</span>());
+        }
+    }
+}</pre>
+        </div>
+    </div>
+
+    <!-- Slide 17: Best Practices -->
+    <div class="slide">
+        <h2><span class="emoji">⭐</span> Best Practices</h2>
+        <div class="highlight-box" style="border-color: #4caf50;">
+            <h3>✅ RADI:</h3>
+            <ul>
+                <li>Hvati specifične iznimke, ne <code>Exception</code></li>
+                <li>Daj korisne poruke o greškama</li>
+                <li>Koristi try-with-resources za resurse</li>
+                <li>Logiraj iznimke za debugging</li>
+                <li>Kreiraj vlastite iznimke za domensku logiku</li>
+            </ul>
+        </div>
+        <div class="highlight-box" style="border-color: #f44336;">
+            <h3>❌ NEMOJ:</h3>
+            <ul>
+                <li>Prazan catch blok (<code>catch(Exception e) {}</code>)</li>
+                <li>Hvatati <code>Error</code> klasu</li>
+                <li>Koristiti iznimke za kontrolu toka</li>
+                <li>Ignorirati checked iznimke</li>
+                <li>Bacati generičke iznimke bez poruke</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Slide 18: Pattern Matching for switch (Java 21+) -->
+    <div class="slide">
+        <h2><span class="emoji">🆕</span> Pattern Matching <span class="badge new">Java 21+</span></h2>
+        <p>Moderne mogućnosti za obradu iznimaka:</p>
+        <div class="code-block">
+                <pre><span class="keyword">public</span> String <span class="method">handleException</span>(Exception ex) {
+    <span class="keyword">return switch</span> (ex) {
+        <span class="keyword">case</span> <span class="class-name">FileNotFoundException</span> fnf 
+            <span class="keyword">when</span> fnf.<span class="method">getMessage</span>().<span
+                            class="method">contains</span>(<span class="string">"config"</span>) ->
+            <span class="string">"⚙️ Konfiguracijska datoteka nije pronađena"</span>;
+            
+        <span class="keyword">case</span> <span class="class-name">FileNotFoundException</span> fnf ->
+            <span class="string">"📄 Datoteka nije pronađena: "</span> + fnf.<span class="method">getMessage</span>();
+            
+        <span class="keyword">case</span> <span class="class-name">IOException</span> io ->
+            <span class="string">"💾 I/O greška: "</span> + io.<span class="method">getMessage</span>();
+            
+        <span class="keyword">case</span> <span class="class-name">SQLException</span> sql ->
+            <span class="string">"🗃️ Greška baze podataka: "</span> + sql.<span class="method">getMessage</span>();
+            
+        <span class="keyword">default</span> ->
+            <span class="string">"❌ Nepoznata greška: "</span> + ex.<span class="method">getMessage</span>();
+    };
+}</pre>
+        </div>
+        <div class="tip-box">
+            Pattern matching omogućava elegantniju obradu različitih tipova iznimaka!
+        </div>
+    </div>
+
+    <!-- Slide 19: Chained Exceptions -->
+    <div class="slide">
+        <h2><span class="emoji">⛓️</span> Chained Exceptions</h2>
+        <p>Povezivanje iznimaka za bolju dijagnostiku:</p>
+        <div class="code-block">
+                <pre><span class="keyword">public class</span> <span class="class-name">DataService</span> {
+    
+    <span class="keyword">public</span> User <span class="method">getUser</span>(<span
+                            class="keyword">int</span> id) <span class="keyword">throws</span> <span class="class-name">DataAccessException</span> {
+        <span class="keyword">try</span> {
+            <span class="comment">// Spajanje na bazu i dohvaćanje korisnika</span>
+            Connection conn = <span class="method">getConnection</span>();
+            <span class="keyword">return</span> <span class="method">fetchUserFromDB</span>(conn, id);
+            
+        } <span class="keyword">catch</span> (<span class="class-name">SQLException</span> e) {
+            <span class="comment">// Omotaj SQL iznimku u domensku iznimku</span>
+            <span class="keyword">throw new</span> <span class="class-name">DataAccessException</span>(
+                <span class="string">"Ne mogu dohvatiti korisnika #"</span> + id,
+                e  <span class="comment">// ← Originalna iznimka kao uzrok</span>
+            );
+        }
+    }
+}</pre>
+        </div>
+        <div class="highlight-box">
+            <strong>Prednosti:</strong>
+            <ul>
+                <li>Zadržava potpunu informaciju o greški</li>
+                <li>Omogućava apstrakciju (skriva SQL detalje)</li>
+                <li>Olakšava debugging (cijeli lanac je vidljiv)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Slide 20: Praktični primjer -->
+    <div class="slide">
+        <h2><span class="emoji">💼</span> Praktični primjer - API poziv</h2>
+        <div class="code-block">
+                <pre><span class="keyword">public class</span> <span class="class-name">UserAPI</span> {
+    
+    <span class="keyword">public</span> User <span class="method">createUser</span>(String email, String password) {
+        <span class="keyword">try</span> {
+            <span class="comment">// Validacija</span>
+            EmailValidator.<span class="method">validateEmail</span>(email);
+            PasswordValidator.<span class="method">validatePassword</span>(password);
+            
+            <span class="comment">// Provjera postoji li već korisnik</span>
+            <span class="keyword">if</span> (userRepository.<span class="method">existsByEmail</span>(email)) {
+                <span class="keyword">throw new</span> <span class="class-name">UserAlreadyExistsException</span>(email);
+            }
+            
+            <span class="comment">// Kreiranje korisnika</span>
+            User user = <span class="keyword">new</span> <span class="class-name">User</span>(email, password);
+            <span class="keyword">return</span> userRepository.<span class="method">save</span>(user);
+            
+        } <span class="keyword">catch</span> (<span class="class-name">InvalidEmailException</span> | <span
+                            class="class-name">InvalidPasswordException</span> e) {
+            <span class="comment">// Validacijske greške</span>
+            logger.<span class="method">warn</span>(<span class="string">"Validacija neuspješna: {}"</span>, e.<span
+                            class="method">getMessage</span>());
+            <span class="keyword">throw new</span> <span class="class-name">ValidationException</span>(e.<span
+                            class="method">getMessage</span>(), e);
+            
+        } <span class="keyword">catch</span> (<span class="class-name">UserAlreadyExistsException</span> e) {
+            <span class="comment">// Poslovni problem</span>
+            logger.<span class="method">info</span>(<span class="string">"Pokušaj duple registracije: {}"</span>, email);
+            <span class="keyword">throw</span> e;
+            
+        } <span class="keyword">catch</span> (<span class="class-name">DataAccessException</span> e) {
+            <span class="comment">// Tehnički problem</span>
+            logger.<span class="method">error</span>(<span class="string">"DB greška pri kreiranju korisnika"</span>, e);
+            <span class="keyword">throw new</span> <span class="class-name">ServiceException</span>(<span
+                            class="string">"Nije moguće kreirati korisnika"</span>, e);
+        }
+    }
+}</pre>
+        </div>
+    </div>
+
+    <!-- Slide 21: Zaključak -->
+    <div class="slide">
+        <h2><span class="emoji">🎯</span> Zaključak</h2>
+        <div class="highlight-box" style="border-color: #4caf50;">
+            <h3>Što smo naučili:</h3>
+            <ul>
+                <li><span class="emoji">✅</span> Try-catch-finally za obradu iznimaka</li>
+                <li><span class="emoji">🎭</span> Multi-catch i try-with-resources</li>
+                <li><span class="emoji">🌳</span> Hijerarhiju iznimaka (Exception vs Error)</li>
+                <li><span class="emoji">🏷️</span> Razliku između checked i unchecked</li>
+                <li><span class="emoji">🎾</span> Kako bacati i deklarirati iznimke</li>
+                <li><span class="emoji">🎨</span> Kreiranje vlastitih iznimaka</li>
+                <li><span class="emoji">🆕</span> Moderne Java 21+ feature-e</li>
+            </ul>
+        </div>
+        <div class="tip-box">
+            Exception handling je umjetnost! Vježbom ćete razviti intuiciju kada i kako koristiti iznimke.
+        </div>
+    </div>
+
+    <!-- Slide 22: Pitanja -->
+    <div class="slide">
+        <h1><span class="emoji">❓</span> Pitanja?</h1>
+        <div style="text-align: center; margin-top: 80px;">
+            <p style="font-size: 1.5em; color: #667eea; margin-bottom: 40px;">
+                Slobodno pitajte! 🙋‍♂️🙋‍♀️
+            </p>
+            <div style="margin-top: 60px;">
+                <p style="font-size: 1.1em; color: #666;">
+                    <span class="emoji">💡</span> Savjet: Najbolji način učenja je praksa!<br>
+                    Eksperimentirajte s iznimkama u vašim projektima.
+                </p>
+            </div>
+            <div style="margin-top: 80px;">
+                <span class="badge">Keep Coding</span>
+                <span class="badge new">Stay Curious</span>
+                <span class="badge important">Never Stop Learning</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-counter">
+    <span id="currentSlide">1</span> / <span id="totalSlides">22</span>
+</div>
+
+<div class="navigation">
+    <button class="nav-btn" id="prevBtn" title="Prethodni slide">←</button>
+    <button class="nav-btn" id="nextBtn" title="Sljedeći slide">→</button>
+</div>
+
+<script>
+    // Prezentacijska logika
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    document.getElementById('totalSlides').textContent = totalSlides;
+
+    function showSlide(n) {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (n + totalSlides) % totalSlides;
+        slides[currentSlide].classList.add('active');
+        document.getElementById('currentSlide').textContent = currentSlide + 1;
+
+        // Scroll to top of slide
+        slides[currentSlide].scrollTop = 0;
+    }
+
+    function nextSlide() {
+        showSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+        showSlide(currentSlide - 1);
+    }
+
+    // Event listeners
+    document.getElementById('nextBtn').addEventListener('click', nextSlide);
+    document.getElementById('prevBtn').addEventListener('click', prevSlide);
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            e.preventDefault();
+            nextSlide();
+        } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            prevSlide();
+        } else if (e.key === 'Home') {
+            e.preventDefault();
+            showSlide(0);
+        } else if (e.key === 'End') {
+            e.preventDefault();
+            showSlide(totalSlides - 1);
+        }
+    });
+
+    // Touch/swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+
+    document.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+
+    function handleSwipe() {
+        if (touchEndX < touchStartX - 50) {
+            nextSlide();
+        }
+        if (touchEndX > touchStartX + 50) {
+            prevSlide();
+        }
+    }
+
+    // Click on slide to advance (except on code blocks)
+    slides.forEach(slide => {
+        slide.addEventListener('click', (e) => {
+            if (!e.target.closest('.code-block') &&
+                !e.target.closest('.nav-btn')) {
+                nextSlide();
+            }
+        });
+    });
+
+    // Prevent scrolling when using arrow keys
+    window.addEventListener('keydown', (e) => {
+        if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
+            if (e.target === document.body) {
+                e.preventDefault();
+            }
+        }
+    });
+</script>
+</body>
+</html>

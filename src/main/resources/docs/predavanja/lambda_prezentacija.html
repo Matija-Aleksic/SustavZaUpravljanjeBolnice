@@ -1,0 +1,1714 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Lambda izrazi u Javi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-code: #f5f5f5;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --accent-primary: #667eea;
+            --accent-secondary: #764ba2;
+            --border-color: #e2e8f0;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --success: #48bb78;
+            --warning: #ed8936;
+            --error: #f56565;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a202c;
+            --bg-secondary: #2d3748;
+            --bg-code: #2d3748;
+            --text-primary: #f7fafc;
+            --text-secondary: #e2e8f0;
+            --text-muted: #a0aec0;
+            --accent-primary: #9f7aea;
+            --accent-secondary: #ed64a6;
+            --border-color: #4a5568;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow);
+        }
+
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem 2rem;
+            position: relative;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            color: var(--accent-primary);
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem 0;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .author {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-top: 2rem;
+        }
+
+        .content-box {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--accent-primary);
+        }
+
+        .code-block {
+            background: var(--bg-code);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .code-header {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px 6px 0 0;
+            margin: -1.5rem -1.5rem 1rem -1.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        pre {
+            margin: 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            background: var(--bg-code);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, var(--accent-primary) 0%, var(--accent-primary) 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 30%;
+            background-position: 0 85%;
+            padding: 0 4px;
+        }
+
+        .emoji {
+            font-size: 2rem;
+            margin-right: 0.5rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px var(--shadow);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-top: 1rem;
+        }
+
+        li {
+            margin: 0.8rem 0;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .before, .after {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .before {
+            border-left: 4px solid var(--error);
+        }
+
+        .after {
+            border-left: 4px solid var(--success);
+        }
+
+        .label {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .label-old {
+            color: var(--error);
+        }
+
+        .label-new {
+            color: var(--success);
+        }
+
+        .example-title {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+            margin: 1.5rem 0 1rem 0;
+            font-weight: 600;
+        }
+
+        .tip {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--warning);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .tip-title {
+            color: var(--warning);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .syntax-keyword {
+            color: #d73a49;
+            font-weight: 600;
+        }
+
+        .syntax-string {
+            color: #032f62;
+        }
+
+        .syntax-comment {
+            color: #6a737d;
+            font-style: italic;
+        }
+
+        .syntax-function {
+            color: #6f42c1;
+        }
+
+        [data-theme="dark"] .syntax-keyword {
+            color: #ff7b72;
+        }
+
+        [data-theme="dark"] .syntax-string {
+            color: #a5d6ff;
+        }
+
+        [data-theme="dark"] .syntax-comment {
+            color: #8b949e;
+        }
+
+        [data-theme="dark"] .syntax-function {
+            color: #d2a8ff;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-secondary);
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: flex;
+            gap: 10px;
+            box-shadow: 0 4px 12px var(--shadow);
+            z-index: 1000;
+        }
+
+        .nav-button {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: var(--accent-secondary);
+            transform: scale(1.05);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media print {
+            .theme-toggle,
+            .navigation {
+                display: none;
+            }
+
+            .slide {
+                page-break-after: always;
+                min-height: 100vh;
+            }
+        }
+    </style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()">🌓 Promijeni temu</button>
+
+<div class="container">
+    <!-- Slide 1: Naslovna -->
+    <div class="slide" id="slide-1">
+        <h1>Lambda izrazi u Javi</h1>
+        <p class="subtitle">Funkcionalno programiranje za modernu Javu ✨</p>
+        <div class="content-box">
+            <p style="font-size: 1.2rem;">🚀 Java 25 • 💡 Praktični primjeri • 🎯 Gen Z fokus</p>
+        </div>
+        <p class="author">Programiranje u jeziku Java | Tehničko veleučilište u Zagrebu</p>
+        <div class="slide-number">1</div>
+    </div>
+
+    <!-- Slide 2: Sadržaj -->
+    <div class="slide" id="slide-2">
+        <h2>📚 Sadržaj</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">1️⃣ Uvod</div>
+                <ul style="margin-left: 1rem;">
+                    <li>Što su lambda izrazi?</li>
+                    <li>Zašto ih koristiti?</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title">2️⃣ Sintaksa</div>
+                <ul style="margin-left: 1rem;">
+                    <li>Osnovna sintaksa</li>
+                    <li>Različiti formati</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title">3️⃣ Funkcionalna sučelja</div>
+                <ul style="margin-left: 1rem;">
+                    <li>Predefined sučelja</li>
+                    <li>Custom sučelja</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title">4️⃣ Method References</div>
+                <ul style="margin-left: 1rem;">
+                    <li>Vrste referenci</li>
+                    <li>Praktična primjena</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title">5️⃣ Stream API</div>
+                <ul style="margin-left: 1rem;">
+                    <li>Filter, Map, Reduce</li>
+                    <li>Collectors</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title">6️⃣ Best Practices</div>
+                <ul style="margin-left: 1rem;">
+                    <li>Česte greške</li>
+                    <li>Savjeti i trikovi</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-number">2</div>
+    </div>
+
+    <!-- Slide 3: Što su Lambda izrazi? -->
+    <div class="slide" id="slide-3">
+        <h2>🤔 Što su Lambda izrazi?</h2>
+        <div class="content-box">
+            <h3>Definicija</h3>
+            <p style="font-size: 1.2rem; color: var(--text-secondary);">
+                Lambda izraz je <span class="highlight">anonimna funkcija</span> koja omogućava pisanje kraćeg,
+                čitljivijeg koda. Uvedeni su u <strong>Java 8</strong> i revolucionirali su način programiranja.
+            </p>
+        </div>
+
+        <h3 style="margin-top: 2rem;">💭 Razmisli ovako:</h3>
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">🎵 Spotify Playlist</div>
+                <p>Umjesto da ručno odabireš svaku pjesmu, samo kažeš:
+                    <em>"Pusti sve rock pjesme iz 2023."</em> - Lambda je ta jednostavna naredba!</p>
+            </div>
+            <div class="card">
+                <div class="card-title">📸 Instagram Filter</div>
+                <p>Ne trebaš znati kako filter radi iznutra, samo ga primiješ na sliku jednim klikom.
+                    Lambda je kao taj filter za kod!</p>
+            </div>
+        </div>
+        <div class="slide-number">3</div>
+    </div>
+
+    <!-- Slide 4: Zašto Lambda izrazi? -->
+    <div class="slide" id="slide-4">
+        <h2>🎯 Zašto koristiti Lambda izraze?</h2>
+
+        <div class="comparison">
+            <div class="before">
+                <div class="label label-old">❌ PRIJE (tradicionalni način)</div>
+                <div class="code-block">
+                    <div class="code-header">Sortiranje liste - tradicionalno</div>
+                    <pre><code><span class="syntax-comment">// TikTok korisnici po broju followera</span>
+List&lt;User&gt; users = getTikTokUsers();
+
+Collections.sort(users, <span class="syntax-keyword">new</span> Comparator&lt;User&gt;() {
+    <span class="syntax-keyword">@Override</span>
+    <span class="syntax-keyword">public int</span> <span class="syntax-function">compare</span>(User u1, User u2) {
+        <span class="syntax-keyword">return</span> Integer.compare(
+            u1.getFollowers(), 
+            u2.getFollowers()
+        );
+    }
+});
+
+<span class="syntax-comment">// 😓 9 linija koda za jednostavnu operaciju!</span></code></pre>
+                </div>
+            </div>
+
+            <div class="after">
+                <div class="label label-new">✅ S LAMBDA IZRAZOM</div>
+                <div class="code-block">
+                    <div class="code-header">Sortiranje liste - lambda</div>
+                    <pre><code><span class="syntax-comment">// TikTok korisnici po broju followera</span>
+List&lt;User&gt; users = getTikTokUsers();
+
+users.sort((u1, u2) -> 
+    Integer.compare(u1.getFollowers(), u2.getFollowers())
+);
+
+<span class="syntax-comment">// 🎉 3 linije - isti rezultat!</span>
+
+<span class="syntax-comment">// Ili još kraće s method reference:</span>
+users.sort(Comparator.comparingInt(User::getFollowers));</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">💡 Pro Tip</div>
+            Lambda izrazi čine kod:
+            <ul>
+                <li>📝 <strong>Kraćim</strong> - manje koda za pisanje i održavanje</li>
+                <li>👀 <strong>Čitljivijim</strong> - fokus na ono što radiš, ne kako</li>
+                <li>🚀 <strong>Modernijim</strong> - funkcionalni stil programiranja</li>
+            </ul>
+        </div>
+        <div class="slide-number">4</div>
+    </div>
+
+    <!-- Slide 5: Sintaksa Lambda izraza -->
+    <div class="slide" id="slide-5">
+        <h2>📝 Sintaksa Lambda izraza</h2>
+
+        <div class="content-box">
+            <h3>Opća sintaksa</h3>
+            <div class="code-block">
+                <pre><code>(parametri) -> { tijelo lambda izraza }</code></pre>
+            </div>
+            <p style="margin-top: 1rem; font-size: 1.1rem;">
+                <strong>→</strong> Arrow operator povezuje parametre s tijelom funkcije
+            </p>
+        </div>
+
+        <h3 style="margin-top: 2rem;">📖 Različiti formati lambda izraza:</h3>
+
+        <div class="code-block">
+            <div class="code-header">1. Bez parametara</div>
+            <pre><code><span class="syntax-comment">// Jednostavna lambda bez parametara</span>
+() -> System.out.println(<span class="syntax-string">"Hello from Lambda! 👋"</span>);
+
+<span class="syntax-comment">// Ili s više linija koda</span>
+() -> {
+    System.out.println(<span class="syntax-string">"Pokretanje Stream aplikacije..."</span>);
+    streamService.start();
+    <span class="syntax-keyword">return</span> <span class="syntax-string">"Streaming started!"</span>;
+};</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">2. Jedan parametar</div>
+            <pre><code><span class="syntax-comment">// Zagrade oko parametra su opcijske</span>
+name -> System.out.println(<span class="syntax-string">"Hi "</span> + name);
+
+<span class="syntax-comment">// Ili s eksplicitnim tipom (opcijski)</span>
+(String name) -> System.out.println(<span class="syntax-string">"Hi "</span> + name);
+
+<span class="syntax-comment">// YouTube primjer - subscribe notifikacija</span>
+channel -> sendNotification(<span class="syntax-string">"New video on "</span> + channel);</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">3. Više parametara</div>
+            <pre><code><span class="syntax-comment">// Zagrade su obavezne za više parametara</span>
+(x, y) -> x + y;
+
+<span class="syntax-comment">// Discord primjer - slanje DM poruke</span>
+(user, message) -> user.sendDirectMessage(message);
+
+<span class="syntax-comment">// S eksplicitnim tipovima</span>
+(Integer followers, Integer likes) -> followers + likes;</code></pre>
+        </div>
+        <div class="slide-number">5</div>
+    </div>
+
+    <!-- Slide 6: Funkcionalna sučelja -->
+    <div class="slide" id="slide-6">
+        <h2>🔌 Funkcionalna sučelja (Functional Interfaces)</h2>
+
+        <div class="content-box">
+            <p style="font-size: 1.2rem;">
+                Funkcionalno sučelje je sučelje s <span class="highlight">točno jednom apstraktnom metodom</span>.
+                Lambda izrazi mogu se koristiti samo s funkcionalnim sučeljima!
+            </p>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Vlastito funkcionalno sučelje</div>
+            <pre><code><span class="syntax-comment">// @FunctionalInterface anotacija osigurava da imamo samo jednu metodu</span>
+<span class="syntax-keyword">@FunctionalInterface</span>
+<span class="syntax-keyword">interface</span> <span class="syntax-function">ContentModerator</span> {
+    <span class="syntax-keyword">boolean</span> <span class="syntax-function">isAppropriate</span>(String content);
+}
+
+<span class="syntax-comment">// Korištenje s lambdom</span>
+ContentModerator moderator = content -> 
+    !content.contains(<span class="syntax-string">"spam"</span>) && 
+    !content.contains(<span class="syntax-string">"inappropriate"</span>);
+
+<span class="syntax-comment">// Provjera sadržaja</span>
+<span class="syntax-keyword">boolean</span> canPost = moderator.isAppropriate(<span class="syntax-string">"Check out my new video!"</span>);
+System.out.println(<span class="syntax-string">"Can post: "</span> + canPost); <span
+                        class="syntax-comment">// true</span></code></pre>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">⚡ Quick Fact</div>
+            Java ima više ugrađenih funkcionalnih sučelja u <code>java.util.function</code> paketu.
+            Ne moraš uvijek praviti svoje!
+        </div>
+        <div class="slide-number">6</div>
+    </div>
+
+    <!-- Slide 7: Predefined Functional Interfaces -->
+    <div class="slide" id="slide-7">
+        <h2>🎁 Ugrađena funkcionalna sučelja</h2>
+
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">Predicate&lt;T&gt;</div>
+                <p style="margin-bottom: 1rem;">Prima argument, vraća boolean</p>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Filter za Instagram story</span>
+Predicate&lt;Story&gt; isActive = 
+    story -> story.getHoursOld() < 24;
+
+<span class="syntax-comment">// Provjera</span>
+<span class="syntax-keyword">if</span> (isActive.test(myStory)) {
+    showStory(myStory);
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Function&lt;T,R&gt;</div>
+                <p style="margin-bottom: 1rem;">Prima argument tipa T, vraća rezultat tipa R</p>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Username formatter</span>
+Function&lt;String, String&gt; addAtSign = 
+    name -> <span class="syntax-string">"@"</span> + name.toLowerCase();
+
+String handle = addAtSign.apply(<span class="syntax-string">"JohnDoe"</span>);
+<span class="syntax-comment">// Result: "@johndoe"</span></code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Consumer&lt;T&gt;</div>
+                <p style="margin-bottom: 1rem;">Prima argument, ne vraća ništa</p>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Slanje push notifikacije</span>
+Consumer&lt;User&gt; sendNotif = 
+    user -> notificationService
+        .send(user.getId(), <span class="syntax-string">"New message!"</span>);
+
+users.forEach(sendNotif);</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Supplier&lt;T&gt;</div>
+                <p style="margin-bottom: 1rem;">Ne prima argumente, vraća rezultat</p>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Random quote generator</span>
+Supplier&lt;String&gt; randomQuote = () -> {
+    String[] quotes = {
+        <span class="syntax-string">"Stay hungry"</span>,
+        <span class="syntax-string">"Think different"</span>,
+        <span class="syntax-string">"Just do it"</span>
+    };
+    <span class="syntax-keyword">return</span> quotes[<span class="syntax-keyword">new</span> Random()
+        .nextInt(quotes.length)];
+};
+
+String quote = randomQuote.get();</code></pre>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">7</div>
+    </div>
+
+    <!-- Slide 8: Method References -->
+    <div class="slide" id="slide-8">
+        <h2>🔗 Method References</h2>
+
+        <div class="content-box">
+            <p style="font-size: 1.2rem;">
+                Method reference je <span class="highlight">još kraći način</span> pisanja lambda izraza
+                kada lambda samo poziva postojeću metodu.
+            </p>
+        </div>
+
+        <h3>Sintaksa: <code style="font-size: 1.3rem;">Class::method</code></h3>
+
+        <div class="comparison">
+            <div class="before">
+                <div class="label label-old">Lambda izraz</div>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Lambda koji poziva metodu</span>
+users.forEach(user -> 
+    System.out.println(user)
+);</code></pre>
+                </div>
+            </div>
+
+            <div class="after">
+                <div class="label label-new">Method Reference</div>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Ista stvar, kraće</span>
+users.forEach(System.out::println);</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 2rem;">🎯 Vrste Method References:</h3>
+
+        <div class="code-block">
+            <div class="code-header">1. Reference na statičku metodu</div>
+            <pre><code><span class="syntax-comment">// Parsiranje brojeva iz stringa</span>
+List&lt;String&gt; numbers = List.of(<span class="syntax-string">"1"</span>, <span
+                        class="syntax-string">"2"</span>, <span class="syntax-string">"3"</span>);
+
+<span class="syntax-comment">// Lambda:</span>
+numbers.stream().map(s -> Integer.parseInt(s));
+
+<span class="syntax-comment">// Method reference:</span>
+numbers.stream().map(Integer::parseInt);</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">2. Reference na instance metodu objekta</div>
+            <pre><code><span class="syntax-comment">// Filtriranje praznih stringova</span>
+List&lt;String&gt; hashtags = List.of(<span class="syntax-string">"#java"</span>, <span class="syntax-string">""</span>, <span
+                        class="syntax-string">"#coding"</span>);
+
+<span class="syntax-comment">// Lambda:</span>
+hashtags.stream().filter(s -> !s.isEmpty());
+
+<span class="syntax-comment">// Method reference:</span>
+hashtags.stream().filter(String::isEmpty).map(s -> !s);</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">3. Reference na konstruktor</div>
+            <pre><code><span class="syntax-comment">// Kreiranje User objekata</span>
+List&lt;String&gt; usernames = List.of(<span class="syntax-string">"alice"</span>, <span
+                        class="syntax-string">"bob"</span>, <span class="syntax-string">"charlie"</span>);
+
+<span class="syntax-comment">// Lambda:</span>
+usernames.stream().map(name -> <span class="syntax-keyword">new</span> User(name));
+
+<span class="syntax-comment">// Method reference:</span>
+usernames.stream().map(User::<span class="syntax-keyword">new</span>);</code></pre>
+        </div>
+        <div class="slide-number">8</div>
+    </div>
+
+    <!-- Slide 9: Stream API osnove -->
+    <div class="slide" id="slide-9">
+        <h2>🌊 Stream API + Lambda = 🔥</h2>
+
+        <div class="content-box">
+            <p style="font-size: 1.2rem;">
+                Stream API omogućava <span class="highlight">funkcionalno procesiranje kolekcija</span>.
+                Lambda izrazi čine Stream API moćnim i lakim za korištenje!
+            </p>
+        </div>
+
+        <h3>💡 Razmisli o Stream-u kao o "conveyor belt-u"</h3>
+        <p style="font-size: 1.1rem; margin: 1rem 0;">
+            Podatke stavljaš na "traku" (stream), primjenjuješ operacije (filter, map),
+            i na kraju dobiješ rezultat (collect, count, etc.)
+        </p>
+
+        <div class="code-block">
+            <div class="code-header">Instagram primjer - najpopularniji postovi</div>
+            <pre><code><span class="syntax-comment">// Lista Instagram postova</span>
+List&lt;Post&gt; posts = getInstagramPosts();
+
+<span class="syntax-comment">// Zadatak: Nađi top 5 postova s najviše lajkova iz 2024.</span>
+List&lt;Post&gt; topPosts = posts.stream()
+    .filter(post -> post.getYear() == 2024)           <span class="syntax-comment">// 1. Filtriraj po godini</span>
+    .filter(post -> post.getLikes() > 10000)           <span class="syntax-comment">// 2. Samo popularne</span>
+    .sorted(Comparator.comparingInt(Post::getLikes)
+            .reversed())                                <span class="syntax-comment">// 3. Sortiraj silazno</span>
+    .limit(5)                                          <span class="syntax-comment">// 4. Uzmi top 5</span>
+    .collect(Collectors.toList());                     <span class="syntax-comment">// 5. Sakupi u listu</span>
+
+<span class="syntax-comment">// 🎉 Sve u 6 linija čitljivog koda!</span></code></pre>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">🚀 Stream operacije</div>
+            <ul>
+                <li><strong>filter()</strong> - filtrira elemente (vraća boolean)</li>
+                <li><strong>map()</strong> - transformira elemente (vraća novi tip)</li>
+                <li><strong>sorted()</strong> - sortira elemente</li>
+                <li><strong>limit()</strong> - ograničava broj elemenata</li>
+                <li><strong>collect()</strong> - sakuplja rezultate u kolekciju</li>
+            </ul>
+        </div>
+        <div class="slide-number">9</div>
+    </div>
+
+    <!-- Slide 10: Stream API - praktični primjeri -->
+    <div class="slide" id="slide-10">
+        <h2>🎮 Stream API - Gaming Primjeri</h2>
+
+        <div class="code-block">
+            <div class="code-header">Primjer 1: Spotify - omiljene pjesme</div>
+            <pre><code><span class="syntax-comment">// Filtriraj sve rock pjesme duže od 3 minute</span>
+List&lt;Song&gt; playlist = songs.stream()
+    .filter(song -> <span class="syntax-string">"Rock"</span>.equals(song.getGenre()))
+    .filter(song -> song.getDuration() > 180)
+    .collect(Collectors.toList());
+
+<span class="syntax-comment">// Prosječna duljina svih rock pjesama</span>
+<span class="syntax-keyword">double</span> avgDuration = songs.stream()
+    .filter(song -> <span class="syntax-string">"Rock"</span>.equals(song.getGenre()))
+    .mapToInt(Song::getDuration)
+    .average()
+    .orElse(0.0);</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Primjer 2: Gaming leaderboard</div>
+            <pre><code><span class="syntax-comment">// Top 10 igrača po score-u</span>
+List&lt;Player&gt; topPlayers = players.stream()
+    .sorted(Comparator.comparingInt(Player::getScore).reversed())
+    .limit(10)
+    .collect(Collectors.toList());
+
+<span class="syntax-comment">// Ukupni score svih aktivnih igrača</span>
+<span class="syntax-keyword">int</span> totalScore = players.stream()
+    .filter(Player::isActive)
+    .mapToInt(Player::getScore)
+    .sum();
+
+<span class="syntax-comment">// Pronađi najboljeg igrača</span>
+Optional&lt;Player&gt; bestPlayer = players.stream()
+    .max(Comparator.comparingInt(Player::getScore));</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Primjer 3: E-commerce - košarica</div>
+            <pre><code><span class="syntax-comment">// Izračunaj ukupnu cijenu artikala na popustu</span>
+<span class="syntax-keyword">double</span> total = cart.getItems().stream()
+    .filter(Item::hasDiscount)
+    .mapToDouble(item -> item.getPrice() * (1 - item.getDiscount()))
+    .sum();
+
+<span class="syntax-comment">// Grupiraj artikle po kategoriji</span>
+Map&lt;String, List&lt;Item&gt;&gt; byCategory = cart.getItems().stream()
+    .collect(Collectors.groupingBy(Item::getCategory));</code></pre>
+        </div>
+        <div class="slide-number">10</div>
+    </div>
+
+    <!-- Slide 11: map() transformacije -->
+    <div class="slide" id="slide-11">
+        <h2>🔄 map() - Transformacije podataka</h2>
+
+        <div class="content-box">
+            <p style="font-size: 1.2rem;">
+                <code>map()</code> transformira svaki element u stream-u.
+                <span class="highlight">Prima jedan tip, vraća drugi tip.</span>
+            </p>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">TikTok primjer - formatiranje usernames</div>
+            <pre><code><span class="syntax-comment">// Od liste imena do liste @usernames</span>
+List&lt;String&gt; names = List.of(<span class="syntax-string">"Ana"</span>, <span class="syntax-string">"Marko"</span>, <span
+                        class="syntax-string">"Ivana"</span>);
+
+List&lt;String&gt; usernames = names.stream()
+    .map(name -> <span class="syntax-string">"@"</span> + name.toLowerCase())
+    .collect(Collectors.toList());
+
+<span class="syntax-comment">// Rezultat: ["@ana", "@marko", "@ivana"]</span></code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">YouTube primjer - ekstrakcija podataka</div>
+            <pre><code><span class="syntax-comment">// Od Video objekata do naslova videa</span>
+List&lt;Video&gt; videos = getVideos();
+
+List&lt;String&gt; titles = videos.stream()
+    .map(Video::getTitle)
+    .collect(Collectors.toList());
+
+<span class="syntax-comment">// Ukupno pregleda svih videa</span>
+<span class="syntax-keyword">long</span> totalViews = videos.stream()
+    .map(Video::getViews)
+    .reduce(0L, Long::sum);
+
+<span class="syntax-comment">// Ili kraće:</span>
+<span class="syntax-keyword">long</span> totalViews2 = videos.stream()
+    .mapToLong(Video::getViews)
+    .sum();</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Netflix primjer - transformacija Movie -> DTO</div>
+            <pre><code><span class="syntax-comment">// Pretvori Movie objekte u jednostavne DTO-ove</span>
+List&lt;MovieDTO&gt; movieCards = movies.stream()
+    .map(movie -> <span class="syntax-keyword">new</span> MovieDTO(
+        movie.getTitle(),
+        movie.getThumbnail(),
+        movie.getRating()
+    ))
+    .collect(Collectors.toList());</code></pre>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">💡 Kada koristiti map()?</div>
+            Koristi <code>map()</code> kada trebaš:
+            <ul>
+                <li>Pretvoriti objekte iz jednog tipa u drugi</li>
+                <li>Ekstraktirati određeno polje iz objekta</li>
+                <li>Primijeniti funkciju na svaki element</li>
+            </ul>
+        </div>
+        <div class="slide-number">11</div>
+    </div>
+
+    <!-- Slide 12: flatMap() -->
+    <div class="slide" id="slide-12">
+        <h2>🗺️ flatMap() - "Ravnanje" struktura</h2>
+
+        <div class="content-box">
+            <p style="font-size: 1.2rem;">
+                <code>flatMap()</code> se koristi kada imaš <span class="highlight">"kolekciju kolekcija"</span>
+                i želiš je "spljoštiti" u jednu kolekciju.
+            </p>
+        </div>
+
+        <div class="comparison">
+            <div class="before">
+                <div class="label label-old">map() - bez ravnanja</div>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Svaki korisnik ima listu prijatelja</span>
+List&lt;User&gt; users = getUsers();
+
+<span class="syntax-comment">// map() vraća Stream&lt;List&lt;User&gt;&gt;</span>
+Stream&lt;List&lt;User&gt;&gt; friendLists = 
+    users.stream()
+        .map(User::getFriends);
+
+<span class="syntax-comment">// 😕 Lista listi, ne možemo lako raditi</span></code></pre>
+                </div>
+            </div>
+
+            <div class="after">
+                <div class="label label-new">flatMap() - s ravnanjem</div>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Svaki korisnik ima listu prijatelja</span>
+List&lt;User&gt; users = getUsers();
+
+<span class="syntax-comment">// flatMap() vraća Stream&lt;User&gt;</span>
+List&lt;User&gt; allFriends = 
+    users.stream()
+        .flatMap(user -> user.getFriends().stream())
+        .collect(Collectors.toList());
+
+<span class="syntax-comment">// 🎉 Jedna ravna lista svih prijatelja!</span></code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Snapchat primjer - svi hashtagovi</div>
+            <pre><code><span class="syntax-comment">// Svaki story ima više hashtagova</span>
+List&lt;Story&gt; stories = getStories();
+
+<span class="syntax-comment">// Izvuci sve hashtagove iz svih storyja</span>
+List&lt;String&gt; allHashtags = stories.stream()
+    .flatMap(story -> story.getHashtags().stream())
+    .distinct()  <span class="syntax-comment">// Ukloni duplikate</span>
+    .collect(Collectors.toList());
+
+<span class="syntax-comment">// Rezultat: [#summer, #fun, #travel, #food, ...]</span></code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Discord primjer - svi članovi servera</div>
+            <pre><code><span
+                    class="syntax-comment">// Svaki server (guild) ima više kanala, svaki kanal više članova</span>
+List&lt;Guild&gt; guilds = getGuilds();
+
+Set&lt;User&gt; allMembers = guilds.stream()
+    .flatMap(guild -> guild.getChannels().stream())  <span class="syntax-comment">// Stream kanala</span>
+    .flatMap(channel -> channel.getMembers().stream()) <span class="syntax-comment">// Stream članova</span>
+    .collect(Collectors.toSet());  <span class="syntax-comment">// Set automatski uklanja duplikate</span></code></pre>
+        </div>
+        <div class="slide-number">12</div>
+    </div>
+
+    <!-- Slide 13: Collectors -->
+    <div class="slide" id="slide-13">
+        <h2>🎯 Collectors - Sakupljanje rezultata</h2>
+
+        <div class="content-box">
+            <p style="font-size: 1.2rem;">
+                <code>Collectors</code> omogućavaju pretvaranje stream-a u različite strukture podataka.
+            </p>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">toList() / toSet()</div>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// U listu</span>
+List&lt;String&gt; list = stream
+    .collect(Collectors.toList());
+
+<span class="syntax-comment">// U set (bez duplikata)</span>
+Set&lt;String&gt; set = stream
+    .collect(Collectors.toSet());</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">joining()</div>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Spoji stringove</span>
+String hashtags = tags.stream()
+    .collect(Collectors.joining(<span class="syntax-string">", "</span>));
+
+<span class="syntax-comment">// Result: "java, coding, tech"</span></code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">groupingBy()</div>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Grupiraj po žanru</span>
+Map&lt;String, List&lt;Song&gt;&gt; byGenre = 
+    songs.stream()
+        .collect(Collectors
+            .groupingBy(Song::getGenre));</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">partitioningBy()</div>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Podijeli u dvije grupe (true/false)</span>
+Map&lt;Boolean, List&lt;User&gt;&gt; byStatus = 
+    users.stream()
+        .collect(Collectors
+            .partitioningBy(User::isActive));</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Instagram Analytics primjer</div>
+            <pre><code><span class="syntax-comment">// Broj postova po danu u tjednu</span>
+Map&lt;DayOfWeek, Long&gt; postsByDay = posts.stream()
+    .collect(Collectors.groupingBy(
+        post -> post.getDate().getDayOfWeek(),
+        Collectors.counting()
+    ));
+
+<span class="syntax-comment">// Prosječan broj lajkova po tipu posta</span>
+Map&lt;PostType, Double&gt; avgLikesByType = posts.stream()
+    .collect(Collectors.groupingBy(
+        Post::getType,
+        Collectors.averagingInt(Post::getLikes)
+    ));</code></pre>
+        </div>
+        <div class="slide-number">13</div>
+    </div>
+
+    <!-- Slide 14: Česte greške -->
+    <div class="slide" id="slide-14">
+        <h2>⚠️ Česte greške s Lambda izrazima</h2>
+
+        <div class="content-box">
+            <h3 style="color: var(--error);">❌ GREŠKA #1: Mutiranje vanjskih varijabli</h3>
+            <div class="comparison" style="margin-top: 1rem;">
+                <div class="before">
+                    <div class="label label-old">Loše - Side effects</div>
+                    <div class="code-block">
+                            <pre><code><span class="syntax-keyword">int</span> sum = 0; <span class="syntax-comment">// Outer variable</span>
+numbers.forEach(n -> {
+    sum += n; <span class="syntax-comment">// ❌ ERROR: Variable used in lambda</span>
+              <span class="syntax-comment">// must be final or effectively final</span>
+});</code></pre>
+                    </div>
+                </div>
+
+                <div class="after">
+                    <div class="label label-new">Dobro - Funkcionalni pristup</div>
+                    <div class="code-block">
+                            <pre><code><span class="syntax-comment">// Koristi reduce() za agregaciju</span>
+<span class="syntax-keyword">int</span> sum = numbers.stream()
+    .reduce(0, Integer::sum);
+
+<span class="syntax-comment">// Ili sum() za primitive</span>
+<span class="syntax-keyword">int</span> sum2 = numbers.stream()
+    .mapToInt(Integer::intValue)
+    .sum();</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-box" style="margin-top: 2rem;">
+            <h3 style="color: var(--error);">❌ GREŠKA #2: Presložene lambde</h3>
+            <div class="comparison" style="margin-top: 1rem;">
+                <div class="before">
+                    <div class="label label-old">Loše - Nečitljivo</div>
+                    <div class="code-block">
+                            <pre><code><span class="syntax-comment">// 😵 Previše logike u lambdi</span>
+users.stream()
+    .filter(u -> {
+        <span class="syntax-keyword">if</span> (u.getAge() > 18) {
+            <span class="syntax-keyword">if</span> (u.isActive()) {
+                <span class="syntax-keyword">if</span> (u.getFollowers() > 1000) {
+                    <span class="syntax-keyword">return true</span>;
+                }
+            }
+        }
+        <span class="syntax-keyword">return false</span>;
+    });</code></pre>
+                    </div>
+                </div>
+
+                <div class="after">
+                    <div class="label label-new">Dobro - Jasno i čisto</div>
+                    <div class="code-block">
+                            <pre><code><span class="syntax-comment">// 😊 Izdvoji u zasebnu metodu</span>
+users.stream()
+    .filter(<span class="syntax-keyword">this</span>::isInfluencer);
+
+<span class="syntax-keyword">private boolean</span> <span class="syntax-function">isInfluencer</span>(User u) {
+    <span class="syntax-keyword">return</span> u.getAge() > 18 
+        && u.isActive() 
+        && u.getFollowers() > 1000;
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-box" style="margin-top: 2rem;">
+            <h3 style="color: var(--error);">❌ GREŠKA #3: Zanemarivanje null vrijednosti</h3>
+            <div class="code-block">
+                    <pre><code><span class="syntax-comment">// ❌ Može baciti NullPointerException</span>
+users.stream()
+    .map(User::getName)  <span class="syntax-comment">// getName() može vratiti null!</span>
+    .map(String::toUpperCase)  <span class="syntax-comment">// 💥 NPE!</span>
+    .collect(Collectors.toList());
+
+<span class="syntax-comment">// ✅ Sigurniji pristup</span>
+users.stream()
+    .map(User::getName)
+    .filter(Objects::nonNull)  <span class="syntax-comment">// Filtriraj null-ove</span>
+    .map(String::toUpperCase)
+    .collect(Collectors.toList());
+
+<span class="syntax-comment">// ✅ Ili koristi Optional</span>
+users.stream()
+    .map(User::getNameOptional)
+    .flatMap(Optional::stream)  <span class="syntax-comment">// Java 9+</span>
+    .map(String::toUpperCase)
+    .collect(Collectors.toList());</code></pre>
+            </div>
+        </div>
+        <div class="slide-number">14</div>
+    </div>
+
+    <!-- Slide 15: Best Practices -->
+    <div class="slide" id="slide-15">
+        <h2>✨ Best Practices</h2>
+
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">1️⃣ Koristi method reference kada je moguće</div>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Dobro ✅</span>
+list.forEach(System.out::println);
+
+<span class="syntax-comment">// Meh, može bolje</span>
+list.forEach(x -> System.out.println(x));</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">2️⃣ Izbjegavaj side effects</div>
+                <p style="margin: 0.5rem 0;">Lambda izrazi trebaju biti <strong>pure functions</strong> - bez mutiranja
+                    stanja!</p>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Dobro ✅</span>
+<span class="syntax-keyword">return</span> users.stream()
+    .filter(User::isActive)
+    .collect(Collectors.toList());
+
+<span class="syntax-comment">// Loše ❌</span>
+List&lt;User&gt; result = <span class="syntax-keyword">new</span> ArrayList&lt;&gt;();
+users.forEach(u -> {
+    <span class="syntax-keyword">if</span> (u.isActive()) {
+        result.add(u); <span class="syntax-comment">// Side effect!</span>
+    }
+});</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">3️⃣ Lambda ili običan loop?</div>
+                <p style="margin: 0.5rem 0;">Koristi lambdu kada operacija treba biti <strong>deklarativna</strong>.</p>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Lambda - za transformacije ✅</span>
+names.stream()
+    .map(String::toUpperCase)
+    .collect(Collectors.toList());
+
+<span class="syntax-comment">// Loop - za kompleksnu logiku ✅</span>
+<span class="syntax-keyword">for</span> (User user : users) {
+    <span class="syntax-keyword">if</span> (complexCondition(user)) {
+        doMultipleThings(user);
+        updateDatabase(user);
+    }
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">4️⃣ Ime lambda parametara</div>
+                <p style="margin: 0.5rem 0;">Koristi <strong>smislena imena</strong>, ne generička <code>x</code>,
+                    <code>y</code>.</p>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Dobro ✅</span>
+users.stream()
+    .filter(user -> user.getAge() > 18)
+    .map(user -> user.getName())
+
+<span class="syntax-comment">// Loše ❌</span>
+users.stream()
+    .filter(u -> u.getAge() > 18)
+    .map(u -> u.getName())</code></pre>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">15</div>
+    </div>
+
+    <!-- Slide 16: Performance Tips -->
+    <div class="slide" id="slide-16">
+        <h2>⚡ Performance Savjeti</h2>
+
+        <div class="content-box">
+            <h3>1. Parallel Streams - Pažljivo!</h3>
+            <div class="code-block">
+                    <pre><code><span class="syntax-comment">// Parallel stream za velike kolekcije</span>
+List&lt;Integer&gt; numbers = IntStream.range(1, 1_000_000)
+    .boxed()
+    .collect(Collectors.toList());
+
+<span class="syntax-comment">// Sequential (obični stream)</span>
+<span class="syntax-keyword">long</span> sum1 = numbers.stream()
+    .mapToLong(Integer::longValue)
+    .sum();
+
+<span class="syntax-comment">// Parallel - koristi više CPU cores</span>
+<span class="syntax-keyword">long</span> sum2 = numbers.parallelStream()
+    .mapToLong(Integer::longValue)
+    .sum();
+
+<span class="syntax-comment">// ⚠️ PAZI: Parallel je brži samo za:</span>
+<span class="syntax-comment">// - Velike količine podataka (>10,000 elemenata)</span>
+<span class="syntax-comment">// - CPU-intensive operacije</span>
+<span class="syntax-comment">// - Bez side effects i shared state!</span></code></pre>
+            </div>
+        </div>
+
+        <div class="content-box" style="margin-top: 2rem;">
+            <h3>2. Lazy Evaluation</h3>
+            <p style="margin: 1rem 0;">Stream operacije su <strong>lazy</strong> - izvršavaju se tek kad pozoveš
+                terminal operaciju!</p>
+            <div class="code-block">
+                    <pre><code><span class="syntax-comment">// Ništa se NE izvršava ovdje!</span>
+Stream&lt;User&gt; stream = users.stream()
+    .filter(user -> {
+        System.out.println(<span class="syntax-string">"Filtering "</span> + user.getName());
+        <span class="syntax-keyword">return</span> user.isActive();
+    })
+    .map(user -> {
+        System.out.println(<span class="syntax-string">"Mapping "</span> + user.getName());
+        <span class="syntax-keyword">return</span> user.getName();
+    });
+
+<span class="syntax-comment">// Izvršava se tek kad pozoveš terminal operaciju:</span>
+List&lt;String&gt; names = stream.collect(Collectors.toList());
+
+<span class="syntax-comment">// 💡 Ovo je odlično za performanse - ne procesira sve podatke</span>
+<span class="syntax-comment">// ako koristiš npr. findFirst() ili limit()!</span></code></pre>
+            </div>
+        </div>
+
+        <div class="content-box" style="margin-top: 2rem;">
+            <h3>3. Short-circuiting operacije</h3>
+            <div class="code-block">
+                    <pre><code><span class="syntax-comment">// anyMatch() - prestaje čim nađe match ✅</span>
+<span class="syntax-keyword">boolean</span> hasActiveUsers = users.stream()
+    .anyMatch(User::isActive);  <span class="syntax-comment">// Zaustavlja se na prvom true</span>
+
+<span class="syntax-comment">// findFirst() - vraća odmah prvog ✅</span>
+Optional&lt;User&gt; admin = users.stream()
+    .filter(User::isAdmin)
+    .findFirst();  <span class="syntax-comment">// Ne procesira ostale elemente</span>
+
+<span class="syntax-comment">// limit() - ograničava broj elemenata ✅</span>
+List&lt;User&gt; first10 = users.stream()
+    .limit(10)
+    .collect(Collectors.toList());  <span class="syntax-comment">// Procesira samo 10</span></code></pre>
+            </div>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">💡 Golden Rule</div>
+            <strong>Nemoj prerano optimizirati!</strong>
+            Prvo napiši čitljiv kod, pa optimiziraj ako je potrebno.
+            Stream API je uglavnom dovoljno brz za većinu slučajeva.
+        </div>
+        <div class="slide-number">16</div>
+    </div>
+
+    <!-- Slide 17: Java 25 novosti -->
+    <div class="slide" id="slide-17">
+        <h2>🆕 Što je novo u Java 25?</h2>
+
+        <div class="content-box">
+            <h3>1. Pattern Matching u lambdama (Preview)</h3>
+            <div class="code-block">
+                    <pre><code><span class="syntax-comment">// Tradicionalno</span>
+users.stream()
+    .filter(user -> user <span class="syntax-keyword">instanceof</span> PremiumUser)
+    .map(user -> (PremiumUser) user)
+    .forEach(premium -> System.out.println(premium.getBenefits()));
+
+<span class="syntax-comment">// Java 25 - Pattern matching u lambdama</span>
+users.stream()
+    .filter(PremiumUser premium -> premium.getSubscription().isActive())
+    .forEach(premium -> System.out.println(premium.getBenefits()));</code></pre>
+            </div>
+        </div>
+
+        <div class="content-box" style="margin-top: 2rem;">
+            <h3>2. Enhanced Stream API</h3>
+            <div class="code-block">
+                    <pre><code><span class="syntax-comment">// Nove metode za lakšu obradu</span>
+List&lt;Post&gt; posts = getPosts();
+
+<span class="syntax-comment">// mapMulti() - alternative za flatMap</span>
+posts.stream()
+    .mapMulti((post, consumer) -> {
+        post.getTags().forEach(consumer);
+    })
+    .distinct()
+    .forEach(System.out::println);
+
+<span class="syntax-comment">// takeWhile() i dropWhile() za ordered streams</span>
+List&lt;Integer&gt; numbers = List.of(1, 2, 3, 4, 5, 6);
+
+numbers.stream()
+    .takeWhile(n -> n < 4)  <span class="syntax-comment">// [1, 2, 3]</span>
+    .forEach(System.out::println);
+
+numbers.stream()
+    .dropWhile(n -> n < 4)  <span class="syntax-comment">// [4, 5, 6]</span>
+    .forEach(System.out::println);</code></pre>
+            </div>
+        </div>
+
+        <div class="content-box" style="margin-top: 2rem;">
+            <h3>3. Record Patterns u lambdama</h3>
+            <div class="code-block">
+                    <pre><code><span class="syntax-comment">// Record definicija</span>
+<span class="syntax-keyword">record</span> User(String name, <span class="syntax-keyword">int</span> age, String email) {}
+
+<span class="syntax-comment">// Dekonstrukcija u lambdi</span>
+List&lt;User&gt; users = getUsers();
+
+users.stream()
+    .map(user -> <span class="syntax-keyword">switch</span> (user) {
+        <span class="syntax-keyword">case</span> User(var name, var age, var email) 
+            when age > 18 -> <span class="syntax-string">"Adult: "</span> + name;
+        <span class="syntax-keyword">case</span> User(var name, var age, var email) 
+            -> <span class="syntax-string">"Minor: "</span> + name;
+    })
+    .forEach(System.out::println);</code></pre>
+            </div>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">🚀 Stay Updated!</div>
+            Java se brzo razvija! Prati <a href="https://openjdk.org/" style="color: var(--accent-primary);">OpenJDK</a>
+            za najnovije značajke i JEP-ove (Java Enhancement Proposals).
+        </div>
+        <div class="slide-number">17</div>
+    </div>
+
+    <!-- Slide 18: Praktični projekt -->
+    <div class="slide" id="slide-18">
+        <h2>🎯 Praktični projekt: Social Media Analytics</h2>
+
+        <div class="content-box">
+            <h3>Zadatak: Analiza Instagram postova</h3>
+            <p style="font-size: 1.1rem; margin: 1rem 0;">
+                Kreiraj sustav za analizu popularnosti postova koristeći Stream API i lambde.
+            </p>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Model klase</div>
+            <pre><code><span class="syntax-keyword">record</span> Post(
+    String id,
+    String author,
+    String content,
+    <span class="syntax-keyword">int</span> likes,
+    <span class="syntax-keyword">int</span> comments,
+    <span class="syntax-keyword">int</span> shares,
+    LocalDateTime postedAt,
+    List&lt;String&gt; hashtags
+) {
+    <span class="syntax-comment">// Engagement rate calculation</span>
+    <span class="syntax-keyword">public double</span> <span class="syntax-function">engagementRate</span>() {
+        <span class="syntax-keyword">return</span> (likes + comments * 2 + shares * 3) / 100.0;
+    }
+}</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Analytics klasa</div>
+            <pre><code><span class="syntax-keyword">public class</span> <span
+                    class="syntax-function">InstagramAnalytics</span> {
+    
+    <span class="syntax-comment">// 1. Top 10 postova po engagement rate-u</span>
+    <span class="syntax-keyword">public</span> List&lt;Post&gt; <span class="syntax-function">getTopEngagingPosts</span>(List&lt;Post&gt; posts) {
+        <span class="syntax-keyword">return</span> posts.stream()
+            .sorted(Comparator.comparingDouble(Post::engagementRate).reversed())
+            .limit(10)
+            .collect(Collectors.toList());
+    }
+    
+    <span class="syntax-comment">// 2. Najčešći hashtagovi</span>
+    <span class="syntax-keyword">public</span> Map&lt;String, Long&gt; <span
+                        class="syntax-function">getTopHashtags</span>(List&lt;Post&gt; posts, <span
+                        class="syntax-keyword">int</span> limit) {
+        <span class="syntax-keyword">return</span> posts.stream()
+            .flatMap(post -> post.hashtags().stream())
+            .collect(Collectors.groupingBy(
+                tag -> tag,
+                Collectors.counting()
+            ))
+            .entrySet().stream()
+            .sorted(Map.Entry.&lt;String, Long&gt;comparingByValue().reversed())
+            .limit(limit)
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue,
+                (e1, e2) -> e1,
+                LinkedHashMap::<span class="syntax-keyword">new</span>
+            ));
+    }
+    
+    <span class="syntax-comment">// 3. Autori s prosječno najviše lajkova</span>
+    <span class="syntax-keyword">public</span> Map&lt;String, Double&gt; <span
+                        class="syntax-function">getTopAuthors</span>(List&lt;Post&gt; posts) {
+        <span class="syntax-keyword">return</span> posts.stream()
+            .collect(Collectors.groupingBy(
+                Post::author,
+                Collectors.averagingInt(Post::likes)
+            ))
+            .entrySet().stream()
+            .sorted(Map.Entry.&lt;String, Double&gt;comparingByValue().reversed())
+            .limit(5)
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue,
+                (e1, e2) -> e1,
+                LinkedHashMap::<span class="syntax-keyword">new</span>
+            ));
+    }
+    
+    <span class="syntax-comment">// 4. Postovi iz zadnjih 24 sata</span>
+    <span class="syntax-keyword">public</span> List&lt;Post&gt; <span class="syntax-function">getRecentPosts</span>(List&lt;Post&gt; posts) {
+        LocalDateTime yesterday = LocalDateTime.now().minusHours(24);
+        <span class="syntax-keyword">return</span> posts.stream()
+            .filter(post -> post.postedAt().isAfter(yesterday))
+            .sorted(Comparator.comparing(Post::postedAt).reversed())
+            .collect(Collectors.toList());
+    }
+}</code></pre>
+        </div>
+        <div class="slide-number">18</div>
+    </div>
+
+    <!-- Slide 19: Debugging Lambda izraza -->
+    <div class="slide" id="slide-19">
+        <h2>🐛 Debugging Lambda izraza</h2>
+
+        <div class="content-box">
+            <h3>Tipovi grešaka i kako ih riješiti</h3>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">1. Debug sa peek()</div>
+            <pre><code><span
+                    class="syntax-comment">// peek() omogućava inspekciju elemenata bez mijenjanja stream-a</span>
+List&lt;String&gt; result = users.stream()
+    .filter(User::isActive)
+    .peek(user -> System.out.println(<span class="syntax-string">"After filter: "</span> + user))
+    .map(User::getName)
+    .peek(name -> System.out.println(<span class="syntax-string">"After map: "</span> + name))
+    .collect(Collectors.toList());
+
+<span class="syntax-comment">// Output:</span>
+<span class="syntax-comment">// After filter: User[name=Ana, active=true]</span>
+<span class="syntax-comment">// After map: Ana</span>
+<span class="syntax-comment">// After filter: User[name=Marko, active=true]</span>
+<span class="syntax-comment">// After map: Marko</span></code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">2. Breakpoints u IntelliJ IDEA</div>
+            <pre><code><span class="syntax-comment">// Postavi breakpoint na liniju s lambdom</span>
+users.stream()
+    .filter(user -> user.getAge() > 18)  <span class="syntax-comment">// ← Breakpoint ovdje</span>
+    .collect(Collectors.toList());
+
+<span class="syntax-comment">// IntelliJ će stati na svakom pozivu lambde!</span>
+<span class="syntax-comment">// Možeš vidjeti vrijednosti user objekta</span></code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">3. Izvuci lambdu u zasebnu metodu</div>
+            <pre><code><span class="syntax-comment">// Loše - teško za debug</span>
+users.stream()
+    .filter(u -> u.getAge() > 18 && u.isActive() && u.hasEmail())
+    .collect(Collectors.toList());
+
+<span class="syntax-comment">// Dobro - lako za debug</span>
+users.stream()
+    .filter(<span class="syntax-keyword">this</span>::isEligible)
+    .collect(Collectors.toList());
+
+<span class="syntax-keyword">private boolean</span> <span class="syntax-function">isEligible</span>(User user) {
+    <span class="syntax-comment">// Ovdje možeš staviti breakpoint i vidjeti sve!</span>
+    <span class="syntax-keyword">boolean</span> adultAge = user.getAge() > 18;
+    <span class="syntax-keyword">boolean</span> active = user.isActive();
+    <span class="syntax-keyword">boolean</span> hasEmail = user.hasEmail();
+    <span class="syntax-keyword">return</span> adultAge && active && hasEmail;
+}</code></pre>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">💡 Pro Debugging Tip</div>
+            Koristi <strong>Stream.of().toList()</strong> za brzo testiranje lambda logike:
+            <div class="code-block" style="margin-top: 0.5rem;">
+                    <pre><code><span class="syntax-comment">// Brzo testiraj svoju lambdu</span>
+List&lt;String&gt; test = Stream.of(<span class="syntax-string">"Ana"</span>, <span class="syntax-string">"Marko"</span>, <span
+                                class="syntax-string">"Ivana"</span>)
+    .map(name -> <span class="syntax-string">"@"</span> + name.toLowerCase())
+    .toList();
+
+System.out.println(test); <span class="syntax-comment">// [@ana, @marko, @ivana]</span></code></pre>
+            </div>
+        </div>
+        <div class="slide-number">19</div>
+    </div>
+
+    <!-- Slide 20: Zaključak -->
+    <div class="slide" id="slide-20">
+        <h2>🎓 Zaključak</h2>
+
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">📝 Što smo naučili?</div>
+                <ul style="margin-left: 1rem;">
+                    <li>Lambda sintaksu i funkcionalna sučelja</li>
+                    <li>Method references za kraći kod</li>
+                    <li>Stream API za elegantnu obradu podataka</li>
+                    <li>Best practices i česte greške</li>
+                    <li>Novosti u Java 25</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title">💪 Key Takeaways</div>
+                <ul style="margin-left: 1rem;">
+                    <li>Lambda = Kraći, čitljiviji kod</li>
+                    <li>Stream API = Deklarativno programiranje</li>
+                    <li>Izbjegavaj side effects</li>
+                    <li>Koristi method references</li>
+                    <li>Piši čist, funkcionalan kod</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-box" style="margin-top: 2rem; text-align: center;">
+            <h3 style="font-size: 2rem; margin-bottom: 1rem;">🚀 Sretno s kodiranjem!</h3>
+            <p style="font-size: 1.3rem; color: var(--text-secondary);">
+                Lambda izrazi su moćan alat - koristi ih mudro! 💡
+            </p>
+        </div>
+
+        <div class="tip" style="margin-top: 2rem;">
+            <div class="tip-title">📚 Dodatni resursi</div>
+            <ul>
+                <li><strong>Oracle Java Tutorials:</strong> <a
+                        href="https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html"
+                        style="color: var(--accent-primary);">Lambda Expressions</a></li>
+                <li><strong>Baeldung:</strong> Odličan izvor za Java tutorijale</li>
+                <li><strong>Java Stream API Documentation:</strong> Službena dokumentacija</li>
+                <li><strong>Modern Java in Action:</strong> Preporučena knjiga</li>
+            </ul>
+        </div>
+
+        <div class="content-box"
+             style="margin-top: 2rem; text-align: center; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); color: white;">
+            <h3 style="font-size: 2rem; margin-bottom: 0.5rem; color: white;">Pitanja? 🤔</h3>
+            <p style="font-size: 1.2rem;">
+                Tehničko veleučilište u Zagrebu<br>
+                Programiranje u jeziku Java
+            </p>
+        </div>
+        <div class="slide-number">20</div>
+    </div>
+</div>
+
+<div class="navigation">
+    <button class="nav-button" id="prevBtn" onclick="previousSlide()">← Prethodni</button>
+    <span id="slideIndicator" style="color: var(--text-primary); font-weight: 600; padding: 0 20px;">1 / 20</span>
+    <button class="nav-button" id="nextBtn" onclick="nextSlide()">Sljedeći →</button>
+</div>
+
+<script>
+    let currentSlide = 1;
+    const totalSlides = 20;
+
+    function showSlide(n) {
+        const slides = document.querySelectorAll('.slide');
+        if (n > totalSlides) currentSlide = totalSlides;
+        if (n < 1) currentSlide = 1;
+
+        slides.forEach(slide => slide.style.display = 'none');
+        slides[currentSlide - 1].style.display = 'flex';
+
+        document.getElementById('slideIndicator').textContent = `${currentSlide} / ${totalSlides}`;
+
+        document.getElementById('prevBtn').disabled = currentSlide === 1;
+        document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+
+        // Scroll to top on slide change
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    function nextSlide() {
+        currentSlide++;
+        showSlide(currentSlide);
+    }
+
+    function previousSlide() {
+        currentSlide--;
+        showSlide(currentSlide);
+    }
+
+    function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    }
+
+    // Load saved theme
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        showSlide(currentSlide);
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+    });
+
+    // Initialize
+    showSlide(currentSlide);
+</script>
+</body>
+</html>

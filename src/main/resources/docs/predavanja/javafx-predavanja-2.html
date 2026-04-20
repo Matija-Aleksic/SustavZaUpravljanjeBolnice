@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>JavaFX - Predavanja | TVZ</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+          rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f0f1a;
+            --bg-secondary: #1a1a2e;
+            --bg-card: #16213e;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --accent-1: #6366f1;
+            --accent-2: #8b5cf6;
+            --accent-3: #ec4899;
+            --code-bg: #1e1e2e;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            --gradient-1: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+            --gradient-2: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .light-mode {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --code-bg: #f1f5f9;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            --gradient-2: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            padding: 60px 80px;
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--gradient-2);
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide.exit {
+            opacity: 0;
+            transform: translateX(-100px);
+        }
+
+        /* Title Slide */
+        .slide.title-slide {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: var(--bg-primary);
+        }
+
+        .title-slide h1 {
+            font-size: 5rem;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.3));
+            }
+            to {
+                filter: drop-shadow(0 0 40px rgba(139, 92, 246, 0.5));
+            }
+        }
+
+        .title-slide .subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        .title-slide .meta {
+            display: flex;
+            gap: 30px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .title-slide .meta span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Content Slides */
+        .slide h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        .slide-content p, .slide-content li {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        .slide-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .slide-content li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        .slide-content li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent-1);
+            font-weight: bold;
+        }
+
+        /* Code blocks */
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 16px;
+            padding: 24px;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+
+        .code-block pre {
+            margin: 0;
+        }
+
+        .code-block code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .code-dot.red {
+            background: #ff5f57;
+        }
+
+        .code-dot.yellow {
+            background: #ffbd2e;
+        }
+
+        .code-dot.green {
+            background: #28c840;
+        }
+
+        .code-filename {
+            margin-left: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Two column layout */
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            color: var(--accent-1);
+        }
+
+        .card p {
+            font-size: 1rem !important;
+            color: var(--text-secondary);
+        }
+
+        /* Feature grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-item {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .feature-text h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .feature-text p {
+            font-size: 0.9rem !important;
+            color: var(--text-secondary);
+        }
+
+        /* Highlight box */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border-left: 4px solid var(--accent-1);
+            padding: 20px 24px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
+        }
+
+        .highlight-box p {
+            font-size: 1.1rem !important;
+            color: var(--text-primary);
+        }
+
+        /* Navigation */
+        .nav-controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: var(--bg-card);
+            padding: 12px 24px;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--accent-1);
+            transform: scale(1.1);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            min-width: 60px;
+            text-align: center;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--gradient-1);
+            transition: width 0.3s ease;
+            z-index: 1000;
+        }
+
+        /* Theme toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border: none;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* TOC Slide */
+        .toc-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .toc-item {
+            background: var(--bg-card);
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .toc-item:hover {
+            background: var(--accent-1);
+            transform: translateX(10px);
+        }
+
+        .toc-number {
+            width: 30px;
+            height: 30px;
+            background: var(--gradient-1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* JavaFX Window Mockup */
+        .javafx-window {
+            background: #f0f0f0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid #ccc;
+        }
+
+        .javafx-titlebar {
+            background: linear-gradient(180deg, #e8e8e8 0%, #d0d0d0 100%);
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #bbb;
+        }
+
+        .javafx-titlebar-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .javafx-titlebar-btn.close {
+            background: #ff5f57;
+        }
+
+        .javafx-titlebar-btn.minimize {
+            background: #ffbd2e;
+        }
+
+        .javafx-titlebar-btn.maximize {
+            background: #28c840;
+        }
+
+        .javafx-titlebar-title {
+            flex: 1;
+            text-align: center;
+            font-size: 12px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .javafx-content {
+            padding: 20px;
+            background: #f5f5f5;
+            min-height: 150px;
+        }
+
+        /* Layout examples */
+        .hbox-demo {
+            display: flex;
+            gap: 5px;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #ddd;
+        }
+
+        .hbox-demo .rect {
+            background: #333;
+        }
+
+        .vbox-demo {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #ddd;
+            width: fit-content;
+        }
+
+        .vbox-demo .rect {
+            background: #333;
+        }
+
+        .flowpane-demo {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 10px;
+            background: #fff;
+            max-width: 250px;
+        }
+
+        .flowpane-demo .btn {
+            background: #e0e0e0;
+            border: 1px solid #999;
+            padding: 5px 12px;
+            font-size: 11px;
+            border-radius: 3px;
+        }
+
+        .borderpane-demo {
+            display: grid;
+            grid-template-areas: 
+                "top top top"
+                "left center right"
+                "bottom bottom bottom";
+            gap: 5px;
+            background: #fff;
+            padding: 10px;
+        }
+
+        .borderpane-demo .area {
+            background: #e0e0e0;
+            border: 1px solid #999;
+            padding: 10px 15px;
+            text-align: center;
+            font-size: 11px;
+            border-radius: 3px;
+        }
+
+        .borderpane-demo .top {
+            grid-area: top;
+        }
+
+        .borderpane-demo .left {
+            grid-area: left;
+        }
+
+        .borderpane-demo .center {
+            grid-area: center;
+            background: #c0c0c0;
+        }
+
+        .borderpane-demo .right {
+            grid-area: right;
+        }
+
+        .borderpane-demo .bottom {
+            grid-area: bottom;
+        }
+
+        .gridpane-demo {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 8px;
+            align-items: center;
+            padding: 15px;
+            background: #fff;
+        }
+
+        .gridpane-demo label {
+            font-size: 12px;
+            text-align: right;
+            color: #333;
+        }
+
+        .gridpane-demo input {
+            padding: 6px 10px;
+            border: 1px solid #999;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        .gridpane-demo .btn-row {
+            grid-column: 2;
+            text-align: right;
+        }
+
+        .gridpane-demo button {
+            background: #e0e0e0;
+            border: 1px solid #999;
+            padding: 6px 16px;
+            font-size: 11px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        /* Preview container */
+        .preview-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .preview-label {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 15px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .slide {
+                padding: 40px;
+            }
+
+            .title-slide h1 {
+                font-size: 3rem;
+            }
+
+            .slide h2 {
+                font-size: 2rem;
+            }
+
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+
+            .toc-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Keyboard hint */
+        .keyboard-hint {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 999;
+        }
+
+        .keyboard-hint.show {
+            opacity: 1;
+        }
+
+        kbd {
+            background: var(--bg-secondary);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            margin: 0 4px;
+        }
+
+        /* Animation for list items */
+        .slide.active .slide-content li,
+        .slide.active .card,
+        .slide.active .feature-item {
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .slide.active .slide-content li:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .slide.active .slide-content li:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .slide.active .slide-content li:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .slide.active .slide-content li:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .slide.active .slide-content li:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .slide.active .slide-content li:nth-child(6) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Questions slide */
+        .questions-slide {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .questions-slide h2 {
+            font-size: 4rem;
+            margin-bottom: 30px;
+        }
+
+        .questions-slide .emoji {
+            font-size: 6rem;
+            margin-bottom: 30px;
+        }
+
+        /* Diagram styles */
+        .diagram-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .layout-diagram {
+            display: grid;
+            grid-template-areas: 
+                "top top top"
+                "left center right"
+                "bottom bottom bottom";
+            gap: 10px;
+            width: 350px;
+        }
+
+        .layout-box {
+            background: var(--bg-card);
+            border: 2px solid var(--accent-1);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .layout-box.top {
+            grid-area: top;
+        }
+
+        .layout-box.left {
+            grid-area: left;
+        }
+
+        .layout-box.center {
+            grid-area: center;
+            background: var(--accent-1);
+            color: white;
+        }
+
+        .layout-box.right {
+            grid-area: right;
+        }
+
+        .layout-box.bottom {
+            grid-area: bottom;
+        }
+
+        /* Small code */
+        .code-block.small {
+            padding: 16px;
+        }
+
+        .code-block.small code {
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<button class="theme-toggle" id="themeToggle" title="Promijeni temu">🌙</button>
+
+<div class="keyboard-hint" id="keyboardHint">
+    Koristi <kbd>←</kbd> <kbd>→</kbd> za navigaciju
+</div>
+
+<div class="presentation-container" id="presentation">
+
+    <!-- Slide 1: Title -->
+    <div class="slide title-slide active" data-slide="1">
+        <h1>Uvod u JavaFX</h1>
+        <p class="subtitle">Moderno grafičko sučelje za Java aplikacije</p>
+        <div class="meta">
+            <span>📚 Tehničko veleučilište u Zagrebu</span>
+            <span>👨‍💻 Programiranje u Javi</span>
+            <span>📅 2025/2026</span>
+        </div>
+    </div>
+
+    <!-- Slide 2: Sadržaj -->
+    <div class="slide" data-slide="2">
+        <h2>📋 Sadržaj predavanja</h2>
+        <div class="toc-list">
+            <div class="toc-item" onclick="goToSlide(3)">
+                <span class="toc-number">1</span>
+                <span>Grafička sučelja u Javi</span>
+            </div>
+            <div class="toc-item" onclick="goToSlide(5)">
+                <span class="toc-number">2</span>
+                <span>Prednosti JavaFX-a</span>
+            </div>
+            <div class="toc-item" onclick="goToSlide(6)">
+                <span class="toc-number">3</span>
+                <span>Prva JavaFX aplikacija</span>
+            </div>
+            <div class="toc-item" onclick="goToSlide(9)">
+                <span class="toc-number">4</span>
+                <span>FXML</span>
+            </div>
+            <div class="toc-item" onclick="goToSlide(11)">
+                <span class="toc-number">5</span>
+                <span>Organizatori rasporeda</span>
+            </div>
+            <div class="toc-item" onclick="goToSlide(18)">
+                <span class="toc-number">6</span>
+                <span>MVC arhitektura</span>
+            </div>
+            <div class="toc-item" onclick="goToSlide(22)">
+                <span class="toc-number">7</span>
+                <span>JavaFX zbirke</span>
+            </div>
+            <div class="toc-item" onclick="goToSlide(25)">
+                <span class="toc-number">8</span>
+                <span>TableView i izbornici</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: GUI u Javi - Povijest -->
+    <div class="slide" data-slide="3">
+        <h2>🖥️ Grafička sučelja u Javi</h2>
+        <div class="slide-content">
+            <div class="highlight-box">
+                <p><strong>GUI</strong> (Graphical User Interface) omogućava korištenje aplikacija kroz grafičke
+                    elemente - <em>kontrole</em> ili <em>widgete</em> (Window Gadgets)</p>
+            </div>
+            <ul>
+                <li><strong>AWT</strong> (Abstract Window Toolkit) - prvi GUI library u Javi, prisutan od samih početaka
+                </li>
+                <li><strong>Swing</strong> - primarni GUI toolkit od Jave SE 1.2 do Jave SE 7</li>
+                <li>Swing je trenutno samo u fazi održavanja (maintenance mode)</li>
+                <li>Ostaje dio Jave radi <em>backward compatibility</em>, ali se više ne razvija aktivno</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Slide 4: JavaFX povijest -->
+    <div class="slide" data-slide="4">
+        <h2>📜 Povijest JavaFX-a</h2>
+        <div class="slide-content">
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">🚀</div>
+                    <div class="feature-text">
+                        <h4>2007 - Početak</h4>
+                        <p>JavaFX predstavljen kao konkurent Adobe Flashu i Microsoft Silverlightu</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📦</div>
+                    <div class="feature-text">
+                        <h4>2008 - Verzija 1.0</h4>
+                        <p>Prva službena verzija koristi JavaFX Script (sličan JavaScriptu)</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-text">
+                        <h4>2011 - Verzija 2.0</h4>
+                        <p>Velika promjena - JavaFX postaje skup Java libraryja</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">☕</div>
+                    <div class="feature-text">
+                        <h4>2014 - JavaFX 8</h4>
+                        <p>Integriran s Javom 8, postaje standardni GUI toolkit</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Prednosti JavaFX-a -->
+    <div class="slide" data-slide="5">
+        <h2>✨ Prednosti JavaFX-a</h2>
+        <div class="slide-content">
+            <div class="feature-grid">
+                <div class="card">
+                    <h3>🎨 Scene Builder</h3>
+                    <p>Vizualni alat za dizajniranje GUI-ja. Može se koristiti samostalno ili integriran u IDE.</p>
+                </div>
+                <div class="card">
+                    <h3>💅 CSS Styling</h3>
+                    <p>Korištenje CSS-a za oblikovanje komponenti - poznato web developerima!</p>
+                </div>
+                <div class="card">
+                    <h3>⚡ Multithreading</h3>
+                    <p>Napredno korištenje niti za optimalne performanse na višejezgrenim procesorima.</p>
+                </div>
+                <div class="card">
+                    <h3>🎬 Animacije</h3>
+                    <p>Podrška za transformacije i animacije - dinamični UI efekti.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: Prva JavaFX aplikacija - kod -->
+    <div class="slide" data-slide="6">
+        <h2>👨‍💻 Prva JavaFX aplikacija</h2>
+        <div class="slide-content two-columns">
+            <div class="column">
+                <div class="code-block small">
+                    <div class="code-header">
+                        <span class="code-dot red"></span>
+                        <span class="code-dot yellow"></span>
+                        <span class="code-dot green"></span>
+                        <span class="code-filename">Main.java</span>
+                    </div>
+                    <pre><code class="language-java">public class Main extends Application {
+    @Override
+    public void start(Stage primaryStage) {
+        try {
+            BorderPane root = new BorderPane();
+            Scene scene = new Scene(root, 400, 400);
+            scene.getStylesheets().add(
+                getClass().getResource("application.css")
+                    .toExternalForm()
+            );
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}</code></pre>
+                </div>
+            </div>
+            <div class="column">
+                <div class="preview-container">
+                    <div class="javafx-window" style="width: 280px;">
+                        <div class="javafx-titlebar">
+                            <span class="javafx-titlebar-btn close"></span>
+                            <span class="javafx-titlebar-btn minimize"></span>
+                            <span class="javafx-titlebar-btn maximize"></span>
+                            <span class="javafx-titlebar-title">JavaFX Application</span>
+                        </div>
+                        <div class="javafx-content" style="height: 200px; background: #e1e4cb;">
+                            <!-- Empty BorderPane -->
+                        </div>
+                    </div>
+                </div>
+                <p class="preview-label">📱 Rezultat: prazan prozor 400x400</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 7: Objašnjenje koda -->
+    <div class="slide" data-slide="7">
+        <h2>🔍 Razumijevanje strukture</h2>
+        <div class="slide-content">
+            <ul>
+                <li><code>extends Application</code> - nasljeđivanje klase koja upravlja životnim ciklusom aplikacije
+                </li>
+                <li><code>start(Stage primaryStage)</code> - glavna metoda za pokretanje GUI-ja, prima Stage objekt</li>
+                <li><strong>Stage</strong> - glavni prozor aplikacije (kao pozornica u kazalištu 🎭)</li>
+                <li><strong>Scene</strong> - sadržaj prozora, može se mijenjati dinamički</li>
+                <li><code>launch(args)</code> - pokreće JavaFX aplikaciju iz main metode</li>
+            </ul>
+            <div class="highlight-box">
+                <p>💡 <strong>Scene Graph</strong> - JavaFX koncept koji omogućuje korištenje više Scene objekata na
+                    jednom Stage objektu</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 8: CSS u JavaFX -->
+    <div class="slide" data-slide="8">
+        <h2>💅 CSS stiliziranje u JavaFX-u</h2>
+        <div class="slide-content two-columns">
+            <div class="column">
+                <p>Dodavanje CSS datoteke:</p>
+                <div class="code-block small">
+                        <pre><code class="language-java">scene.getStylesheets().add(
+    getClass().getResource("application.css")
+        .toExternalForm()
+);</code></pre>
+                </div>
+                <p style="margin-top: 20px;">Inline stil u kodu:</p>
+                <div class="code-block small">
+                        <pre><code class="language-java">root.setStyle(
+    "-fx-background: rgb(225, 228, 203)"
+);</code></pre>
+                </div>
+            </div>
+            <div class="column">
+                <div class="highlight-box">
+                    <p>⚠️ <strong>Važno:</strong> CSS svojstva u JavaFX-u moraju imati <code>-fx-</code> prefiks!</p>
+                </div>
+                <div class="code-block small">
+                    <div class="code-header">
+                        <span class="code-dot red"></span>
+                        <span class="code-dot yellow"></span>
+                        <span class="code-dot green"></span>
+                        <span class="code-filename">application.css</span>
+                    </div>
+                    <pre><code class="language-css">.root {
+    -fx-font-size: 16pt;
+    -fx-font-family: "Courier New";
+    -fx-background: rgb(225, 228, 203);
+}</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 9: FXML -->
+    <div class="slide" data-slide="9">
+        <h2>📄 FXML - FX Markup Language</h2>
+        <div class="slide-content two-columns">
+            <div class="column">
+                <div class="highlight-box">
+                    <p><strong>Scene Builder</strong> generira FXML datoteke - XML format za definiranje GUI-ja</p>
+                </div>
+                <ul>
+                    <li>Odvaja <strong>prezentacijsku logiku</strong> od <strong>programske logike</strong></li>
+                    <li>Lakše održavanje i promjene dizajna bez diranja Java koda</li>
+                </ul>
+                <div class="code-block small" style="margin-top: 15px;">
+                        <pre><code class="language-java">// Učitavanje FXML datoteke
+BorderPane root = (BorderPane) FXMLLoader.load(
+    getClass().getResource("Sample.fxml")
+);</code></pre>
+                </div>
+            </div>
+            <div class="column">
+                <div class="preview-container">
+                    <div class="javafx-window" style="width: 220px;">
+                        <div class="javafx-titlebar">
+                            <span class="javafx-titlebar-btn close"></span>
+                            <span class="javafx-titlebar-btn minimize"></span>
+                            <span class="javafx-titlebar-btn maximize"></span>
+                            <span class="javafx-titlebar-title">FXML Demo</span>
+                        </div>
+                        <div class="javafx-content"
+                             style="display: flex; justify-content: center; align-items: center; height: 150px;">
+                            <button style="padding: 8px 20px; font-size: 13px; background: #e0e0e0; border: 1px solid #999; border-radius: 4px; cursor: pointer;">
+                                Moj gumb
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <p class="preview-label">📱 FXML s jednim gumbom</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 10: FXML primjer -->
+    <div class="slide" data-slide="10">
+        <h2>📝 FXML primjer</h2>
+        <div class="slide-content">
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="code-dot red"></span>
+                    <span class="code-dot yellow"></span>
+                    <span class="code-dot green"></span>
+                    <span class="code-filename">Sample.fxml</span>
+                </div>
+                <pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;?import javafx.scene.control.*?&gt;
+&lt;?import javafx.scene.layout.*?&gt;
+
+&lt;BorderPane prefHeight="287.0" prefWidth="286.0" 
+    xmlns:fx="http://javafx.com/fxml/1"
+    xmlns="http://javafx.com/javafx/8" 
+    fx:controller="application.SampleController"&gt;
+    
+    &lt;center&gt;
+        &lt;Button mnemonicParsing="false" 
+                text="Moj gumb" 
+                BorderPane.alignment="CENTER" /&gt;
+    &lt;/center&gt;
+    
+&lt;/BorderPane&gt;</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 11: Organizatori rasporeda -->
+    <div class="slide" data-slide="11">
+        <h2>📐 Organizatori rasporeda (Layouts)</h2>
+        <div class="slide-content">
+            <p>Služe za postavljanje elemenata na GUI u određenom rasporedu:</p>
+            <div class="feature-grid" style="margin-top: 30px;">
+                <div class="card">
+                    <h3>HBox</h3>
+                    <p>Horizontalni redak</p>
+                </div>
+                <div class="card">
+                    <h3>VBox</h3>
+                    <p>Vertikalni stupac</p>
+                </div>
+                <div class="card">
+                    <h3>FlowPane</h3>
+                    <p>Tok elemenata</p>
+                </div>
+                <div class="card">
+                    <h3>BorderPane</h3>
+                    <p>5 područja</p>
+                </div>
+                <div class="card">
+                    <h3>GridPane</h3>
+                    <p>Mreža (tablica)</p>
+                </div>
+            </div>
+            <div class="highlight-box" style="margin-top: 20px;">
+                <p>💡 Svi organizatori automatski prilagođavaju veličinu elemenata pri promjeni veličine prozora!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 12: HBox -->
+    <div class="slide" data-slide="12">
+        <h2>↔️ HBox - Horizontalni raspored</h2>
+        <div class="slide-content two-columns">
+            <div class="column">
+                <div class="code-block small">
+                        <pre><code class="language-java">HBox hbox = new HBox(5); // razmak 5px
+hbox.setPadding(new Insets(1));
+
+Rectangle r1 = new Rectangle(10, 10);
+Rectangle r2 = new Rectangle(20, 20);
+Rectangle r3 = new Rectangle(5, 20);
+Rectangle r4 = new Rectangle(20, 5);
+
+HBox.setMargin(r1, new Insets(2,2,2,2));
+hbox.getChildren().addAll(r1, r2, r3, r4);</code></pre>
+                </div>
+                <div class="highlight-box">
+                    <p>💡 Elementi se postavljaju <strong>jedan iza drugog</strong> horizontalno</p>
+                </div>
+            </div>
+            <div class="column">
+                <div class="preview-container">
+                    <div class="javafx-window" style="width: 250px;">
+                        <div class="javafx-titlebar">
+                            <span class="javafx-titlebar-btn close"></span>
+                            <span class="javafx-titlebar-btn minimize"></span>
+                            <span class="javafx-titlebar-btn maximize"></span>
+                            <span class="javafx-titlebar-title">HBox Example</span>
+                        </div>
+                        <div class="javafx-content">
+                            <div class="hbox-demo">
+                                <div class="rect" style="width: 10px; height: 10px;"></div>
+                                <div class="rect" style="width: 20px; height: 20px;"></div>
+                                <div class="rect" style="width: 5px; height: 20px;"></div>
+                                <div class="rect" style="width: 20px; height: 5px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="preview-label">📱 Pravokutnici u HBox-u</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 13: VBox -->
+    <div class="slide" data-slide="13">
+        <h2>↕️ VBox - Vertikalni raspored</h2>
+        <div class="slide-content two-columns">
+            <div class="column">
+                <div class="code-block small">
+                        <pre><code class="language-java">VBox vbox = new VBox(5); // razmak 5px
+vbox.setPadding(new Insets(1));
+
+Rectangle r1 = new Rectangle(10, 10);
+Rectangle r2 = new Rectangle(20, 20);
+Rectangle r3 = new Rectangle(5, 20);
+Rectangle r4 = new Rectangle(20, 5);
+
+VBox.setMargin(r1, new Insets(2,2,2,2));
+vbox.getChildren().addAll(r1, r2, r3, r4);</code></pre>
+                </div>
+                <div class="highlight-box">
+                    <p>💡 Elementi se postavljaju <strong>jedan ispod drugog</strong> vertikalno</p>
+                </div>
+            </div>
+            <div class="column">
+                <div class="preview-container">
+                    <div class="javafx-window" style="width: 200px;">
+                        <div class="javafx-titlebar">
+                            <span class="javafx-titlebar-btn close"></span>
+                            <span class="javafx-titlebar-btn minimize"></span>
+                            <span class="javafx-titlebar-btn maximize"></span>
+                            <span class="javafx-titlebar-title">VBox Example</span>
+                        </div>
+                        <div class="javafx-content">
+                            <div class="vbox-demo">
+                                <div class="rect" style="width: 10px; height: 10px;"></div>
+                                <div class="rect" style="width: 20px; height: 20px;"></div>
+                                <div class="rect" style="width: 5px; height: 20px;"></div>
+                                <div class="rect" style="width: 20px; height: 5px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="preview-label">📱 Pravokutnici u VBox-u</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 14: FlowPane -->
+    <div class="slide" data-slide="14">
+        <h2>🌊 FlowPane</h2>
+        <div class="slide-content two-columns">
+            <div class="column">
+                <div class="code-block small">
+                        <pre><code class="language-java">FlowPane flowPane = new FlowPane();
+
+Button b1 = new Button("Prvi");
+Button b2 = new Button("Drugi");
+Button b3 = new Button("Treći");
+// ... više gumbova
+
+flowPane.setAlignment(Pos.TOP_RIGHT);
+flowPane.getChildren().addAll(
+    b1, b2, b3, b4, b5, b6, b7, b8, b9, b10
+);</code></pre>
+                </div>
+                <div class="highlight-box">
+                    <p>💡 Elementi "teku" dok ne dosegnu kraj, zatim prelaze u novi red</p>
+                </div>
+            </div>
+            <div class="column">
+                <div class="preview-container">
+                    <div class="javafx-window" style="width: 280px;">
+                        <div class="javafx-titlebar">
+                            <span class="javafx-titlebar-btn close"></span>
+                            <span class="javafx-titlebar-btn minimize"></span>
+                            <span class="javafx-titlebar-btn maximize"></span>
+                            <span class="javafx-titlebar-title">FlowPane Example</span>
+                        </div>
+                        <div class="javafx-content" style="padding: 10px;">
+                            <div class="flowpane-demo">
+                                <span class="btn">Prvi</span>
+                                <span class="btn">Drugi</span>
+                                <span class="btn">Treći</span>
+                                <span class="btn">Četvrti</span>
+                                <span class="btn">Peti</span>
+                                <span class="btn">Šesti</span>
+                                <span class="btn">Sedmi</span>
+                                <span class="btn">Osmi</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="preview-label">📱 Gumbi u FlowPane-u</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 15: BorderPane -->
+    <div class="slide" data-slide="15">
+        <h2>🗺️ BorderPane</h2>
+        <div class="slide-content two-columns">
+            <div class="column">
+                <p>Omogućava postavljanje komponenti u <strong>5 područja</strong>:</p>
+                <ul style="margin-top: 20px;">
+                    <li><strong>TOP</strong> - zaglavlje</li>
+                    <li><strong>LEFT</strong> - lijeva strana</li>
+                    <li><strong>CENTER</strong> - glavni sadržaj</li>
+                    <li><strong>RIGHT</strong> - desna strana</li>
+                    <li><strong>BOTTOM</strong> - podnožje</li>
+                </ul>
+                <div class="highlight-box" style="margin-top: 20px;">
+                    <p>🌐 Sličan koncept kao kod web dizajna!</p>
+                </div>
+            </div>
+            <div class="column">
+                <div class="preview-container">
+                    <div class="javafx-window" style="width: 300px;">
+                        <div class="javafx-titlebar">
+                            <span class="javafx-titlebar-btn close"></span>
+                            <span class="javafx-titlebar-btn minimize"></span>
+                            <span class="javafx-titlebar-btn maximize"></span>
+                            <span class="javafx-titlebar-title">BorderPane Example</span>
+                        </div>
+                        <div class="javafx-content" style="padding: 8px;">
+                            <div class="borderpane-demo">
+                                <span class="area top">GORNJI</span>
+                                <span class="area left">LIJEVI</span>
+                                <span class="area center">SREDIŠNJI</span>
+                                <span class="area right">DESNI</span>
+                                <span class="area bottom">DONJI</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="preview-label">📱 BorderPane s 5 područja</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 16: BorderPane kod -->
+    <div class="slide" data-slide="16">
+        <h2>🗺️ BorderPane - Primjer koda</h2>
+        <div class="slide-content">
+            <div class="code-block">
+                    <pre><code class="language-java">BorderPane borderPane = new BorderPane();
+
+Button b1 = new Button("GORNJI");
+Button b2 = new Button("LIJEVI");
+Button b3 = new Button("SREDIŠNJI");
+Button b4 = new Button("DESNI");
+Button b5 = new Button("DONJI");
+
+BorderPane.setAlignment(b1, Pos.TOP_CENTER);
+borderPane.setTop(b1);
+borderPane.setLeft(b2);
+borderPane.setCenter(b3);
+borderPane.setRight(b4);
+BorderPane.setAlignment(b5, Pos.BOTTOM_CENTER);
+borderPane.setBottom(b5);</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 17: GridPane -->
+    <div class="slide" data-slide="17">
+        <h2>📊 GridPane</h2>
+        <div class="slide-content two-columns">
+            <div class="column">
+                <ul>
+                    <li>Elementi se postavljaju u <strong>tablicu</strong></li>
+                    <li>Svaki element ima "koordinate" (stupac, redak)</li>
+                    <li>Idealno za <strong>forme za unos</strong></li>
+                </ul>
+                <div class="code-block small" style="margin-top: 15px;">
+                        <pre><code class="language-java">GridPane gridpane = new GridPane();
+
+Label fNameLbl = new Label("First Name");
+TextField fNameFld = new TextField();
+
+gridpane.add(fNameLbl, 0, 0); // col 0, row 0
+gridpane.add(fNameFld, 1, 0); // col 1, row 0</code></pre>
+                </div>
+            </div>
+            <div class="column">
+                <div class="preview-container">
+                    <div class="javafx-window" style="width: 300px;">
+                        <div class="javafx-titlebar">
+                            <span class="javafx-titlebar-btn close"></span>
+                            <span class="javafx-titlebar-btn minimize"></span>
+                            <span class="javafx-titlebar-btn maximize"></span>
+                            <span class="javafx-titlebar-title">GridPane Form</span>
+                        </div>
+                        <div class="javafx-content">
+                            <div class="gridpane-demo">
+                                <label>First Name</label>
+                                <input placeholder="" type="text">
+                                <label>Last Name</label>
+                                <input placeholder="" type="text">
+                                <div class="btn-row">
+                                    <button>Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="preview-label">📱 Forma u GridPane-u</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 18: MVC Uvod -->
+    <div class="slide title-slide" data-slide="18">
+        <h1>JavaFX MVC</h1>
+        <p class="subtitle">Model - View - Controller arhitektura</p>
+    </div>
+
+    <!-- Slide 19: MVC Osnove -->
+    <div class="slide" data-slide="19">
+        <h2>🏗️ Osnove MVC arhitekture</h2>
+        <div class="slide-content">
+            <div class="feature-grid">
+                <div class="card">
+                    <h3>📦 Model</h3>
+                    <p>Klase koje predstavljaju domenske podatke (npr. Knjiga, Korisnik, Proizvod)</p>
+                </div>
+                <div class="card">
+                    <h3>👁️ View</h3>
+                    <p>FXML datoteke ili Java klase koje definiraju izgled grafičkog sučelja</p>
+                </div>
+                <div class="card">
+                    <h3>🎮 Controller</h3>
+                    <p>Povezuje GUI elemente s poslovnom logikom - reagira na korisničke akcije</p>
+                </div>
+            </div>
+            <div class="highlight-box" style="margin-top: 30px;">
+                <p>💡 <strong>Ključno:</strong> Elementi GUI-ja trebaju imati jedinstvene identifikatore
+                    (<code>fx:id</code>) za povezivanje s Controllerom</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 20: Controller klasa -->
+    <div class="slide" data-slide="20">
+        <h2>🎮 Controller klasa</h2>
+        <div class="slide-content">
+            <ul>
+                <li>Povezuje elemente GUI-ja s Java kodom (poslovna logika)</li>
+                <li>Varijable moraju odgovarati elementima GUI-ja po <strong>tipu i nazivu</strong></li>
+                <li>Svaki ekran trebao bi imati svoju FXML datoteku i Controller klasu</li>
+            </ul>
+            <div class="code-block" style="margin-top: 20px;">
+                <div class="code-header">
+                    <span class="code-dot red"></span>
+                    <span class="code-dot yellow"></span>
+                    <span class="code-dot green"></span>
+                    <span class="code-filename">Sample.fxml</span>
+                </div>
+                <pre><code class="language-xml">&lt;BorderPane fx:controller="hr.tvz.controller.KnjigeController"&gt;
+    ...
+&lt;/BorderPane&gt;</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 21: @FXML anotacija -->
+    <div class="slide" data-slide="21">
+        <h2>🏷️ Anotacija @FXML</h2>
+        <div class="slide-content two-columns">
+            <div class="column">
+                <p>Označava elemente u Javi koji se koriste u FXML-u:</p>
+                <div class="code-block small" style="margin-top: 15px;">
+                    <div class="code-header">
+                        <span class="code-dot red"></span>
+                        <span class="code-dot yellow"></span>
+                        <span class="code-dot green"></span>
+                        <span class="code-filename">KnjigeController.java</span>
+                    </div>
+                    <pre><code class="language-java">public class KnjigeController {
+
+    @FXML
+    private TableView&lt;Knjiga&gt; knjigaTable;
+    
+    @FXML
+    public void initialize() {
+        // inicijalizacija ekrana
+    }
+    
+    @FXML
+    public void prikaziSveKnjige() {
+        // logika za prikaz
+    }
+}</code></pre>
+                </div>
+            </div>
+            <div class="column">
+                <div class="highlight-box">
+                    <p>⚠️ <strong>Važno:</strong> Naziv varijable mora odgovarati <code>fx:id</code> u FXML-u!</p>
+                </div>
+                <div class="code-block small" style="margin-top: 15px;">
+                    <div class="code-header">
+                        <span class="code-dot red"></span>
+                        <span class="code-dot yellow"></span>
+                        <span class="code-dot green"></span>
+                        <span class="code-filename">knjige.fxml</span>
+                    </div>
+                    <pre><code class="language-xml">&lt;TableView fx:id="knjigaTable"&gt;
+    ...
+&lt;/TableView&gt;
+
+&lt;Button text="Prikaži"
+    onAction="#prikaziSveKnjige"/&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 22: JavaFX zbirke -->
+    <div class="slide" data-slide="22">
+        <h2>📚 JavaFX zbirke (Collections)</h2>
+        <div class="slide-content">
+            <p>Specijalne zbirke koje automatski ažuriraju GUI pri promjenama:</p>
+            <div class="feature-grid" style="margin-top: 20px;">
+                <div class="card">
+                    <h3>ObservableList</h3>
+                    <p>Lista s automatskim praćenjem promjena preko Listenera</p>
+                </div>
+                <div class="card">
+                    <h3>ObservableMap</h3>
+                    <p>Mapa s automatskim praćenjem promjena</p>
+                </div>
+                <div class="card">
+                    <h3>FXCollections</h3>
+                    <p>Factory klasa za kreiranje Observable zbirki</p>
+                </div>
+                <div class="card">
+                    <h3>ListChangeListener</h3>
+                    <p>Prima notifikacije o promjenama u listi</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 23: ObservableList primjer -->
+    <div class="slide" data-slide="23">
+        <h2>📋 ObservableList - Primjer</h2>
+        <div class="slide-content">
+            <div class="code-block">
+                    <pre><code class="language-java">// Kreiranje ObservableList iz obične Java liste
+List&lt;Knjiga&gt; filtriraneKnjige = dohvatiKnjige();
+
+ObservableList&lt;Knjiga&gt; listaKnjiga = 
+    FXCollections.observableArrayList(filtriraneKnjige);
+
+// Povezivanje s TableView komponentom
+knjigaTable.setItems(listaKnjiga);
+
+// Sada kada se promijeni listaKnjiga, 
+// TableView se automatski ažurira! 🎉</code></pre>
+            </div>
+            <div class="highlight-box" style="margin-top: 20px;">
+                <p>💡 Ovo je kao <strong>reactive programming</strong> - promjena podataka automatski ažurira prikaz,
+                    slično kao u React-u ili Vue.js!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 24: TableColumn binding -->
+    <div class="slide" data-slide="24">
+        <h2>🔗 Povezivanje stupaca s podacima</h2>
+        <div class="slide-content">
+            <div class="code-block">
+                    <pre><code class="language-java">@FXML
+private TableColumn&lt;Knjiga, String&gt; nazivKnjigeColumn;
+
+@FXML
+public void initialize() {
+    nazivKnjigeColumn.setCellValueFactory(
+        new Callback&lt;CellDataFeatures&lt;Knjiga,String&gt;, 
+                     ObservableValue&lt;String&gt;&gt;() {
+            public ObservableValue&lt;String&gt; call(
+                    CellDataFeatures&lt;Knjiga, String&gt; param) {
+                return new ReadOnlyStringWrapper(
+                    param.getValue().getNaziv()
+                );
+            }
+        }
+    );
+}</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 25: Izbornici -->
+    <div class="slide" data-slide="25">
+        <h2>📑 Povezivanje akcija s izbornikom</h2>
+        <div class="slide-content">
+            <p>Izbornik se sastoji od <code>Menu</code> (glavni element) i <code>MenuItem</code> elemenata:</p>
+            <div class="code-block" style="margin-top: 20px;">
+                    <pre><code class="language-java">public void prikaziKnjige() {
+    try {
+        BorderPane knjigaPane = FXMLLoader.load(
+            JavaFXGlavna.class.getResource("../javafx/knjige.fxml")
+        );
+        JavaFXGlavna.setCenterPane(knjigaPane);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}</code></pre>
+            </div>
+            <div class="highlight-box" style="margin-top: 20px;">
+                <p>💡 <strong>Best practice:</strong> Svaka opcija izbornika otvara novi ekran definiran u zasebnoj FXML
+                    datoteci</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 26: Pitanja -->
+    <div class="slide questions-slide" data-slide="26">
+        <div class="emoji">🤔</div>
+        <h2>Pitanja?</h2>
+        <p style="color: var(--text-secondary); font-size: 1.2rem;">Hvala na pažnji!</p>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="nav-controls">
+    <button class="nav-btn" id="prevBtn" onclick="prevSlide()">←</button>
+    <span class="slide-counter" id="slideCounter">1 / 26</span>
+    <button class="nav-btn" id="nextBtn" onclick="nextSlide()">→</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/css.min.js"></script>
+<script>
+    let currentSlide = 1;
+    const totalSlides = document.querySelectorAll('.slide').length;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        hljs.highlightAll();
+        updateSlide();
+        showKeyboardHint();
+    });
+
+    function showKeyboardHint() {
+        const hint = document.getElementById('keyboardHint');
+        hint.classList.add('show');
+        setTimeout(() => hint.classList.remove('show'), 4000);
+    }
+
+    function updateSlide() {
+        const slides = document.querySelectorAll('.slide');
+        slides.forEach((slide, index) => {
+            slide.classList.remove('active', 'exit');
+            if (index + 1 === currentSlide) {
+                slide.classList.add('active');
+            }
+        });
+        document.getElementById('slideCounter').textContent = `${currentSlide} / ${totalSlides}`;
+        const progress = (currentSlide / totalSlides) * 100;
+        document.getElementById('progressBar').style.width = `${progress}%`;
+        document.getElementById('prevBtn').disabled = currentSlide === 1;
+        document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides) {
+            currentSlide++;
+            updateSlide();
+        }
+    }
+
+    function prevSlide() {
+        if (currentSlide > 1) {
+            currentSlide--;
+            updateSlide();
+        }
+    }
+
+    function goToSlide(num) {
+        if (num >= 1 && num <= totalSlides) {
+            currentSlide = num;
+            updateSlide();
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            e.preventDefault();
+            nextSlide();
+        } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            prevSlide();
+        } else if (e.key === 'Home') {
+            e.preventDefault();
+            goToSlide(1);
+        } else if (e.key === 'End') {
+            e.preventDefault();
+            goToSlide(totalSlides);
+        }
+    });
+
+    document.getElementById('presentation').addEventListener('click', (e) => {
+        if (e.target.closest('.nav-controls') || e.target.closest('.toc-item') || e.target.closest('button') || e.target.closest('a')) {
+            return;
+        }
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        if (x > rect.width / 2) {
+            nextSlide();
+        } else {
+            prevSlide();
+        }
+    });
+
+    const themeToggle = document.getElementById('themeToggle');
+    let isDark = true;
+
+    themeToggle.addEventListener('click', () => {
+        isDark = !isDark;
+        document.body.classList.toggle('light-mode');
+        themeToggle.textContent = isDark ? '🌙' : '☀️';
+    });
+
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+
+    document.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                nextSlide();
+            } else {
+                prevSlide();
+            }
+        }
+    }
+</script>
+</body>
+</html>

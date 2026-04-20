@@ -1,0 +1,2074 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Generičko programiranje u Javi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-code: #f5f5f5;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --accent-primary: #4f46e5;
+            --accent-secondary: #7c3aed;
+            --border-color: #e2e8f0;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-code: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent-primary: #818cf8;
+            --accent-secondary: #a78bfa;
+            --border-color: #334155;
+            --shadow: rgba(0, 0, 0, 0.4);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow);
+        }
+
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem 2rem;
+            position: relative;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            color: var(--accent-primary);
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem 0;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .author {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-top: 2rem;
+        }
+
+        .content-box {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--accent-primary);
+        }
+
+        .code-block {
+            background: var(--bg-code);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .code-header {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px 6px 0 0;
+            margin: -1.5rem -1.5rem 1rem -1.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        pre {
+            margin: 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            background: var(--bg-code);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, var(--accent-primary) 0%, var(--accent-primary) 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 30%;
+            background-position: 0 85%;
+            padding: 0 4px;
+        }
+
+        .emoji {
+            font-size: 2rem;
+            margin-right: 0.5rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px var(--shadow);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-top: 1rem;
+        }
+
+        li {
+            margin: 0.8rem 0;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .before, .after {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .before {
+            border-left: 4px solid var(--error);
+        }
+
+        .after {
+            border-left: 4px solid var(--success);
+        }
+
+        .label {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .label-old {
+            color: var(--error);
+        }
+
+        .label-new {
+            color: var(--success);
+        }
+
+        .example-title {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+            margin: 1.5rem 0 1rem 0;
+            font-weight: 600;
+        }
+
+        .tip {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--warning);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .tip-title {
+            color: var(--warning);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .info-box {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--info);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .info-title {
+            color: var(--info);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .syntax-keyword {
+            color: #d73a49;
+            font-weight: 600;
+        }
+
+        .syntax-string {
+            color: #032f62;
+        }
+
+        .syntax-comment {
+            color: #6a737d;
+            font-style: italic;
+        }
+
+        .syntax-function {
+            color: #6f42c1;
+        }
+
+        .syntax-type {
+            color: #005cc5;
+            font-weight: 600;
+        }
+
+        [data-theme="dark"] .syntax-keyword {
+            color: #ff7b72;
+        }
+
+        [data-theme="dark"] .syntax-string {
+            color: #a5d6ff;
+        }
+
+        [data-theme="dark"] .syntax-comment {
+            color: #8b949e;
+        }
+
+        [data-theme="dark"] .syntax-function {
+            color: #d2a8ff;
+        }
+
+        [data-theme="dark"] .syntax-type {
+            color: #79c0ff;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-secondary);
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: flex;
+            gap: 10px;
+            box-shadow: 0 4px 12px var(--shadow);
+            z-index: 1000;
+        }
+
+        .nav-button {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: var(--accent-secondary);
+            transform: scale(1.05);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .type-params {
+            display: inline-block;
+            background: var(--accent-primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin: 0 2px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media print {
+            .theme-toggle,
+            .navigation {
+                display: none;
+            }
+
+            .slide {
+                page-break-after: always;
+                min-height: 100vh;
+            }
+        }
+    </style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()">🌓 Promijeni temu</button>
+
+<div class="container">
+    <!-- Slide 1: Naslovna -->
+    <div class="slide" id="slide-1">
+        <h1>Generičko programiranje u Javi</h1>
+        <p class="subtitle">Type-Safe kod s Generics 🎯</p>
+        <div class="content-box">
+            <p style="font-size: 1.2rem;">🔒 Type Safety • 🔄 Reusability • ⚡ Performance</p>
+        </div>
+        <p class="author">Programiranje u jeziku Java | Tehničko veleučilište u Zagrebu</p>
+        <div class="slide-number">1</div>
+    </div>
+
+    <!-- Slide 2: Sadržaj -->
+    <div class="slide" id="slide-2">
+        <h2>📚 Sadržaj</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">1️⃣ Uvod u Generics</div>
+                <ul style="margin-left: 1rem;">
+                    <li>Problem bez Generics-a</li>
+                    <li>Zašto ih trebamo?</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title">2️⃣ Generičke metode</div>
+                <ul style="margin-left: 1rem;">
+                    <li>Sintaksa &lt;T&gt;</li>
+                    <li>Type parameters</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title">3️⃣ Generičke klase</div>
+                <ul style="margin-left: 1rem;">
+                    <li>Kreiranje generičkih klasa</li>
+                    <li>Multiple type parameters</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title">4️⃣ Bounded Types</div>
+                <ul style="margin-left: 1rem;">
+                    <li>Upper bounds (extends)</li>
+                    <li>Lower bounds (super)</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title">5️⃣ Wildcards</div>
+                <ul style="margin-left: 1rem;">
+                    <li>? wildcard</li>
+                    <li>PECS princip</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title">6️⃣ Best Practices</div>
+                <ul style="margin-left: 1rem;">
+                    <li>Raw types - ne!</li>
+                    <li>Type erasure</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-number">2</div>
+    </div>
+
+    <!-- Slide 3: Problem bez Generics-a -->
+    <div class="slide" id="slide-3">
+        <h2>😰 Problem: Bez Generics-a (pre-Java 5)</h2>
+
+        <div class="content-box">
+            <h3>Scenario: Lista igrača u gaming lobby-ju</h3>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">❌ Prije Java 5 - Sve je Object</div>
+            <pre><code><span class="syntax-comment">// Lista može sadržavati bilo što!</span>
+List players = <span class="syntax-keyword">new</span> ArrayList();
+
+<span class="syntax-comment">// Dodajemo igrace</span>
+players.add(<span class="syntax-keyword">new</span> Player(<span class="syntax-string">"xXDragonSlayerXx"</span>));
+players.add(<span class="syntax-keyword">new</span> Player(<span class="syntax-string">"NoobMaster69"</span>));
+
+<span class="syntax-comment">// Netko slučajno doda String umjesto Player objekta!</span>
+players.add(<span class="syntax-string">"Ovo nije Player!"</span>);  <span class="syntax-comment">// 😱 Kompajler to dozvoli!</span>
+
+<span class="syntax-comment">// Izvlačenje podataka - OPASNO!</span>
+<span class="syntax-keyword">for</span> (<span class="syntax-keyword">int</span> i = 0; i < players.size(); i++) {
+    Player p = (Player) players.get(i);  <span class="syntax-comment">// ⚠️ Casting obavezan</span>
+    System.out.println(p.getUsername());
+}
+
+<span class="syntax-comment">// 💥 RUNTIME ERROR: ClassCastException!</span>
+<span class="syntax-comment">// Exception in thread "main" java.lang.ClassCastException:</span>
+<span class="syntax-comment">// java.lang.String cannot be cast to Player</span></code></pre>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">⚠️ Problemi bez Generics-a</div>
+            <ul>
+                <li>❌ <strong>Greške u runtime-u</strong> - ne u compile-time!</li>
+                <li>❌ <strong>Potreban casting</strong> - repetitivan i opasan kod</li>
+                <li>❌ <strong>Nema type safety</strong> - možeš staviti bilo što u listu</li>
+                <li>❌ <strong>Teže čitljiv kod</strong> - nije jasno što lista sadržava</li>
+            </ul>
+        </div>
+        <div class="slide-number">3</div>
+    </div>
+
+    <!-- Slide 4: Rješenje sa Generics -->
+    <div class="slide" id="slide-4">
+        <h2>✨ Rješenje: Generics!</h2>
+
+        <div class="comparison">
+            <div class="before">
+                <div class="label label-old">❌ BEZ Generics</div>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Nije type-safe</span>
+List players = <span class="syntax-keyword">new</span> ArrayList();
+players.add(<span class="syntax-keyword">new</span> Player(<span class="syntax-string">"Ana"</span>));
+players.add(<span class="syntax-string">"Greška"</span>);  <span class="syntax-comment">// OK 😱</span>
+
+<span class="syntax-comment">// Casting potreban</span>
+Player p = (Player) players.get(0);
+
+<span class="syntax-comment">// Runtime greška!</span>
+Player p2 = (Player) players.get(1);
+<span class="syntax-comment">// 💥 ClassCastException!</span></code></pre>
+                </div>
+            </div>
+
+            <div class="after">
+                <div class="label label-new">✅ SA Generics</div>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Type-safe!</span>
+List<span class="type-params">&lt;Player&gt;</span> players = <span class="syntax-keyword">new</span> ArrayList<>();
+players.add(<span class="syntax-keyword">new</span> Player(<span class="syntax-string">"Ana"</span>));
+players.add(<span class="syntax-string">"Greška"</span>);  <span class="syntax-comment">// ❌ COMPILE ERROR!</span>
+
+<span class="syntax-comment">// Bez castinga!</span>
+Player p = players.get(0);
+
+<span class="syntax-comment">// Sigurno - nema runtime greški! ✅</span>
+Player p2 = players.get(1);</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <div class="info-title">🎯 Što su Generics?</div>
+            <p style="font-size: 1.1rem; margin-top: 0.5rem;">
+                Generics omogućavaju da <span
+                    class="highlight">definiraš klase i metode s tipovima kao parametrima</span>.
+                Kompajler onda može provjeriti tipove u <strong>compile-time</strong>, ne u runtime!
+            </p>
+        </div>
+
+        <div class="content-box">
+            <h3>🎁 Prednosti Generics-a:</h3>
+            <ul>
+                <li>✅ <strong>Type safety u compile-time</strong> - greške se hvataju odmah</li>
+                <li>✅ <strong>Elimininacija castinga</strong> - čitljiviji kod</li>
+                <li>✅ <strong>Reusabilnost koda</strong> - jedna klasa/metoda za sve tipove</li>
+                <li>✅ <strong>Bolja dokumentacija</strong> - jasno se vidi što metoda prima</li>
+            </ul>
+        </div>
+        <div class="slide-number">4</div>
+    </div>
+
+    <!-- Slide 5: Generičke metode -->
+    <div class="slide" id="slide-5">
+        <h2>🔧 Generičke metode</h2>
+
+        <div class="content-box">
+            <h3>Sintaksa</h3>
+            <div class="code-block">
+                    <pre><code><span class="syntax-keyword">public</span> <span
+                            class="type-params">&lt;T&gt;</span> <span class="syntax-keyword">void</span> <span
+                            class="syntax-function">methodName</span>(<span class="type-params">T</span> param) {
+    <span class="syntax-comment">// T može biti bilo koji tip!</span>
+}</code></pre>
+            </div>
+            <p style="margin-top: 1rem; font-size: 1.1rem;">
+                <span class="type-params">&lt;T&gt;</span> se naziva <strong>type parameter</strong> i označava da
+                metoda koristi generički tip.
+            </p>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Primjer: Ispis array-a - Generic način</div>
+            <pre><code><span class="syntax-comment">// Jedna metoda za sve tipove! 🎉</span>
+<span class="syntax-keyword">public static</span> <span class="type-params">&lt;T&gt;</span> <span
+                        class="syntax-keyword">void</span> <span class="syntax-function">printArray</span>(<span
+                        class="type-params">T</span>[] array) {
+    <span class="syntax-keyword">for</span> (<span class="type-params">T</span> element : array) {
+        System.out.print(element + <span class="syntax-string">" "</span>);
+    }
+    System.out.println();
+}
+
+<span class="syntax-comment">// Korištenje - radi za sve tipove!</span>
+Integer[] numbers = {1, 2, 3, 4, 5};
+<span class="syntax-function">printArray</span>(numbers);  <span class="syntax-comment">// Output: 1 2 3 4 5</span>
+
+String[] names = {<span class="syntax-string">"Ana"</span>, <span class="syntax-string">"Marko"</span>, <span
+                        class="syntax-string">"Ivana"</span>};
+<span class="syntax-function">printArray</span>(names);  <span class="syntax-comment">// Output: Ana Marko Ivana</span>
+
+Double[] prices = {19.99, 29.99, 39.99};
+<span class="syntax-function">printArray</span>(prices);  <span
+                        class="syntax-comment">// Output: 19.99 29.99 39.99</span></code></pre>
+        </div>
+
+        <div class="comparison">
+            <div class="before">
+                <div class="label label-old">❌ Bez Generics - Duplicate kod</div>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Morali bi napisati 3 metode!</span>
+<span class="syntax-keyword">public static void</span> <span class="syntax-function">printIntArray</span>(Integer[] arr) {
+    <span class="syntax-keyword">for</span> (Integer n : arr) {
+        System.out.print(n + <span class="syntax-string">" "</span>);
+    }
+}
+
+<span class="syntax-keyword">public static void</span> <span class="syntax-function">printStringArray</span>(String[] arr) {
+    <span class="syntax-keyword">for</span> (String s : arr) {
+        System.out.print(s + <span class="syntax-string">" "</span>);
+    }
+}
+
+<span class="syntax-keyword">public static void</span> <span class="syntax-function">printDoubleArray</span>(Double[] arr) {
+    <span class="syntax-keyword">for</span> (Double d : arr) {
+        System.out.print(d + <span class="syntax-string">" "</span>);
+    }
+}
+<span class="syntax-comment">// 😫 Copy-paste, teško za održavanje!</span></code></pre>
+                </div>
+            </div>
+
+            <div class="after">
+                <div class="label label-new">✅ S Generics - DRY princip</div>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Samo jedna metoda! 🎉</span>
+<span class="syntax-keyword">public static</span> <span class="type-params">&lt;T&gt;</span> <span
+                                    class="syntax-keyword">void</span> <span
+                                    class="syntax-function">printArray</span>(<span class="type-params">T</span>[] arr) {
+    <span class="syntax-keyword">for</span> (<span class="type-params">T</span> element : arr) {
+        System.out.print(element + <span class="syntax-string">" "</span>);
+    }
+}
+
+<span class="syntax-comment">// Radi za SVE tipove!</span>
+<span class="syntax-comment">// Integer, String, Double,</span>
+<span class="syntax-comment">// Player, User, Post...</span>
+<span class="syntax-comment">// bilo što!</span></code></pre>
+                </div>
+            </div>
+        </div>
+        <div class="slide-number">5</div>
+    </div>
+
+    <!-- Slide 6: Type Parameters konvencije -->
+    <div class="slide" id="slide-6">
+        <h2>🔤 Konvencije za Type Parameters</h2>
+
+        <div class="content-box">
+            <p style="font-size: 1.2rem; margin-bottom: 1rem;">
+                Po konvenciji se koriste <span class="highlight">velika slova</span> za type parameters:
+            </p>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <div class="card-title"><span class="type-params">T</span> - Type</div>
+                <p>Opći tip - najčešće korišteno</p>
+                <div class="code-block" style="margin-top: 1rem;">
+                        <pre><code><span class="syntax-keyword">public class</span> Box<span class="type-params">&lt;T&gt;</span> {
+    <span class="syntax-keyword">private</span> <span class="type-params">T</span> item;
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="type-params">E</span> - Element</div>
+                <p>Element u kolekciji</p>
+                <div class="code-block" style="margin-top: 1rem;">
+                        <pre><code><span class="syntax-keyword">public interface</span> List<span class="type-params">&lt;E&gt;</span> {
+    <span class="syntax-keyword">void</span> add(<span class="type-params">E</span> element);
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="type-params">K</span>, <span class="type-params">V</span> - Key,
+                    Value
+                </div>
+                <p>Za Map strukture</p>
+                <div class="code-block" style="margin-top: 1rem;">
+                        <pre><code><span class="syntax-keyword">public interface</span> Map<span class="type-params">&lt;K, V&gt;</span> {
+    <span class="type-params">V</span> get(<span class="type-params">K</span> key);
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><span class="type-params">N</span> - Number</div>
+                <p>Za numeričke tipove</p>
+                <div class="code-block" style="margin-top: 1rem;">
+                        <pre><code><span class="syntax-keyword">public class</span> Calculator<span class="type-params">&lt;N&gt;</span> {
+    <span class="type-params">N</span> sum(<span class="type-params">N</span> a, <span class="type-params">N</span> b);
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Instagram primjer - Multiple type parameters</div>
+            <pre><code><span class="syntax-comment">// Metoda koja prima DVA generička tipa</span>
+<span class="syntax-keyword">public static</span> <span class="type-params">&lt;K, V&gt;</span> Map<span
+                        class="type-params">&lt;K, V&gt;</span> <span class="syntax-function">createMap</span>(<span
+                        class="type-params">K</span> key, <span class="type-params">V</span> value) {
+    Map<span class="type-params">&lt;K, V&gt;</span> map = <span class="syntax-keyword">new</span> HashMap<>();
+    map.put(key, value);
+    <span class="syntax-keyword">return</span> map;
+}
+
+<span class="syntax-comment">// Korištenje:</span>
+Map&lt;String, Integer&gt; likes = createMap(<span class="syntax-string">"post_123"</span>, 1500);
+Map&lt;String, User&gt; followers = createMap(<span class="syntax-string">"@ana"</span>, <span class="syntax-keyword">new</span> User(<span
+                        class="syntax-string">"Ana"</span>));</code></pre>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">💡 Dobra praksa</div>
+            Uvijek koristi konvencionalna imena (<span class="type-params">T</span>, <span class="type-params">E</span>,
+            <span class="type-params">K</span>, <span class="type-params">V</span>)
+            za type parameters - to će razumjeti svaki Java developer!
+        </div>
+        <div class="slide-number">6</div>
+    </div>
+
+    <!-- Slide 7: Generičke klase -->
+    <div class="slide" id="slide-7">
+        <h2>📦 Generičke klase</h2>
+
+        <div class="content-box">
+            <p style="font-size: 1.2rem;">
+                Klasa može imati <span class="highlight">type parameter</span> koji se koristi kroz cijelu klasu.
+            </p>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Primjer: Box&lt;T&gt; - Generic kontejner</div>
+            <pre><code><span class="syntax-comment">// Generička klasa koja može držati bilo koji tip</span>
+<span class="syntax-keyword">public class</span> Box<span class="type-params">&lt;T&gt;</span> {
+    <span class="syntax-keyword">private</span> <span class="type-params">T</span> content;
+    
+    <span class="syntax-keyword">public</span> <span class="syntax-function">Box</span>(<span
+                        class="type-params">T</span> content) {
+        <span class="syntax-keyword">this</span>.content = content;
+    }
+    
+    <span class="syntax-keyword">public</span> <span class="type-params">T</span> <span class="syntax-function">getContent</span>() {
+        <span class="syntax-keyword">return</span> content;
+    }
+    
+    <span class="syntax-keyword">public void</span> <span class="syntax-function">setContent</span>(<span
+                        class="type-params">T</span> content) {
+        <span class="syntax-keyword">this</span>.content = content;
+    }
+}
+
+<span class="syntax-comment">// Korištenje:</span>
+Box&lt;String&gt; stringBox = <span class="syntax-keyword">new</span> Box&lt;&gt;(<span class="syntax-string">"Hello Generics!"</span>);
+String text = stringBox.getContent();  <span class="syntax-comment">// Bez castinga!</span>
+
+Box&lt;Integer&gt; numberBox = <span class="syntax-keyword">new</span> Box&lt;&gt;(42);
+Integer num = numberBox.getContent();  <span class="syntax-comment">// Type-safe!</span>
+
+Box&lt;User&gt; userBox = <span class="syntax-keyword">new</span> Box&lt;&gt;(<span class="syntax-keyword">new</span> User(<span
+                        class="syntax-string">"Ana"</span>));
+User user = userBox.getContent();  <span class="syntax-comment">// Odlično!</span></code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Gaming primjer - Inventory sistem</div>
+            <pre><code><span class="syntax-comment">// Generic inventory za bilo koji tip itema</span>
+<span class="syntax-keyword">public class</span> Inventory<span class="type-params">&lt;T&gt;</span> {
+    <span class="syntax-keyword">private</span> List<span class="type-params">&lt;T&gt;</span> items;
+    <span class="syntax-keyword">private int</span> maxSize;
+    
+    <span class="syntax-keyword">public</span> <span class="syntax-function">Inventory</span>(<span
+                        class="syntax-keyword">int</span> maxSize) {
+        <span class="syntax-keyword">this</span>.items = <span class="syntax-keyword">new</span> ArrayList<>();
+        <span class="syntax-keyword">this</span>.maxSize = maxSize;
+    }
+    
+    <span class="syntax-keyword">public boolean</span> <span class="syntax-function">addItem</span>(<span
+                        class="type-params">T</span> item) {
+        <span class="syntax-keyword">if</span> (items.size() < maxSize) {
+            items.add(item);
+            <span class="syntax-keyword">return true</span>;
+        }
+        <span class="syntax-keyword">return false</span>; <span class="syntax-comment">// Inventory full!</span>
+    }
+    
+    <span class="syntax-keyword">public</span> <span class="type-params">T</span> <span
+                        class="syntax-function">getItem</span>(<span class="syntax-keyword">int</span> index) {
+        <span class="syntax-keyword">return</span> items.get(index);
+    }
+    
+    <span class="syntax-keyword">public int</span> <span class="syntax-function">getSize</span>() {
+        <span class="syntax-keyword">return</span> items.size();
+    }
+}
+
+<span class="syntax-comment">// Korištenje - različiti inventoryi za različite tipove:</span>
+Inventory&lt;Weapon&gt; weapons = <span class="syntax-keyword">new</span> Inventory&lt;&gt;(10);
+weapons.addItem(<span class="syntax-keyword">new</span> Weapon(<span class="syntax-string">"Sword"</span>, 50));
+weapons.addItem(<span class="syntax-keyword">new</span> Weapon(<span class="syntax-string">"Bow"</span>, 30));
+
+Inventory&lt;Potion&gt; potions = <span class="syntax-keyword">new</span> Inventory&lt;&gt;(20);
+potions.addItem(<span class="syntax-keyword">new</span> Potion(<span class="syntax-string">"Health"</span>, 25));
+potions.addItem(<span class="syntax-keyword">new</span> Potion(<span class="syntax-string">"Mana"</span>, 15));
+
+<span class="syntax-comment">// Type-safe - ne možeš staviti Weapon u potions inventory!</span>
+<span class="syntax-comment">// potions.addItem(new Weapon(...)); // ❌ COMPILE ERROR!</span></code></pre>
+        </div>
+        <div class="slide-number">7</div>
+    </div>
+
+    <!-- Slide 8: Real-world primjer - Stack -->
+    <div class="slide" id="slide-8">
+        <h2>🥞 Real-world primjer: Generic Stack</h2>
+
+        <div class="code-block">
+            <div class="code-header">Stack&lt;T&gt; - LIFO struktura podataka</div>
+            <pre><code><span class="syntax-comment">// Generic Stack implementacija</span>
+<span class="syntax-keyword">public class</span> Stack<span class="type-params">&lt;T&gt;</span> {
+    <span class="syntax-keyword">private</span> List<span class="type-params">&lt;T&gt;</span> elements;
+    <span class="syntax-keyword">private int</span> maxSize;
+    
+    <span class="syntax-keyword">public</span> <span class="syntax-function">Stack</span>(<span class="syntax-keyword">int</span> maxSize) {
+        <span class="syntax-keyword">this</span>.elements = <span class="syntax-keyword">new</span> ArrayList&lt;&gt;();
+        <span class="syntax-keyword">this</span>.maxSize = maxSize;
+    }
+    
+    <span class="syntax-comment">// Push element na vrh stacka</span>
+    <span class="syntax-keyword">public void</span> <span class="syntax-function">push</span>(<span class="type-params">T</span> element) {
+        <span class="syntax-keyword">if</span> (elements.size() >= maxSize) {
+            <span class="syntax-keyword">throw new</span> RuntimeException(<span class="syntax-string">"Stack overflow! 💥"</span>);
+        }
+        elements.add(element);
+    }
+    
+    <span class="syntax-comment">// Pop - ukloni i vrati element s vrha</span>
+    <span class="syntax-keyword">public</span> <span class="type-params">T</span> <span
+                        class="syntax-function">pop</span>() {
+        <span class="syntax-keyword">if</span> (isEmpty()) {
+            <span class="syntax-keyword">throw new</span> RuntimeException(<span class="syntax-string">"Stack je prazan!"</span>);
+        }
+        <span class="syntax-keyword">return</span> elements.remove(elements.size() - 1);
+    }
+    
+    <span class="syntax-comment">// Peek - pogledaj vrh bez uklanjanja</span>
+    <span class="syntax-keyword">public</span> <span class="type-params">T</span> <span
+                        class="syntax-function">peek</span>() {
+        <span class="syntax-keyword">if</span> (isEmpty()) {
+            <span class="syntax-keyword">throw new</span> RuntimeException(<span class="syntax-string">"Stack je prazan!"</span>);
+        }
+        <span class="syntax-keyword">return</span> elements.get(elements.size() - 1);
+    }
+    
+    <span class="syntax-keyword">public boolean</span> <span class="syntax-function">isEmpty</span>() {
+        <span class="syntax-keyword">return</span> elements.isEmpty();
+    }
+    
+    <span class="syntax-keyword">public int</span> <span class="syntax-function">size</span>() {
+        <span class="syntax-keyword">return</span> elements.size();
+    }
+}</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Korištenje - Browser History primjer</div>
+            <pre><code><span class="syntax-comment">// Stack za browser back button funkcionalnost</span>
+Stack&lt;String&gt; browserHistory = <span class="syntax-keyword">new</span> Stack&lt;&gt;(50);
+
+<span class="syntax-comment">// Korisnik browsea po stranicama</span>
+browserHistory.push(<span class="syntax-string">"google.com"</span>);
+browserHistory.push(<span class="syntax-string">"youtube.com"</span>);
+browserHistory.push(<span class="syntax-string">"instagram.com"</span>);
+browserHistory.push(<span class="syntax-string">"tiktok.com"</span>);
+
+System.out.println(<span class="syntax-string">"Trenutna stranica: "</span> + browserHistory.peek());
+<span class="syntax-comment">// Output: Trenutna stranica: tiktok.com</span>
+
+<span class="syntax-comment">// Klikni "Back" button</span>
+String previous = browserHistory.pop();
+System.out.println(<span class="syntax-string">"Vraćam se s: "</span> + previous);
+<span class="syntax-comment">// Output: Vraćam se s: tiktok.com</span>
+
+System.out.println(<span class="syntax-string">"Sada sam na: "</span> + browserHistory.peek());
+<span class="syntax-comment">// Output: Sada sam na: instagram.com</span></code></pre>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">🎯 Zašto je ovo odlično?</div>
+            Jedna <code>Stack&lt;T&gt;</code> klasa radi za <strong>SVE tipove</strong>:
+            <code>Stack&lt;String&gt;</code>, <code>Stack&lt;Integer&gt;</code>, <code>Stack&lt;User&gt;</code>, <code>Stack&lt;Post&gt;</code>...
+            Bez Generics-a bi morali pisati zasebnu klasu za svaki tip! 😫
+        </div>
+        <div class="slide-number">8</div>
+    </div>
+
+    <!-- Slide 9: Bounded Type Parameters -->
+    <div class="slide" id="slide-9">
+        <h2>🔒 Bounded Type Parameters</h2>
+
+        <div class="content-box">
+            <p style="font-size: 1.2rem;">
+                Ponekad želiš <span class="highlight">ograničiti koje tipove generic može prihvatiti</span>.
+                Koristi <code>extends</code> keyword za upper bound!
+            </p>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Sintaksa - extends keyword</div>
+            <pre><code><span class="syntax-comment">// T mora biti Number ili nešto što nasljeđuje Number</span>
+<span class="syntax-keyword">public</span> <span class="type-params">&lt;T extends Number&gt;</span> <span
+                        class="syntax-keyword">void</span> <span class="syntax-function">someMethod</span>(<span
+                        class="type-params">T</span> number) {
+    <span class="syntax-comment">// Sada možemo pozvati metode iz Number klase!</span>
+    <span class="syntax-keyword">double</span> value = number.doubleValue();
+}</code></pre>
+        </div>
+
+        <div class="comparison">
+            <div class="before">
+                <div class="label label-old">❌ Bez bounds - preopćenito</div>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// T može biti BILO ŠTO</span>
+<span class="syntax-keyword">public static</span> <span class="type-params">&lt;T&gt;</span> <span
+                                    class="syntax-keyword">double</span> <span
+                                    class="syntax-function">sum</span>(List<span class="type-params">&lt;T&gt;</span> list) {
+    <span class="syntax-keyword">double</span> total = 0;
+    <span class="syntax-keyword">for</span> (<span class="type-params">T</span> item : list) {
+        <span class="syntax-comment">// ❌ ERROR: Ne možemo</span>
+        <span class="syntax-comment">// koristiti doubleValue()</span>
+        <span class="syntax-comment">// jer T nije Number!</span>
+        total += item.doubleValue();
+    }
+    <span class="syntax-keyword">return</span> total;
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="after">
+                <div class="label label-new">✅ S bounds - specifično</div>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// T mora biti Number ili podklasa</span>
+<span class="syntax-keyword">public static</span> <span class="type-params">&lt;T extends Number&gt;</span> 
+<span class="syntax-keyword">double</span> <span class="syntax-function">sum</span>(List<span class="type-params">&lt;T&gt;</span> list) {
+    <span class="syntax-keyword">double</span> total = 0;
+    <span class="syntax-keyword">for</span> (<span class="type-params">T</span> item : list) {
+        <span class="syntax-comment">// ✅ OK! T extends Number</span>
+        <span class="syntax-comment">// pa ima doubleValue()</span>
+        total += item.doubleValue();
+    }
+    <span class="syntax-keyword">return</span> total;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">E-commerce primjer - Calculator</div>
+            <pre><code><span class="syntax-comment">// Bounded generic klasa za kalkulacije</span>
+<span class="syntax-keyword">public class</span> Calculator<span class="type-params">&lt;T extends Number&gt;</span> {
+    
+    <span class="syntax-keyword">public double</span> <span class="syntax-function">add</span>(<span
+                        class="type-params">T</span> a, <span class="type-params">T</span> b) {
+        <span class="syntax-keyword">return</span> a.doubleValue() + b.doubleValue();
+    }
+    
+    <span class="syntax-keyword">public double</span> <span class="syntax-function">subtract</span>(<span
+                        class="type-params">T</span> a, <span class="type-params">T</span> b) {
+        <span class="syntax-keyword">return</span> a.doubleValue() - b.doubleValue();
+    }
+    
+    <span class="syntax-keyword">public double</span> <span class="syntax-function">multiply</span>(<span
+                        class="type-params">T</span> a, <span class="type-params">T</span> b) {
+        <span class="syntax-keyword">return</span> a.doubleValue() * b.doubleValue();
+    }
+}
+
+<span class="syntax-comment">// Korištenje:</span>
+Calculator&lt;Integer&gt; intCalc = <span class="syntax-keyword">new</span> Calculator&lt;&gt;();
+<span class="syntax-keyword">double</span> result1 = intCalc.add(5, 10);  <span class="syntax-comment">// 15.0</span>
+
+Calculator&lt;Double&gt; doubleCalc = <span class="syntax-keyword">new</span> Calculator&lt;&gt;();
+<span class="syntax-keyword">double</span> result2 = doubleCalc.multiply(2.5, 4.0);  <span class="syntax-comment">// 10.0</span>
+
+<span class="syntax-comment">// ❌ NE radi - String nije Number!</span>
+<span class="syntax-comment">// Calculator&lt;String&gt; stringCalc = new Calculator&lt;&gt;(); // COMPILE ERROR!</span></code></pre>
+        </div>
+        <div class="slide-number">9</div>
+    </div>
+
+    <!-- Slide 10: Multiple bounds -->
+    <div class="slide" id="slide-10">
+        <h2>🔗 Multiple Bounds</h2>
+
+        <div class="content-box">
+            <p style="font-size: 1.2rem;">
+                Tip može imati <span class="highlight">više ograničenja odjednom</span>!
+            </p>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Sintaksa - &amp; operator</div>
+            <pre><code><span class="syntax-comment">// T mora biti i Number I Comparable</span>
+<span class="syntax-keyword">public</span> <span
+                        class="type-params">&lt;T extends Number &amp; Comparable&lt;T&gt;&gt;</span> <span
+                        class="type-params">T</span> <span class="syntax-function">max</span>(<span class="type-params">T</span> a, <span
+                        class="type-params">T</span> b) {
+    <span class="syntax-keyword">return</span> a.compareTo(b) > 0 ? a : b;
+}</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Gaming Leaderboard primjer</div>
+            <pre><code><span class="syntax-comment">// Interface za rangiranje igrača</span>
+<span class="syntax-keyword">interface</span> Rankable {
+    <span class="syntax-keyword">int</span> getRank();
+}
+
+<span class="syntax-comment">// Klasa mora biti Comparable I implementirati Rankable</span>
+<span class="syntax-keyword">public class</span> Leaderboard<span class="type-params">&lt;T extends Comparable&lt;T&gt; &amp; Rankable&gt;</span> {
+    <span class="syntax-keyword">private</span> List<span class="type-params">&lt;T&gt;</span> players;
+    
+    <span class="syntax-keyword">public</span> <span class="syntax-function">Leaderboard</span>() {
+        <span class="syntax-keyword">this</span>.players = <span class="syntax-keyword">new</span> ArrayList&lt;&gt;();
+    }
+    
+    <span class="syntax-keyword">public void</span> <span class="syntax-function">addPlayer</span>(<span
+                        class="type-params">T</span> player) {
+        players.add(player);
+        <span class="syntax-comment">// Možemo sortirati jer je Comparable</span>
+        Collections.sort(players);
+    }
+    
+    <span class="syntax-keyword">public</span> <span class="type-params">T</span> <span class="syntax-function">getTopPlayer</span>() {
+        <span class="syntax-keyword">return</span> players.isEmpty() ? <span class="syntax-keyword">null</span> : players.get(0);
+    }
+    
+    <span class="syntax-keyword">public void</span> <span class="syntax-function">displayRankings</span>() {
+        <span class="syntax-keyword">for</span> (<span class="type-params">T</span> player : players) {
+            <span class="syntax-comment">// Možemo koristiti getRank() jer implementira Rankable</span>
+            System.out.println(<span class="syntax-string">"Rank "</span> + player.getRank() + <span
+                        class="syntax-string">": "</span> + player);
+        }
+    }
+}
+
+<span class="syntax-comment">// Player klasa koja zadovoljava obje uvjete</span>
+<span class="syntax-keyword">class</span> Player <span class="syntax-keyword">implements</span> Comparable&lt;Player&gt;, Rankable {
+    <span class="syntax-keyword">private</span> String username;
+    <span class="syntax-keyword">private int</span> score;
+    <span class="syntax-keyword">private int</span> rank;
+    
+    <span class="syntax-keyword">@Override</span>
+    <span class="syntax-keyword">public int</span> <span class="syntax-function">compareTo</span>(Player other) {
+        <span class="syntax-keyword">return</span> Integer.compare(other.score, <span class="syntax-keyword">this</span>.score); <span
+                        class="syntax-comment">// Više = bolje</span>
+    }
+    
+    <span class="syntax-keyword">@Override</span>
+    <span class="syntax-keyword">public int</span> <span class="syntax-function">getRank</span>() {
+        <span class="syntax-keyword">return</span> rank;
+    }
+}</code></pre>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">⚠️ Važno pravilo</div>
+            Ako imaš multiple bounds:
+            <ul>
+                <li>✅ <strong>Klasa mora biti prva</strong> (ako postoji)</li>
+                <li>✅ Interface-i dolaze nakon</li>
+                <li>Primjer: <code>&lt;T extends Number &amp; Comparable&lt;T&gt; &amp; Serializable&gt;</code></li>
+            </ul>
+        </div>
+        <div class="slide-number">10</div>
+    </div>
+
+    <!-- Slide 11: Wildcards - uvod -->
+    <div class="slide" id="slide-11">
+        <h2>🃏 Wildcards - Zamjenski znakovi</h2>
+
+        <div class="content-box">
+            <p style="font-size: 1.2rem;">
+                Wildcard <span class="type-params">?</span> označava <span class="highlight">"nepoznati tip"</span>.
+                Koristi se u situacijama gdje ne znaš ili ne brineš o konkretnom tipu.
+            </p>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Problem: Previše specifična metoda</div>
+            <pre><code><span class="syntax-comment">// Ova metoda radi SAMO za List&lt;Integer&gt;</span>
+<span class="syntax-keyword">public static void</span> <span class="syntax-function">printList</span>(List&lt;Integer&gt; list) {
+    <span class="syntax-keyword">for</span> (Integer i : list) {
+        System.out.println(i);
+    }
+}
+
+<span class="syntax-comment">// Problem:</span>
+List&lt;Integer&gt; ints = List.of(1, 2, 3);
+printList(ints);  <span class="syntax-comment">// ✅ OK</span>
+
+List&lt;String&gt; strings = List.of(<span class="syntax-string">"a"</span>, <span
+                        class="syntax-string">"b"</span>, <span class="syntax-string">"c"</span>);
+printList(strings);  <span class="syntax-comment">// ❌ ERROR - ne prima String!</span>
+
+List&lt;Double&gt; doubles = List.of(1.5, 2.5);
+printList(doubles);  <span class="syntax-comment">// ❌ ERROR - ne prima Double!</span></code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Rješenje: Unbounded wildcard (?)</div>
+            <pre><code><span class="syntax-comment">// ? = bilo koji tip! Univerzalna metoda!</span>
+<span class="syntax-keyword">public static void</span> <span class="syntax-function">printList</span>(List<span
+                        class="type-params">&lt;?&gt;</span> list) {
+    <span class="syntax-keyword">for</span> (Object element : list) {
+        System.out.println(element);
+    }
+}
+
+<span class="syntax-comment">// Sada radi za SVE tipove! 🎉</span>
+List&lt;Integer&gt; ints = List.of(1, 2, 3);
+printList(ints);  <span class="syntax-comment">// ✅ OK</span>
+
+List&lt;String&gt; strings = List.of(<span class="syntax-string">"a"</span>, <span
+                        class="syntax-string">"b"</span>, <span class="syntax-string">"c"</span>);
+printList(strings);  <span class="syntax-comment">// ✅ OK</span>
+
+List&lt;Double&gt; doubles = List.of(1.5, 2.5);
+printList(doubles);  <span class="syntax-comment">// ✅ OK</span>
+
+List&lt;User&gt; users = getUsers();
+printList(users);  <span class="syntax-comment">// ✅ OK</span></code></pre>
+        </div>
+
+        <div class="info-box">
+            <div class="info-title">🤔 Kada koristiti wildcard?</div>
+            <ul>
+                <li>✅ Kada metoda <strong>samo čita</strong> elemente</li>
+                <li>✅ Kada ne ovisi o konkretnom tipu</li>
+                <li>✅ Kada želiš maksimalnu fleksibilnost</li>
+            </ul>
+        </div>
+        <div class="slide-number">11</div>
+    </div>
+
+    <!-- Slide 12: Upper bounded wildcards -->
+    <div class="slide" id="slide-12">
+        <h2>⬆️ Upper Bounded Wildcards</h2>
+
+        <div class="content-box">
+            <p style="font-size: 1.2rem;">
+                <span class="type-params">&lt;? extends Type&gt;</span> = <span class="highlight">"bilo koji tip koji JE ili NASLJEĐUJE Type"</span>
+            </p>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Spotify primjer - suma duljina pjesama</div>
+            <pre><code><span class="syntax-comment">// Želimo sumirati duljine pjesama različitih tipova</span>
+<span class="syntax-keyword">public static double</span> <span class="syntax-function">sumDurations</span>(List<span
+                        class="type-params">&lt;? extends Number&gt;</span> durations) {
+    <span class="syntax-keyword">double</span> total = 0;
+    <span class="syntax-keyword">for</span> (Number duration : durations) {
+        total += duration.doubleValue();
+    }
+    <span class="syntax-keyword">return</span> total;
+}
+
+<span class="syntax-comment">// Radi za SVE što nasljeđuje Number!</span>
+List&lt;Integer&gt; intDurations = List.of(180, 240, 195);  <span class="syntax-comment">// sekunde</span>
+<span class="syntax-keyword">double</span> total1 = sumDurations(intDurations);  <span
+                        class="syntax-comment">// ✅ OK</span>
+
+List&lt;Double&gt; doubleDurations = List.of(3.5, 4.2, 3.8);  <span class="syntax-comment">// minute</span>
+<span class="syntax-keyword">double</span> total2 = sumDurations(doubleDurations);  <span
+                        class="syntax-comment">// ✅ OK</span>
+
+List&lt;Long&gt; longDurations = List.of(180000L, 240000L);  <span class="syntax-comment">// milisekunde</span>
+<span class="syntax-keyword">double</span> total3 = sumDurations(longDurations);  <span
+                        class="syntax-comment">// ✅ OK</span>
+
+<span class="syntax-comment">// ❌ NE radi - String nije Number!</span>
+<span class="syntax-comment">// List&lt;String&gt; strings = List.of("3:00", "4:00");</span>
+<span class="syntax-comment">// sumDurations(strings); // COMPILE ERROR!</span></code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Gaming primjer - hijerarhija karaktera</div>
+            <pre><code><span class="syntax-comment">// Hijerarhija klasa</span>
+<span class="syntax-keyword">class</span> Character { 
+    <span class="syntax-keyword">protected</span> String name;
+    <span class="syntax-keyword">protected int</span> health;
+}
+
+<span class="syntax-keyword">class</span> Warrior <span class="syntax-keyword">extends</span> Character { 
+    <span class="syntax-keyword">private int</span> armor;
+}
+
+<span class="syntax-keyword">class</span> Mage <span class="syntax-keyword">extends</span> Character { 
+    <span class="syntax-keyword">private int</span> mana;
+}
+
+<span class="syntax-comment">// Metoda koja prima bilo koji Character ili podklasu</span>
+<span class="syntax-keyword">public static void</span> <span class="syntax-function">healParty</span>(List<span
+                        class="type-params">&lt;? extends Character&gt;</span> party) {
+    <span class="syntax-keyword">for</span> (Character member : party) {
+        member.health = 100;  <span class="syntax-comment">// Full heal!</span>
+        System.out.println(<span class="syntax-string">"Healed "</span> + member.name);
+    }
+}
+
+<span class="syntax-comment">// Korištenje:</span>
+List&lt;Warrior&gt; warriors = getWarriors();
+healParty(warriors);  <span class="syntax-comment">// ✅ Warrior extends Character</span>
+
+List&lt;Mage&gt; mages = getMages();
+healParty(mages);  <span class="syntax-comment">// ✅ Mage extends Character</span>
+
+List&lt;Character&gt; mixed = getMixedParty();
+healParty(mixed);  <span class="syntax-comment">// ✅ Character sam po sebi</span></code></pre>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">💡 Kada koristiti <span class="type-params">&lt;? extends T&gt;</span>?</div>
+            Koristi kada želiš <strong>ČITATI</strong> podatke iz kolekcije,
+            ali ne i pisati. Think: <em>"Producer extends"</em> 📤
+        </div>
+        <div class="slide-number">12</div>
+    </div>
+
+    <!-- Slide 13: Lower bounded wildcards -->
+    <div class="slide" id="slide-13">
+        <h2>⬇️ Lower Bounded Wildcards</h2>
+
+        <div class="content-box">
+            <p style="font-size: 1.2rem;">
+                <span class="type-params">&lt;? super Type&gt;</span> = <span class="highlight">"bilo koji tip koji JE ili NADKLASA od Type"</span>
+            </p>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Primjer: Dodavanje elemenata u listu</div>
+            <pre><code><span class="syntax-comment">// Možemo PISATI Integer u listu Number ili Object</span>
+<span class="syntax-keyword">public static void</span> <span class="syntax-function">addNumbers</span>(List<span
+                        class="type-params">&lt;? super Integer&gt;</span> list) {
+    list.add(1);
+    list.add(2);
+    list.add(3);
+}
+
+<span class="syntax-comment">// Korištenje:</span>
+List&lt;Integer&gt; integers = <span class="syntax-keyword">new</span> ArrayList&lt;&gt;();
+addNumbers(integers);  <span class="syntax-comment">// ✅ OK - Integer</span>
+
+List&lt;Number&gt; numbers = <span class="syntax-keyword">new</span> ArrayList&lt;&gt;();
+addNumbers(numbers);  <span class="syntax-comment">// ✅ OK - Number je super od Integer</span>
+
+List&lt;Object&gt; objects = <span class="syntax-keyword">new</span> ArrayList&lt;&gt;();
+addNumbers(objects);  <span class="syntax-comment">// ✅ OK - Object je super od Integer</span>
+
+<span class="syntax-comment">// ❌ NE radi - Double nije super od Integer!</span>
+<span class="syntax-comment">// List&lt;Double&gt; doubles = new ArrayList&lt;&gt;();</span>
+<span class="syntax-comment">// addNumbers(doubles); // COMPILE ERROR!</span></code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Discord primjer - slanje notifikacija</div>
+            <pre><code><span class="syntax-comment">// Hijerarhija notifikacija</span>
+<span class="syntax-keyword">class</span> Notification {
+    <span class="syntax-keyword">protected</span> String message;
+}
+
+<span class="syntax-keyword">class</span> DirectMessage <span class="syntax-keyword">extends</span> Notification {
+    <span class="syntax-keyword">private</span> String sender;
+}
+
+<span class="syntax-keyword">class</span> MentionNotification <span class="syntax-keyword">extends</span> Notification {
+    <span class="syntax-keyword">private</span> String channel;
+}
+
+<span class="syntax-comment">// Možemo PISATI DirectMessage u listu koja prihvaća Notification ili super</span>
+<span class="syntax-keyword">public static void</span> <span class="syntax-function">sendDirectMessages</span>(
+    List<span class="type-params">&lt;? super DirectMessage&gt;</span> inbox, 
+    String sender
+) {
+    inbox.add(<span class="syntax-keyword">new</span> DirectMessage(sender, <span class="syntax-string">"Hey! 👋"</span>));
+    inbox.add(<span class="syntax-keyword">new</span> DirectMessage(sender, <span
+                        class="syntax-string">"What's up?"</span>));
+}
+
+<span class="syntax-comment">// Korištenje:</span>
+List&lt;DirectMessage&gt; dmList = <span class="syntax-keyword">new</span> ArrayList&lt;&gt;();
+sendDirectMessages(dmList, <span class="syntax-string">"@john"</span>);  <span class="syntax-comment">// ✅ OK</span>
+
+List&lt;Notification&gt; allNotifs = <span class="syntax-keyword">new</span> ArrayList&lt;&gt;();
+sendDirectMessages(allNotifs, <span class="syntax-string">"@jane"</span>);  <span class="syntax-comment">// ✅ OK - može sve notifikacije</span>
+
+List&lt;Object&gt; everything = <span class="syntax-keyword">new</span> ArrayList&lt;&gt;();
+sendDirectMessages(everything, <span class="syntax-string">"@bob"</span>);  <span class="syntax-comment">// ✅ OK - Object sve prihvaća</span></code></pre>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">💡 Kada koristiti <span class="type-params">&lt;? super T&gt;</span>?</div>
+            Koristi kada želiš <strong>PISATI</strong> podatke u kolekciju.
+            Think: <em>"Consumer super"</em> 📥
+        </div>
+        <div class="slide-number">13</div>
+    </div>
+
+    <!-- Slide 14: PECS princip -->
+    <div class="slide" id="slide-14">
+        <h2>🎯 PECS Princip</h2>
+
+        <div class="content-box">
+            <h3 style="font-size: 2.5rem; text-align: center; margin: 2rem 0;">
+                <span style="color: var(--success);">P</span>roducer
+                <span style="color: var(--accent-primary);">E</span>xtends,
+                <span style="color: var(--warning);">C</span>onsumer
+                <span style="color: var(--accent-secondary);">S</span>uper
+            </h3>
+            <p style="font-size: 1.2rem; text-align: center;">
+                Zlatno pravilo za wildcards! ✨
+            </p>
+        </div>
+
+        <div class="comparison">
+            <div class="after">
+                <div class="label label-new">📤 Producer Extends</div>
+                <p style="margin: 1rem 0;">Kada <strong>čitaš/dobavljaš</strong> iz kolekcije:</p>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Čitanje iz liste</span>
+<span class="syntax-keyword">public static void</span> <span class="syntax-function">processNumbers</span>(
+    List<span class="type-params">&lt;? extends Number&gt;</span> numbers
+) {
+    <span class="syntax-keyword">for</span> (Number n : numbers) {
+        System.out.println(n.doubleValue());
+    }
+    <span class="syntax-comment">// ✅ Čitanje - OK!</span>
+    <span class="syntax-comment">// ❌ Pisanje - NE!</span>
+    <span class="syntax-comment">// numbers.add(5); // ERROR</span>
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="before">
+                <div class="label" style="color: var(--warning);">📥 Consumer Super</div>
+                <p style="margin: 1rem 0;">Kada <strong>pišeš/dodaješ</strong> u kolekciju:</p>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Pisanje u listu</span>
+<span class="syntax-keyword">public static void</span> <span class="syntax-function">addIntegers</span>(
+    List<span class="type-params">&lt;? super Integer&gt;</span> list
+) {
+    list.add(1);
+    list.add(2);
+    list.add(3);
+    <span class="syntax-comment">// ✅ Pisanje - OK!</span>
+    <span class="syntax-comment">// ⚠️ Čitanje - samo Object</span>
+    Object obj = list.get(0);
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Real-world primjer: Collections.copy()</div>
+            <pre><code><span class="syntax-comment">// Stvarna deklaracija iz Java Collections API</span>
+<span class="syntax-keyword">public static</span> <span class="type-params">&lt;T&gt;</span> <span
+                        class="syntax-keyword">void</span> <span class="syntax-function">copy</span>(
+    List<span class="type-params">&lt;? super T&gt;</span> dest,     <span class="syntax-comment">// Consumer (pišemo u dest)</span>
+    List<span class="type-params">&lt;? extends T&gt;</span> src    <span class="syntax-comment">// Producer (čitamo iz src)</span>
+) {
+    <span class="syntax-keyword">for</span> (<span class="type-params">T</span> item : src) {        <span
+                        class="syntax-comment">// Čitanje iz src</span>
+        dest.add(item);         <span class="syntax-comment">// Pisanje u dest</span>
+    }
+}
+
+<span class="syntax-comment">// Primjer korištenja:</span>
+List&lt;Integer&gt; source = List.of(1, 2, 3);
+List&lt;Number&gt; destination = <span class="syntax-keyword">new</span> ArrayList&lt;&gt;();
+
+Collections.copy(destination, source);
+<span class="syntax-comment">// ✅ Radi jer:</span>
+<span class="syntax-comment">// - destination je List&lt;? super Integer&gt; (Number je super od Integer)</span>
+<span class="syntax-comment">// - source je List&lt;? extends Integer&gt; (Integer extends Integer)</span></code></pre>
+        </div>
+
+        <div class="info-box">
+            <div class="info-title">💡 Kako zapamtiti PECS?</div>
+            <ul>
+                <li>📤 <strong>Producer (izvor)</strong> → čitaš podatke → <code>extends</code></li>
+                <li>📥 <strong>Consumer (odredište)</strong> → pišeš podatke → <code>super</code></li>
+                <li>🎯 Ako SAMO čitaš i pišeš → ne koristi wildcards, koristi <code>&lt;T&gt;</code></li>
+            </ul>
+        </div>
+        <div class="slide-number">14</div>
+    </div>
+
+    <!-- Slide 15: Type Erasure -->
+    <div class="slide" id="slide-15">
+        <h2>🔄 Type Erasure - Brisanje tipova</h2>
+
+        <div class="content-box">
+            <p style="font-size: 1.2rem;">
+                Java Generics koriste <span class="highlight">"type erasure"</span> - kompajler briše informaciju o
+                tipovima u runtime-u zbog backward kompatibilnosti s Java verzijama prije 5.
+            </p>
+        </div>
+
+        <div class="comparison">
+            <div class="before">
+                <div class="label" style="color: var(--info);">📝 Source kod (što pišeš)</div>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Tvoj kod s Generics</span>
+List&lt;String&gt; strings = <span class="syntax-keyword">new</span> ArrayList&lt;&gt;();
+strings.add(<span class="syntax-string">"Java"</span>);
+strings.add(<span class="syntax-string">"Generics"</span>);
+
+String first = strings.get(0);
+
+<span class="syntax-comment">// Generic metoda</span>
+<span class="syntax-keyword">public</span> <span class="type-params">&lt;T&gt;</span> <span
+                                    class="syntax-keyword">void</span> <span
+                                    class="syntax-function">process</span>(<span class="type-params">T</span> item) {
+    System.out.println(item);
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="after">
+                <div class="label" style="color: var(--warning);">⚙️ Bytecode (što vidi JVM)</div>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Nakon type erasure</span>
+List strings = <span class="syntax-keyword">new</span> ArrayList();
+strings.add(<span class="syntax-string">"Java"</span>);
+strings.add(<span class="syntax-string">"Generics"</span>);
+
+String first = (String) strings.get(0);  <span class="syntax-comment">// Casting!</span>
+
+<span class="syntax-comment">// T se zamjenjuje s Object</span>
+<span class="syntax-keyword">public void</span> <span class="syntax-function">process</span>(Object item) {
+    System.out.println(item);
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Type Erasure s bounded types</div>
+            <pre><code><span class="syntax-comment">// Source kod</span>
+<span class="syntax-keyword">public class</span> Calculator<span class="type-params">&lt;T extends Number&gt;</span> {
+    <span class="syntax-keyword">private</span> <span class="type-params">T</span> value;
+    
+    <span class="syntax-keyword">public double</span> <span class="syntax-function">getValue</span>() {
+        <span class="syntax-keyword">return</span> value.doubleValue();
+    }
+}
+
+<span class="syntax-comment">// Nakon type erasure - T se zamjenjuje s Number (ne s Object!)</span>
+<span class="syntax-keyword">public class</span> Calculator {
+    <span class="syntax-keyword">private</span> Number value;  <span class="syntax-comment">// T → Number</span>
+    
+    <span class="syntax-keyword">public double</span> <span class="syntax-function">getValue</span>() {
+        <span class="syntax-keyword">return</span> value.doubleValue();
+    }
+}</code></pre>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">⚠️ Posljedice Type Erasure</div>
+            <ul>
+                <li>❌ Ne možeš napraviti <code>new T()</code> - tip ne postoji u runtime-u!</li>
+                <li>❌ Ne možeš napraviti <code>new T[]</code> - array ne može biti generički</li>
+                <li>❌ Ne možeš koristiti <code>instanceof T</code></li>
+                <li>❌ Statički članovi ne mogu koristiti type parameters</li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Što NE radi zbog Type Erasure</div>
+            <pre><code><span class="syntax-keyword">public class</span> Box<span class="type-params">&lt;T&gt;</span> {
+    <span class="syntax-comment">// ❌ ERROR - ne možeš instancirati T</span>
+    <span class="syntax-comment">// T item = new T();</span>
+    
+    <span class="syntax-comment">// ❌ ERROR - ne možeš napraviti array od T</span>
+    <span class="syntax-comment">// T[] array = new T[10];</span>
+    
+    <span class="syntax-comment">// ❌ ERROR - instanceof ne radi s T</span>
+    <span class="syntax-comment">// if (obj instanceof T) { ... }</span>
+    
+    <span class="syntax-comment">// ❌ ERROR - statički članovi ne mogu koristiti T</span>
+    <span class="syntax-comment">// private static T staticField;</span>
+}</code></pre>
+        </div>
+        <div class="slide-number">15</div>
+    </div>
+
+    <!-- Slide 16: Raw Types - Zašto ne! -->
+    <div class="slide" id="slide-16">
+        <h2>⚠️ Raw Types - Nemoj koristiti!</h2>
+
+        <div class="content-box">
+            <p style="font-size: 1.2rem;">
+                <strong>Raw type</strong> = korištenje generičke klase <span
+                    class="highlight">bez type parametara</span>.
+                Postoji samo zbog backward kompatibilnosti s pre-Java 5 kodom.
+            </p>
+        </div>
+
+        <div class="comparison">
+            <div class="before">
+                <div class="label label-old">❌ RAW TYPE - Opasno!</div>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// Bez &lt;&gt; - raw type!</span>
+List users = <span class="syntax-keyword">new</span> ArrayList();
+
+<span class="syntax-comment">// Može primiti SVE - nema type safety!</span>
+users.add(<span class="syntax-keyword">new</span> User(<span class="syntax-string">"Ana"</span>));
+users.add(<span class="syntax-string">"Ovo nije User!"</span>);  <span
+                                    class="syntax-comment">// 😱 OK u compile-time</span>
+users.add(42);  <span class="syntax-comment">// 😱 OK u compile-time</span>
+
+<span class="syntax-comment">// Potreban casting - opasno!</span>
+User u = (User) users.get(0);  <span class="syntax-comment">// ✅ OK</span>
+User u2 = (User) users.get(1);  <span class="syntax-comment">// 💥 ClassCastException!</span>
+
+<span class="syntax-comment">// ⚠️ Compiler warning:</span>
+<span class="syntax-comment">// "List is a raw type. References to </span>
+<span class="syntax-comment">// generic type List&lt;E&gt; should be parameterized"</span></code></pre>
+                </div>
+            </div>
+
+            <div class="after">
+                <div class="label label-new">✅ GENERICS - Sigurno!</div>
+                <div class="code-block">
+                        <pre><code><span class="syntax-comment">// S &lt;&gt; - type-safe!</span>
+List&lt;User&gt; users = <span class="syntax-keyword">new</span> ArrayList&lt;&gt;();
+
+<span class="syntax-comment">// Samo User objekti!</span>
+users.add(<span class="syntax-keyword">new</span> User(<span class="syntax-string">"Ana"</span>));  <span
+                                    class="syntax-comment">// ✅ OK</span>
+
+<span class="syntax-comment">// Compile-time errors - odlično!</span>
+<span class="syntax-comment">// users.add("String"); // ❌ COMPILE ERROR</span>
+<span class="syntax-comment">// users.add(42); // ❌ COMPILE ERROR</span>
+
+<span class="syntax-comment">// Bez castinga - sigurno!</span>
+User u = users.get(0);  <span class="syntax-comment">// ✅ Uvijek User</span>
+User u2 = users.get(1);  <span class="syntax-comment">// ✅ Uvijek User</span>
+
+<span class="syntax-comment">// 🎉 Nema warnings!</span></code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">TikTok primjer - Raw type problem</div>
+            <pre><code><span class="syntax-comment">// ❌ Loše - Raw type</span>
+<span class="syntax-keyword">class</span> VideoQueue {
+    <span class="syntax-keyword">private</span> List videos = <span
+                        class="syntax-keyword">new</span> ArrayList();  <span class="syntax-comment">// Raw type!</span>
+    
+    <span class="syntax-keyword">public void</span> <span class="syntax-function">addVideo</span>(Object video) {
+        videos.add(video);
+    }
+    
+    <span class="syntax-keyword">public</span> Object <span class="syntax-function">nextVideo</span>() {
+        <span class="syntax-keyword">return</span> videos.remove(0);
+    }
+}
+
+VideoQueue queue = <span class="syntax-keyword">new</span> VideoQueue();
+queue.addVideo(<span class="syntax-keyword">new</span> Video(<span class="syntax-string">"funny_cat.mp4"</span>));
+queue.addVideo(<span class="syntax-string">"Not a video!"</span>);  <span
+                        class="syntax-comment">// 😱 Prihvaća String!</span>
+
+Video v = (Video) queue.nextVideo();  <span class="syntax-comment">// OK</span>
+Video v2 = (Video) queue.nextVideo();  <span class="syntax-comment">// 💥 RUNTIME ERROR!</span>
+
+<span class="syntax-comment">// ✅ Dobro - Generics</span>
+<span class="syntax-keyword">class</span> VideoQueue<span class="type-params">&lt;T&gt;</span> {
+    <span class="syntax-keyword">private</span> List<span class="type-params">&lt;T&gt;</span> videos = <span
+                        class="syntax-keyword">new</span> ArrayList&lt;&gt;();
+    
+    <span class="syntax-keyword">public void</span> <span class="syntax-function">addVideo</span>(<span
+                        class="type-params">T</span> video) {
+        videos.add(video);
+    }
+    
+    <span class="syntax-keyword">public</span> <span class="type-params">T</span> <span class="syntax-function">nextVideo</span>() {
+        <span class="syntax-keyword">return</span> videos.remove(0);
+    }
+}
+
+VideoQueue&lt;Video&gt; queue = <span class="syntax-keyword">new</span> VideoQueue&lt;&gt;();
+queue.addVideo(<span class="syntax-keyword">new</span> Video(<span class="syntax-string">"funny_cat.mp4"</span>));
+<span class="syntax-comment">// queue.addVideo("Not a video!"); // ❌ COMPILE ERROR!</span>
+
+Video v = queue.nextVideo();  <span class="syntax-comment">// ✅ Type-safe, bez castinga!</span></code></pre>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">🚫 Pravilo: NIKAD nemoj koristiti raw types!</div>
+            Raw types postoje samo zbog starih verzija Jave (pre-1.5).
+            <strong>Uvijek koristi Generics</strong> za type safety!
+        </div>
+        <div class="slide-number">16</div>
+    </div>
+
+    <!-- Slide 17: Best Practices -->
+    <div class="slide" id="slide-17">
+        <h2>✨ Best Practices za Generics</h2>
+
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">1️⃣ Eliminiraj raw types</div>
+                <div class="code-block" style="margin-top: 1rem;">
+                        <pre><code><span class="syntax-comment">// ❌ Loše</span>
+List list = <span class="syntax-keyword">new</span> ArrayList();
+
+<span class="syntax-comment">// ✅ Dobro</span>
+List&lt;String&gt; list = <span class="syntax-keyword">new</span> ArrayList&lt;&gt;();</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">2️⃣ Koristi diamond operator</div>
+                <div class="code-block" style="margin-top: 1rem;">
+                        <pre><code><span class="syntax-comment">// ❌ Redundantno</span>
+List&lt;String&gt; l = <span class="syntax-keyword">new</span> ArrayList&lt;String&gt;();
+
+<span class="syntax-comment">// ✅ Kraće (Java 7+)</span>
+List&lt;String&gt; l = <span class="syntax-keyword">new</span> ArrayList&lt;&gt;();</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">3️⃣ Preferiraj liste nad arrayima</div>
+                <div class="code-block" style="margin-top: 1rem;">
+                        <pre><code><span class="syntax-comment">// ❌ Array - ne type-safe</span>
+Object[] arr = <span class="syntax-keyword">new</span> String[10];
+arr[0] = 1;  <span class="syntax-comment">// Runtime error!</span>
+
+<span class="syntax-comment">// ✅ Lista - type-safe</span>
+List&lt;String&gt; list = <span class="syntax-keyword">new</span> ArrayList&lt;&gt;();
+<span class="syntax-comment">// list.add(1); // Compile error!</span></code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">4️⃣ Koristi PECS za wildcards</div>
+                <div class="code-block" style="margin-top: 1rem;">
+                        <pre><code><span class="syntax-comment">// Producer - extends</span>
+<span class="syntax-keyword">void</span> <span class="syntax-function">read</span>(List<span class="type-params">&lt;? extends T&gt;</span> src);
+
+<span class="syntax-comment">// Consumer - super</span>
+<span class="syntax-keyword">void</span> <span class="syntax-function">write</span>(List<span class="type-params">&lt;? super T&gt;</span> dest);</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">5️⃣ Bounded types kad je potrebno</div>
+                <div class="code-block" style="margin-top: 1rem;">
+                        <pre><code><span class="syntax-comment">// Ograniči na Number</span>
+<span class="syntax-keyword">public</span> <span class="type-params">&lt;T extends Number&gt;</span> 
+<span class="syntax-keyword">double</span> <span class="syntax-function">sum</span>(List<span class="type-params">&lt;T&gt;</span> list) {
+    <span class="syntax-keyword">return</span> list.stream()
+        .mapToDouble(Number::doubleValue)
+        .sum();
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">6️⃣ Ne koristi instanceof s Generics</div>
+                <div class="code-block" style="margin-top: 1rem;">
+                        <pre><code><span class="syntax-comment">// ❌ Ne radi - Type erasure</span>
+<span class="syntax-comment">// if (obj instanceof List&lt;String&gt;)</span>
+
+<span class="syntax-comment">// ✅ Radi - samo raw type</span>
+<span class="syntax-keyword">if</span> (obj <span class="syntax-keyword">instanceof</span> List) {
+    List&lt;?&gt; list = (List&lt;?&gt;) obj;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">💡 Golden Rules</div>
+            <ul>
+                <li>✅ Uvijek koristi Generics umjesto raw types</li>
+                <li>✅ Koristi wildcards za fleksibilnost</li>
+                <li>✅ PECS princip za wildcards</li>
+                <li>✅ Bounded types za ograničenja</li>
+                <li>❌ Ne pokušavaj "prevariti" type system</li>
+            </ul>
+        </div>
+        <div class="slide-number">17</div>
+    </div>
+
+    <!-- Slide 18: Praktični projekt -->
+    <div class="slide" id="slide-18">
+        <h2>🎯 Praktični projekt: Generic Cache</h2>
+
+        <div class="content-box">
+            <h3>Zadatak: Cache sistem za web aplikaciju</h3>
+            <p style="font-size: 1.1rem; margin: 1rem 0;">
+                Kreiraj generički cache koji može spremati bilo koji tip podataka s TTL (Time To Live).
+            </p>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">CacheEntry - wrapper za podatke</div>
+            <pre><code><span class="syntax-keyword">class</span> CacheEntry<span class="type-params">&lt;T&gt;</span> {
+    <span class="syntax-keyword">private final</span> <span class="type-params">T</span> value;
+    <span class="syntax-keyword">private final long</span> expiryTime;
+    
+    <span class="syntax-keyword">public</span> <span class="syntax-function">CacheEntry</span>(<span
+                        class="type-params">T</span> value, <span class="syntax-keyword">long</span> ttlMillis) {
+        <span class="syntax-keyword">this</span>.value = value;
+        <span class="syntax-keyword">this</span>.expiryTime = System.currentTimeMillis() + ttlMillis;
+    }
+    
+    <span class="syntax-keyword">public boolean</span> <span class="syntax-function">isExpired</span>() {
+        <span class="syntax-keyword">return</span> System.currentTimeMillis() > expiryTime;
+    }
+    
+    <span class="syntax-keyword">public</span> <span class="type-params">T</span> <span
+                        class="syntax-function">getValue</span>() {
+        <span class="syntax-keyword">return</span> value;
+    }
+}</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">GenericCache - glavna klasa</div>
+            <pre><code><span class="syntax-keyword">public class</span> GenericCache<span class="type-params">&lt;K, V&gt;</span> {
+    <span class="syntax-keyword">private final</span> Map<span class="type-params">&lt;K, CacheEntry&lt;V&gt;&gt;</span> cache;
+    <span class="syntax-keyword">private final long</span> defaultTtl;
+    
+    <span class="syntax-keyword">public</span> <span class="syntax-function">GenericCache</span>(<span
+                        class="syntax-keyword">long</span> defaultTtlMillis) {
+        <span class="syntax-keyword">this</span>.cache = <span class="syntax-keyword">new</span> ConcurrentHashMap&lt;&gt;();
+        <span class="syntax-keyword">this</span>.defaultTtl = defaultTtlMillis;
+    }
+    
+    <span class="syntax-comment">// Dodaj u cache</span>
+    <span class="syntax-keyword">public void</span> <span class="syntax-function">put</span>(<span
+                        class="type-params">K</span> key, <span class="type-params">V</span> value) {
+        cache.put(key, <span class="syntax-keyword">new</span> CacheEntry&lt;&gt;(value, defaultTtl));
+    }
+    
+    <span class="syntax-comment">// Dodaj s custom TTL</span>
+    <span class="syntax-keyword">public void</span> <span class="syntax-function">put</span>(<span
+                        class="type-params">K</span> key, <span class="type-params">V</span> value, <span
+                        class="syntax-keyword">long</span> ttlMillis) {
+        cache.put(key, <span class="syntax-keyword">new</span> CacheEntry&lt;&gt;(value, ttlMillis));
+    }
+    
+    <span class="syntax-comment">// Dohvati iz cache-a</span>
+    <span class="syntax-keyword">public</span> Optional<span class="type-params">&lt;V&gt;</span> <span
+                        class="syntax-function">get</span>(<span class="type-params">K</span> key) {
+        CacheEntry<span class="type-params">&lt;V&gt;</span> entry = cache.get(key);
+        
+        <span class="syntax-keyword">if</span> (entry == <span class="syntax-keyword">null</span>) {
+            <span class="syntax-keyword">return</span> Optional.empty();
+        }
+        
+        <span class="syntax-keyword">if</span> (entry.isExpired()) {
+            cache.remove(key);  <span class="syntax-comment">// Očisti expired entry</span>
+            <span class="syntax-keyword">return</span> Optional.empty();
+        }
+        
+        <span class="syntax-keyword">return</span> Optional.of(entry.getValue());
+    }
+    
+    <span class="syntax-comment">// Očisti sve expired entries</span>
+    <span class="syntax-keyword">public void</span> <span class="syntax-function">cleanup</span>() {
+        cache.entrySet()
+            .removeIf(entry -> entry.getValue().isExpired());
+    }
+    
+    <span class="syntax-keyword">public int</span> <span class="syntax-function">size</span>() {
+        <span class="syntax-keyword">return</span> cache.size();
+    }
+    
+    <span class="syntax-keyword">public void</span> <span class="syntax-function">clear</span>() {
+        cache.clear();
+    }
+}</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">Korištenje - Instagram user cache</div>
+            <pre><code><span class="syntax-comment">// Cache za User objekte - 5 minuta TTL</span>
+GenericCache&lt;String, User&gt; userCache = 
+    <span class="syntax-keyword">new</span> GenericCache&lt;&gt;(5 * 60 * 1000);
+
+<span class="syntax-comment">// Spremi korisnika</span>
+User ana = <span class="syntax-keyword">new</span> User(<span class="syntax-string">"@ana"</span>, <span
+                        class="syntax-string">"Ana Horvat"</span>);
+userCache.put(<span class="syntax-string">"@ana"</span>, ana);
+
+<span class="syntax-comment">// Dohvati iz cache-a</span>
+Optional&lt;User&gt; cached = userCache.get(<span class="syntax-string">"@ana"</span>);
+cached.ifPresent(user -> 
+    System.out.println(<span class="syntax-string">"Loaded from cache: "</span> + user.getName())
+);
+
+<span class="syntax-comment">// Cache za post statistike - 1 minuta TTL</span>
+GenericCache&lt;String, PostStats&gt; statsCache = 
+    <span class="syntax-keyword">new</span> GenericCache&lt;&gt;(60 * 1000);
+
+statsCache.put(<span class="syntax-string">"post_123"</span>, <span class="syntax-keyword">new</span> PostStats(1500, 250));
+
+<span class="syntax-comment">// Cache za session tokene - 30 minuta TTL</span>
+GenericCache&lt;String, SessionToken&gt; sessionCache = 
+    <span class="syntax-keyword">new</span> GenericCache&lt;&gt;(30 * 60 * 1000);</code></pre>
+        </div>
+        <div class="slide-number">18</div>
+    </div>
+
+    <!-- Slide 19: Java 25+ novosti -->
+    <div class="slide" id="slide-19">
+        <h2>🆕 Generics u Java 25+</h2>
+
+        <div class="content-box">
+            <h3>Budućnost Generics-a</h3>
+            <p style="font-size: 1.1rem;">
+                Project Valhalla i Project Amber donose poboljšanja u Generics!
+            </p>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">1. Primitive Type Specialization (budućnost)</div>
+            <pre><code><span class="syntax-comment">// Trenutno - mora boxing</span>
+List&lt;Integer&gt; numbers = <span class="syntax-keyword">new</span> ArrayList&lt;&gt;();
+numbers.add(5);  <span class="syntax-comment">// Boxing: int → Integer (overhead!)</span>
+
+<span class="syntax-comment">// Budućnost - direktno primitive</span>
+List&lt;<span class="syntax-keyword">int</span>&gt; numbers = <span class="syntax-keyword">new</span> ArrayList&lt;&gt;();  <span
+                        class="syntax-comment">// Možda uskoro!</span>
+numbers.add(5);  <span class="syntax-comment">// Bez boxinga, brže!</span></code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">2. Inline Types (Project Valhalla)</div>
+            <pre><code><span class="syntax-comment">// Inline types - value types bez wrappera</span>
+<span class="syntax-keyword">inline class</span> Point<span class="type-params">&lt;T extends Number&gt;</span> {
+    <span class="syntax-keyword">private final</span> <span class="type-params">T</span> x;
+    <span class="syntax-keyword">private final</span> <span class="type-params">T</span> y;
+    
+    <span class="syntax-comment">// Brže, manje memorije, bez heap allocation!</span>
+}</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-header">3. Better type inference</div>
+            <pre><code><span class="syntax-comment">// Trenutno - ponekad treba eksplicitno</span>
+List&lt;String&gt; list = Collections.&lt;String&gt;emptyList();
+
+<span class="syntax-comment">// Java 25+ - još bolji inference</span>
+<span class="syntax-keyword">var</span> list = List.of(<span class="syntax-string">"a"</span>, <span
+                        class="syntax-string">"b"</span>, <span class="syntax-string">"c"</span>);  <span
+                        class="syntax-comment">// List&lt;String&gt; inferred</span>
+<span class="syntax-keyword">var</span> map = Map.of(<span class="syntax-string">"key"</span>, 1, <span
+                        class="syntax-string">"key2"</span>, 2);  <span class="syntax-comment">// Map&lt;String, Integer&gt;</span></code></pre>
+        </div>
+
+        <div class="info-box">
+            <div class="info-title">🚀 Što možemo očekivati?</div>
+            <ul>
+                <li>⚡ <strong>Primitive Generics</strong> - bez boxing overheada</li>
+                <li>📦 <strong>Inline Types</strong> - vrijednosti bez heap allocation</li>
+                <li>🎯 <strong>Bolji type inference</strong> - manje verboze koda</li>
+                <li>🔧 <strong>Reified Generics</strong> - pristup tipovima u runtime-u</li>
+            </ul>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">💡 Stay Updated!</div>
+            Prati:
+            <ul>
+                <li><strong>Project Valhalla:</strong> Value types i specialized generics</li>
+                <li><strong>Project Amber:</strong> Pattern matching s generics</li>
+                <li><strong>JEPs:</strong> Java Enhancement Proposals na openjdk.org</li>
+            </ul>
+        </div>
+        <div class="slide-number">19</div>
+    </div>
+
+    <!-- Slide 20: Zaključak -->
+    <div class="slide" id="slide-20">
+        <h2>🎓 Zaključak</h2>
+
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">📝 Što smo naučili?</div>
+                <ul style="margin-left: 1rem;">
+                    <li>Generičke metode i klase</li>
+                    <li>Type parameters (<span class="type-params">T</span>, <span class="type-params">E</span>, <span
+                            class="type-params">K</span>, <span class="type-params">V</span>)
+                    </li>
+                    <li>Bounded types (extends, super)</li>
+                    <li>Wildcards (?, extends, super)</li>
+                    <li>PECS princip</li>
+                    <li>Type Erasure</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title">💪 Key Takeaways</div>
+                <ul style="margin-left: 1rem;">
+                    <li>🔒 Type safety u compile-time</li>
+                    <li>📝 Čitljiviji kod bez castinga</li>
+                    <li>♻️ Reusability - jedna klasa za sve</li>
+                    <li>🚫 Nikad raw types!</li>
+                    <li>🎯 PECS za wildcards</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-box" style="margin-top: 2rem; text-align: center;">
+            <h3 style="font-size: 2rem; margin-bottom: 1rem;">🎉 Generics = Type Safety + Reusability</h3>
+            <p style="font-size: 1.3rem; color: var(--text-secondary);">
+                Jedna generička klasa bolja je od stotinu specifičnih! 💡
+            </p>
+        </div>
+
+        <div class="comparison" style="margin-top: 2rem;">
+            <div class="before">
+                <div class="label label-old">❌ Bez Generics</div>
+                <ul style="margin: 1rem 0;">
+                    <li>Runtime greške</li>
+                    <li>Puno castinga</li>
+                    <li>Duplicate kod</li>
+                    <li>Teže za održavanje</li>
+                </ul>
+            </div>
+
+            <div class="after">
+                <div class="label label-new">✅ S Generics</div>
+                <ul style="margin: 1rem 0;">
+                    <li>Compile-time greške</li>
+                    <li>Bez castinga</li>
+                    <li>DRY princip</li>
+                    <li>Lako za održavanje</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="tip" style="margin-top: 2rem;">
+            <div class="tip-title">📚 Dodatni resursi</div>
+            <ul>
+                <li><strong>Oracle Java Tutorials:</strong> <a
+                        href="https://docs.oracle.com/javase/tutorial/java/generics/"
+                        style="color: var(--accent-primary);">Generics Tutorial</a></li>
+                <li><strong>Effective Java (Joshua Bloch):</strong> Poglavlja 26-31</li>
+                <li><strong>Java Language Specification:</strong> Chapter 4 & 8</li>
+            </ul>
+        </div>
+
+        <div class="content-box"
+             style="margin-top: 2rem; text-align: center; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); color: white;">
+            <h3 style="font-size: 2rem; margin-bottom: 0.5rem; color: white;">Pitanja? 🤔</h3>
+            <p style="font-size: 1.2rem;">
+                Tehničko veleučilište u Zagrebu<br>
+                Programiranje u jeziku Java
+            </p>
+        </div>
+        <div class="slide-number">20</div>
+    </div>
+</div>
+
+<div class="navigation">
+    <button class="nav-button" id="prevBtn" onclick="previousSlide()">← Prethodni</button>
+    <span id="slideIndicator" style="color: var(--text-primary); font-weight: 600; padding: 0 20px;">1 / 20</span>
+    <button class="nav-button" id="nextBtn" onclick="nextSlide()">Sljedeći →</button>
+</div>
+
+<script>
+    let currentSlide = 1;
+    const totalSlides = 20;
+
+    function showSlide(n) {
+        const slides = document.querySelectorAll('.slide');
+        if (n > totalSlides) currentSlide = totalSlides;
+        if (n < 1) currentSlide = 1;
+
+        slides.forEach(slide => slide.style.display = 'none');
+        slides[currentSlide - 1].style.display = 'flex';
+
+        document.getElementById('slideIndicator').textContent = `${currentSlide} / ${totalSlides}`;
+
+        document.getElementById('prevBtn').disabled = currentSlide === 1;
+        document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    function nextSlide() {
+        currentSlide++;
+        showSlide(currentSlide);
+    }
+
+    function previousSlide() {
+        currentSlide--;
+        showSlide(currentSlide);
+    }
+
+    function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        showSlide(currentSlide);
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextSlide();
+        if (e.key === 'ArrowLeft') previousSlide();
+    });
+
+    showSlide(currentSlide);
+</script>
+</body>
+</html>
