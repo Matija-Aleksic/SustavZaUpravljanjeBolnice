@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="TOP_CENTER" spacing="20.0" stylesheets="@hospital-styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.alex.sustavzaupravljanjebolnice.controller.DoctorOverviewController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <Label styleClass="header" text="Doctor Overview" />
+
+    <HBox alignment="CENTER" spacing="10.0">
+        <Button onAction="#handleAddDoctor" styleClass="button" text="Add Doctor" />
+        <Button onAction="#handleEditDoctor" styleClass="button" text="Edit Doctor" />
+        <Button onAction="#handleDeleteDoctor" styleClass="button" text="Delete Doctor" />
+    </HBox>
+
+    <TableView fx:id="doctorsTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="firstNameColumn" prefWidth="150.0" text="First Name" />
+            <TableColumn fx:id="lastNameColumn" prefWidth="150.0" text="Last Name" />
+            <TableColumn fx:id="oibColumn" prefWidth="100.0" text="OIB" />
+            <TableColumn fx:id="birthDateColumn" prefWidth="120.0" text="Birth Date" />
+            <TableColumn fx:id="emailColumn" prefWidth="200.0" text="Email" />
+            <!-- Add more columns as needed, e.g., for assignedPatients, appointments -->
+        </columns>
+    </TableView>
+</VBox>

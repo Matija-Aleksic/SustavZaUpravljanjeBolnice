@@ -17,5 +17,19 @@ public abstract class Person implements Serializable {
         this.birthDate = birthDate;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
 
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getOib() {
+        return oib;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
 }

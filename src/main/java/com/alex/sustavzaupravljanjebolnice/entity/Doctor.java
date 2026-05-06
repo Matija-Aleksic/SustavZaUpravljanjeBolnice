@@ -13,4 +13,19 @@ public class Doctor extends Staff {
         this.appointments = appointments;
     }
 
+    public List<Patient> getAssignedPatients() {
+        return assignedPatients;
+    }
+
+    public void setAssignedPatients(List<Patient> assignedPatients) {
+        this.assignedPatients = assignedPatients;
+    }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
+    }
 }

@@ -12,4 +12,20 @@ public class Staff extends Person {
         this.role = role;
         this.email = email;
     }
+
+    public StaffRoles getRole() {
+        return role;
+    }
+
+    public void setRole(StaffRoles role) {
+        this.role = role;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
