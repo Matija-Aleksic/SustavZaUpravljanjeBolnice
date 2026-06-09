@@ -1,5 +1,7 @@
 package com.alex.sustavzaupravljanjebolnice.entity;
 
+import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -10,7 +12,10 @@ public class PatientBuilder {
     private LocalDate birthDate;
     private PatientStatus status;
     private String mbo;
+    private Hospital hospital;
     private List<Appointment> appointments;
+    private List<Perscription> prescriptions;
+    private Doctor assignedDoctor;
 
     public PatientBuilder setFirstName(String firstName) {
         this.firstName = firstName;
@@ -42,12 +47,27 @@ public class PatientBuilder {
         return this;
     }
 
+    public PatientBuilder setHospital(Hospital hospital) {
+        this.hospital = hospital;
+        return this;
+    }
+
     public PatientBuilder setAppointments(List<Appointment> appointments) {
         this.appointments = appointments;
         return this;
     }
 
+    public PatientBuilder setPrescriptions(List<Perscription> prescriptions) {
+        this.prescriptions = prescriptions;
+        return this;
+    }
+
+    public PatientBuilder setAssignedDoctor(Doctor assignedDoctor) {
+        this.assignedDoctor = assignedDoctor;
+        return this;
+    }
+
     public Patient createPatient() {
-        return new Patient(firstName, lastName, oib, birthDate, status, mbo, appointments);
+        return new Patient(firstName, lastName, oib, birthDate, status, mbo, hospital, appointments, prescriptions, assignedDoctor);
     }
 }
