@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>JDBC - Java Database Connectivity</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+    <style>
+        :root {
+            /* Light theme */
+            --bg-primary: #fafafa;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f0f0f0;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --text-muted: #8888aa;
+            --accent-primary: #ff6b35;
+            --accent-secondary: #f7931e;
+            --accent-gradient: linear-gradient(135deg, #ff6b35, #f7931e);
+            --code-bg: #1e1e2e;
+            --code-text: #cdd6f4;
+            --border-color: #e0e0e0;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --card-bg: #ffffff;
+            --highlight-bg: rgba(255, 107, 53, 0.1);
+
+            /* Code syntax colors */
+            --code-keyword: #cba6f7;
+            --code-string: #a6e3a1;
+            --code-number: #fab387;
+            --code-comment: #6c7086;
+            --code-class: #89dceb;
+            --code-method: #89b4fa;
+            --code-annotation: #f9e2af;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f0f1a;
+            --bg-secondary: #1a1a2e;
+            --bg-tertiary: #252542;
+            --text-primary: #e8e8f0;
+            --text-secondary: #b8b8d0;
+            --text-muted: #6868a0;
+            --accent-primary: #ff7f50;
+            --accent-secondary: #ffa500;
+            --accent-gradient: linear-gradient(135deg, #ff7f50, #ffa500);
+            --border-color: #3a3a5c;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --card-bg: #1a1a2e;
+            --highlight-bg: rgba(255, 127, 80, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background 0.4s ease, color 0.4s ease;
+            overflow-x: hidden;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            padding: 8px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-primary);
+        }
+
+        .theme-toggle .icon {
+            font-size: 1.2rem;
+        }
+
+        /* Navigation */
+        .nav-dots {
+            position: fixed;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-dot:hover,
+        .nav-dot.active {
+            background: var(--accent-primary);
+            transform: scale(1.3);
+        }
+
+        .nav-dot::after {
+            content: attr(data-title);
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-secondary);
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .nav-dot:hover::after {
+            opacity: 1;
+        }
+
+        /* Slide Container */
+        .presentation {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+        }
+
+        .slide {
+            min-height: 100vh;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide-content {
+            max-width: 1200px;
+            width: 100%;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Title Slide */
+        .title-slide {
+            background: var(--bg-primary);
+            text-align: center;
+            position: relative;
+        }
+
+        .title-slide::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 70% 70%, rgba(247, 147, 30, 0.08) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .title-slide h1 {
+            font-size: 5rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-slide .subtitle {
+            font-size: 1.8rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-slide .badge {
+            display: inline-block;
+            background: var(--accent-gradient);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Section Headers */
+        h2 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin: 1.5rem 0 1rem;
+        }
+
+        /* Content Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 1rem 0;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 40px var(--shadow-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px var(--shadow-color);
+        }
+
+        .card.highlight {
+            border-left: 4px solid var(--accent-primary);
+            background: var(--highlight-bg);
+        }
+
+        /* Lists */
+        ul, ol {
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin: 0.8rem 0;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        li::marker {
+            color: var(--accent-primary);
+        }
+
+        li strong {
+            color: var(--text-primary);
+        }
+
+        /* Code Blocks */
+        .code-container {
+            background: var(--code-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .code-header {
+            background: #181825;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #313244;
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .code-dot.red {
+            background: #f38ba8;
+        }
+
+        .code-dot.yellow {
+            background: #f9e2af;
+        }
+
+        .code-dot.green {
+            background: #a6e3a1;
+        }
+
+        .code-title {
+            margin-left: auto;
+            color: #6c7086;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        pre {
+            margin: 0;
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--code-text);
+        }
+
+        /* Syntax Highlighting */
+        .keyword {
+            color: var(--code-keyword);
+            font-weight: 500;
+        }
+
+        .string {
+            color: var(--code-string);
+        }
+
+        .number {
+            color: var(--code-number);
+        }
+
+        .comment {
+            color: var(--code-comment);
+            font-style: italic;
+        }
+
+        .class-name {
+            color: var(--code-class);
+        }
+
+        .method {
+            color: var(--code-method);
+        }
+
+        .annotation {
+            color: var(--code-annotation);
+        }
+
+        .type {
+            color: #f9e2af;
+        }
+
+        .variable {
+            color: #cdd6f4;
+        }
+
+        .operator {
+            color: #89dceb;
+        }
+
+        /* Inline code */
+        .inline-code {
+            background: var(--bg-tertiary);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            color: var(--accent-primary);
+        }
+
+        /* Grid layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        /* Feature boxes */
+        .feature-box {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .feature-box:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-5px);
+        }
+
+        .feature-box .icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-box h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .feature-box p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Architecture diagram */
+        .architecture {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 2rem;
+        }
+
+        .arch-box {
+            background: var(--accent-gradient);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-align: center;
+            min-width: 200px;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .arch-connector {
+            width: 3px;
+            height: 30px;
+            background: var(--border-color);
+        }
+
+        .arch-row {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .arch-box.secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+
+        .arch-box.db {
+            background: linear-gradient(135deg, #45b7d1, #2196F3);
+            border-radius: 12px 12px 24px 24px;
+        }
+
+        /* Tips section */
+        .tip {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            background: var(--highlight-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            border-left: 4px solid var(--accent-primary);
+        }
+
+        .tip-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .tip-content h4 {
+            color: var(--accent-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: var(--accent-gradient);
+            z-index: 1001;
+            transition: width 0.3s ease;
+        }
+
+        /* Slide counter */
+        .slide-counter {
+            position: fixed;
+            bottom: 20px;
+            right: 25px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            z-index: 999;
+        }
+
+        /* Emoji accents */
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 0.3rem;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px var(--shadow-color);
+        }
+
+        th, td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: var(--highlight-bg);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .slide {
+                padding: 40px;
+            }
+
+            .title-slide h1 {
+                font-size: 3.5rem;
+            }
+
+            h2 {
+                font-size: 2.2rem;
+            }
+
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-dots {
+                display: none;
+            }
+        }
+
+        /* Output box */
+        .output-box {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-top: 1rem;
+            border-left: 4px solid #a6e3a1;
+        }
+
+        .output-box .label {
+            color: #a6e3a1;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .output-box code {
+            color: #cdd6f4;
+            font-size: 0.85rem;
+        }
+
+        /* Comparison boxes */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-box {
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 2px solid;
+        }
+
+        .comparison-box.old {
+            border-color: #f38ba8;
+            background: rgba(243, 139, 168, 0.1);
+        }
+
+        .comparison-box.new {
+            border-color: #a6e3a1;
+            background: rgba(166, 227, 161, 0.1);
+        }
+
+        .comparison-box .label {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .comparison-box.old .label {
+            color: #f38ba8;
+        }
+
+        .comparison-box.new .label {
+            color: #a6e3a1;
+        }
+
+        /* Keyboard shortcuts hint */
+        .keyboard-hint {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 1rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            z-index: 999;
+        }
+
+        .key {
+            background: var(--bg-secondary);
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<button class="theme-toggle" onclick="toggleTheme()">
+    <span class="icon" id="themeIcon">🌙</span>
+    <span id="themeText">Dark</span>
+</button>
+
+<nav class="nav-dots" id="navDots"></nav>
+
+<div class="slide-counter">
+    <span id="currentSlide">1</span> / <span id="totalSlides">14</span>
+</div>
+
+<div class="keyboard-hint">
+    <span><span class="key">↑</span> <span class="key">↓</span> navigacija</span>
+</div>
+
+<div class="presentation" id="presentation">
+
+    <!-- Slide 1: Title -->
+    <section class="slide title-slide" data-title="Naslov">
+        <div class="slide-content">
+            <h1>JDBC</h1>
+            <p class="subtitle">Java Database Connectivity</p>
+            <span class="badge">☕ Java 25 Edition</span>
+        </div>
+    </section>
+
+    <!-- Slide 2: Sadržaj -->
+    <section class="slide" data-title="Sadržaj">
+        <div class="slide-content">
+            <h2>📋 Što ćemo naučiti?</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>🎯 Osnove</h3>
+                    <ul>
+                        <li>Što su relacijske baze podataka</li>
+                        <li>JDBC arhitektura i kako radi</li>
+                        <li>H2 baza podataka</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>💻 Praktični dio</h3>
+                    <ul>
+                        <li>Spajanje na bazu podataka</li>
+                        <li>Pripremanje i izvršavanje upita</li>
+                        <li>Kreiranje i dohvaćanje podataka</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>⚡ Napredne teme</h3>
+                    <ul>
+                        <li>PreparedStatement vs Statement</li>
+                        <li>Try-with-resources pattern</li>
+                        <li>Rad s transakcijama</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>🛡️ Best Practices</h3>
+                    <ul>
+                        <li>Sigurno zatvaranje resursa</li>
+                        <li>Sprječavanje SQL injection napada</li>
+                        <li>Optimizacija performansi</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 3: Osnove baza podataka -->
+    <section class="slide" data-title="Osnove BP">
+        <div class="slide-content">
+            <h2>🗄️ Osnove baza podataka</h2>
+            <div class="card">
+                <p><strong>Relacijske baze podataka</strong> (engl. <em>relational databases</em>) predstavljaju
+                    organizirane zbirke podataka koje koriste tablice s redcima i stupcima za pohranu informacija.</p>
+            </div>
+
+            <div class="tip">
+                <span class="tip-icon">💡</span>
+                <div class="tip-content">
+                    <h4>RDBMS sustav omogućava:</h4>
+                    <p>Pouzdano upravljanje operacijama poput kreiranja tablica, spremanja, dohvaćanja, ažuriranja i
+                        brisanja podataka — sve uz održavanje konzistentnosti!</p>
+                </div>
+            </div>
+
+            <h3>Najpopularnije baze podataka</h3>
+            <div class="grid-3">
+                <div class="feature-box">
+                    <div class="icon">🐘</div>
+                    <h4>PostgreSQL</h4>
+                    <p>Open source, moćna</p>
+                </div>
+                <div class="feature-box">
+                    <div class="icon">🐬</div>
+                    <h4>MySQL</h4>
+                    <p>Najpopularnija</p>
+                </div>
+                <div class="feature-box">
+                    <div class="icon">🔷</div>
+                    <h4>MS SQL Server</h4>
+                    <p>Enterprise rješenje</p>
+                </div>
+                <div class="feature-box">
+                    <div class="icon">🔶</div>
+                    <h4>Oracle</h4>
+                    <p>Industrijski standard</p>
+                </div>
+                <div class="feature-box">
+                    <div class="icon">🧪</div>
+                    <h4>H2</h4>
+                    <p>Idealna za razvoj</p>
+                </div>
+                <div class="feature-box">
+                    <div class="icon">🐦</div>
+                    <h4>Apache Derby</h4>
+                    <p>Embedded baza</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 4: JDBC Uvod -->
+    <section class="slide" data-title="Što je JDBC?">
+        <div class="slide-content">
+            <h2>🔌 Što je JDBC?</h2>
+
+            <div class="card highlight">
+                <p><strong>JDBC</strong> (Java Database Connectivity) je Java API koji omogućava spajanje Java
+                    aplikacija na bilo koju relacijsku bazu podataka korištenjem odgovarajućeg JDBC drivera.</p>
+            </div>
+
+            <h3>Tri glavne aktivnosti</h3>
+            <div class="grid-3">
+                <div class="feature-box">
+                    <div class="icon">🔗</div>
+                    <h4>1. Povezivanje</h4>
+                    <p>Ostvarivanje veze s bazom podataka</p>
+                </div>
+                <div class="feature-box">
+                    <div class="icon">📝</div>
+                    <h4>2. Izvršavanje</h4>
+                    <p>SQL upiti za CRUD operacije</p>
+                </div>
+                <div class="feature-box">
+                    <div class="icon">🚪</div>
+                    <h4>3. Zatvaranje</h4>
+                    <p>Oslobađanje resursa</p>
+                </div>
+            </div>
+
+            <div class="tip">
+                <span class="tip-icon">🎯</span>
+                <div class="tip-content">
+                    <h4>CRUD operacije</h4>
+                    <p><strong>C</strong>reate (INSERT) • <strong>R</strong>ead (SELECT) • <strong>U</strong>pdate
+                        (UPDATE) • <strong>D</strong>elete (DELETE)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 5: JDBC Arhitektura -->
+    <section class="slide" data-title="Arhitektura">
+        <div class="slide-content">
+            <h2>🏗️ JDBC arhitektura</h2>
+
+            <div class="grid-2">
+                <div class="architecture">
+                    <div class="arch-box">☕ Java Aplikacija</div>
+                    <div class="arch-connector"></div>
+                    <div class="arch-box secondary">📚 JDBC API</div>
+                    <div class="arch-connector"></div>
+                    <div class="arch-box secondary">🔧 JDBC Driver Manager</div>
+                    <div class="arch-connector"></div>
+                    <div class="arch-row">
+                        <div class="arch-box db">🗄️ Oracle</div>
+                        <div class="arch-box db">🗄️ MySQL</div>
+                        <div class="arch-box db">🗄️ H2</div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="card">
+                        <h3>Kako to funkcionira?</h3>
+                        <ul>
+                            <li>Iz Java aplikacije poziva se kod iz <strong>JDBC biblioteke</strong></li>
+                            <li>JDBC pomoću <strong>drivera</strong> komunicira s bazom korištenjem SQL upita</li>
+                            <li>Driveri SQL pozive pretvaraju u <strong>komunikacijski protokol</strong> specifične baze
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="tip">
+                        <span class="tip-icon">📦</span>
+                        <div class="tip-content">
+                            <h4>Driver = JAR datoteka</h4>
+                            <p>Svaka baza ima svoj driver koji se dodaje kao dependency u projektu.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 6: H2 Database -->
+    <section class="slide" data-title="H2 baza">
+        <div class="slide-content">
+            <h2>🧪 H2 baza podataka</h2>
+
+            <div class="card highlight">
+                <p><strong>H2</strong> je open-source relacijska baza podataka u cijelosti implementirana u Javi.
+                    Savršena je za razvoj i testiranje!</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3>✨ Prednosti</h3>
+                    <ul>
+                        <li>🚀 <strong>Super brza</strong> — idealna za razvoj</li>
+                        <li>📦 <strong>Embedded mod</strong> — ne treba instalacija</li>
+                        <li>🌐 <strong>Server mod</strong> — za višekorisničke scenarije</li>
+                        <li>🎨 <strong>Web konzola</strong> — vizualni pregled podataka</li>
+                        <li>💾 <strong>In-memory</strong> — podaci u RAM-u</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>📥 Instalacija</h3>
+                    <p style="margin-bottom: 1rem;">Preuzmi s: <span class="inline-code">h2database.com</span></p>
+                    <p><strong>Verzija:</strong> 2.4.240 (2025)</p>
+
+                    <div class="code-container" style="margin-top: 1rem;">
+                        <div class="code-header">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                            <span class="code-title">pom.xml</span>
+                        </div>
+                        <pre><code><span class="comment">&lt;!-- Maven dependency --&gt;</span>
+<span class="keyword">&lt;dependency&gt;</span>
+    <span class="class-name">&lt;groupId&gt;</span>com.h2database<span class="class-name">&lt;/groupId&gt;</span>
+    <span class="class-name">&lt;artifactId&gt;</span>h2<span class="class-name">&lt;/artifactId&gt;</span>
+    <span class="class-name">&lt;version&gt;</span>2.4.240<span class="class-name">&lt;/version&gt;</span>
+<span class="keyword">&lt;/dependency&gt;</span></code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 7: Spajanje na bazu -->
+    <section class="slide" data-title="Spajanje">
+        <div class="slide-content">
+            <h2>🔗 Spajanje na bazu podataka</h2>
+
+            <p style="margin-bottom: 1.5rem;">Prvi korak je kreiranje <span class="inline-code">Connection</span>
+                objekta koji predstavlja vezu s bazom:</p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span class="code-dot red"></span>
+                    <span class="code-dot yellow"></span>
+                    <span class="code-dot green"></span>
+                    <span class="code-title">DatabaseConnection.java</span>
+                </div>
+                <pre><code><span class="keyword">try</span> {
+    <span class="comment">// Kreiranje veze s bazom podataka</span>
+    <span class="type">Connection</span> <span class="variable">veza</span> <span class="operator">=</span> <span
+                            class="class-name">DriverManager</span>.<span class="method">getConnection</span>(
+        <span class="string">"jdbc:h2:tcp://localhost/~/Java-2025"</span>,  <span class="comment">// URL baze</span>
+        <span class="string">"student"</span>,                                <span
+                            class="comment">// korisničko ime</span>
+        <span class="string">"student"</span>                                 <span class="comment">// lozinka</span>
+    );
+    
+    <span class="class-name">System</span>.<span class="variable">out</span>.<span class="method">println</span>(<span
+                            class="string">"✅ Uspješno spojen na bazu!"</span>);
+    
+} <span class="keyword">catch</span> (<span class="class-name">SQLException</span> <span class="variable">e</span>) {
+    <span class="class-name">System</span>.<span class="variable">err</span>.<span class="method">println</span>(<span
+                            class="string">"❌ Greška: "</span> <span class="operator">+</span> <span
+                            class="variable">e</span>.<span class="method">getMessage</span>());
+}</code></pre>
+            </div>
+
+            <div class="grid-2" style="margin-top: 2rem;">
+                <div class="card">
+                    <h3>🔍 Struktura URL-a</h3>
+                    <table>
+                        <tr>
+                            <td><span class="inline-code">jdbc:h2</span></td>
+                            <td>Tip baze podataka</td>
+                        </tr>
+                        <tr>
+                            <td><span class="inline-code">tcp://localhost/~/</span></td>
+                            <td>Lokacija servera</td>
+                        </tr>
+                        <tr>
+                            <td><span class="inline-code">Java-2025</span></td>
+                            <td>Naziv baze</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="tip">
+                    <span class="tip-icon">⚠️</span>
+                    <div class="tip-content">
+                        <h4>SQLException</h4>
+                        <p>Ova checked iznimka obuhvaća sve potencijalne probleme u radu s bazom — obavezno ju
+                            hvataj!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 8: Statement i upiti -->
+    <section class="slide" data-title="Statement">
+        <div class="slide-content">
+            <h2>📝 Pripremanje i izvršavanje upita</h2>
+
+            <p style="margin-bottom: 1.5rem;">Za izvršavanje SQL upita koristimo <span
+                    class="inline-code">Statement</span> objekt:</p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span class="code-dot red"></span>
+                    <span class="code-dot yellow"></span>
+                    <span class="code-dot green"></span>
+                    <span class="code-title">QueryExample.java</span>
+                </div>
+                <pre><code><span class="comment">// Kreiranje Statement objekta iz Connection objekta</span>
+<span class="type">Statement</span> <span class="variable">stmt</span> <span class="operator">=</span> <span
+                            class="variable">veza</span>.<span class="method">createStatement</span>();
+
+<span class="comment">// Izvršavanje SELECT upita — vraća ResultSet</span>
+<span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> <span
+                            class="variable">stmt</span>.<span class="method">executeQuery</span>(
+    <span class="string">"SELECT id, ime, prezime FROM STUDENTI"</span>
+);
+
+<span class="comment">// Iteriranje kroz rezultate</span>
+<span class="keyword">while</span> (<span class="variable">rs</span>.<span class="method">next</span>()) {
+    <span class="type">int</span> <span class="variable">id</span>       <span class="operator">=</span> <span
+                            class="variable">rs</span>.<span class="method">getInt</span>(<span
+                            class="string">"id"</span>);
+    <span class="type">String</span> <span class="variable">ime</span>   <span class="operator">=</span> <span
+                            class="variable">rs</span>.<span class="method">getString</span>(<span
+                            class="string">"ime"</span>);
+    <span class="type">String</span> <span class="variable">prezime</span> <span class="operator">=</span> <span
+                            class="variable">rs</span>.<span class="method">getString</span>(<span class="string">"prezime"</span>);
+    
+    <span class="class-name">System</span>.<span class="variable">out</span>.<span class="method">println</span>(<span
+                            class="variable">id</span> <span class="operator">+</span> <span class="string">": "</span> <span
+                            class="operator">+</span> <span class="variable">ime</span> <span class="operator">+</span> <span
+                            class="string">" "</span> <span class="operator">+</span> <span
+                            class="variable">prezime</span>);
+}</code></pre>
+            </div>
+
+            <div class="grid-2" style="margin-top: 1.5rem;">
+                <div class="card">
+                    <h3>📦 ResultSet metode</h3>
+                    <ul>
+                        <li><span class="inline-code">getInt()</span> — za INTEGER</li>
+                        <li><span class="inline-code">getString()</span> — za VARCHAR</li>
+                        <li><span class="inline-code">getDouble()</span> — za DECIMAL</li>
+                        <li><span class="inline-code">getDate()</span> — za DATE</li>
+                        <li><span class="inline-code">getBoolean()</span> — za BOOLEAN</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>🔄 Tip metode ovisi o operaciji</h3>
+                    <ul>
+                        <li><span class="inline-code">executeQuery()</span> — SELECT</li>
+                        <li><span class="inline-code">executeUpdate()</span> — INSERT, UPDATE, DELETE</li>
+                        <li><span class="inline-code">execute()</span> — bilo koji SQL</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 9: Kreiranje tablice -->
+    <section class="slide" data-title="CREATE TABLE">
+        <div class="slide-content">
+            <h2>🏗️ Kreiranje tablice STUDENTI</h2>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span class="code-dot red"></span>
+                    <span class="code-dot yellow"></span>
+                    <span class="code-dot green"></span>
+                    <span class="code-title">create_table.sql</span>
+                </div>
+                <pre><code><span class="keyword">CREATE TABLE</span> <span class="class-name">STUDENTI</span> (
+    <span class="variable">id</span>             <span class="type">INT</span>          <span
+                            class="keyword">NOT NULL</span> <span class="keyword">GENERATED ALWAYS AS IDENTITY</span>,
+    <span class="variable">jmbag</span>          <span class="type">VARCHAR(20)</span>  <span
+                            class="keyword">NOT NULL</span>,
+    <span class="variable">ime</span>            <span class="type">VARCHAR(50)</span>  <span
+                            class="keyword">NOT NULL</span>,
+    <span class="variable">prezime</span>        <span class="type">VARCHAR(50)</span>  <span
+                            class="keyword">NOT NULL</span>,
+    <span class="variable">datum_rodjenja</span> <span class="type">DATE</span>         <span
+                            class="keyword">NOT NULL</span>,
+    
+    <span class="keyword">PRIMARY KEY</span> (<span class="variable">id</span>)
+);</code></pre>
+            </div>
+
+            <div class="grid-2" style="margin-top: 2rem;">
+                <div class="card">
+                    <h3>📊 Struktura tablice</h3>
+                    <table>
+                        <tr>
+                            <th>Stupac</th>
+                            <th>Tip</th>
+                            <th>Opis</th>
+                        </tr>
+                        <tr>
+                            <td>id</td>
+                            <td>INT</td>
+                            <td>Auto-increment PK</td>
+                        </tr>
+                        <tr>
+                            <td>jmbag</td>
+                            <td>VARCHAR(20)</td>
+                            <td>JMBAG studenta</td>
+                        </tr>
+                        <tr>
+                            <td>ime</td>
+                            <td>VARCHAR(50)</td>
+                            <td>Ime studenta</td>
+                        </tr>
+                        <tr>
+                            <td>prezime</td>
+                            <td>VARCHAR(50)</td>
+                            <td>Prezime</td>
+                        </tr>
+                        <tr>
+                            <td>datum_rodjenja</td>
+                            <td>DATE</td>
+                            <td>Datum rođenja</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="tip">
+                    <span class="tip-icon">🔑</span>
+                    <div class="tip-content">
+                        <h4>GENERATED ALWAYS AS IDENTITY</h4>
+                        <p>Automatski generira jedinstveni ID za svaki novi redak — zamjena za AUTO_INCREMENT u
+                            MySQL-u.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 10: Dohvaćanje podataka - moderno -->
+    <section class="slide" data-title="SELECT">
+        <div class="slide-content">
+            <h2>📖 Dohvaćanje podataka — Java 25 stil</h2>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span class="code-dot red"></span>
+                    <span class="code-dot yellow"></span>
+                    <span class="code-dot green"></span>
+                    <span class="code-title">FetchStudents.java</span>
+                </div>
+                <pre><code><span class="keyword">final</span> <span class="type">String</span> <span class="variable">URL</span> <span
+                        class="operator">=</span> <span class="string">"jdbc:h2:tcp://localhost/~/Java-2025"</span>;
+<span class="keyword">final</span> <span class="type">String</span> <span class="variable">USER</span> <span
+                            class="operator">=</span> <span class="string">"student"</span>;
+<span class="keyword">final</span> <span class="type">String</span> <span class="variable">PASS</span> <span
+                            class="operator">=</span> <span class="string">"student"</span>;
+
+<span class="comment">// ✨ Try-with-resources — automatski zatvara sve resurse!</span>
+<span class="keyword">try</span> (
+    <span class="type">Connection</span> <span class="variable">veza</span> <span class="operator">=</span> <span
+                            class="class-name">DriverManager</span>.<span class="method">getConnection</span>(<span
+                            class="variable">URL</span>, <span class="variable">USER</span>, <span
+                            class="variable">PASS</span>);
+    <span class="type">Statement</span> <span class="variable">stmt</span> <span class="operator">=</span> <span
+                            class="variable">veza</span>.<span class="method">createStatement</span>();
+    <span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> <span
+                            class="variable">stmt</span>.<span class="method">executeQuery</span>(<span class="string">"SELECT * FROM STUDENTI"</span>)
+) {
+    <span class="keyword">while</span> (<span class="variable">rs</span>.<span class="method">next</span>()) {
+        <span class="keyword">var</span> <span class="variable">id</span>      <span class="operator">=</span> <span
+                            class="variable">rs</span>.<span class="method">getInt</span>(<span
+                            class="string">"id"</span>);
+        <span class="keyword">var</span> <span class="variable">jmbag</span>   <span class="operator">=</span> <span
+                            class="variable">rs</span>.<span class="method">getString</span>(<span class="string">"jmbag"</span>);
+        <span class="keyword">var</span> <span class="variable">ime</span>     <span class="operator">=</span> <span
+                            class="variable">rs</span>.<span class="method">getString</span>(<span
+                            class="string">"ime"</span>);
+        <span class="keyword">var</span> <span class="variable">prezime</span> <span class="operator">=</span> <span
+                            class="variable">rs</span>.<span class="method">getString</span>(<span class="string">"prezime"</span>);
+        <span class="keyword">var</span> <span class="variable">datum</span>   <span class="operator">=</span> <span
+                            class="variable">rs</span>.<span class="method">getObject</span>(<span class="string">"datum_rodjenja"</span>, <span
+                            class="class-name">LocalDate</span>.<span class="keyword">class</span>);
+        
+        <span class="class-name">System</span>.<span class="variable">out</span>.<span
+                            class="method">println</span>(<span class="class-name">STR</span>.<span class="string">"Student: \{id} \{jmbag} \{ime} \{prezime} \{datum}"</span>);
+    }
+} <span class="keyword">catch</span> (<span class="class-name">SQLException</span> <span class="variable">e</span>) {
+    <span class="variable">e</span>.<span class="method">printStackTrace</span>();
+}</code></pre>
+            </div>
+
+            <div class="output-box">
+                <div class="label">📤 Output</div>
+                <code>Student: 1 0036374849 Pero Perić 1994-01-01<br>
+                    Student: 2 0024568238 Ivo Ivić 1993-01-01</code>
+            </div>
+
+            <div class="tip" style="margin-top: 1.5rem;">
+                <span class="tip-icon">🆕</span>
+                <div class="tip-content">
+                    <h4>Java 25 novosti u ovom primjeru</h4>
+                    <p><strong>var</strong> za type inference • <strong>STR template</strong> za string interpolaciju •
+                        <strong>LocalDate</strong> direktno iz ResultSet-a</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 11: PreparedStatement -->
+    <section class="slide" data-title="PreparedStatement">
+        <div class="slide-content">
+            <h2>⚡ PreparedStatement — sigurnije i brže!</h2>
+
+            <div class="comparison">
+                <div class="comparison-box old">
+                    <div class="label">❌ Statement — NE RADI OVO!</div>
+                    <div class="code-container" style="margin: 0;">
+                            <pre><code><span class="comment">// Ranjivo na SQL injection! 💀</span>
+<span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">"SELECT * FROM STUDENTI "</span> <span
+                                        class="operator">+</span>
+    <span class="string">"WHERE jmbag = '"</span> <span class="operator">+</span> <span
+                                        class="variable">userInput</span> <span class="operator">+</span> <span
+                                        class="string">"'"</span>;
+<span class="variable">stmt</span>.<span class="method">executeQuery</span>(<span
+                                        class="variable">sql</span>);</code></pre>
+                    </div>
+                </div>
+                <div class="comparison-box new">
+                    <div class="label">✅ PreparedStatement — KORISTI OVO!</div>
+                    <div class="code-container" style="margin: 0;">
+                            <pre><code><span class="comment">// Sigurno — parametri su escapirani! 🛡️</span>
+<span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">"SELECT * FROM STUDENTI "</span> <span
+                                        class="operator">+</span>
+    <span class="string">"WHERE jmbag = ?"</span>;
+<span class="variable">pstmt</span>.<span class="method">setString</span>(<span class="number">1</span>, <span
+                                        class="variable">userInput</span>);</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-container" style="margin-top: 2rem;">
+                <div class="code-header">
+                    <span class="code-dot red"></span>
+                    <span class="code-dot yellow"></span>
+                    <span class="code-dot green"></span>
+                    <span class="code-title">PreparedStatementExample.java</span>
+                </div>
+                <pre><code><span class="comment">// UPDATE s parametrima</span>
+<span class="type">String</span> <span class="variable">updateSql</span> <span class="operator">=</span> <span
+                            class="string">"UPDATE STUDENTI SET ime = ? WHERE jmbag = ?"</span>;
+
+<span class="keyword">try</span> (<span class="type">PreparedStatement</span> <span class="variable">pstmt</span> <span
+                            class="operator">=</span> <span class="variable">veza</span>.<span class="method">prepareStatement</span>(<span
+                            class="variable">updateSql</span>)) {
+    <span class="variable">pstmt</span>.<span class="method">setString</span>(<span class="number">1</span>, <span
+                            class="string">"Željko"</span>);    <span class="comment">// 1. parametar (ime)</span>
+    <span class="variable">pstmt</span>.<span class="method">setString</span>(<span class="number">2</span>, <span
+                            class="string">"0024568238"</span>); <span class="comment">// 2. parametar (jmbag)</span>
+    
+    <span class="keyword">int</span> <span class="variable">affectedRows</span> <span class="operator">=</span> <span
+                            class="variable">pstmt</span>.<span class="method">executeUpdate</span>();
+    <span class="class-name">System</span>.<span class="variable">out</span>.<span class="method">println</span>(<span
+                            class="string">"Ažurirano redaka: "</span> <span class="operator">+</span> <span
+                            class="variable">affectedRows</span>);
+}</code></pre>
+            </div>
+
+            <div class="grid-2" style="margin-top: 1.5rem;">
+                <div class="card">
+                    <h3>🛡️ Prednosti</h3>
+                    <ul>
+                        <li>Zaštita od <strong>SQL injection</strong> napada</li>
+                        <li><strong>Brže</strong> — upit se kompajlira samo jednom</li>
+                        <li><strong>Čitljiviji</strong> kod s parametrima</li>
+                    </ul>
+                </div>
+                <div class="tip">
+                    <span class="tip-icon">🔢</span>
+                    <div class="tip-content">
+                        <h4>Parametri počinju od 1!</h4>
+                        <p>Za razliku od nizova, JDBC parametri su 1-indexed: prvi je <span class="inline-code">?</span>
+                            ima indeks 1, ne 0.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 12: INSERT s PreparedStatement -->
+    <section class="slide" data-title="INSERT">
+        <div class="slide-content">
+            <h2>➕ Spremanje novih podataka</h2>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span class="code-dot red"></span>
+                    <span class="code-dot yellow"></span>
+                    <span class="code-dot green"></span>
+                    <span class="code-title">InsertStudent.java</span>
+                </div>
+                <pre><code><span class="type">String</span> <span class="variable">insertSql</span> <span
+                        class="operator">=</span> <span class="string">"""
+    INSERT INTO STUDENTI (jmbag, ime, prezime, datum_rodjenja)
+    VALUES (?, ?, ?, ?)
+    """</span>;
+
+<span class="keyword">try</span> (<span class="type">PreparedStatement</span> <span class="variable">pstmt</span> <span
+                            class="operator">=</span> <span class="variable">veza</span>.<span class="method">prepareStatement</span>(<span
+                            class="variable">insertSql</span>)) {
+    
+    <span class="comment">// Postavljanje vrijednosti parametara</span>
+    <span class="variable">pstmt</span>.<span class="method">setString</span>(<span class="number">1</span>, <span
+                            class="string">"0012345678"</span>);
+    <span class="variable">pstmt</span>.<span class="method">setString</span>(<span class="number">2</span>, <span
+                            class="string">"Ana"</span>);
+    <span class="variable">pstmt</span>.<span class="method">setString</span>(<span class="number">3</span>, <span
+                            class="string">"Anić"</span>);
+    <span class="variable">pstmt</span>.<span class="method">setObject</span>(<span class="number">4</span>, <span
+                            class="class-name">LocalDate</span>.<span class="method">of</span>(<span
+                            class="number">2000</span>, <span class="number">5</span>, <span class="number">15</span>));
+    
+    <span class="comment">// Izvršavanje INSERT naredbe</span>
+    <span class="keyword">int</span> <span class="variable">result</span> <span class="operator">=</span> <span
+                            class="variable">pstmt</span>.<span class="method">executeUpdate</span>();
+    
+    <span class="keyword">if</span> (<span class="variable">result</span> <span class="operator">></span> <span
+                            class="number">0</span>) {
+        <span class="class-name">System</span>.<span class="variable">out</span>.<span
+                            class="method">println</span>(<span class="string">"✅ Student uspješno dodan!"</span>);
+    }
+    
+} <span class="keyword">catch</span> (<span class="class-name">SQLException</span> <span class="variable">e</span>) {
+    <span class="class-name">System</span>.<span class="variable">err</span>.<span class="method">println</span>(<span
+                            class="string">"❌ Greška: "</span> <span class="operator">+</span> <span
+                            class="variable">e</span>.<span class="method">getMessage</span>());
+}</code></pre>
+            </div>
+
+            <div class="tip" style="margin-top: 1.5rem;">
+                <span class="tip-icon">📝</span>
+                <div class="tip-content">
+                    <h4>Text Blocks (Java 15+)</h4>
+                    <p>Koristi <span class="inline-code">"""</span> za višelinijske stringove — SQL upiti su puno
+                        čitljiviji!</p>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 1rem;">
+                <h3>📊 Metode za različite tipove</h3>
+                <div class="grid-2">
+                    <ul>
+                        <li><span class="inline-code">setString()</span> → VARCHAR, CHAR</li>
+                        <li><span class="inline-code">setInt()</span> → INTEGER</li>
+                        <li><span class="inline-code">setLong()</span> → BIGINT</li>
+                    </ul>
+                    <ul>
+                        <li><span class="inline-code">setDouble()</span> → DOUBLE, FLOAT</li>
+                        <li><span class="inline-code">setObject()</span> → LocalDate, LocalDateTime</li>
+                        <li><span class="inline-code">setBoolean()</span> → BOOLEAN</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 13: Try-with-resources vs stari način -->
+    <section class="slide" data-title="Zatvaranje resursa">
+        <div class="slide-content">
+            <h2>🚪 Zatvaranje veze s bazom</h2>
+
+            <p style="margin-bottom: 1.5rem;">Uvijek moramo zatvoriti resurse! Pogledaj razliku između starog i novog
+                načina:</p>
+
+            <div class="comparison">
+                <div class="comparison-box old">
+                    <div class="label">❌ Stari način — verbose i error-prone</div>
+                    <div class="code-container" style="margin: 0; font-size: 0.8rem;">
+                            <pre><code><span class="type">Connection</span> <span class="variable">veza</span> <span
+                                    class="operator">=</span> <span class="keyword">null</span>;
+<span class="type">Statement</span> <span class="variable">stmt</span> <span class="operator">=</span> <span
+                                        class="keyword">null</span>;
+<span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> <span
+                                        class="keyword">null</span>;
+
+<span class="keyword">try</span> {
+    <span class="variable">veza</span> <span class="operator">=</span> <span
+                                        class="class-name">DriverManager</span>.<span
+                                        class="method">getConnection</span>(...);
+    <span class="variable">stmt</span> <span class="operator">=</span> <span class="variable">veza</span>.<span
+                                        class="method">createStatement</span>();
+    <span class="variable">rs</span> <span class="operator">=</span> <span class="variable">stmt</span>.<span
+                                        class="method">executeQuery</span>(<span class="string">"SELECT..."</span>);
+    <span class="comment">// obrada rezultata...</span>
+} <span class="keyword">catch</span> (<span class="class-name">SQLException</span> <span class="variable">e</span>) {
+    <span class="variable">e</span>.<span class="method">printStackTrace</span>();
+} <span class="keyword">finally</span> {
+    <span class="keyword">try</span> {
+        <span class="keyword">if</span> (<span class="variable">rs</span> <span class="operator">!=</span> <span
+                                        class="keyword">null</span>) <span class="variable">rs</span>.<span
+                                        class="method">close</span>();
+        <span class="keyword">if</span> (<span class="variable">stmt</span> <span class="operator">!=</span> <span
+                                        class="keyword">null</span>) <span class="variable">stmt</span>.<span
+                                        class="method">close</span>();
+        <span class="keyword">if</span> (<span class="variable">veza</span> <span class="operator">!=</span> <span
+                                        class="keyword">null</span>) <span class="variable">veza</span>.<span
+                                        class="method">close</span>();
+    } <span class="keyword">catch</span> (<span class="class-name">SQLException</span> <span class="variable">ex</span>) {
+        <span class="variable">ex</span>.<span class="method">printStackTrace</span>();
+    }
+}</code></pre>
+                    </div>
+                </div>
+                <div class="comparison-box new">
+                    <div class="label">✅ Try-with-resources — čisto i sigurno</div>
+                    <div class="code-container" style="margin: 0; font-size: 0.8rem;">
+                            <pre><code><span class="keyword">try</span> (
+    <span class="type">Connection</span> <span class="variable">veza</span> <span class="operator">=</span> <span
+                                        class="class-name">DriverManager</span>.<span
+                                        class="method">getConnection</span>(...);
+    <span class="type">Statement</span> <span class="variable">stmt</span> <span class="operator">=</span> <span
+                                        class="variable">veza</span>.<span class="method">createStatement</span>();
+    <span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> <span
+                                        class="variable">stmt</span>.<span class="method">executeQuery</span>(<span
+                                        class="string">"SELECT..."</span>)
+) {
+    <span class="comment">// obrada rezultata...</span>
+    <span class="keyword">while</span> (<span class="variable">rs</span>.<span class="method">next</span>()) {
+        <span class="comment">// ...</span>
+    }
+    
+} <span class="keyword">catch</span> (<span class="class-name">SQLException</span> <span class="variable">e</span>) {
+    <span class="variable">e</span>.<span class="method">printStackTrace</span>();
+}
+
+<span class="comment">// Resursi se automatski zatvaraju! 🎉</span></code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip" style="margin-top: 1.5rem;">
+                <span class="tip-icon">💡</span>
+                <div class="tip-content">
+                    <h4>Zašto try-with-resources?</h4>
+                    <p>Sve klase koje implementiraju <span class="inline-code">AutoCloseable</span> (Connection,
+                        Statement, ResultSet) automatski se zatvaraju na kraju bloka — čak i ako dođe do iznimke!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 14: Transakcije -->
+    <section class="slide" data-title="Transakcije">
+        <div class="slide-content">
+            <h2>🔄 Transakcije — sve ili ništa!</h2>
+
+            <div class="card highlight">
+                <p><strong>Transakcija</strong> = skup operacija koje se moraju izvršiti zajedno kao jedna atomarna
+                    cjelina. Ili sve uspije, ili se sve vraća na staro stanje.</p>
+            </div>
+
+            <div class="code-container" style="margin-top: 1.5rem;">
+                <div class="code-header">
+                    <span class="code-dot red"></span>
+                    <span class="code-dot yellow"></span>
+                    <span class="code-dot green"></span>
+                    <span class="code-title">TransactionExample.java</span>
+                </div>
+                <pre><code><span class="keyword">try</span> (<span class="type">Connection</span> <span
+                        class="variable">veza</span> <span class="operator">=</span> <span class="class-name">DriverManager</span>.<span
+                        class="method">getConnection</span>(<span class="variable">URL</span>, <span class="variable">USER</span>, <span
+                        class="variable">PASS</span>)) {
+    
+    <span class="comment">// 🔒 Isključi auto-commit — sada MI kontroliramo kada se sprema!</span>
+    <span class="variable">veza</span>.<span class="method">setAutoCommit</span>(<span class="keyword">false</span>);
+    
+    <span class="keyword">try</span> {
+        <span class="comment">// Prva operacija</span>
+        <span class="keyword">try</span> (<span class="keyword">var</span> <span class="variable">ps1</span> <span
+                            class="operator">=</span> <span class="variable">veza</span>.<span class="method">prepareStatement</span>(
+                <span class="string">"UPDATE STUDENTI SET ime = ? WHERE jmbag = ?"</span>)) {
+            <span class="variable">ps1</span>.<span class="method">setString</span>(<span class="number">1</span>, <span
+                            class="string">"Petar"</span>);
+            <span class="variable">ps1</span>.<span class="method">setString</span>(<span class="number">2</span>, <span
+                            class="string">"0024568238"</span>);
+            <span class="variable">ps1</span>.<span class="method">executeUpdate</span>();
+        }
+        
+        <span class="comment">// Druga operacija</span>
+        <span class="keyword">try</span> (<span class="keyword">var</span> <span class="variable">ps2</span> <span
+                            class="operator">=</span> <span class="variable">veza</span>.<span class="method">prepareStatement</span>(
+                <span class="string">"UPDATE STUDENTI SET prezime = ? WHERE jmbag = ?"</span>)) {
+            <span class="variable">ps2</span>.<span class="method">setString</span>(<span class="number">1</span>, <span
+                            class="string">"Ivičić"</span>);
+            <span class="variable">ps2</span>.<span class="method">setString</span>(<span class="number">2</span>, <span
+                            class="string">"0024568238"</span>);
+            <span class="variable">ps2</span>.<span class="method">executeUpdate</span>();
+        }
+        
+        <span class="comment">// ✅ Sve OK — spremi promjene!</span>
+        <span class="variable">veza</span>.<span class="method">commit</span>();
+        
+    } <span class="keyword">catch</span> (<span class="class-name">SQLException</span> <span class="variable">e</span>) {
+        <span class="comment">// ❌ Nešto je pošlo po zlu — vrati sve nazad!</span>
+        <span class="variable">veza</span>.<span class="method">rollback</span>();
+        <span class="keyword">throw</span> <span class="variable">e</span>;
+    }
+}</code></pre>
+            </div>
+
+            <div class="grid-3" style="margin-top: 1.5rem;">
+                <div class="feature-box">
+                    <div class="icon">🔒</div>
+                    <h4>setAutoCommit(false)</h4>
+                    <p>Isključuje automatsko spremanje</p>
+                </div>
+                <div class="feature-box">
+                    <div class="icon">✅</div>
+                    <h4>commit()</h4>
+                    <p>Trajno sprema sve promjene</p>
+                </div>
+                <div class="feature-box">
+                    <div class="icon">↩️</div>
+                    <h4>rollback()</h4>
+                    <p>Poništava sve promjene</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 15: Pitanja -->
+    <section class="slide title-slide" data-title="Pitanja?">
+        <div class="slide-content">
+            <h1>❓</h1>
+            <p class="subtitle">Pitanja?</p>
+            <span class="badge">Hvala na pažnji! 🎉</span>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    // Theme Toggle
+    function toggleTheme() {
+        const body = document.body;
+        const icon = document.getElementById('themeIcon');
+        const text = document.getElementById('themeText');
+
+        if (body.hasAttribute('data-theme')) {
+            body.removeAttribute('data-theme');
+            icon.textContent = '🌙';
+            text.textContent = 'Dark';
+        } else {
+            body.setAttribute('data-theme', 'dark');
+            icon.textContent = '☀️';
+            text.textContent = 'Light';
+        }
+    }
+
+    // Navigation Dots
+    const slides = document.querySelectorAll('.slide');
+    const navDots = document.getElementById('navDots');
+    const presentation = document.getElementById('presentation');
+    const progressBar = document.getElementById('progressBar');
+    const currentSlideEl = document.getElementById('currentSlide');
+    const totalSlidesEl = document.getElementById('totalSlides');
+
+    totalSlidesEl.textContent = slides.length;
+
+    slides.forEach((slide, index) => {
+        const dot = document.createElement('div');
+        dot.className = 'nav-dot';
+        dot.setAttribute('data-title', slide.dataset.title || `Slide ${index + 1}`);
+        dot.onclick = () => {
+            slides[index].scrollIntoView({behavior: 'smooth'});
+        };
+        navDots.appendChild(dot);
+    });
+
+    const navDotElements = document.querySelectorAll('.nav-dot');
+
+    // Update active state on scroll
+    const observerOptions = {
+        root: presentation,
+        threshold: 0.5
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const index = Array.from(slides).indexOf(entry.target);
+                navDotElements.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === index);
+                });
+
+                // Update progress bar
+                const progress = ((index + 1) / slides.length) * 100;
+                progressBar.style.width = `${progress}%`;
+
+                // Update slide counter
+                currentSlideEl.textContent = index + 1;
+            }
+        });
+    }, observerOptions);
+
+    slides.forEach(slide => observer.observe(slide));
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        const currentIndex = parseInt(currentSlideEl.textContent) - 1;
+
+        if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+            e.preventDefault();
+            if (currentIndex < slides.length - 1) {
+                slides[currentIndex + 1].scrollIntoView({behavior: 'smooth'});
+            }
+        } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+            e.preventDefault();
+            if (currentIndex > 0) {
+                slides[currentIndex - 1].scrollIntoView({behavior: 'smooth'});
+            }
+        }
+    });
+
+    // Set initial dark theme (better for presentations)
+    document.body.setAttribute('data-theme', 'dark');
+    document.getElementById('themeIcon').textContent = '☀️';
+    document.getElementById('themeText').textContent = 'Light';
+</script>
+</body>
+</html>

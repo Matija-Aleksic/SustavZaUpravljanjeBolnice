@@ -1,0 +1,288 @@
+Deseta laboratorijska vježba iz predmeta „Programiranje u Javi“ 2025/2026
+Prijediplomski studij – smjer računarstvo
+Tehničko veleučilište u Zagrebu
+
+DESETA LABORATORIJSKA VJEŽBA
+Deseta laboratorijska vježba vezana je uz predavanja i auditorne vježbe iz gradiva
+višenitnosti, vezana uz implementaciju paralelnih aktivnosti u JavaFX aplikaciji. Na
+početku laboratorijskih vježbi potrebno je riješiti „blic“ test na sustavu „Moodle“ iz tog
+gradiva. „Blic“ testovi moraju se rješavati na računalima u laboratoriju (ne vlastitim
+laptopima). Samo oni studenti koji ostvare 50% bodova iz „blic“ testa mogu pristupiti
+ostatku laboratorijske vježbe.
+Za pripremu desete laboratorijske vježbe kroz rješavanje projektnog zadatka
+potrebno je implementirati sljedeće:
+1. Implementirati virtualnu nit koje će omogućavati dohvaćanje podataka iz baze
+vezanu uz željeni entitet koji se odnose na posljednje uneseni podatak u bazu.
+Dohvaćeni podatak potrebno je ispisati na početnom ekranu JavaFX
+aplikacije.
+2. Implementirati virtualnu nit koja će kreirati sigurnosnu kopiju željene tablice te
+je preimenovati u „_BACKUP“ tablicu. U nju je potrebno prebaciti sve podatke
+iz originalne tablice. Tablicu je moguće odabrati po želji.
+3. Uvesti „util“ klase koje će sadržavati korisne metode koje se pozivaju unutar
+aplikacije kao što je prikazano na predavanjima.
+4. Nijedna klasa ne smije imati više od 200 linija koda.
+5. Programski kod potrebno je skenirati pomoću SonarQube alata te ispraviti sve
+prijavljene pogreške.
+
+© Autor: doc.dr.sc. Aleksander Radovan, prof.struč.stud., e-mail: aradovan@tvz.hr
+
+Osma laboratorijska vježba iz predmeta „Programiranje u Javi“ 2025/2026
+Prijediplomski studij – smjer računarstvo
+Tehničko veleučilište u Zagrebu
+
+DEVETA LABORATORIJSKA VJEŽBA
+Deveta laboratorijska vježba vezana je uz predavanja i auditorne vježbe iz gradiva
+JDBC-a, vezana za pohranjivanje podataka u bazu, umjesto datoteka. Na početku
+laboratorijskih vježbi potrebno je riješiti „blic“ test na sustavu „Moodle“ iz tog gradiva.
+„Blic“ testovi moraju se rješavati na računalima u laboratoriju (ne vlastitim laptopima).
+Samo oni studenti koji ostvare 50% bodova iz „blic“ testa mogu pristupiti ostatku
+laboratorijske vježbe.
+Za pripremu devete laboratorijske vježbe kroz rješavanje projektnog zadatka
+potrebno je implementirati sljedeće:
+1. Dijelove koda koji dohvaćaju i spremaju podatke u datoteku potrebno je
+zamijeniti modulima koji dohvaćaju i spremaju podatke u bazu podataka po
+uzoru na primjer s predavanja.
+2. Pristupne podatke za bazu podataka potrebno je prebaciti u „properties“
+datoteku.
+3. Uvesti „util“ klase koje će sadržavati korisne metode koje se pozivaju unutar
+aplikacije kao što je prikazano na predavanjima.
+4. Nijedna klasa ne smije imati više od 200 linija koda.
+5. Programski kod potrebno je skenirati pomoću SonarQube alata te ispraviti sve
+prijavljene pogreške.
+Više informacija o SonarQube alatu, načinu instaliranja i korištenju moguće je pronaći
+na sljedećim stranicama:
+https://plugins.jetbrains.com/plugin/7973-sonarqube-for-ide
+docs.sonarsource.com/sonarqube-for-intellij/getting-started/installation
+youtube.com/watch?v=mu3WnjyrAx4
+
+© Autor: doc.dr.sc. Aleksander Radovan, prof.struč.stud., e-mail: aradovan@tvz.hr
+
+Druga laboratorijska vježba iz predmeta „Programiranje u Javi“ 2025/2026
+Prijediplomski studij – smjer računarstvo
+Tehničko veleučilište u Zagrebu
+
+DRUGA LABORATORIJSKA VJEŽBA
+Druga laboratorijska vježba vezana je uz predavanja i auditorne vježbe iz gradiva
+objektno orijentiranog programiranja u Javi. Na početku laboratorijskih vježbi
+potrebno je riješiti „blic“ test na sustavu „Moodle“ iz tog gradiva. „Blic“ testovi moraju
+se rješavati na računalima u laboratoriju (ne vlastitim laptopima). Samo oni studenti
+koji ostvare 50% bodova iz „blic“ testa mogu pristupiti ostatku laboratorijske vježbe.
+Za pripremu druge laboratorijske vježbe kroz rješavanje projektnog zadatka
+potrebno je implementirati sljedeće:
+1. Proširiti rješenje prve laboratorijske vježbe s jednom apstraktnom klasu, dva
+sučelja od kojeg jedno mora biti zapečaćeno te jednim zapisom.
+2. Prilagoditi ostatak programa kako bi uspješno od korisnika tražio i dodatne
+podatke koji su uvedeni sučeljima i zapisom.
+3. U barem jednom primjeru potrebno je koristiti koncepte polimorfizma te u
+jedno polje dodati objekte podklasa koji imaju jednu zajedničku nadklasu te
+odrediti vrijednosti s maksimalnim i minimalnim vrijednostima prema
+odabranim parametrima, na primjer, najmlađu osobu, artikl s najvećom
+cijenom i slično.
+4. Dodati „builder pattern“ za barem jednu klasu koja se koristi u aplikaciji i
+iskoristiti ga.
+5. Od korisnika zatražiti unos podataka za pet objekata svake klase koji su
+dodijeljeni za projektni zadatak.
+6. Dozvoljeno je koristiti samo polja (engl. array) za spremanje objekata.
+7. Povezati objekte na način da jedni sadržavaju druge prema logici projektnog
+zadatka.
+8. Korisniku omogućiti pretraživanje objekata prema zadanim kriterijima. Za
+pretraživanje je potrebno koristiti „for“, „while“ i „do-while“ petlje.
+
+© Autor: doc.dr.sc. Aleksander Radovan, prof.struč.stud., e-mail: aradovan@tvz.hr
+
+Osma laboratorijska vježba iz predmeta „Programiranje u Javi“ 2025/2026
+Prijediplomski studij – smjer računarstvo
+Tehničko veleučilište u Zagrebu
+
+OSMA LABORATORIJSKA VJEŽBA
+Osma laboratorijska vježba vezana je uz predavanja i auditorne vježbe iz gradiva
+JavaFX-a, vezana za unos i spremanje podataka u aplikaciju. Na početku
+laboratorijskih vježbi potrebno je riješiti „blic“ test na sustavu „Moodle“ iz tog gradiva.
+„Blic“ testovi moraju se rješavati na računalima u laboratoriju (ne vlastitim laptopima).
+Samo oni studenti koji ostvare 50% bodova iz „blic“ testa mogu pristupiti ostatku
+laboratorijske vježbe.
+Za pripremu osme laboratorijske vježbe kroz rješavanje projektnog zadatka potrebno
+je implementirati sljedeće:
+1. Za svaki entitet potrebno je dodati prozor koji će omogućavati spremanje novih
+podataka. Prikaz tih dodatnih prozora potrebno je omogućiti kroz dodatne
+opcije u izborniku.
+2. Prikazivati dijaloge u slučaju neispravnog popunjavanja podataka u aplikaciju
+(npr. Neispravan unos ili neunošenje podataka, negativni iznosi, datumi u
+prošlosti ili budućnosti, nekompatibilni podaci i slično).
+3. Uvesti „util“ klase koje će sadržavati korisne metode koje se pozivaju unutar
+aplikacije kao što je prikazano na predavanjima.
+4. Nijedna klasa ne smije imati više od 200 linija koda.
+5. Programski kod potrebno je skenirati pomoću SonarQube alata te ispraviti sve
+prijavljene pogreške.
+Više informacija o SonarQube alatu, načinu instaliranja i korištenju moguće je pronaći
+na sljedećim stranicama:
+https://plugins.jetbrains.com/plugin/7973-sonarqube-for-ide
+docs.sonarsource.com/sonarqube-for-intellij/getting-started/installation
+youtube.com/watch?v=mu3WnjyrAx4
+
+© Autor: doc.dr.sc. Aleksander Radovan, prof.struč.stud., e-mail: aradovan@tvz.hr
+
+Peta laboratorijska vježba iz predmeta „Programiranje u Javi“ 2025/2026
+Prijediplomski studij – smjer računarstvo
+Tehničko veleučilište u Zagrebu
+
+PETA LABORATORIJSKA VJEŽBA
+Peta laboratorijska vježba vezana je uz predavanja i auditorne vježbe iz gradiva
+lambdi i generičkog programiranja u Javi. Na početku laboratorijskih vježbi potrebno
+je riješiti „blic“ test na sustavu „Moodle“ iz tog gradiva. „Blic“ testovi moraju se
+rješavati na računalima u laboratoriju (ne vlastitim laptopima). Samo oni studenti koji
+ostvare 50% bodova iz „blic“ testa mogu pristupiti ostatku laboratorijske vježbe.
+Za pripremu pete laboratorijske vježbe kroz rješavanje projektnog zadatka potrebno
+je implementirati sljedeće:
+1. Proširiti rješenje četvrte laboratorijske vježbe lambda izrazima u radu sa
+korištenim zbirkama: listama, setovima i mapama po pitanju filtriranja,
+sortiranja, mapiranja, reduciranja i grupiranja. Koristiti pristup temeljen na
+„immutable“ i „mutable“ zbirkama.
+2. Na svim mjestima gdje se koristila „null“ vrijednost u prethodnim vježbama
+potrebno je koristiti tip podatka „Optional“. Ako nigdje nije korištena „null“
+vrijednost, iskoristiti opciju korištenja tipa „Optional“ u slučajevima kad lambda
+izrazi vraćaju vrijednost „Optional“ (na primjer, u slučaju „getFirst“ i sličnih
+metoda).
+3. Proširiti rješenje četvrte laboratorijske vježbe generičkim tipovima koji
+obuhvaćaju korištenje PECS pristupa, „upper bounded wildcards“, „lower
+bounded wildcards“ i „multiple bounds“ implementacija.
+
+© Autor: doc.dr.sc. Aleksander Radovan, prof.struč.stud., e-mail: aradovan@tvz.hr
+
+Prva laboratorijska vježba iz predmeta „Programiranje u Javi“ 2025/2026
+Prijediplomski studij – smjer računarstvo
+Tehničko veleučilište u Zagrebu
+
+PRVA LABORATORIJSKA VJEŽBA
+Prva laboratorijska vježba vezana je uz predavanja i auditorne vježbe iz gradiva
+klasa i objekata. Na početku laboratorijskih vježbi potrebno je riješiti „blic“ test na
+sustavu „Moodle“ iz tog gradiva. „Blic“ testovi moraju se rješavati na računalima u
+laboratoriju (ne vlastitim laptopima). Samo oni studenti koji ostvare 50% bodova iz
+„blic“ testa mogu pristupiti ostatku laboratorijske vježbe.
+Za pripremu laboratorijske vježbe kroz rješavanje projektnog zadatka potrebno je
+implementirati sljedeće:
+1. Od korisnika zatražiti unos podataka za pet objekata svake klase koji su
+dodijeljeni za projektni zadatak.
+2. Dozvoljeno je koristiti samo polja (engl. array) za spremanje objekata.
+3. Povezati objekte na način da jedni sadržavaju druge prema logici projektnog
+zadatka.
+4. Korisniku omogućiti pretraživanje objekata prema zadanim kriterijima. Za
+pretraživanje je potrebno koristiti „for“, „while“ i „do-while“ petlje.
+5. Korisniku omogućiti pronalaženje objekata s maksimalnim i minimalnim
+vrijednostima prema odabranim parametrima, na primjer, najmlađu osobu,
+artikl s najvećom cijenom i slično.
+
+© Autor: doc.dr.sc. Aleksander Radovan, prof.struč.stud., e-mail: aradovan@tvz.hr
+
+Sedma laboratorijska vježba iz predmeta „Programiranje u Javi“ 2025/2026
+Prijediplomski studij – smjer računarstvo
+Tehničko veleučilište u Zagrebu
+
+SEDMA LABORATORIJSKA VJEŽBA
+Sedma laboratorijska vježba vezana je uz predavanja i auditorne vježbe iz gradiva
+JavaFX-a. Na početku laboratorijskih vježbi potrebno je riješiti „blic“ test na sustavu
+„Moodle“ iz tog gradiva. „Blic“ testovi moraju se rješavati na računalima u laboratoriju
+(ne vlastitim laptopima). Samo oni studenti koji ostvare 50% bodova iz „blic“ testa
+mogu pristupiti ostatku laboratorijske vježbe.
+Za pripremu sedme laboratorijske vježbe kroz rješavanje projektnog zadatka
+potrebno je implementirati sljedeće:
+1. Kreirati novi JavaFX projekt u okruženju IntelliJ te prenijeti sve korisne klase i
+datoteke iz projekta šeste laboratorijske vježbe u taj projekt.
+2. Kreirati JavaFX ekrane i izbornik kao što je prikazano na predavanjima i
+auditornim vježbama koji će omogućavati pretraživanje entiteta po
+parametrima koje entiteti sadrže.
+3. Prikazivati dijaloge u slučaju neispravnog popunjavanja kriterija pretraživanja s
+informativnim porukama o pogreškama.
+4. Uvesti „util“ klase koje će sadržavati korisne metode koje se pozivaju unutar
+aplikacije kao što je prikazano na predavanjima.
+5. Nijedna klasa ne smije imati više od 200 linija koda.
+6. Programski kod potrebno je skenirati pomoću SonarQube alata te ispraviti sve
+prijavljene pogreške.
+Više informacija o SonarQube alatu, načinu instaliranja i korištenju moguće je pronaći
+na sljedećim stranicama:
+https://plugins.jetbrains.com/plugin/7973-sonarqube-for-ide
+docs.sonarsource.com/sonarqube-for-intellij/getting-started/installation
+youtube.com/watch?v=mu3WnjyrAx4
+
+© Autor: doc.dr.sc. Aleksander Radovan, prof.struč.stud., e-mail: aradovan@tvz.hr
+
+Druga laboratorijska vježba iz predmeta „Programiranje u Javi“ 2025/2026
+Prijediplomski studij – smjer računarstvo
+Tehničko veleučilište u Zagrebu
+
+Treća LABORATORIJSKA VJEŽBA
+Treća laboratorijska vježba vezana je uz predavanja i auditorne vježbe iz gradiva
+iznimaka u Javi i Javadoc dokumentacije. Na početku laboratorijskih vježbi potrebno
+je riješiti „blic“ test na sustavu „Moodle“ iz tog gradiva. „Blic“ testovi moraju se
+rješavati na računalima u laboratoriju (ne vlastitim laptopima). Samo oni studenti koji
+ostvare 50% bodova iz „blic“ testa mogu pristupiti ostatku laboratorijske vježbe.
+Za pripremu treće laboratorijske vježbe kroz rješavanje projektnog zadatka potrebno
+je implementirati sljedeće:
+1. Proširiti rješenje druge laboratorijske vježbe s dvije „checked“ iznimke u
+dijelovima koda (kod neispravnog unosa podataka, na primjer string vrijednosti
+umjesto brojčanih, nakon čega korisnik mora ponoviti unos).
+2. Proširiti rješenje druge laboratorijske vježbe s dvije „unchecked“ iznimke i
+dijelovima koda (kod logičkih pogrešaka gdje to nije primjereno, na primjer kod
+unosa negativnih iznosa gdje mogu biti samo pozitivni ili kod isteka
+maksimalnog vremena čekanja na korisnički unos podataka).
+3. Konfigurirati Logback biblioteku koja će omogućavati kreiranje „log“ datoteka i
+zapisivati („logirati“) najvažnije događaje u aplikacije sa svih pet razina
+logiranja (TRACE, DEBUG, INFO, WARN i ERROR).
+4. Za svaku metodu i klasu generiranje Javadoc dokumentacije.
+
+© Autor: doc.dr.sc. Aleksander Radovan, prof.struč.stud., e-mail: aradovan@tvz.hr
+
+Četvrta laboratorijska vježba iz predmeta „Programiranje u Javi“ 2025/2026
+Prijediplomski studij – smjer računarstvo
+Tehničko veleučilište u Zagrebu
+
+ČETVRTA LABORATORIJSKA VJEŽBA
+Četvrta laboratorijska vježba vezana je uz predavanja i auditorne vježbe iz gradiva
+zbirki u Javi. Na početku laboratorijskih vježbi potrebno je riješiti „blic“ test na sustavu
+„Moodle“ iz tog gradiva. „Blic“ testovi moraju se rješavati na računalima u laboratoriju
+(ne vlastitim laptopima). Samo oni studenti koji ostvare 50% bodova iz „blic“ testa
+mogu pristupiti ostatku laboratorijske vježbe.
+Za pripremu četvrte laboratorijske vježbe kroz rješavanje projektnog zadatka
+potrebno je implementirati sljedeće:
+1. Proširiti rješenje treće laboratorijske vježbe s dodatnim zbirkama: listama,
+setovima i mapama te enumeracijom. S navedenim zbirkama potrebno je
+zamijeniti sva mjesta u kodu gdje se koriste polja.
+2. Omogućiti sortiranje podataka korištenjem sučelja „Comparator“ i lambda
+izraza.
+3. U aplikaciji koristiti tehnike i metode objašnjene u predavanjima i auditornim
+vježbama: Sequenced Collections, Stream Gatherers,
+Collectors.partitioningBy() i Collectors.groupingBy().
+
+© Autor: doc.dr.sc. Aleksander Radovan, prof.struč.stud., e-mail: aradovan@tvz.hr
+
+Šesta laboratorijska vježba iz predmeta „Programiranje u Javi“ 2025/2026
+Prijediplomski studij – smjer računarstvo
+Tehničko veleučilište u Zagrebu
+
+ŠESTA LABORATORIJSKA VJEŽBA
+Šesta laboratorijska vježba vezana je uz predavanja i auditorne vježbe iz gradiva
+datoteka u Javi. Na početku laboratorijskih vježbi potrebno je riješiti „blic“ test na
+sustavu „Moodle“ iz tog gradiva. „Blic“ testovi moraju se rješavati na računalima u
+laboratoriju (ne vlastitim laptopima). Samo oni studenti koji ostvare 50% bodova iz
+„blic“ testa mogu pristupiti ostatku laboratorijske vježbe.
+Za pripremu šeste laboratorijske vježbe kroz rješavanje projektnog zadatka potrebno
+je implementirati sljedeće:
+1. Proširiti rješenje pete laboratorijske vježbe na način da se umjesto unošenja
+podataka o strane korisnika podaci učitavaju iz JSON datoteka. Potrebno je
+kreirati zasebne JSON datoteke za svaki entitet u aplikaciji. Svaki novokreirani
+podatak također je potrebno spremiti u JSON datoteku.
+2. Proširiti rješenje pete laboratorijske vježbe na način da se svi učitani podaci iz
+JSON datoteke serijaliziraju u jednu „backup.bin“ datoteku koja će imati
+funkciju pričuvne kopije na zahtjev korisnika. Nakon toga potrebno je
+omogućiti korisniku da dohvati te podatke i „pregazi“ trenutne podatke u
+aplikaciji s podacima iz pričuvne kopije.
+3. Proširiti rješenje pete laboratorijske vježbe na način da se podaci koje unosi
+korisnik pri odabiru opcija koje nudi aplikacija (na primjer, odabir opcije iz
+izbornika, kreiranje pričuvne kopije, dohvaćanje podataka iz pričuvne kopije i
+slično) spreme u XML formatu kao svojevrsni „log“. Na zahtjev korisnika
+potrebno je ispisati podatke spremljene u XML formatu (samo bez „tagova“ za
+formatiranje XML-a).
+
+© Autor: doc.dr.sc. Aleksander Radovan, prof.struč.stud., e-mail: aradovan@tvz.hr
+
+

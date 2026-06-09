@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>MedPrecision HMS - Staff Management Overlays</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+          rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap"
+          rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+          rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#717784",
+                        "on-tertiary-container": "#0e0300",
+                        "primary-container": "#0078d7",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e2e2e2",
+                        "tertiary-container": "#bf5a00",
+                        "surface-bright": "#f9f9f9",
+                        "on-tertiary-fixed-variant": "#753400",
+                        "on-primary-container": "#000510",
+                        "tertiary-fixed": "#ffdbc8",
+                        "primary-fixed": "#d4e3ff",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-background": "#1a1c1c",
+                        "on-surface-variant": "#414752",
+                        "outline-variant": "#c0c7d4",
+                        "secondary-fixed": "#d8e3f5",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#f1f1f1",
+                        "background": "#f9f9f9",
+                        "primary": "#005fac",
+                        "on-tertiary-fixed": "#321300",
+                        "on-secondary-fixed": "#111c29",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb68b",
+                        "surface-container-low": "#f3f3f3",
+                        "inverse-primary": "#a4c9ff",
+                        "on-primary-fixed": "#001c39",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#005fad",
+                        "error-container": "#ffdad6",
+                        "secondary-container": "#d8e3f5",
+                        "on-surface": "#1a1c1c",
+                        "on-secondary-fixed-variant": "#3d4855",
+                        "secondary": "#545f6e",
+                        "on-error": "#ffffff",
+                        "primary-fixed-dim": "#a4c9ff",
+                        "on-secondary-container": "#5a6574",
+                        "secondary-fixed-dim": "#bcc7d8",
+                        "surface-dim": "#dadada",
+                        "surface": "#f9f9f9",
+                        "inverse-surface": "#2f3131",
+                        "surface-container-high": "#e8e8e8",
+                        "tertiary": "#994700",
+                        "on-primary-fixed-variant": "#004884",
+                        "surface-container": "#eeeeee"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {},
+                    "fontFamily": {
+                        "headline": [
+                            "Inter"
+                        ],
+                        "body": [
+                            "Inter"
+                        ],
+                        "label": [
+                            "Inter"
+                        ]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9f9f9; /* Fallback */
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* Modal Overlay Background */
+        .modal-overlay {
+            background-color: rgba(26, 28, 28, 0.4); /* Darkened transparent overlay */
+            backdrop-filter: blur(4px); /* Slight blur for focus */
+        }
+
+        /* Ambient Shadow for floating elements */
+        .ambient-shadow {
+            box-shadow: 0 12px 32px rgba(26, 28, 28, 0.06);
+        }
+
+        /* Gradient Button */
+        .btn-gradient {
+            background: linear-gradient(to bottom, #005fac, #0078d7);
+        }
+
+        /* Input Ghost Border */
+        .input-ghost-border {
+            border: none;
+            border-bottom: 1px solid rgba(192, 199, 212, 0.5); /* outline-variant at ~50% opacity */
+            border-radius: 0;
+            background-color: transparent;
+        }
+
+        .input-ghost-border:focus {
+            outline: none;
+            border-bottom: 2px solid #005fac; /* primary */
+            box-shadow: none;
+        }
+
+        /* Select Ghost Border */
+        .select-ghost-border {
+            border: none;
+            border-bottom: 1px solid rgba(192, 199, 212, 0.5);
+            border-radius: 0;
+            background-color: transparent;
+        }
+
+        .select-ghost-border:focus {
+            outline: none;
+            border-bottom: 2px solid #005fac;
+            box-shadow: none;
+        }
+
+        /* Tonal Nesting overrides */
+        .surface-lowest-on-low {
+            background-color: #ffffff; /* surface-container-lowest */
+        }
+
+    </style>
+</head>
+<body class="bg-background text-on-background font-body relative overflow-hidden flex items-center justify-center h-screen w-screen p-4 md:p-8 gap-8 flex-wrap">
+<!-- Add/Edit Staff Modal -->
+<div class="relative w-full max-w-md bg-surface-container-lowest ambient-shadow rounded-DEFAULT flex flex-col z-10 border border-surface-variant/20">
+    <!-- Header -->
+    <div class="flex justify-between items-center px-6 py-4 bg-surface-container-low rounded-t-DEFAULT">
+        <h2 class="text-base font-semibold text-on-surface tracking-tight font-headline">Add New Staff Member</h2>
+        <button aria-label="Close" class="text-on-surface-variant hover:text-on-surface transition-colors">
+            <span class="material-symbols-outlined text-lg">close</span>
+        </button>
+    </div>
+    <!-- Form Content -->
+    <div class="p-6 flex flex-col gap-5">
+        <!-- ID Field -->
+        <div class="flex flex-col gap-1">
+            <label class="text-xs font-medium text-on-surface-variant tracking-wide font-label uppercase" for="staffId">Staff
+                ID</label>
+            <div class="bg-surface-container-low px-3 pt-2 pb-1 rounded-t-DEFAULT">
+                <input class="input-ghost-border w-full text-sm text-on-surface font-medium pb-1" disabled=""
+                       id="staffId" readonly="" type="text" value="EMP-1042"/>
+            </div>
+            <p class="text-[10px] text-on-surface-variant mt-1">Auto-generated identifier.</p>
+        </div>
+        <!-- Name Field -->
+        <div class="flex flex-col gap-1">
+            <label class="text-xs font-medium text-on-surface-variant tracking-wide font-label uppercase"
+                   for="staffName">Full Name <span class="text-error">*</span></label>
+            <div class="bg-surface-container-low px-3 pt-2 pb-1 rounded-t-DEFAULT">
+                <input class="input-ghost-border w-full text-sm text-on-surface pb-1 placeholder:text-outline-variant"
+                       id="staffName" placeholder="Enter full name" type="text"/>
+            </div>
+        </div>
+        <!-- Role Selection -->
+        <div class="flex flex-col gap-1">
+            <label class="text-xs font-medium text-on-surface-variant tracking-wide font-label uppercase"
+                   for="staffRole">Role <span class="text-error">*</span></label>
+            <div class="bg-surface-container-low px-3 pt-2 pb-1 rounded-t-DEFAULT relative">
+                <select class="select-ghost-border w-full text-sm text-on-surface pb-1 appearance-none bg-transparent pr-8"
+                        id="staffRole">
+                    <option disabled="" selected="" value="">Select a role...</option>
+                    <option value="physician">Attending Physician</option>
+                    <option value="nurse_rn">Registered Nurse (RN)</option>
+                    <option value="specialist">Clinical Specialist</option>
+                    <option value="admin">Administrator</option>
+                </select>
+                <!-- Custom Select Arrow icon to match theme -->
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-sm">expand_more</span>
+            </div>
+        </div>
+        <!-- Department Selection -->
+        <div class="flex flex-col gap-1">
+            <label class="text-xs font-medium text-on-surface-variant tracking-wide font-label uppercase"
+                   for="staffDept">Department <span class="text-error">*</span></label>
+            <div class="bg-surface-container-low px-3 pt-2 pb-1 rounded-t-DEFAULT relative">
+                <select class="select-ghost-border w-full text-sm text-on-surface pb-1 appearance-none bg-transparent pr-8"
+                        id="staffDept">
+                    <option disabled="" selected="" value="">Select a department...</option>
+                    <option value="cardio">Cardiology</option>
+                    <option value="neuro">Neurology</option>
+                    <option value="er">Emergency</option>
+                    <option value="peds">Pediatrics</option>
+                </select>
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-sm">expand_more</span>
+            </div>
+        </div>
+        <!-- Email Field (Optional) -->
+        <div class="flex flex-col gap-1">
+            <label class="text-xs font-medium text-on-surface-variant tracking-wide font-label uppercase"
+                   for="staffEmail">Email Address</label>
+            <div class="bg-surface-container-low px-3 pt-2 pb-1 rounded-t-DEFAULT">
+                <input class="input-ghost-border w-full text-sm text-on-surface pb-1 placeholder:text-outline-variant"
+                       id="staffEmail" placeholder="name@medprecision.com" type="email"/>
+            </div>
+        </div>
+    </div>
+    <!-- Footer Actions -->
+    <div class="px-6 py-4 bg-surface-container flex justify-end gap-3 rounded-b-DEFAULT mt-auto">
+        <button class="px-4 py-2 text-sm font-medium text-primary hover:bg-surface-container-highest rounded-DEFAULT transition-colors">
+            Cancel
+        </button>
+        <button class="btn-gradient px-5 py-2 text-sm font-medium text-on-primary rounded-DEFAULT shadow-sm hover:opacity-90 transition-opacity">
+            Save Details
+        </button>
+    </div>
+</div>
+<!-- Delete Confirmation Dialog -->
+<div class="relative w-full max-w-sm bg-surface-container-lowest ambient-shadow rounded-DEFAULT flex flex-col z-10 border border-error-container/30">
+    <!-- Alert Content -->
+    <div class="p-6 flex flex-col items-center text-center gap-4">
+        <!-- Warning Icon -->
+        <div class="w-12 h-12 rounded-full bg-error-container flex items-center justify-center text-error mb-2">
+            <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">warning</span>
+        </div>
+        <h2 class="text-lg font-bold text-on-surface tracking-tight font-headline">Remove Staff Member?</h2>
+        <p class="text-sm text-on-surface-variant">
+            You are about to permanently remove <span class="font-semibold text-on-surface">Dr. Sarah Jenkins</span>
+            from the system. This action will archive their active assignments but cannot be undone.
+        </p>
+        <div class="w-full bg-surface-container-low p-3 mt-2 text-left border-l-2 border-outline-variant">
+            <p class="text-xs text-on-surface-variant font-mono">ID: EMP-0892</p>
+            <p class="text-xs text-on-surface-variant font-mono">Dept: Neurology</p>
+        </div>
+    </div>
+    <!-- Footer Actions -->
+    <div class="px-6 py-4 bg-surface-container flex justify-between gap-3 rounded-b-DEFAULT mt-2 border-t border-surface-variant/30">
+        <button class="px-4 py-2 text-sm font-medium text-on-surface-variant hover:bg-surface-container-highest rounded-DEFAULT transition-colors">
+            Cancel
+        </button>
+        <button class="bg-error px-5 py-2 text-sm font-medium text-on-error rounded-DEFAULT shadow-sm hover:bg-[#a01616] transition-colors">
+            Confirm Removal
+        </button>
+    </div>
+</div>
+</body>
+</html>

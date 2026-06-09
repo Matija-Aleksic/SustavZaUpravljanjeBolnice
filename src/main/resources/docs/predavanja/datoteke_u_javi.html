@@ -1,0 +1,1853 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Datoteke u Javi - Prezentacija</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a5568;
+            --accent: #3b82f6;
+            --accent-dark: #2563eb;
+            --border: #e2e8f0;
+            --code-bg: #1e293b;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --accent: #60a5fa;
+            --accent-dark: #3b82f6;
+            --border: #334155;
+            --code-bg: #0f172a;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px var(--shadow);
+        }
+
+        .header-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-dark);
+        }
+
+        .slide-counter {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .slide-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slide {
+            display: none !important;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 3rem;
+            max-width: 1200px;
+            width: 100%;
+            min-height: 600px;
+            max-height: calc(100vh - 200px);
+            box-shadow: 0 8px 32px var(--shadow);
+            animation: slideIn 0.4s ease;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            margin: 0 auto;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1;
+        }
+
+        .slide.active {
+            display: block !important;
+            position: relative;
+            top: auto;
+            transform: none;
+            opacity: 1;
+            visibility: visible;
+            z-index: 10;
+            overflow-y: auto;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--accent);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 1rem;
+        }
+
+        .slide-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        .slide-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .slide-content li {
+            margin: 1rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .slide-content li:before {
+            content: "▸";
+            color: var(--accent);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .slide-content ol {
+            padding-left: 2rem;
+        }
+
+        .slide-content ol li {
+            margin: 0.8rem 0;
+            padding-left: 0.5rem;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+        }
+
+        pre {
+            margin: 0 !important;
+            background: transparent !important;
+        }
+
+        code {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            background: var(--accent);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--accent);
+            color: white;
+            font-weight: 600;
+        }
+
+        .navigation {
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            border-top: 2px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            background: var(--accent-dark);
+            transform: translateY(-2px);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--border);
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .note {
+            background: var(--bg-primary);
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .note-title {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 2rem;
+                min-height: auto;
+            }
+
+            .slide-title {
+                font-size: 2rem;
+            }
+
+            .slide-content {
+                font-size: 1rem;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Title slide special styling */
+        .title-slide {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .title-slide .slide-title {
+            font-size: 3.5rem;
+            border: none;
+            margin-bottom: 2rem;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+        }
+
+        /* Content list styling */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .content-item {
+            background: var(--bg-primary);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+        }
+    </style>
+</head>
+<body>
+<div class="presentation-container">
+    <div class="header">
+        <div class="header-title">Datoteke u Javi - Tehničko veleučilište u Zagrebu</div>
+        <div class="controls">
+                <span class="slide-counter">
+                    <span id="currentSlide">1</span> / <span id="totalSlides">20</span>
+                </span>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <span id="themeIcon">🌙</span> Promijeni temu
+            </button>
+        </div>
+    </div>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div class="slide-container">
+        <!-- Slide 1: Naslov -->
+        <div class="slide active title-slide">
+            <h1 class="slide-title">Datoteke u Javi</h1>
+            <div class="subtitle">Programiranje u jeziku Java</div>
+            <div class="subtitle">Tehničko veleučilište u Zagrebu</div>
+            <div class="subtitle" style="margin-top: 2rem; color: var(--accent);">Java 25</div>
+        </div>
+
+        <!-- Slide 2: Sadržaj -->
+        <div class="slide">
+            <h2 class="slide-title">Sadržaj</h2>
+            <div class="slide-content content-grid">
+                <div class="content-item">📚 Uvod u rad s datotekama</div>
+                <div class="content-item">🌊 Vrste tokova podataka u Javi</div>
+                <div class="content-item">📁 Klasa java.io.File</div>
+                <div class="content-item">🗂️ Sučelja i klase iz paketa java.nio.file</div>
+                <div class="content-item">✏️ Klasa Formatter</div>
+                <div class="content-item">🔄 Tokovi za čitanje i zapisivanje podataka</div>
+                <div class="content-item">📊 Klase koje predstavljaju tokove podataka</div>
+                <div class="content-item">💾 Čitanje i zapisivanje u binarne datoteke</div>
+                <div class="content-item">🛡️ Blok "try-with-resources"</div>
+                <div class="content-item">⚡ Unapređenja u Javi 9</div>
+                <div class="content-item">🌊 Korištenje streamova s datotekama</div>
+                <div class="content-item">🔐 Serijalizacija i deserijalizacija</div>
+                <div class="content-item">📄 XML format (JAXB)</div>
+                <div class="content-item">🔗 JSON format (JSON-B)</div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Uvod -->
+        <div class="slide">
+            <h2 class="slide-title">Uvod u rad s datotekama</h2>
+            <div class="slide-content">
+                <ul>
+                    <li>Datoteke se koriste za <span class="highlight">trajnije pohranjivanje podataka</span> ili dohvat
+                        informacija iz njih koje su postojale i prije pokretanja programa
+                    </li>
+                    <li>Postoje dvije vrste datoteka: <strong>tekstualne</strong> i <strong>binarne</strong></li>
+                    <li>Iz perspektive Java programa svaka datoteka može se razmatrati kao <span class="highlight">niz bajtova</span>
+                        (engl. stream of bytes)
+                    </li>
+                    <li>Svaka datoteka na kraju ima <strong>"end-of-file"</strong> oznaku kojom se detektira kraj
+                        datoteke nakon čega je potrebno zaustaviti proces čitanja njenog sadržaja
+                    </li>
+                    <li>U datoteke je moguće spremati i cijele objekte postupkom koji se naziva <span class="highlight">serijalizacija</span>,
+                        a čitanje podataka o objektima se naziva <span class="highlight">deserijalizacija</span></li>
+                </ul>
+                <div class="note">
+                    <div class="note-title">💡 Zanimljivost za Z generaciju</div>
+                    Slično kao što Instagram sprema vaše storije ili TikTok čuva vaše draftove - datoteke omogućuju
+                    programima da "zapamte" stvari i nakon što ih ugasite!
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Vrste tokova -->
+        <div class="slide">
+            <h2 class="slide-title">Vrste tokova podataka u Javi</h2>
+            <div class="slide-content">
+                <ul>
+                    <li>Tokovi podataka pomoću kojih se dohvaćaju i zapisuju podaci u datoteke mogu biti temeljeni na:
+                    </li>
+                </ul>
+                <div class="two-column">
+                    <div>
+                        <h3 style="color: var(--accent);">Binarni format</h3>
+                        <ul>
+                            <li>Ulazni i izlazni tok predstavljeni bajtovima</li>
+                            <li>char ima 2 bajta, int 4 bajta, double 8 bajtova itd.</li>
+                            <li>Koristi se kod binarnih datoteka</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--accent);">Znakovni format</h3>
+                        <ul>
+                            <li>Ulazni i izlazni tok predstavljen nizom znakova</li>
+                            <li>Svaki znak ima 2 bajta</li>
+                            <li>Koristi se kod tekstualnih datoteka</li>
+                        </ul>
+                    </div>
+                </div>
+                <ul>
+                    <li>Prilikom otvaranja datoteka potrebno je <span
+                            class="highlight">kreirati pripadajući objekt</span> čiji konstruktor komunicira s
+                        operacijskim sustavom
+                    </li>
+                    <li>U Javi postoje tri standardna toka podataka:
+                        <ul style="margin-top: 0.5rem;">
+                            <li><code>System.in</code> - za učitavanje podataka s tipkovnice</li>
+                            <li><code>System.out</code> - za ispis podataka na zaslon</li>
+                            <li><code>System.err</code> - za ispis podataka o pogreškama na zaslon</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 5: Klasa File -->
+        <div class="slide">
+            <h2 class="slide-title">Klasa java.io.File</h2>
+            <div class="slide-content">
+                <ul>
+                    <li>Predstavlja element datotečnog sustava (može biti datoteka ili mapa)</li>
+                    <li>Sadrži <span class="highlight">putanju, ime i veličinu</span> datoteke, ali <strong>ne i sam
+                        sadržaj</strong></li>
+                    <li>Može kreirati datoteku na sljedeće načine:</li>
+                </ul>
+                <div class="code-block">
+                        <pre><code class="language-java">// Kreiranje File objekata
+File wf1 = new File("moj.htm");
+File wf2 = new File("java\\html\\IO.html");
+File wf3 = new File("D:\\java\\25.txt");
+
+// Provjera postojanja i tipa
+if (wf1.exists()) {
+    System.out.println("Datoteka postoji!");
+}
+
+if (wf1.isFile()) {
+    System.out.println("To je datoteka");
+} else if (wf1.isDirectory()) {
+    System.out.println("To je mapa");
+}
+
+// Dohvat informacija
+System.out.println("Naziv: " + wf1.getName());
+System.out.println("Putanja: " + wf1.getPath());
+System.out.println("Veličina: " + wf1.length() + " bajtova");</code></pre>
+                </div>
+                <ul>
+                    <li>Sadrži niz korisnih metoda: <code>exists()</code>, <code>isFile()</code>,
+                        <code>isDirectory()</code>, <code>getName()</code>, <code>getPath()</code> itd.
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 6: NIO.File -->
+        <div class="slide">
+            <h2 class="slide-title">Sučelja i klase iz paketa java.nio.file</h2>
+            <div class="slide-content">
+                <p style="margin-bottom: 1.5rem;">Omogućavaju dohvat podataka iz datoteka pomoću sljedećih sučelja i
+                    klasa (uvedeni od Jave SE 6):</p>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Sučelje/Klasa</th>
+                            <th>Opis</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><strong>Path</strong> (sučelje)</td>
+                            <td>Objekti predstavljaju lokaciju datoteka ili mape, ali ne omogućavaju čitanje sadržaja
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Paths</strong> (klasa)</td>
+                            <td>Sadrži statičke metode za dohvat Path objekata koji predstavljaju datoteku ili mapu</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Files</strong> (klasa)</td>
+                            <td>Sadrži statičke metode za rad s datotekama: kopiranje, kreiranje, brisanje, čitanje
+                                sadržaja itd.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>DirectoryStream</strong> (sučelje)</td>
+                            <td>Omogućava iteraciju kroz sadržaj mape</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="note">
+                    <div class="note-title">🎯 Moderna praksa</div>
+                    NIO.2 API (java.nio.file) je moderniji i preporučeniji način rada s datotekama u odnosu na stari
+                    java.io.File!
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Formatter -->
+        <div class="slide">
+            <h2 class="slide-title">Klasa Formatter</h2>
+            <div class="slide-content">
+                <ul>
+                    <li>Služi za <span class="highlight">oblikovanje teksta</span> koji se može zapisivati u datoteku
+                    </li>
+                    <li>Radi po principu korištenja metode <code>printf</code></li>
+                </ul>
+                <div class="code-block">
+                        <pre><code class="language-java">import java.util.Formatter;
+import java.io.IOException;
+
+public class FormatterPrimjer {
+    public static void main(String[] args) {
+        try (Formatter output = new Formatter("clients.txt")) {
+            // Zapisivanje formatiranih podataka
+            output.format("%d %s %s %.2f%n", 
+                         1, "Ivan", "Horvat", 1500.50);
+            output.format("%d %s %s %.2f%n", 
+                         2, "Ana", "Kovač", 2300.75);
+            output.format("%d %s %s %.2f%n", 
+                         3, "Marko", "Babić", 1850.00);
+            
+            System.out.println("Podaci uspješno zapisani!");
+            
+        } catch (IOException | SecurityException e) {
+            System.err.println("Pogreška: " + e.getMessage());
+        }
+    }
+}</code></pre>
+                </div>
+                <ul>
+                    <li>U slučaju nedostatka prava za korištenje datoteke baca se iznimka <code>SecurityException</code>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 8: Tokovi -->
+        <div class="slide">
+            <h2 class="slide-title">Tokovi za čitanje i zapisivanje podataka</h2>
+            <div class="slide-content">
+                <p style="margin-bottom: 1.5rem;">U Javi postoji nekoliko klasa koje predstavljaju tokove za razmjenu
+                    podataka s datotekama:</p>
+                <div class="two-column">
+                    <div>
+                        <h3 style="color: var(--accent);">📥 Ulazni tokovi podataka</h3>
+                        <p style="margin: 1rem 0;">Za čitanje podataka iz datoteka</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--accent);">📤 Izlazni tokovi podataka</h3>
+                        <p style="margin: 1rem 0;">Za zapisivanje podataka u datoteke</p>
+                    </div>
+                </div>
+                <h3 style="color: var(--accent); margin-top: 2rem;">Osnovne apstraktne klase za binarne datoteke:</h3>
+                <ul>
+                    <li><code>java.io.InputStream</code> - šalje bajtove iz vanjskog izvora u Java program</li>
+                    <li><code>java.io.OutputStream</code> - šalje bajtove iz Java programa u neko vanjsko odredište</li>
+                </ul>
+                <h3 style="color: var(--accent); margin-top: 2rem;">Osnovne apstraktne klase za tekstualne
+                    datoteke:</h3>
+                <ul>
+                    <li><code>java.io.Reader</code> - prima znakove iz vanjskog izvora i šalje ih u Java program</li>
+                    <li><code>java.io.Writer</code> - šalje znakove iz Java programa u vanjski izvor</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 9: Klase tokova -->
+        <div class="slide">
+            <h2 class="slide-title">Klase koje predstavljaju tokove podataka</h2>
+            <div class="slide-content">
+                <p style="margin-bottom: 1.5rem;">Postoji niz klasa koje predstavljaju implementaciju apstraktnih klasa
+                    za čitanje i zapisivanje tokova podataka u Javi:</p>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Tip</th>
+                            <th>Klase</th>
+                            <th>Namjena</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><strong>InputStream</strong></td>
+                            <td>FileInputStream, BufferedInputStream, DataInputStream</td>
+                            <td>Čitanje binarnih podataka</td>
+                        </tr>
+                        <tr>
+                            <td><strong>OutputStream</strong></td>
+                            <td>FileOutputStream, BufferedOutputStream, DataOutputStream</td>
+                            <td>Zapisivanje binarnih podataka</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reader</strong></td>
+                            <td>FileReader, BufferedReader, InputStreamReader</td>
+                            <td>Čitanje tekstualnih podataka</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Writer</strong></td>
+                            <td>FileWriter, BufferedWriter, PrintWriter</td>
+                            <td>Zapisivanje tekstualnih podataka</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="note">
+                    <div class="note-title">⚡ Performance tip</div>
+                    Uvijek koristite <strong>Buffered</strong> verzije klasa (BufferedReader, BufferedWriter) za bolje
+                    performanse pri radu s većim datotekama!
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Binarne datoteke -->
+        <div class="slide">
+            <h2 class="slide-title">Čitanje i zapisivanje u binarne datoteke</h2>
+            <div class="slide-content">
+                <h3 style="color: var(--accent);">Osnovna metoda klase InputStream</h3>
+                <div class="code-block">
+                    <pre><code class="language-java">public abstract int read() throws IOException</code></pre>
+                </div>
+                <ul>
+                    <li>Čita <strong>1 bajt</strong> iz ulaznog toka</li>
+                    <li>Vraća cjelobrojnu vrijednost tog bajta</li>
+                    <li>Metoda <code>read()</code> blokira izvođenje ostatka programa dok se bajt ne pročita</li>
+                </ul>
+
+                <h3 style="color: var(--accent); margin-top: 2rem;">Osnovna metoda klase OutputStream</h3>
+                <div class="code-block">
+                    <pre><code class="language-java">public abstract void write(int b) throws IOException</code></pre>
+                </div>
+                <ul>
+                    <li>Šalje <strong>1 bajt</strong> podataka preko izlaznog toka</li>
+                    <li>Odredište taj znak interpretira na određeni način</li>
+                </ul>
+
+                <div class="code-block">
+                        <pre><code class="language-java">// Primjer kopiranja datoteke bajt po bajt
+try (FileInputStream fis = new FileInputStream("ulaz.bin");
+     FileOutputStream fos = new FileOutputStream("izlaz.bin")) {
+    
+    int bajt;
+    while ((bajt = fis.read()) != -1) {
+        fos.write(bajt);
+    }
+} catch (IOException e) {
+    e.printStackTrace();
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Try-with-resources -->
+        <div class="slide">
+            <h2 class="slide-title">Blok "try-with-resources"</h2>
+            <div class="slide-content">
+                <ul>
+                    <li>Svaku datoteku je nakon korištenja potrebno <span class="highlight">zatvoriti</span> pozivom
+                        metode <code>close()</code></li>
+                    <li>Od <strong>Jave 7</strong> uveden je poseban "try" blok koji <span class="highlight">automatski poziva metodu close()</span>
+                    </li>
+                    <li>Naziva se <strong>"try-with-resources"</strong></li>
+                </ul>
+                <div class="code-block">
+                        <pre><code class="language-java">import java.io.FileInputStream;
+import java.io.IOException;
+
+public class TryWithResourcesPrimjer {
+    private static final String FILENAME = "test.txt";
+    
+    public static void main(String[] args) {
+        // Objekt se automatski zatvara na kraju try bloka
+        try (FileInputStream fis = new FileInputStream(FILENAME)) {
+            
+            for (int n = fis.read(); n != -1; n = fis.read()) {
+                System.out.write(n);
+            }
+            System.out.flush();
+            
+        } catch (IOException ex) {
+            System.err.println("Pogreška kod čitanja datoteke " + FILENAME);
+            ex.printStackTrace();
+        }
+        // Nije potrebno ručno zvati fis.close()!
+    }
+}</code></pre>
+                </div>
+                <div class="note">
+                    <div class="note-title">✨ Prednosti try-with-resources</div>
+                    Automatsko zatvaranje resursa, čišći kod, manje šanse za memory leakove!
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Java 9 unapređenja -->
+        <div class="slide">
+            <h2 class="slide-title">Unapređenja bloka "try-with-resources" u Javi 9</h2>
+            <div class="slide-content">
+                <p style="margin-bottom: 1.5rem;">U <strong>Javi 9</strong> je moguće koristiti blok
+                    "try-with-resources" na način da se objekti mogu definirati <span
+                            class="highlight">prije bloka</span> i samo se koristiti u njemu:</p>
+
+                <h3 style="color: var(--accent);">Uvjet: objekti moraju biti "final" ili "effectively final"</h3>
+
+                <div class="code-block">
+                        <pre><code class="language-java">import java.io.FileInputStream;
+import java.io.IOException;
+
+public class Java9TryWithResources {
+    private static final String FILENAME = "test.txt";
+    
+    public static void main(String[] args) {
+        // Objekt se kreira PRIJE try bloka
+        FileInputStream fis = new FileInputStream(FILENAME);
+        
+        // Objekt se samo koristi u try bloku (mora biti effectively final)
+        try (fis) {
+            
+            for (int n = fis.read(); n != -1; n = fis.read()) {
+                System.out.write(n);
+            }
+            System.out.flush();
+            
+        } catch (IOException ex) {
+            System.err.println("Pogreška kod čitanja datoteke " + FILENAME);
+            ex.printStackTrace();
+        }
+        // fis se automatski zatvara!
+    }
+}</code></pre>
+                </div>
+
+                <div class="note">
+                    <div class="note-title">🎯 Effectively final</div>
+                    Varijabla je "effectively final" ako joj se vrijednost ne mijenja nakon inicijalizacije, čak i ako
+                    nije eksplicitno označena kao <code>final</code>.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Streamovi -->
+        <div class="slide">
+            <h2 class="slide-title">Korištenje streamova u radu s datotekama</h2>
+            <div class="slide-content">
+                <p style="margin-bottom: 1.5rem;">Klasa <code>Files</code> sadrži nekoliko metoda koje su vezane uz
+                    <span class="highlight">streamove</span> i drastično olakšavaju rad s datotekama:</p>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Metoda</th>
+                            <th>Opis</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><code>lines(Path putanja)</code></td>
+                            <td>Dohvaća sve linije unutar datoteke</td>
+                        </tr>
+                        <tr>
+                            <td><code>list(Path putanja)</code></td>
+                            <td>Dohvaća sve datoteke na zadanoj putanji</td>
+                        </tr>
+                        <tr>
+                            <td><code>newDirectoryStream(Path)</code></td>
+                            <td>Otvara mapu i omogućava dohvaćanje sadržaja</td>
+                        </tr>
+                        <tr>
+                            <td><code>walk(Path putanja)</code></td>
+                            <td>Otvara mape i sve podmape u hijerarhiji</td>
+                        </tr>
+                        <tr>
+                            <td><code>readString(Path)</code></td>
+                            <td>Čita cijeli sadržaj datoteke u jedan String</td>
+                        </tr>
+                        <tr>
+                            <td><code>writeString(Path, String)</code></td>
+                            <td>Zapisuje cijeli String u datoteku</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="code-block">
+                        <pre><code class="language-java">import java.nio.file.*;
+import java.io.IOException;
+
+// Čitanje svih linija i filtriranje
+Files.lines(Paths.get("podaci.txt"))
+     .filter(line -> line.contains("Java"))
+     .forEach(System.out::println);
+
+// Ispis svih .java datoteka u mapi
+Files.list(Paths.get("./src"))
+     .filter(path -> path.toString().endsWith(".java"))
+     .forEach(System.out::println);</code></pre>
+                </div>
+
+                <p style="margin-top: 1.5rem;">Nakon dohvaćanja podataka, moguće je koristiti metode temeljene na
+                    <strong>lambda izrazima</strong> kao što su <code>filter</code>, <code>forEach</code>,
+                    <code>limit</code>, <code>map</code> itd.</p>
+            </div>
+        </div>
+
+        <!-- Slide 14: Serijalizacija - Uvod -->
+        <div class="slide">
+            <h2 class="slide-title">Serijalizacija i deserijalizacija u Javi</h2>
+            <div class="slide-content">
+                <ul>
+                    <li>Tijekom izvođenja Java programa objekti koji se koriste su u <span
+                            class="highlight">memoriji</span></li>
+                    <li>Nakon završetka programa se <strong>oslobađa memorija</strong> koju su objekti koristili</li>
+                    <li>Ako je potrebno <span class="highlight">"sačuvati" objekte</span> kako bi se mogli koristiti i
+                        nakon završetka programa ili ih je potrebno pretvoriti u "fizički" oblik koji se može koristiti
+                        za slanje na druge lokacije, potrebno ih je <strong>serijalizirati</strong></li>
+                </ul>
+
+                <div class="two-column" style="margin-top: 2rem;">
+                    <div>
+                        <h3 style="color: var(--accent);">📦 Serijalizacija</h3>
+                        <p>Zapisivanje stanja objekta (vrijednosti varijabli) u binarnom obliku u datoteku</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--accent);">📂 Deserijalizacija</h3>
+                        <p>Obrnuti proces čitanja objekata u binarnom obliku i njihovo "aktiviranje" u trenutno aktivnom
+                            programu</p>
+                    </div>
+                </div>
+
+                <div class="note" style="margin-top: 2rem;">
+                    <div class="note-title">⚠️ Važno</div>
+                    Klase čiji objekti se žele serijalizirati moraju implementirati sučelje <code>Serializable</code>
+                </div>
+
+                <div class="code-block">
+                        <pre><code class="language-java">import java.io.Serializable;
+
+public class Osoba implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
+    private String ime;
+    private String prezime;
+    private int godina;
+    
+    // Konstruktori, getteri, setteri...
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Serijalizacija - Primjer -->
+        <div class="slide">
+            <h2 class="slide-title">Serijalizacija objekata u Javi</h2>
+            <div class="slide-content">
+                <p style="margin-bottom: 1.5rem;">Za serijaliziranje objekata u binarnom obliku koristi se klasa <code>ObjectOutputStream</code>
+                    i metoda <code>writeObject()</code>:</p>
+
+                <div class="code-block">
+                        <pre><code class="language-java">import java.io.*;
+import java.util.Date;
+
+public class SerijalizacijaPrimjer {
+    public static void main(String[] args) {
+        try (ObjectOutputStream out = new ObjectOutputStream(
+                new FileOutputStream("osobe.dat"))) {
+            
+            // Kreiranje objekata
+            Zupanija zagrebacka = new Zupanija(
+                "Zagrebačka", 
+                309696, 
+                3078.0,
+                Zupanija.POZIVNI_BROJ_ZUPANIJA_ZAGREBACKA_GRAD_ZAGREB
+            );
+            
+            Osoba osoba = new Osoba(
+                "Pero", 
+                "Perić", 
+                zagrebacka, 
+                new Date()
+            );
+            
+            // Serijalizacija objekta
+            out.writeObject(osoba);
+            
+            System.out.println("Objekt uspješno serijaliziran!");
+            
+        } catch (IOException e) {
+            System.err.println("Pogreška prilikom serijalizacije: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                </div>
+
+                <div class="note">
+                    <div class="note-title">💡 Savjet</div>
+                    Možete serijalizirati više objekata u istu datoteku pozivajući <code>writeObject()</code> više puta.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 16: Deserijalizacija -->
+        <div class="slide">
+            <h2 class="slide-title">Deserijalizacija objekata u Javi</h2>
+            <div class="slide-content">
+                <p style="margin-bottom: 1.5rem;">Proces deserijalizacije obavlja se <span class="highlight">istim redoslijedom</span>
+                    kojim su objekti i serijalizirani:</p>
+
+                <div class="code-block">
+                        <pre><code class="language-java">import java.io.*;
+
+public class DeserijalizacijaPrimjer {
+    private static final String SERIALIZATION_FILE_NAME = "osobe.dat";
+    
+    public static void main(String[] args) {
+        try (ObjectInputStream in = new ObjectInputStream(
+                new FileInputStream(SERIALIZATION_FILE_NAME))) {
+            
+            // Deserijalizacija objekta
+            Osoba procitanaOsoba = (Osoba) in.readObject();
+            
+            // Ispis podataka o pročitanom objektu
+            System.out.println("Podaci o pročitanom objektu:");
+            System.out.println("Ime osobe: " + procitanaOsoba.getIme());
+            System.out.println("Prezime osobe: " + procitanaOsoba.getPrezime());
+            System.out.println("Županija: " + 
+                procitanaOsoba.getZupanija().getNaziv());
+            System.out.println("Datum rođenja: " + 
+                procitanaOsoba.getDatumRodenja());
+            
+        } catch (IOException ex) {
+            System.err.println("Pogreška kod čitanja datoteke: " + ex);
+        } catch (ClassNotFoundException ex) {
+            System.err.println("Klasa nije pronađena: " + ex);
+        }
+    }
+}</code></pre>
+                </div>
+
+                <div class="note">
+                    <div class="note-title">⚠️ Važno</div>
+                    Potrebno je hvatati dvije iznimke: <code>IOException</code> i <code>ClassNotFoundException</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 17: XML - Uvod -->
+        <div class="slide">
+            <h2 class="slide-title">Zapisivanje i čitanje objekata u XML formatu</h2>
+            <div class="slide-content">
+                <p style="margin-bottom: 1.5rem;"><strong>XML (eXtensible Markup Language)</strong> je fleksibilan način
+                    strukturiranja podataka u čitljivom formatu.</p>
+
+                <h3 style="color: var(--accent);">📋 Prednosti XML-a:</h3>
+                <ul>
+                    <li>Čitljiv i razumljiv format za ljude</li>
+                    <li>Platform-independent (ne ovisi o platformi)</li>
+                    <li>Široko podržan u različitim programskim jezicima</li>
+                    <li>Pogodan za konfiguracije i razmjenu podataka između sistema</li>
+                </ul>
+
+                <h3 style="color: var(--accent); margin-top: 2rem;">🔧 Java XML API-ji:</h3>
+                <div class="two-column">
+                    <div>
+                        <h4 style="color: var(--text-primary);">JAXB (do Java 10)</h4>
+                        <ul>
+                            <li>Java Architecture for XML Binding</li>
+                            <li>Automatsko mapiranje između Java objekata i XML-a</li>
+                            <li>Od Java 11 je eksterena biblioteka</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--text-primary);">Jakarta XML Binding (Java 11+)</h4>
+                        <ul>
+                            <li>Nasljednik JAXB-a</li>
+                            <li>Dio Jakarta EE</li>
+                            <li>Preporučen za moderne aplikacije</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="note" style="margin-top: 2rem;">
+                    <div class="note-title">💡 Zanimljivost</div>
+                    XML se koristi u mnogim poznatim tehnologijama: Android manifesti, Maven pom.xml, Spring
+                    konfiguracije, RSS feedovi itd.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 18: XML - Primjer -->
+        <div class="slide">
+            <h2 class="slide-title">XML Serijalizacija s Jakarta XML Binding</h2>
+            <div class="slide-content">
+                <h3 style="color: var(--accent);">1️⃣ Dodavanje dependency-ja (Maven):</h3>
+                <div class="code-block">
+                        <pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;jakarta.xml.bind&lt;/groupId&gt;
+    &lt;artifactId&gt;jakarta.xml.bind-api&lt;/artifactId&gt;
+    &lt;version&gt;4.0.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.glassfish.jaxb&lt;/groupId&gt;
+    &lt;artifactId&gt;jaxb-runtime&lt;/artifactId&gt;
+    &lt;version&gt;4.0.2&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+                </div>
+
+                <h3 style="color: var(--accent); margin-top: 1.5rem;">2️⃣ Označavanje klase s anotacijama:</h3>
+                <div class="code-block">
+                        <pre><code class="language-java">import jakarta.xml.bind.annotation.*;
+
+@XmlRootElement(name = "student")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Student {
+    
+    @XmlElement(name = "id")
+    private int id;
+    
+    @XmlElement(name = "ime")
+    private String ime;
+    
+    @XmlElement(name = "prezime")
+    private String prezime;
+    
+    @XmlElement(name = "prosjek")
+    private double prosjek;
+    
+    // Prazan konstruktor je obavezan za JAXB
+    public Student() {}
+    
+    public Student(int id, String ime, String prezime, double prosjek) {
+        this.id = id;
+        this.ime = ime;
+        this.prezime = prezime;
+        this.prosjek = prosjek;
+    }
+    
+    // Getteri i setteri...
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 19: XML Zapisivanje -->
+        <div class="slide">
+            <h2 class="slide-title">Zapisivanje objekata u XML datoteku</h2>
+            <div class="slide-content">
+                <div class="code-block">
+                        <pre><code class="language-java">import jakarta.xml.bind.*;
+import java.io.File;
+
+public class XMLSerijalizacija {
+    public static void main(String[] args) {
+        try {
+            // Kreiranje objekta studenta
+            Student student = new Student(
+                1, 
+                "Ana", 
+                "Horvat", 
+                4.8
+            );
+            
+            // Kreiranje JAXB konteksta
+            JAXBContext context = JAXBContext.newInstance(Student.class);
+            
+            // Kreiranje marshallera (za zapisivanje u XML)
+            Marshaller marshaller = context.createMarshaller();
+            
+            // Postavljanje formatiranja (za ljepši ispis)
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+            
+            // Zapisivanje u datoteku
+            File xmlFile = new File("student.xml");
+            marshaller.marshal(student, xmlFile);
+            
+            // Ispis na ekran za provjeru
+            marshaller.marshal(student, System.out);
+            
+            System.out.println("\nStudent uspješno zapisan u XML!");
+            
+        } catch (JAXBException e) {
+            System.err.println("Pogreška kod XML serijalizacije: " 
+                             + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                </div>
+
+                <h3 style="color: var(--accent); margin-top: 1.5rem;">📄 Rezultat - student.xml:</h3>
+                <div class="code-block">
+                        <pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;student&gt;
+    &lt;id&gt;1&lt;/id&gt;
+    &lt;ime&gt;Ana&lt;/ime&gt;
+    &lt;prezime&gt;Horvat&lt;/prezime&gt;
+    &lt;prosjek&gt;4.8&lt;/prosjek&gt;
+&lt;/student&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 20: XML Čitanje -->
+        <div class="slide">
+            <h2 class="slide-title">Čitanje objekata iz XML datoteke</h2>
+            <div class="slide-content">
+                <div class="code-block">
+                        <pre><code class="language-java">import jakarta.xml.bind.*;
+import java.io.File;
+
+public class XMLDeserijalizacija {
+    public static void main(String[] args) {
+        try {
+            // Kreiranje JAXB konteksta
+            JAXBContext context = JAXBContext.newInstance(Student.class);
+            
+            // Kreiranje unmarshallera (za čitanje iz XML-a)
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            
+            // Čitanje objekta iz datoteke
+            File xmlFile = new File("student.xml");
+            Student student = (Student) unmarshaller.unmarshal(xmlFile);
+            
+            // Ispis učitanih podataka
+            System.out.println("Podaci o pročitanom studentu:");
+            System.out.println("ID: " + student.getId());
+            System.out.println("Ime: " + student.getIme());
+            System.out.println("Prezime: " + student.getPrezime());
+            System.out.println("Prosjek: " + student.getProsjek());
+            
+        } catch (JAXBException e) {
+            System.err.println("Pogreška kod XML deserijalizacije: " 
+                             + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                </div>
+
+                <div class="note">
+                    <div class="note-title">🎯 Praktična primjena</div>
+                    XML se često koristi za:
+                    <ul style="margin-top: 0.5rem;">
+                        <li>Konfiguracijske datoteke aplikacija</li>
+                        <li>Razmjenu podataka između različitih sistema</li>
+                        <li>Web servise (SOAP)</li>
+                        <li>Export/import podataka</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 21: JSON - Uvod -->
+        <div class="slide">
+            <h2 class="slide-title">Zapisivanje i čitanje objekata u JSON formatu</h2>
+            <div class="slide-content">
+                <p style="margin-bottom: 1.5rem;"><strong>JSON (JavaScript Object Notation)</strong> je lagan, čitljiv
+                    format za razmjenu podataka koji je postao standard u modernom razvoju softvera.</p>
+
+                <h3 style="color: var(--accent);">🚀 Prednosti JSON-a:</h3>
+                <ul>
+                    <li>Jednostavniji i komaktniji od XML-a</li>
+                    <li>Native format za JavaScript i web aplikacije</li>
+                    <li>Brža obrada i manja veličina datoteka</li>
+                    <li>Dominantan format u REST API-jima</li>
+                    <li>Odličan za moderne microservice arhitekture</li>
+                </ul>
+
+                <h3 style="color: var(--accent); margin-top: 2rem;">🔧 Java JSON biblioteke:</h3>
+                <div class="two-column">
+                    <div>
+                        <h4 style="color: var(--text-primary);">Jakarta JSON Binding (JSON-B)</h4>
+                        <ul>
+                            <li>Službeni Java EE/Jakarta EE standard</li>
+                            <li>Sličan JAXB-u, ali za JSON</li>
+                            <li>Jednostavan za korištenje</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--text-primary);">Jackson</h4>
+                        <ul>
+                            <li>Najpopularnija JSON biblioteka</li>
+                            <li>Visoke performanse</li>
+                            <li>Bogat feature set</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="note" style="margin-top: 2rem;">
+                    <div class="note-title">💡 Zanimljivost za Z generaciju</div>
+                    Svaki put kad koristite Instagram, TikTok, Spotify ili bilo koju drugu mobilnu app - šaljete i
+                    primate podatke u JSON formatu! 📱
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 22: JSON-B Setup -->
+        <div class="slide">
+            <h2 class="slide-title">JSON-B Serijalizacija - Setup</h2>
+            <div class="slide-content">
+                <h3 style="color: var(--accent);">1️⃣ Dodavanje dependency-ja (Maven):</h3>
+                <div class="code-block">
+                        <pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;jakarta.json.bind&lt;/groupId&gt;
+    &lt;artifactId&gt;jakarta.json.bind-api&lt;/artifactId&gt;
+    &lt;version&gt;3.0.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.eclipse&lt;/groupId&gt;
+    &lt;artifactId&gt;yasson&lt;/artifactId&gt;
+    &lt;version&gt;3.0.3&lt;/version&gt;
+    &lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+                </div>
+
+                <h3 style="color: var(--accent); margin-top: 1.5rem;">2️⃣ Kreiranje klase (nije potrebno označavanje
+                    anotacijama!):</h3>
+                <div class="code-block">
+                        <pre><code class="language-java">public class Korisnik {
+    private int id;
+    private String korisnickoIme;
+    private String email;
+    private boolean aktivan;
+    
+    // Prazan konstruktor
+    public Korisnik() {}
+    
+    public Korisnik(int id, String korisnickoIme, 
+                    String email, boolean aktivan) {
+        this.id = id;
+        this.korisnickoIme = korisnickoIme;
+        this.email = email;
+        this.aktivan = aktivan;
+    }
+    
+    // Getteri i setteri za sve varijable
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    
+    public String getKorisnickoIme() { return korisnickoIme; }
+    public void setKorisnickoIme(String korisnickoIme) { 
+        this.korisnickoIme = korisnickoIme; 
+    }
+    
+    // ... ostali getteri i setteri
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 23: JSON Zapisivanje -->
+        <div class="slide">
+            <h2 class="slide-title">Zapisivanje objekata u JSON datoteku</h2>
+            <div class="slide-content">
+                <div class="code-block">
+                        <pre><code class="language-java">import jakarta.json.bind.*;
+import java.io.*;
+import java.util.*;
+
+public class JSONSerijalizacija {
+    public static void main(String[] args) {
+        try {
+            // Kreiranje Jsonb instance
+            Jsonb jsonb = JsonbBuilder.create();
+            
+            // Kreiranje jednog korisnika
+            Korisnik korisnik = new Korisnik(
+                1, 
+                "ana.horvat", 
+                "<a class="__cf_email__" data-cfemail="89e8e7e8c9ecf1e8e4f9e5eca7eae6e4"
+                    href="/cdn-cgi/l/email-protection">[email&#160;protected]</a>",
+                true
+            );
+            
+            // Zapisivanje objekta u JSON string
+            String json = jsonb.toJson(korisnik);
+            System.out.println("JSON reprezentacija:\n" + json);
+            
+            // Zapisivanje u datoteku
+            try (FileWriter writer = new FileWriter("korisnik.json")) {
+                writer.write(json);
+            }
+            
+            // Možemo raditi i s listama objekata!
+            List&lt;Korisnik&gt; korisnici = Arrays.asList(
+                new Korisnik(1, "ana.horvat", "<a class="__cf_email__" data-cfemail="0d6c636c4d68756c607d6168236e6260"
+                                                  href="/cdn-cgi/l/email-protection">[email&#160;protected]</a>", true),
+                new Korisnik(2, "marko.markic", "<a class="__cf_email__"
+                                                    data-cfemail="afc2ceddc4c0efcad7cec2dfc3ca81ccc0c2"
+                                                    href="/cdn-cgi/l/email-protection">[email&#160;protected]</a>", true),
+                new Korisnik(3, "ivana.ivic", "<a class="__cf_email__"
+                                                  data-cfemail="d9b0afb8b7b899bca1b8b4a9b5bcf7bab6b4"
+                                                  href="/cdn-cgi/l/email-protection">[email&#160;protected]</a>", false)
+            );
+            
+            String jsonLista = jsonb.toJson(korisnici);
+            try (FileWriter writer = new FileWriter("korisnici.json")) {
+                writer.write(jsonLista);
+            }
+            
+            System.out.println("\n✅ Podaci uspješno zapisani u JSON!");
+            
+        } catch (Exception e) {
+            System.err.println("Pogreška: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                </div>
+
+                <h3 style="color: var(--accent); margin-top: 1.5rem;">📄 Rezultat - korisnik.json:</h3>
+                <div class="code-block">
+                        <pre><code class="language-json">{
+  "id": 1,
+  "korisnickoIme": "ana.horvat",
+  "email": "<a class="__cf_email__" data-cfemail="accdc2cdecc9d4cdc1dcc0c982cfc3c1" href="/cdn-cgi/l/email-protection">[email&#160;protected]</a>",
+  "aktivan": true
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 24: JSON Čitanje -->
+        <div class="slide">
+            <h2 class="slide-title">Čitanje objekata iz JSON datoteke</h2>
+            <div class="slide-content">
+                <div class="code-block">
+                        <pre><code class="language-java">import jakarta.json.bind.*;
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+
+public class JSONDeserijalizacija {
+    public static void main(String[] args) {
+        try {
+            // Kreiranje Jsonb instance
+            Jsonb jsonb = JsonbBuilder.create();
+            
+            // Čitanje JSON-a iz datoteke
+            String json = Files.readString(Paths.get("korisnik.json"));
+            
+            // Deserijalizacija u objekt
+            Korisnik korisnik = jsonb.fromJson(json, Korisnik.class);
+            
+            // Ispis podataka
+            System.out.println("Pročitani podaci o korisniku:");
+            System.out.println("ID: " + korisnik.getId());
+            System.out.println("Korisničko ime: " + korisnik.getKorisnickoIme());
+            System.out.println("Email: " + korisnik.getEmail());
+            System.out.println("Aktivan: " + korisnik.isAktivan());
+            
+            // Čitanje liste objekata
+            String jsonLista = Files.readString(Paths.get("korisnici.json"));
+            
+            // Deserijalizacija liste - koristimo Type reference
+            List&lt;Korisnik&gt; korisnici = jsonb.fromJson(
+                jsonLista, 
+                new ArrayList&lt;Korisnik&gt;(){}.getClass().getGenericSuperclass()
+            );
+            
+            System.out.println("\nLista korisnika:");
+            for (Korisnik k : korisnici) {
+                System.out.printf("- %s (%s) - %s%n", 
+                    k.getKorisnickoIme(), 
+                    k.getEmail(),
+                    k.isAktivan() ? "Aktivan" : "Neaktivan"
+                );
+            }
+            
+        } catch (Exception e) {
+            System.err.println("Pogreška: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 25: JSON dodatne mogućnosti -->
+        <div class="slide">
+            <h2 class="slide-title">JSON-B - Napredne mogućnosti</h2>
+            <div class="slide-content">
+                <h3 style="color: var(--accent);">🎨 Prilagodba formatiranja:</h3>
+                <div class="code-block">
+                        <pre><code class="language-java">import jakarta.json.bind.*;
+
+// Konfiguracija za lijep ispis
+JsonbConfig config = new JsonbConfig()
+    .withFormatting(true)  // Formatiran ispis s novim redovima
+    .withNullValues(true)  // Uključi null vrijednosti
+    .withEncoding("UTF-8"); // Postavi encoding
+
+Jsonb jsonb = JsonbBuilder.create(config);</code></pre>
+                </div>
+
+                <h3 style="color: var(--accent); margin-top: 1.5rem;">🏷️ Prilagodba imena polja s anotacijama:</h3>
+                <div class="code-block">
+                        <pre><code class="language-java">import jakarta.json.bind.annotation.*;
+import java.time.LocalDate;
+
+public class Proizvod {
+    @JsonbProperty("product_id")
+    private int id;
+    
+    @JsonbProperty("product_name")
+    private String naziv;
+    
+    @JsonbDateFormat("dd.MM.yyyy")
+    private LocalDate datumKreiranja;
+    
+    @JsonbTransient  // Ovo polje se neće serijalizirati
+    private String interniKod;
+    
+    // Konstruktori, getteri, setteri...
+}</code></pre>
+                </div>
+
+                <div class="note" style="margin-top: 1.5rem;">
+                    <div class="note-title">🔥 Real-world primjer</div>
+                    Kad razvijate REST API ili radite s bazom podataka preko JPA, JSON-B automatski radi
+                    serijalizaciju/deserijalizaciju između HTTP zahtjeva i Java objekata!
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 26: Usporedba formata -->
+        <div class="slide">
+            <h2 class="slide-title">Usporedba: Binary vs XML vs JSON</h2>
+            <div class="slide-content">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Karakteristika</th>
+                            <th>Binary (Serializable)</th>
+                            <th>XML</th>
+                            <th>JSON</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><strong>Čitljivost</strong></td>
+                            <td>❌ Nije čitljiv ljudima</td>
+                            <td>✅ Čitljiv</td>
+                            <td>✅ Vrlo čitljiv</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Veličina datoteke</strong></td>
+                            <td>✅ Najmanja</td>
+                            <td>❌ Najveća</td>
+                            <td>✅ Mala do srednja</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Brzina</strong></td>
+                            <td>✅ Najbrža</td>
+                            <td>❌ Sporija</td>
+                            <td>✅ Brza</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Interoperabilnost</strong></td>
+                            <td>❌ Samo Java</td>
+                            <td>✅ Svi jezici</td>
+                            <td>✅ Svi jezici</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Validacija schema</strong></td>
+                            <td>❌ Nema</td>
+                            <td>✅ XSD</td>
+                            <td>✅ JSON Schema</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Web API</strong></td>
+                            <td>❌ Ne koristi se</td>
+                            <td>⚠️ SOAP (legacy)</td>
+                            <td>✅ REST (standard)</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="color: var(--accent); margin-top: 2rem;">📊 Kada koristiti koji format?</h3>
+                <div class="two-column">
+                    <div class="note">
+                        <div class="note-title">✅ Koristi Binary serijalizaciju</div>
+                        <ul>
+                            <li>Interni Java sustavi</li>
+                            <li>Cache mehanizmi</li>
+                            <li>Performanse su kritične</li>
+                        </ul>
+                    </div>
+                    <div class="note">
+                        <div class="note-title">✅ Koristi XML</div>
+                        <ul>
+                            <li>Konfiguracijske datoteke</li>
+                            <li>Legacy sistemi</li>
+                            <li>Potrebna je validacija schema</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="note" style="margin-top: 1rem;">
+                    <div class="note-title">✅ Koristi JSON (najpopularniji izbor!)</div>
+                    <ul style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
+                        <li>REST API-ji</li>
+                        <li>Web aplikacije</li>
+                        <li>Mobile aplikacije</li>
+                        <li>Microservices</li>
+                        <li>NoSQL baze (MongoDB)</li>
+                        <li>Config datoteke (moderne)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 27: Primjer iz prakse -->
+        <div class="slide">
+            <h2 class="slide-title">Praktični primjer: REST API s JSON-om</h2>
+            <div class="slide-content">
+                <p style="margin-bottom: 1.5rem;">Primjer kako se JSON koristi u stvarnoj web aplikaciji s Spring
+                    Boot-om:</p>
+
+                <div class="code-block">
+                        <pre><code class="language-java">import org.springframework.web.bind.annotation.*;
+import java.util.*;
+
+@RestController
+@RequestMapping("/api/korisnici")
+public class KorisnikController {
+    
+    private List&lt;Korisnik&gt; korisnici = new ArrayList&lt;&gt;();
+    
+    // GET zahtjev - vraća JSON
+    @GetMapping
+    public List&lt;Korisnik&gt; dohvatiSveKorisnike() {
+        return korisnici;  // Automatski se pretvara u JSON!
+    }
+    
+    // GET zahtjev s parametrom - vraća jedan objekt kao JSON
+    @GetMapping("/{id}")
+    public Korisnik dohvatiKorisnika(@PathVariable int id) {
+        return korisnici.stream()
+            .filter(k -> k.getId() == id)
+            .findFirst()
+            .orElse(null);
+    }
+    
+    // POST zahtjev - prima JSON i kreira objekt
+    @PostMapping
+    public Korisnik kreirajKorisnika(@RequestBody Korisnik korisnik) {
+        korisnici.add(korisnik);
+        return korisnik;  // Vraća JSON natrag klijentu
+    }
+    
+    // PUT zahtjev - ažurira postojeći objekt
+    @PutMapping("/{id}")
+    public Korisnik azurirajKorisnika(@PathVariable int id, 
+                                       @RequestBody Korisnik noviPodaci) {
+        Korisnik postojeci = korisnici.stream()
+            .filter(k -> k.getId() == id)
+            .findFirst()
+            .orElse(null);
+            
+        if (postojeci != null) {
+            postojeci.setKorisnickoIme(noviPodaci.getKorisnickoIme());
+            postojeci.setEmail(noviPodaci.getEmail());
+            postojeci.setAktivan(noviPodaci.isAktivan());
+        }
+        return postojeci;
+    }
+}</code></pre>
+                </div>
+
+                <div class="note">
+                    <div class="note-title">💡 Što se događa u pozadini?</div>
+                    Spring Boot automatski koristi Jackson biblioteku za konverziju između JSON-a i Java objekata.
+                    Programer ne mora ručno pozivati JsonbBuilder!
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 28: Best practices -->
+        <div class="slide">
+            <h2 class="slide-title">Best Practices za rad s datotekama</h2>
+            <div class="slide-content">
+                <div class="content-grid">
+                    <div class="note">
+                        <div class="note-title">1️⃣ Uvijek koristi try-with-resources</div>
+                        Automatski zatvara resurse i sprječava memory leakove
+                    </div>
+
+                    <div class="note">
+                        <div class="note-title">2️⃣ Koristi NIO.2 API (java.nio.file)</div>
+                        Moderniji, brži i fleksibilniji od starog java.io
+                    </div>
+
+                    <div class="note">
+                        <div class="note-title">3️⃣ Koristi buffering za velike datoteke</div>
+                        BufferedReader/Writer drastično poboljšavaju performanse
+                    </div>
+                    <div class="note">
+                        <div class="note-title">4️⃣ Hvtaj specifične iznimke</div>
+                        IOException, FileNotFoundException, itd.
+                    </div>
+
+                    <div class="note">
+                        <div class="note-title">5️⃣ JSON > XML za nove projekte</div>
+                        Jednostavniji, brži, bolji za web i mobile
+                    </div>
+
+                    <div class="note">
+                        <div class="note-title">6️⃣ Postavi encoding eksplicitno</div>
+                        Koristi UTF-8 za compatibility
+                    </div>
+
+                    <div class="note">
+                        <div class="note-title">7️⃣ Validiraj putanje datoteka</div>
+                        Provjeri da datoteka postoji prije čitanja
+                    </div>
+
+                    <div class="note">
+                        <div class="note-title">8️⃣ Ne čitaj cijelu veliku datoteku u memoriju</div>
+                        Koristi streamove za procesiranje liniju po liniju
+                    </div>
+
+                    <div class="note">
+                        <div class="note-title">9️⃣ Koristi Files utility metode</div>
+                        Files.lines(), Files.readString(), Files.writeString()
+                    </div>
+
+                    <div class="note">
+                        <div class="note-title">🔟 Dokumentiraj format datoteka</div>
+                        Jasno napiši što tvoj program očekuje
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 29: Vježba -->
+        <div class="slide">
+            <h2 class="slide-title">💪 Praktična vježba</h2>
+            <div class="slide-content">
+                <h3 style="color: var(--accent);">Zadatak: Sustav za upravljanje studentima</h3>
+
+                <p style="margin: 1.5rem 0;">Kreirajte Java aplikaciju koja:</p>
+
+                <ol style="font-size: 1.1rem; line-height: 2;">
+                    <li>Definira klasu <code>Student</code> s poljima: id, ime, prezime, JMBAG, prosjek, godina studija
+                    </li>
+                    <li>Omogućava kreiranje liste studenata</li>
+                    <li>Sprema listu studenata u <strong>JSON datoteku</strong></li>
+                    <li>Čita studente iz JSON datoteke</li>
+                    <li>Filtrira studente s prosjekom iznad 4.0</li>
+                    <li>Sortira studente po prezimenu</li>
+                    <li>Ispisuje rezultate na ekran</li>
+                </ol>
+
+                <div class="note" style="margin-top: 2rem;">
+                    <div class="note-title">🎯 Bonus zadaci</div>
+                    <ul>
+                        <li>Dodaj mogućnost pretrage studenta po JMBAG-u</li>
+                        <li>Implementiraj export u XML format također</li>
+                        <li>Kreiraj jednostavan REST API endpoint koji vraća studente</li>
+                        <li>Dodaj validaciju podataka (npr. prosjek mora biti 1.0-5.0)</li>
+                    </ul>
+                </div>
+
+                <div class="note" style="margin-top: 1rem; background: var(--accent); color: white;">
+                    <div class="note-title" style="color: white;">💡 Savjet</div>
+                    Koristite sve naučene koncepte: try-with-resources, streamove, lambda izraze, JSON-B!
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 30: Pitanja -->
+        <div class="slide title-slide">
+            <h1 class="slide-title" style="font-size: 3rem;">Pitanja?</h1>
+            <div class="subtitle" style="margin-top: 2rem;">Hvala na pažnji! 🎓</div>
+            <div class="subtitle">Tehničko veleučilište u Zagrebu</div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="changeSlide(-1)">
+            ← Prethodno
+        </button>
+        <div style="display: flex; gap: 0.5rem;">
+            <button class="nav-button" onclick="goToSlide(0)">
+                🏠 Početak
+            </button>
+            <button class="nav-button" onclick="toggleFullscreen()">
+                🖥️ Fullscreen
+            </button>
+        </div>
+        <button class="nav-button" id="nextBtn" onclick="changeSlide(1)">
+            Sljedeće →
+        </button>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-xml-doc.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    document.getElementById('totalSlides').textContent = totalSlides;
+
+    function showSlide(n) {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (n + totalSlides) % totalSlides;
+        slides[currentSlide].classList.add('active');
+
+        document.getElementById('currentSlide').textContent = currentSlide + 1;
+
+        // Update progress bar
+        const progress = ((currentSlide + 1) / totalSlides) * 100;
+        document.getElementById('progressFill').style.width = progress + '%';
+
+        // Update navigation buttons
+        document.getElementById('prevBtn').disabled = currentSlide === 0;
+        document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+
+        // Re-highlight code
+        Prism.highlightAll();
+    }
+
+    function changeSlide(direction) {
+        showSlide(currentSlide + direction);
+    }
+
+    function goToSlide(n) {
+        showSlide(n);
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') changeSlide(-1);
+        if (e.key === 'ArrowRight') changeSlide(1);
+        if (e.key === 'Home') goToSlide(0);
+        if (e.key === 'End') goToSlide(totalSlides - 1);
+    });
+
+    // Theme toggle
+    function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+
+        const icon = document.getElementById('themeIcon');
+        icon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+
+        localStorage.setItem('theme', newTheme);
+    }
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    const themeIcon = document.getElementById('themeIcon');
+    if (themeIcon) {
+        themeIcon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    }
+
+    // Fullscreen toggle
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.error('Greška pri fullscreen:', err);
+            });
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    }
+
+    // Initialize
+    showSlide(0);
+</script>
+</body>
+</html>

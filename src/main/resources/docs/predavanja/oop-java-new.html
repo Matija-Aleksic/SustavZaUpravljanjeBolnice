@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Objektno orijentirano programiranje u Javi</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+          rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00d4ff;
+            --secondary-color: #ff6b6b;
+            --accent-color: #4ecdc4;
+            --yellow: #ffd93d;
+            --purple: #a855f7;
+            --bg-dark: #0a0e27;
+            --bg-card: #1a1f3a;
+        }
+
+        .reveal {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a1f3a 100%);
+        }
+
+        .reveal h1, .reveal h2, .reveal h3 {
+            color: var(--primary-color);
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            font-weight: 700;
+            text-transform: none;
+        }
+
+        .reveal h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.3em;
+        }
+
+        .reveal h2 {
+            font-size: 1.8em;
+            color: var(--accent-color);
+            margin-bottom: 0.5em;
+        }
+
+        .reveal h3 {
+            font-size: 1.2em;
+            color: var(--secondary-color);
+            margin-bottom: 0.3em;
+        }
+
+        .reveal section {
+            text-align: left;
+        }
+
+        .reveal .title-slide {
+            text-align: center;
+        }
+
+        .reveal ul, .reveal ol {
+            margin-left: 0;
+            line-height: 1.5;
+        }
+
+        .reveal li {
+            margin-bottom: 0.5em;
+            font-size: 0.85em;
+        }
+
+        .reveal p {
+            margin-bottom: 0.5em;
+            font-size: 0.9em;
+        }
+
+        .reveal code {
+            background: var(--bg-card);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: var(--primary-color);
+            font-family: 'Courier New', monospace;
+        }
+
+        .reveal pre {
+            margin: 10px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            border: 2px solid var(--primary-color);
+        }
+
+        .reveal pre code {
+            padding: 15px;
+            border-radius: 12px;
+            max-height: 450px;
+            font-size: 0.65em;
+            line-height: 1.5;
+        }
+
+        .card {
+            background: var(--bg-card);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 10px 0;
+            border-left: 5px solid var(--primary-color);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            margin-bottom: 0.3em;
+            color: var(--primary-color);
+            font-size: 1.1em;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(78, 205, 196, 0.1));
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid var(--accent-color);
+            margin: 10px 0;
+        }
+
+        .emoji {
+            font-size: 1.3em;
+            margin-right: 8px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 10px 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--secondary-color);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .badge-yellow {
+            background: var(--yellow);
+            color: #000;
+        }
+
+        .badge-purple {
+            background: var(--purple);
+        }
+
+        .important {
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 107, 107, 0.2));
+            padding: 10px;
+            border-radius: 10px;
+            border-left: 5px solid var(--secondary-color);
+            margin: 10px 0;
+            font-size: 0.85em;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.1), rgba(78, 205, 196, 0.2));
+            padding: 10px;
+            border-radius: 10px;
+            border-left: 5px solid var(--accent-color);
+            margin: 10px 0;
+            font-size: 0.85em;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255, 211, 61, 0.1), rgba(255, 211, 61, 0.2));
+            padding: 10px;
+            border-radius: 10px;
+            border-left: 5px solid var(--yellow);
+            margin: 10px 0;
+            font-size: 0.85em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.8em;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        th {
+            background: var(--bg-card);
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            color: var(--accent-color);
+            margin-top: 15px;
+        }
+
+        .grid-2 .card {
+            padding: 12px;
+        }
+
+        .grid-2 h3 {
+            font-size: 1em;
+            margin-bottom: 0.3em;
+        }
+
+        .grid-2 pre code {
+            font-size: 0.58em;
+            padding: 10px;
+        }
+
+        .diagram-placeholder {
+            background: var(--bg-card);
+            border: 2px dashed var(--primary-color);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            color: var(--accent-color);
+            font-style: italic;
+            margin: 15px 0;
+        }
+
+        .concept-tag {
+            display: inline-block;
+            background: rgba(168, 85, 247, 0.2);
+            color: var(--purple);
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin: 3px;
+            border: 1px solid var(--purple);
+        }
+
+        .keyword {
+            color: var(--yellow);
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+
+        <!-- Slide 1: Naslovna -->
+        <section class="title-slide">
+            <h1>🎯 Objektno orijentirano programiranje u Javi</h1>
+            <div class="subtitle">OOP Koncepti i Najbolje Prakse</div>
+            <p style="margin-top: 50px; font-size: 1.2em;">
+                <span class="badge">Java 25</span>
+                <span class="badge badge-yellow">OOP</span>
+                <span class="badge badge-purple">Design Patterns</span>
+            </p>
+        </section>
+
+        <!-- Slide 2: Sadržaj -->
+        <section>
+            <h2>📋 Sadržaj prezentacije</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Osnovni koncepti</h3>
+                    <ul style="font-size: 0.85em;">
+                        <li>Nasljeđivanje među klasama</li>
+                        <li>Nadklase i podklase</li>
+                        <li>Modifikator <code>protected</code></li>
+                        <li>Ključna riječ <code>super</code></li>
+                        <li>Konstruktori u podklasama</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Napredne značajke</h3>
+                    <ul style="font-size: 0.85em;">
+                        <li>Polimorfizam</li>
+                        <li>Apstraktne klase</li>
+                        <li>Sučelja (Interfaces)</li>
+                        <li>Lambda izrazi (Java 8+)</li>
+                        <li>Records i Sealed klase</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: Nasljeđivanje -->
+        <section>
+            <h2>🧬 Nasljeđivanje među klasama</h2>
+            <div class="info-box">
+                <p><strong>Nasljeđivanje</strong> omogućava kreiranje novih klasa koje koriste članove već postojećih
+                    klasa</p>
+            </div>
+            <div class="card">
+                <h3>Ključni pojmovi:</h3>
+                <ul style="line-height: 1.6;">
+                    <li><span class="concept-tag">Nadklasa (superclass)</span> - postojeća klasa</li>
+                    <li><span class="concept-tag">Podklasa (subclass)</span> - nova klasa koja nasljeđuje</li>
+                    <li>Podklasa <span class="important">dodaje nove značajke</span> i <span class="important">modificira ponašanje</span>
+                        nadklase
+                    </li>
+                    <li>Sve klase u Javi nasljeđuju <code>java.lang.Object</code></li>
+                </ul>
+            </div>
+            <div class="tip-box">
+                <strong>⚠️ Važno:</strong> Java podržava samo <span class="important">jednostruko nasljeđivanje</span> -
+                svaka klasa može nasljeđivati samo jednu nadklasu!
+            </div>
+        </section>
+
+        <!-- Slide 4: Primjer nasljeđivanja -->
+        <section>
+            <h2>Primjer nasljeđivanja</h2>
+            <pre><code class="language-java">// Nadklasa - općenita klasa
+public class BankovniKredit {
+    protected double iznos;
+    protected double kamatnaStopa;
+    protected int rokOtplate;
+    
+    public double izracunajMjesecnuRatu() {
+        // Osnovna formula za izračun rate
+        return iznos * (1 + kamatnaStopa) / rokOtplate;
+    }
+}
+
+// Podklasa - specifičnija implementacija
+public class KreditZaAuto extends BankovniKredit {
+    private String markaAutomobila;
+    private int godinaProizvodnje;
+    
+    @Override
+    public double izracunajMjesecnuRatu() {
+        // Poseban izračun za auto kredite
+        double osnovnaRata = super.izracunajMjesecnuRatu();
+        return osnovnaRata * 0.95; // 5% popusta
+    }
+}</code></pre>
+        </section>
+
+        <!-- Slide 5: Primjeri nadklasa i podklasa -->
+        <section>
+            <h2>👥 Nadklase i podklase - Primjeri</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Nadklasa</th>
+                    <th>Podklase</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><strong>Student</strong></td>
+                    <td>Apsolvent, DodiplomskiStudent, PostdiplomskiStudent</td>
+                </tr>
+                <tr>
+                    <td><strong>Oblik</strong></td>
+                    <td>Krug, Trokut, Pravokutnik, Kugla, Kocka</td>
+                </tr>
+                <tr>
+                    <td><strong>BankovniKredit</strong></td>
+                    <td>KreditZaAuto, HipotekarniKredit, GotovinsKredit</td>
+                </tr>
+                <tr>
+                    <td><strong>Zaposlenik</strong></td>
+                    <td>NastavnickoOsoblje, PomocnoOsoblje, Administrator</td>
+                </tr>
+                <tr>
+                    <td><strong>BankovniRacun</strong></td>
+                    <td>TekuciRacun, Ziroracun, StedniRacun</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="info-box">
+                <strong>💡 Pravilo:</strong> Podklasa <span class="important">"JE"</span> vrsta nadklase (npr. Student
+                <strong>JE</strong> ClanZajednice)
+            </div>
+        </section>
+
+        <!-- Slide 6: Hijerarhija nasljeđivanja -->
+        <section>
+            <h2>🌳 Hijerarhija nasljeđivanja</h2>
+            <div class="card">
+                <p>Odnosi između klasa prikazuju se <span class="important">UML Class dijagramima</span></p>
+            </div>
+            <div class="diagram-placeholder">
+                📊 UML Dijagram: ClanZajednice → Student → Apsolvent<br>
+                📊 ClanZajednice → Zaposlenik → NastavnickoOsoblje → Profesor
+            </div>
+            <div class="grid-2">
+                <div class="info-box">
+                    <h3>"JE" veza (is-a)</h3>
+                    <p>Student <strong>JE</strong> ClanZajednice<br>
+                        Profesor <strong>JE</strong> Zaposlenik</p>
+                </div>
+                <div class="info-box">
+                    <h3>"IMA" veza (has-a)</h3>
+                    <p>Knjiga <strong>IMA</strong> Autora<br>
+                        Zaposlenik <strong>IMA</strong> DatumRodjenja</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Modifikatori pristupa -->
+        <section>
+            <h2>🔐 Modifikatori pristupa</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Modifikator</th>
+                    <th>Pristup</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><span class="keyword">public</span></td>
+                    <td>Dostupno <strong>svugdje</strong></td>
+                </tr>
+                <tr>
+                    <td><span class="keyword">protected</span></td>
+                    <td>Dostupno u <strong>podklasama</strong> i <strong>istom paketu</strong></td>
+                </tr>
+                <tr>
+                    <td><span class="keyword">private</span></td>
+                    <td>Dostupno samo <strong>unutar klase</strong></td>
+                </tr>
+                <tr>
+                    <td>(bez modifikatora)</td>
+                    <td><strong>Package-private</strong> - samo isti paket</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="tip-box">
+                <strong>💡 Best practice:</strong> Koristite <code>protected</code> za članove koje podklase trebaju moći
+                mijenjati!
+            </div>
+        </section>
+
+        <!-- Slide 8: Super ključna riječ -->
+        <section>
+            <h2>⬆️ Ključna riječ <code>super</code></h2>
+            <div class="card">
+                <h3>Korištenje:</h3>
+                <ul>
+                    <li><code>super</code> - referenca na <span class="important">nadklasu</span></li>
+                    <li><code>this</code> - referenca na <span class="important">trenutnu klasu</span></li>
+                </ul>
+            </div>
+            <pre><code class="language-java">public class DvodimenzionalniOblik {
+    protected double visina;
+    protected double sirina;
+    
+    public DvodimenzionalniOblik(double v, double s) {
+        this.visina = v;
+        this.sirina = s;
+    }
+}
+
+public class Pravokutnik extends DvodimenzionalniOblik {
+    
+    public Pravokutnik(double v, double s) {
+        // Poziv konstruktora nadklase
+        super(v, s);
+    }
+    
+    public double getVisina() {
+        // Pristup varijabli nadklase
+        return super.visina;
+    }
+}</code></pre>
+        </section>
+
+        <!-- Slide 9: Konstruktori u podklasama -->
+        <section>
+            <h2>🏗️ Konstruktori u podklasamas</h2>
+            <div class="warning-box">
+                <strong>⚠️ Važno pravilo:</strong> Prva naredba svakog konstruktora podklase je <code>super()</code>
+            </div>
+            <pre><code class="language-java">public class Zaposlenik {
+    private String ime;
+    
+    public Zaposlenik(String ime) {
+        this.ime = ime;
+    }
+}
+
+public class Profesor extends Zaposlenik {
+    private String katedra;
+    
+    public Profesor(String ime, String katedra) {
+        // MORA biti prva naredba!
+        super(ime);
+        this.katedra = katedra;
+    }
+}</code></pre>
+            <div class="info-box">
+                <p>Konstruktori se pozivaju <span class="important">ulančano</span> - od nadklase prema podklasi</p>
+            </div>
+        </section>
+
+        <!-- Slide 10: Nadjačavanje metoda -->
+        <section>
+            <h2>🔄 Nadjačavanje metoda (@Override)</h2>
+            <pre><code class="language-java">public class DvodimenzionalniOblik {
+    private double visina;
+    private double sirina;
+    
+    public double izracunajPovrsinu() {
+        return visina * sirina;
+    }
+}
+
+public class Krug extends DvodimenzionalniOblik {
+    private double polumjer;
+    
+    // Anotacija označava nadjačavanje
+    @Override
+    public double izracunajPovrsinu() {
+        return Math.PI * Math.pow(polumjer, 2);
+    }
+}</code></pre>
+            <div class="tip-box">
+                <strong>✅ Prednosti @Override:</strong> Kompajler provjerava da li pravilno nadjačavate metodu i javlja
+                grešku ako nije!
+            </div>
+        </section>
+
+        <!-- Slide 11: Klasa Object -->
+        <section>
+            <h2>🔷 Klasa <code>java.lang.Object</code></h2>
+            <div class="info-box">
+                <p>Sve klase u Javi nasljeđuju <code>Object</code> - "majka svih klasa"</p>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>Metoda</th>
+                    <th>Opis</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><code>equals()</code></td>
+                    <td>Usporedba objekata (preporučeno nadjačati!)</td>
+                </tr>
+                <tr>
+                    <td><code>hashCode()</code></td>
+                    <td>Hash vrijednost objekta (za kolekcije)</td>
+                </tr>
+                <tr>
+                    <td><code>toString()</code></td>
+                    <td>String reprezentacija objekta</td>
+                </tr>
+                <tr>
+                    <td><code>clone()</code></td>
+                    <td>Kopiranje objekta</td>
+                </tr>
+                <tr>
+                    <td><code>wait(), notify()</code></td>
+                    <td>Rad s nitima i sinkronizacija</td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Slide 12: Primjer equals i hashCode -->
+        <section>
+            <h2>Nadjačavanje equals() i hashCode()</h2>
+            <pre><code class="language-java">public class Student {
+    private String oib;
+    private String ime;
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) 
+            return false;
+        Student student = (Student) obj;
+        return Objects.equals(oib, student.oib);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(oib);
+    }
+    
+    @Override
+    public String toString() {
+        return "Student{oib='" + oib + "', ime='" + ime + "'}";
+    }
+}</code></pre>
+            <div class="tip-box">
+                <strong>💡 Pravilo:</strong> Ako nadjačate <code>equals()</code>, morate nadjačati i
+                <code>hashCode()</code>!
+            </div>
+        </section>
+
+        <!-- Slide 13: Polimorfizam -->
+        <section>
+            <h2>🎭 Polimorfizam</h2>
+            <div class="highlight-box">
+                <p><strong>Polimorfizam</strong> = "Mnogo oblika" - ista metoda, različito ponašanje</p>
+            </div>
+            <div class="card">
+                <h3>Prednosti polimorfizma:</h3>
+                <ul>
+                    <li>✅ Općenito programiranje umjesto specifičnog</li>
+                    <li>✅ Lakše proširivanje sustava</li>
+                    <li>✅ Tipovi se određuju tijekom izvođenja</li>
+                    <li>✅ Fleksibilniji kod</li>
+                </ul>
+            </div>
+            <pre><code class="language-java">// Polje različitih oblika
+Oblik[] oblici = new Oblik[3];
+oblici[0] = new Krug(5.0);
+oblici[1] = new Pravokutnik(4.0, 6.0);
+oblici[2] = new Trokut(3.0, 4.0, 5.0);
+
+// Polimorfizam - različite implementacije
+for (Oblik oblik : oblici) {
+    System.out.println("Površina: " + oblik.izracunajPovrsinu());
+}</code></pre>
+        </section>
+
+        <!-- Slide 14: Casting -->
+        <section>
+            <h2>🔄 Casting objekata</h2>
+            <pre><code class="language-java">// Upcasting (implicitno)
+Oblik oblik = new Krug(5.0);  // Automatski
+
+// Downcasting (eksplicitno - opasno!)
+Krug krug = (Krug) oblik;
+krug.setPolumjer(10.0);
+
+// Sigurna provjera prije castinga
+if (oblik instanceof Krug) {
+    Krug k = (Krug) oblik;
+    System.out.println("Polumjer: " + k.getPolumjer());
+}
+
+// Java 16+ - Pattern matching
+if (oblik instanceof Krug k) {
+    // Varijabla 'k' je automatski dostupna!
+    System.out.println("Polumjer: " + k.getPolumjer());
+}</code></pre>
+            <div class="tip-box">
+                <strong>✨ Java 16+:</strong> Pattern matching za <code>instanceof</code> - kraći i čitljiviji kod!
+            </div>
+        </section>
+
+        <!-- Slide 15: Apstraktne klase -->
+        <section>
+            <h2>🎨 Apstraktne klase</h2>
+            <div class="warning-box">
+                <strong>⚠️ Važno:</strong> Iz apstraktnih klasa <span
+                    class="important">nije moguće kreirati objekte!</span>
+            </div>
+            <pre><code class="language-java">public abstract class Oblik {
+    protected String naziv;
+    
+    // Obična metoda s implementacijom
+    public String getNaziv() {
+        return naziv;
+    }
+    
+    // Apstraktna metoda - BEZ implementacije
+    public abstract double izracunajPovrsinu();
+    public abstract double izracunajOpseg();
+}
+
+public class Krug extends Oblik {
+    private double polumjer;
+    
+    // MORA implementirati sve apstraktne metode
+    @Override
+    public double izracunajPovrsinu() {
+        return Math.PI * polumjer * polumjer;
+    }
+    
+    @Override
+    public double izracunajOpseg() {
+        return 2 * Math.PI * polumjer;
+    }
+}</code></pre>
+        </section>
+
+        <!-- Slide 16: Pravila apstraktnih klasa -->
+        <section>
+            <h2>Apstraktne klase - Pravila</h2>
+            <div class="card">
+                <h3>✅ Ključna pravila:</h3>
+                <ul style="line-height: 1.7;">
+                    <li>Označava se ključnom riječju <code class="keyword">abstract</code></li>
+                    <li>Može sadržavati i obične i apstraktne metode</li>
+                    <li>Ako ima barem jednu apstraktnu metodu → klasa MORA biti apstraktna</li>
+                    <li>Podklase MORAJU implementirati sve apstraktne metode</li>
+                    <li>Ako podklasa ne implementira sve → i ona mora biti apstraktna</li>
+                    <li>Mogu imati vlastiti konstruktor</li>
+                </ul>
+            </div>
+            <div class="info-box">
+                <strong>💡 Kada koristiti:</strong> Kada želite definirati zajedničko ponašanje, ali implementacija ovisi
+                o konkretnom tipu objekta
+            </div>
+        </section>
+
+        <!-- Slide 17: Final ključna riječ -->
+        <section>
+            <h2>🔒 Ključna riječ <code>final</code></h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Final klase</h3>
+                    <pre><code class="language-java">// Sprječava nasljeđivanje
+public final class String {
+    // ...
+}
+
+// GREŠKA - ne može se naslijediti!
+public class MyString 
+    extends String {
+}</code></pre>
+                </div>
+                <div class="card">
+                    <h3>Final metode</h3>
+                    <pre><code class="language-java">public class Osoba {
+    // Sprječava nadjačavanje
+    public final String getOIB() {
+        return oib;
+    }
+}
+
+// GREŠKA!
+@Override
+public String getOIB() {
+    // ...
+}</code></pre>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Final varijable (konstante)</h3>
+                <pre><code class="language-java">public static final double PI = 3.14159265359;
+public static final String NAZIV_DRZAVE = "Hrvatska";
+private final int MAX_STUDENTS = 100;  // Ne može se mijenjati</code></pre>
+            </div>
+        </section>
+
+        <!-- Slide 18: Sučelja -->
+        <section>
+            <h2>📋 Definiranje sučelja (Interfaces)</h2>
+            <div class="highlight-box">
+                <p><strong>Sučelja</strong> definiraju "ugovor" - koje metode klasa mora implementirati</p>
+            </div>
+            <pre><code class="language-java">// Definiranje sučelja
+public interface Elektricno {
+    // Konstantne vrijednosti (public static final)
+    int MAX_NAPON = 230;
+    
+    // Apstraktne metode (public abstract)
+    void ukljuci();
+    void iskljuci();
+    boolean jeUkljuceno();
+}
+
+// Implementiranje sučelja
+public class ElektricnaGitara extends Gitara 
+    implements Elektricno {
+    
+    private boolean ukljucena;
+    
+    @Override
+    public void ukljuci() {
+        ukljucena = true;
+        System.out.println("Gitara uključena!");
+    }
+    
+    @Override
+    public void iskljuci() {
+        ukljucena = false;
+    }
+    
+    @Override
+    public boolean jeUkljuceno() {
+        return ukljucena;
+    }
+}</code></pre>
+        </section>
+
+        <!-- Slide 19: Višestruka implementacija -->
+        <section>
+            <h2>🔗 Višestruka implementacija sučelja</h2>
+            <div class="tip-box">
+                <strong>✨ Ključna razlika:</strong> Klasa može implementirati <span
+                    class="important">više sučelja</span>, ali naslijediti samo <span
+                    class="important">jednu klasu!</span>
+            </div>
+            <pre><code class="language-java">public interface Plivajuce {
+    void pliva();
+}
+
+public interface Letece {
+    void leti();
+}
+
+public interface Trkace {
+    void trci();
+}
+
+// Implementira VIŠE sučelja!
+public class Patka extends Zivotinja 
+    implements Plivajuce, Letece, Trkace {
+    
+    @Override
+    public void pliva() {
+        System.out.println("Patka pliva!");
+    }
+    
+    @Override
+    public void leti() {
+        System.out.println("Patka leti!");
+    }
+    
+    @Override
+    public void trci() {
+        System.out.println("Patka trči!");
+    }
+}</code></pre>
+        </section>
+
+        <!-- Slide 20: Java 8 - Default metode -->
+        <section>
+            <h2>✨ Java 8: Default metode u sučeljima</h2>
+            <div class="info-box">
+                <strong>Novost u Java 8:</strong> Sučelja mogu imati metode s implementacijom!
+            </div>
+            <pre><code class="language-java">public interface PracenjeVremena {
+    
+    // Default metoda - ima implementaciju
+    default String dohvatiDatumVrijeme() {
+        LocalDateTime now = LocalDateTime.now();
+        return now.format(
+            DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss")
+        );
+    }
+    
+    // Apstraktna metoda
+    void zabiljeziAktivnost(String opis);
+}
+
+public class Zadatak implements PracenjeVremena {
+    
+    // Može koristiti default implementaciju
+    public void ispisi() {
+        System.out.println("Vrijeme: " + dohvatiDatumVrijeme());
+    }
+    
+    // ILI nadjačati default metodu
+    @Override
+    public String dohvatiDatumVrijeme() {
+        return "Custom format...";
+    }
+    
+    @Override
+    public void zabiljeziAktivnost(String opis) {
+        // Implementacija...
+    }
+}</code></pre>
+        </section>
+
+        <!-- Slide 21: Java 8 - Statičke metode -->
+        <section>
+            <h2>Java 8: Statičke metode u sučeljima</h2>
+            <pre><code class="language-java">public interface Provjera {
+    
+    // Statička metoda u sučelju
+    static boolean provjeriPrazanString(String tekst) {
+        return tekst == null || tekst.isEmpty();
+    }
+    
+    static boolean provjeriEmail(String email) {
+        return email != null && email.contains("@");
+    }
+}
+
+// Korištenje - direktno iz sučelja!
+public class Main {
+    public static void main(String[] args) {
+        String ime = "";
+        
+        // Poziv statičke metode iz sučelja
+        if (Provjera.provjeriPrazanString(ime)) {
+            System.out.println("Ime je prazno!");
+        }
+        
+        String email = "student@foi.hr";
+        if (Provjera.provjeriEmail(email)) {
+            System.out.println("Email je valjan!");
+        }
+    }
+}</code></pre>
+        </section>
+
+        <!-- Slide 22: Lambda izrazi -->
+        <section>
+            <h2>🚀 Java 8: Lambda izrazi</h2>
+            <div class="highlight-box">
+                <p><strong>Lambda izrazi</strong> = skraćena sintaksa za anonimne metode</p>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Stari način</h3>
+                    <pre><code class="language-java">// Anonimna klasa
+Comparator<String> comp = 
+  new Comparator<String>() {
+    @Override
+    public int compare(String s1, 
+                       String s2) {
+        return s1.length() - 
+               s2.length();
+    }
+};</code></pre>
+                </div>
+                <div class="card">
+                    <h3>Lambda način</h3>
+                    <pre><code class="language-java">// Lambda izraz
+Comparator<String> comp = 
+    (s1, s2) -> 
+        s1.length() - s2.length();
+
+// Još kraće!
+Comparator<String> comp2 = 
+    Comparator.comparingInt(
+        String::length
+    );</code></pre>
+                </div>
+            </div>
+            <div class="tip-box">
+                <strong>Sintaksa:</strong> <code>(parametri) -> { tijelo }</code>
+            </div>
+        </section>
+
+        <!-- Slide 23: Funkcionalna sučelja -->
+        <section>
+            <h2>Funkcionalna sučelja i Lambda</h2>
+            <pre><code class="language-java">// Funkcionalno sučelje - samo JEDNA apstraktna metoda
+@FunctionalInterface
+public interface Kalkulator {
+    int izracunaj(int a, int b);
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Lambda izrazi za različite operacije
+        Kalkulator zbroj = (a, b) -> a + b;
+        Kalkulator razlika = (a, b) -> a - b;
+        Kalkulator umnozak = (a, b) -> a * b;
+        Kalkulator dijeljenje = (a, b) -> a / b;
+        
+        System.out.println("Zbroj: " + zbroj.izracunaj(10, 5));
+        System.out.println("Razlika: " + razlika.izracunaj(10, 5));
+        System.out.println("Umnožak: " + umnozak.izracunaj(10, 5));
+        
+        // Primjena na liste
+        List<Integer> brojevi = Arrays.asList(1, 2, 3, 4, 5);
+        brojevi.forEach(broj -> System.out.println(broj * 2));
+    }
+}</code></pre>
+        </section>
+
+        <!-- Slide 24: Java 9 - Privatne metode -->
+        <section>
+            <h2>✨ Java 9: Privatne metode u sučeljima</h2>
+            <pre><code class="language-java">public interface Sucelje {
+    
+    // Privatna metoda - može koristiti samo interno
+    private void test() {
+        System.out.println("Privatna metoda");
+    }
+    
+    // Statička metoda
+    public static void test2() {
+        System.out.println("Javna statička metoda");
+    }
+    
+    // Default metoda koja poziva privatnu
+    public default void test3() {
+        test();  // Poziv privatne metode
+        System.out.println("Default metoda");
+    }
+}</code></pre>
+            <div class="info-box">
+                <strong>💡 Svrha:</strong> Privatne metode omogućavaju dijeljenje koda među default metodama bez da ih
+                izlažu van sučelja
+            </div>
+        </section>
+
+        <!-- Slide 25: Java 14 - Records -->
+        <section>
+            <h2>🎯 Java 14: Records</h2>
+            <div class="highlight-box">
+                <p><strong>Records</strong> = kompaktni, nepromjenjivi (immutable) nositelji podataka</p>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Stari način</h3>
+                    <pre><code class="language-java">public class Person {
+    private final String name;
+    private final String address;
+    
+    public Person(String name, 
+                  String address) {
+        this.name = name;
+        this.address = address;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public String getAddress() {
+        return address;
+    }
+    
+    // + equals, hashCode, 
+    // toString...
+}</code></pre>
+                </div>
+                <div class="card">
+                    <h3>Records način</h3>
+                    <pre><code class="language-java">// Automatski generira:
+// - konstruktor
+// - getters
+// - equals()
+// - hashCode()
+// - toString()
+public record Person(
+    String name, 
+    String address
+) {}
+
+// Korištenje
+Person p = new Person(
+    "Ana", 
+    "Zagreb"
+);
+System.out.println(
+    p.name()
+);</code></pre>
+                </div>
+            </div>
+            <div class="tip-box">
+                <strong>✨ Prednosti:</strong> Manje koda, thread-safe, savršeno za DTO objekte!
+            </div>
+        </section>
+
+        <!-- Slide 26: Records - Napredne značajke -->
+        <section>
+            <h2>Records - Dodatne mogućnosti</h2>
+            <pre><code class="language-java">public record Student(
+    String oib, 
+    String ime, 
+    String prezime,
+    double prosjek
+) {
+    // Kompaktni konstruktor - validacija
+    public Student {
+        if (oib == null || oib.length() != 11) {
+            throw new IllegalArgumentException("Neispravan OIB!");
+        }
+        if (prosjek < 1.0 || prosjek > 5.0) {
+            throw new IllegalArgumentException("Prosjek mora biti 1-5!");
+        }
+    }
+    
+    // Dodatne metode
+    public String punoIme() {
+        return ime + " " + prezime;
+    }
+    
+    public boolean jeDobitan() {
+        return prosjek >= 4.0;
+    }
+    
+    // Statičke metode
+    public static Student kreirajDefault() {
+        return new Student("00000000000", "N/A", "N/A", 2.0);
+    }
+}</code></pre>
+        </section>
+
+        <!-- Slide 27: Java 17 - Sealed klase -->
+        <section>
+            <h2>🔐 Java 17: Sealed klase i sučelja</h2>
+            <div class="info-box">
+                <strong>Sealed klase</strong> omogućavaju kontrolu koje klase mogu nasljeđivati/implementirati
+            </div>
+            <pre><code class="language-java">// Sealed sučelje - SAMO Car i Truck mogu implementirati!
+public sealed interface Service 
+    permits Car, Truck {
+    
+    int getMaxServiceIntervalInMonths();
+    
+    default int getMaxDistanceBetweenServicesInKilometers() {
+        return 100000;
+    }
+}
+
+// Sealed apstraktna klasa
+public abstract sealed class Vehicle 
+    permits Car, Truck {
+    
+    protected final String registrationNumber;
+    
+    public Vehicle(String registrationNumber) {
+        this.registrationNumber = registrationNumber;
+    }
+    
+    public String getRegistrationNumber() {
+        return registrationNumber;
+    }
+}</code></pre>
+        </section>
+
+        <!-- Slide 28: Sealed - Implementacija -->
+        <section>
+            <h2>Sealed klase - Implementacija</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Final implementacija</h3>
+                    <pre><code class="language-java">// FINAL - ne može se dalje
+// nasljeđivati
+public final class Truck 
+    extends Vehicle 
+    implements Service {
+    
+    private final int loadCapacity;
+    
+    public Truck(int load, 
+                 String regNum) {
+        super(regNum);
+        this.loadCapacity = load;
+    }
+    
+    @Override
+    public int 
+      getMaxServiceIntervalInMonths() {
+        return 18;
+    }
+}</code></pre>
+                </div>
+                <div class="card">
+                    <h3>Non-sealed implementacija</h3>
+                    <pre><code class="language-java">// NON-SEALED - može se dalje
+// nasljeđivati
+public non-sealed class Car 
+    extends Vehicle 
+    implements Service {
+    
+    private final int numberOfSeats;
+    
+    public Car(int seats, 
+               String regNum) {
+        super(regNum);
+        this.numberOfSeats = seats;
+    }
+    
+    @Override
+    public int 
+      getMaxServiceIntervalInMonths() {
+        return 12;
+    }
+}</code></pre>
+                </div>
+            </div>
+            <div class="tip-box">
+                <strong>💡 Koristi:</strong> Bolja kontrola nad hijerarhijom, sigurnija API dizajna, pattern matching
+            </div>
+        </section>
+
+        <!-- Slide 29: Usporedba OOP koncepata -->
+        <section>
+            <h2>📊 Usporedba OOP koncepata</h2>
+            <table style="font-size: 0.75em;">
+                <thead>
+                <tr>
+                    <th>Koncept</th>
+                    <th>Kada koristiti</th>
+                    <th>Primjer</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><strong>Apstraktna klasa</strong></td>
+                    <td>Zajednička implementacija + apstraktne metode</td>
+                    <td>Oblik, Zivotinja</td>
+                </tr>
+                <tr>
+                    <td><strong>Interface</strong></td>
+                    <td>Ugovor bez implementacije, višestruka impl.</td>
+                    <td>Comparable, Serializable</td>
+                </tr>
+                <tr>
+                    <td><strong>Record</strong></td>
+                    <td>Nepromjenjivi nositelji podataka (DTO)</td>
+                    <td>Person, Student</td>
+                </tr>
+                <tr>
+                    <td><strong>Sealed class</strong></td>
+                    <td>Kontrolirana hijerarhija</td>
+                    <td>Vehicle, Shape</td>
+                </tr>
+                <tr>
+                    <td><strong>Final class</strong></td>
+                    <td>Sprječavanje nasljeđivanja</td>
+                    <td>String, Math</td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Slide 30: Best practices -->
+        <section>
+            <h2>✅ OOP Best Practices</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>DO ✅</h3>
+                    <ul style="font-size: 0.85em;">
+                        <li>Koristiti @Override anotaciju</li>
+                        <li>Nadjačati equals() i hashCode() zajedno</li>
+                        <li>Favorizirati kompoziciju nad nasljeđivanjem</li>
+                        <li>Koristiti sučelja za fleksibilnost</li>
+                        <li>Records za DTO objekte</li>
+                        <li>Sealed klase za kontroliranu hijerarhiju</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>DON'T ❌</h3>
+                    <ul style="font-size: 0.85em;">
+                        <li>Duboke hijerarhije nasljeđivanja</li>
+                        <li>Pretjerano korištenje nasljeđivanja</li>
+                        <li>Zaboraviti super() u konstruktoru</li>
+                        <li>Casting bez instanceof provjere</li>
+                        <li>Javne promjenjive varijable u klasama</li>
+                        <li>Zanemariti princip SRP</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 31: Rekapitulacija -->
+        <section>
+            <h2>📚 Rekapitulacija</h2>
+            <div class="card">
+                <h3>Što smo naučili:</h3>
+                <ul style="line-height: 1.6; font-size: 0.9em;">
+                    <li>✅ Nasljeđivanje i hijerarhija klasa</li>
+                    <li>✅ Modifikatori pristupa (public, private, protected)</li>
+                    <li>✅ Polimorfizam i casting</li>
+                    <li>✅ Apstraktne klase i sučelja</li>
+                    <li>✅ Java 8+ značajke (lambda, default metode, streams)</li>
+                    <li>✅ Java 14 Records</li>
+                    <li>✅ Java 17 Sealed klase</li>
+                </ul>
+            </div>
+            <div class="tip-box">
+                <strong>💪 Sljedeći korak:</strong> Vježbajte kreiranje vlastitih hijerarhija klasa i koristite moderne
+                Java značajke!
+            </div>
+        </section>
+
+        <!-- Slide 32: Resursi -->
+        <section>
+            <h2>🔗 Dodatni resursi</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Službena dokumentacija:</h3>
+                    <ul style="font-size: 0.85em;">
+                        <li>Oracle Java Tutorials</li>
+                        <li>Java Language Specification</li>
+                        <li>OpenJDK Documentation</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Online resursi:</h3>
+                    <ul style="font-size: 0.85em;">
+                        <li>Baeldung (java-tutorials)</li>
+                        <li>Java Design Patterns</li>
+                        <li>Effective Java (knjiga)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="info-box" style="margin-top: 20px;">
+                <p><strong>💡 Preporuka:</strong> "Effective Java" by Joshua Bloch - must-read za svakog Java developera!
+                </p>
+            </div>
+        </section>
+
+        <!-- Slide 33: Pitanja -->
+        <section class="title-slide">
+            <h1>❓ Pitanja?</h1>
+            <div class="subtitle" style="margin-top: 50px;">
+                Slobodno postavite pitanja!
+            </div>
+            <div style="margin-top: 80px; font-size: 1.2em; color: var(--accent-color);">
+                <p>📧 Kontakt putem e-maila</p>
+                <p>💬 Office hours svaki tjedan</p>
+                <p>🌐 Materijali dostupni online</p>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/notes/notes.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/zoom/zoom.min.js"></script>
+
+<script>
+    Reveal.initialize({
+        hash: true,
+        slideNumber: 'c/t',
+        transition: 'slide',
+        backgroundTransition: 'fade',
+        center: false,
+        width: 1280,
+        height: 720,
+        margin: 0.1,
+        plugins: [RevealHighlight, RevealNotes, RevealZoom],
+
+        keyboard: {
+            39: 'next',
+            37: 'prev'
+        }
+    });
+
+    Reveal.on('slidechanged', event => {
+        console.log('Slide changed to:', event.indexh);
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Javadoc Dokumentacija - Java 25</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow: hidden;
+        }
+
+        .slides-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            min-width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+            background: white;
+        }
+
+        .slide-content {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 4em;
+            color: #667eea;
+            margin-bottom: 30px;
+            text-align: center;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #764ba2;
+            padding-bottom: 15px;
+            animation: fadeInLeft 0.8s ease-out;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            color: #764ba2;
+            margin: 25px 0 15px 0;
+        }
+
+        p, li {
+            font-size: 1.3em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            padding-left: 30px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        ul li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-size: 1.5em;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+            font-size: 1.05em;
+            line-height: 1.8;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: slideInUp 0.8s ease-out;
+            white-space: pre;
+            tab-size: 4;
+        }
+
+        .code-block code {
+            display: block;
+        }
+
+        .keyword {
+            color: #ff79c6;
+            font-weight: bold;
+        }
+
+        .class-name {
+            color: #50fa7b;
+            font-weight: bold;
+        }
+
+        .comment {
+            color: #6272a4;
+            font-style: italic;
+        }
+
+        .string {
+            color: #f1fa8c;
+        }
+
+        .annotation {
+            color: #8be9fd;
+            font-weight: bold;
+        }
+
+        .method {
+            color: #ffb86c;
+        }
+
+        .number {
+            color: #bd93f9;
+        }
+
+        .indent {
+            display: inline-block;
+            width: 2em;
+        }
+
+        .indent-guide {
+            border-left: 1px solid #444;
+            padding-left: 2em;
+            margin-left: 2em;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .emoji {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(118, 75, 162, 0.5);
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(102, 126, 234, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            z-index: 1000;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 5px;
+        }
+
+        .tip-box {
+            background: #50fa7b20;
+            border-left: 5px solid #50fa7b;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .warning-box {
+            background: #ff555520;
+            border-left: 5px solid #ff5555;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .example-output {
+            background: #f8f9fa;
+            border: 2px solid #667eea;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1.1em;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="slides-container" id="slidesContainer">
+    <!-- Slide 1: Naslovnica -->
+    <div class="slide">
+        <div class="slide-content center">
+            <h1>🚀 Javadoc Dokumentacija</h1>
+            <p style="font-size: 1.8em; color: #764ba2; margin: 20px 0;">
+                Java 25 Edition
+            </p>
+            <p style="font-size: 1.3em; color: #666;">
+                Profesionalna dokumentacija vašeg koda
+            </p>
+            <div style="margin-top: 50px;">
+                <span class="badge">Moderna</span>
+                <span class="badge">Praktična</span>
+                <span class="badge">Neophodna</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 2: Sadržaj -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>📋 Sadržaj</h2>
+            <ul style="font-size: 1.4em;">
+                <li>Vrste komentara u Javi</li>
+                <li>Što je Javadoc dokumentacija?</li>
+                <li>Primjeri Javadoc dokumentacije</li>
+                <li>Javadoc i nasljeđivanje</li>
+                <li>Prva rečenica - zlatno pravilo</li>
+                <li>Javadoc oznake (@tags)</li>
+                <li>Stil pisanja i best practices</li>
+                <li>Generiranje dokumentacije</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Slide 3: Vrste komentara -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>💬 Vrste komentara u Javi</h2>
+            <div class="two-column">
+                <div>
+                    <h3>1. Jednolinijski komentar</h3>
+                    <div class="code-block"><span class="comment">// Ovo je jednolinijski komentar</span>
+                        <span class="keyword">int</span> brojStudenata = <span class="number">42</span>; <span
+                                class="comment">// inline komentar</span></div>
+
+                    <h3>2. Višelinijski komentar</h3>
+                    <div class="code-block"><span class="comment">/*
+ * Ovo je višelinijski komentar
+ * Može se protezati kroz više redaka
+ * Koristi se za duža objašnjenja
+ */</span></div>
+                </div>
+                <div>
+                    <h3>3. Javadoc komentar ⭐</h3>
+                    <div class="code-block"><span class="comment">/**
+ * Ovo je Javadoc komentar
+ * Služi za generiranje dokumentacije
+ * Koristi posebne @oznake
+ */</span>
+                        <span class="keyword">public class</span> <span class="class-name">Student</span> {
+                        <span class="comment">// klasa...</span>
+                        }
+                    </div>
+                    <div class="tip-box">
+                        <strong>💡 Pro tip:</strong> Javadoc komentari pišu se SAMO za public i protected članove!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: Što je Javadoc -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>📚 Što je Javadoc dokumentacija?</h2>
+            <div class="highlight-box">
+                <p><strong>Javadoc</strong> je sustav za generiranje HTML dokumentacije iz posebno formatiranih
+                    komentara u Java kodu.</p>
+            </div>
+
+            <h3>🎯 Zašto je važan?</h3>
+            <ul>
+                <li><span class="emoji">📖</span> <strong>Razumljivost:</strong> Pomaže drugim programerima (i vama nakon
+                    6 mjeseci) da razumiju vaš kod
+                </li>
+                <li><span class="emoji">🤝</span> <strong>Timski rad:</strong> Olakšava kolaboraciju na projektima</li>
+                <li><span class="emoji">⚡</span> <strong>IDE podrška:</strong> Moderna razvojna okruženja (IntelliJ,
+                    Eclipse, VS Code) automatski prikazuju Javadoc
+                </li>
+                <li><span class="emoji">🏢</span> <strong>Profesionalnost:</strong> Standard u industriji - obavezan u
+                    većini kompanija
+                </li>
+            </ul>
+
+            <div class="warning-box">
+                <strong>⚠️ Upozorenje:</strong> Kod bez dokumentacije = tehnički dug = glavobolja za cijeli tim!
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Primjer moderne klase -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>🎓 Primjer: Dokumentirana klasa</h2>
+            <div class="code-block"><span class="comment">/**
+ * Predstavlja studenta na sveučilištu.
+ * 
+ * Ova klasa omogućava upravljanje osnovnim podacima o studentu
+ * uključujući ime, prezime, JMBAG i prosjek ocjena.
+ * 
+ * <span class="annotation">@author</span> Vaše Ime
+ * <span class="annotation">@version</span> 2.0
+ * <span class="annotation">@since</span> Java 25
+ */</span>
+                <span class="keyword">public class</span> <span class="class-name">Student</span> {
+
+                <span class="keyword">private</span> String ime;
+                <span class="keyword">private</span> String prezime;
+                <span class="keyword">private</span> String jmbag;
+                <span class="keyword">private double</span> prosjek;
+
+                <span class="comment">/**
+     * Konstruira novog studenta sa zadanim podacima.
+     * 
+     * <span class="annotation">@param</span> ime ime studenta (ne smije biti null)
+     * <span class="annotation">@param</span> prezime prezime studenta (ne smije biti null)
+     * <span class="annotation">@param</span> jmbag jedinstveni matični broj (format: 10 znamenki)
+     * <span class="annotation">@throws</span> IllegalArgumentException ako je parametar null ili JMBAG neispravan
+     */</span>
+                <span class="keyword">public</span> <span class="method">Student</span>(String ime, String prezime,
+                String jmbag) {
+                <span class="keyword">this</span>.ime = ime;
+                <span class="keyword">this</span>.prezime = prezime;
+                <span class="keyword">this</span>.jmbag = jmbag;
+                }
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: Primjer metode -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>⚙️ Primjer: Dokumentirana metoda</h2>
+            <div class="code-block"><span class="comment">/**
+ * Izračunava konačnu ocjenu studenta na temelju prosjeka.
+ * 
+ * Konačna ocjena se određuje prema sljedećem:
+ * <span class="keyword">&lt;ul&gt;</span>
+ *   <span class="keyword">&lt;li&gt;</span>1.5 - 2.5: Dovoljan (2)<span class="keyword">&lt;/li&gt;</span>
+ *   <span class="keyword">&lt;li&gt;</span>2.5 - 3.5: Dobar (3)<span class="keyword">&lt;/li&gt;</span>
+ *   <span class="keyword">&lt;li&gt;</span>3.5 - 4.5: Vrlo dobar (4)<span class="keyword">&lt;/li&gt;</span>
+ *   <span class="keyword">&lt;li&gt;</span>4.5 - 5.0: Izvrstan (5)<span class="keyword">&lt;/li&gt;</span>
+ * <span class="keyword">&lt;/ul&gt;</span>
+ * 
+ * <span class="annotation">@param</span> prosjek prosjek ocjena studenta (1.0 - 5.0)
+ * <span class="annotation">@return</span> konačna ocjena kao cijeli broj (2-5)
+ * <span class="annotation">@throws</span> IllegalArgumentException ako je prosjek izvan raspona
+ * <span class="annotation">@see</span> #getProsjek()
+ * <span class="annotation">@since</span> 2.0
+ */</span>
+                <span class="keyword">public int</span> <span class="method">izracunajKonacnuOcjenu</span>(<span
+                        class="keyword">double</span> prosjek) {
+
+                <span class="keyword">if</span> (prosjek < <span class="number">1.5</span> || prosjek > <span
+                        class="number">5.0</span>) {
+                <span class="keyword">throw new</span> <span class="class-name">IllegalArgumentException</span>(<span
+                        class="string">"Neispravan prosjek"</span>);
+                }
+
+                <span class="keyword">return</span> (<span class="keyword">int</span>) Math.round(prosjek);
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 7: Generirani Javadoc -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>🎨 Kako to izgleda u dokumentaciji?</h2>
+            <div class="example-output">
+                <h3 style="color: #333; border-bottom: 2px solid #667eea; padding-bottom: 10px;">
+                    izracunajKonacnuOcjenu</h3>
+                <p style="font-family: monospace; color: #666;">
+                    <span style="color: #764ba2;">public int</span> izracunajKonacnuOcjenu(<span
+                        style="color: #764ba2;">double</span> prosjek)
+                </p>
+                <p style="margin: 15px 0;">
+                    Izračunava konačnu ocjenu studenta na temelju prosjeka.
+                </p>
+                <p style="margin: 15px 0;">
+                    Konačna ocjena se određuje prema sljedećem:
+                </p>
+                <ul style="margin-left: 20px;">
+                    <li>1.5 - 2.5: Dovoljan (2)</li>
+                    <li>2.5 - 3.5: Dobar (3)</li>
+                    <li>3.5 - 4.5: Vrlo dobar (4)</li>
+                    <li>4.5 - 5.0: Izvrstan (5)</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>Parameters:</strong></p>
+                <p style="margin-left: 20px;"><code>prosjek</code> - prosjek ocjena studenta (1.0 - 5.0)</p>
+                <p style="margin-top: 10px;"><strong>Returns:</strong></p>
+                <p style="margin-left: 20px;">konačna ocjena kao cijeli broj (2-5)</p>
+                <p style="margin-top: 10px;"><strong>Throws:</strong></p>
+                <p style="margin-left: 20px;"><code>IllegalArgumentException</code> - ako je prosjek izvan raspona</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 8: Javadoc i nasljeđivanje -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>🔗 Javadoc i nasljeđivanje</h2>
+            <p>Java automatski nasljeđuje Javadoc dokumentaciju! 🎉</p>
+
+            <div class="highlight-box">
+                <h3>Automatsko nasljeđivanje u slučajevima:</h3>
+                <ul>
+                    <li><strong>@Override u podklasi:</strong> Automatski se dodaje oznaka "Overrides"</li>
+                    <li><strong>Implementacija sučelja:</strong> Automatski se dodaje oznaka "Specified by"</li>
+                    <li><strong>Nasljeđivanje sučelja:</strong> Dokumentacija se prenosi s nadsučelja</li>
+                </ul>
+            </div>
+
+            <div class="code-block"><span class="comment">// U sučelju</span>
+                <span class="keyword">public interface</span> <span class="class-name">Osoba</span> {
+
+                <span class="comment">/**
+     * Vraća puno ime osobe.
+     * 
+     * <span class="annotation">@return</span> ime i prezime odvojeni razmakom
+     */</span>
+                String <span class="method">getPunoIme</span>();
+                }
+
+                <span class="comment">// U klasi - NE TREBA ponovno pisati Javadoc!</span>
+                <span class="keyword">public class</span> <span class="class-name">Student</span> <span class="keyword">implements</span>
+                <span class="class-name">Osoba</span> {
+
+                <span class="keyword">private</span> String ime;
+                <span class="keyword">private</span> String prezime;
+
+                <span class="annotation">@Override</span>
+                <span class="keyword">public</span> String <span class="method">getPunoIme</span>() {
+                <span class="keyword">return</span> ime + <span class="string">" "</span> + prezime;
+                }
+
+                <span class="comment">// Javadoc se automatski naslijeđuje! ✨</span>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 9: Zlatno pravilo - prva rečenica -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>✨ Zlatno pravilo: Prva rečenica</h2>
+            <div class="warning-box">
+                <h3>⚡ Najvažnije pravilo Javadoc dokumentacije!</h3>
+                <p><strong>Prva rečenica MORA biti sažetak koji se može čitati samostalno.</strong></p>
+            </div>
+
+            <div class="two-column">
+                <div>
+                    <h3 style="color: #50fa7b;">✅ DOBRO</h3>
+                    <div class="code-block" style="background: #1e3a1e;"><span class="comment">/**
+ * Izračunava prosjek ocjena.
+ * 
+ * Metoda uzima u obzir samo
+ * pozitivne ocjene i zaokružuje
+ * rezultat na dvije decimale.
+ */</span></div>
+                    <p style="color: #50fa7b;">✓ Prva rečenica je jasna i samostalna</p>
+                    <p style="color: #50fa7b;">✓ Počinje glagolom</p>
+                    <p style="color: #50fa7b;">✓ Detalji su odvojeni</p>
+                </div>
+                <div>
+                    <h3 style="color: #ff5555;">❌ LOŠE</h3>
+                    <div class="code-block" style="background: #3a1e1e;"><span class="comment">/**
+ * Ova metoda se koristi kada
+ * trebamo izračunati prosjek.
+ * Izračunava prosjek ocjena.
+ */</span></div>
+                    <p style="color: #ff5555;">✗ Prva rečenica je nejasna</p>
+                    <p style="color: #ff5555;">✗ Ne počinje glagolom</p>
+                    <p style="color: #ff5555;">✗ Previše riječi bez smisla</p>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <strong>💡 Pravilo:</strong> Prva rečenica završava s prvom točkom. Javadoc alat je koristi za pregled!
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 10: Javadoc oznake -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>🏷️ Javadoc oznake (@tags)</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Oznaka</th>
+                    <th>Gdje se koristi</th>
+                    <th>Svrha</th>
+                    <th>Obvezna?</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><code>@author</code></td>
+                    <td>Klase, sučelja</td>
+                    <td>Autor koda</td>
+                    <td>✅ Da</td>
+                </tr>
+                <tr>
+                    <td><code>@version</code></td>
+                    <td>Klase, sučelja</td>
+                    <td>Verzija</td>
+                    <td>✅ Da</td>
+                </tr>
+                <tr>
+                    <td><code>@param</code></td>
+                    <td>Metode, konstruktori</td>
+                    <td>Opis parametra</td>
+                    <td>✅ Za svaki parametar</td>
+                </tr>
+                <tr>
+                    <td><code>@return</code></td>
+                    <td>Metode</td>
+                    <td>Opis povratne vrijednosti</td>
+                    <td>✅ Ako nije void</td>
+                </tr>
+                <tr>
+                    <td><code>@throws</code></td>
+                    <td>Metode, konstruktori</td>
+                    <td>Opis iznimke</td>
+                    <td>✅ Za svaku iznimku</td>
+                </tr>
+                <tr>
+                    <td><code>@see</code></td>
+                    <td>Bilo gdje</td>
+                    <td>Referenca na drugi element</td>
+                    <td>Preporučeno</td>
+                </tr>
+                <tr>
+                    <td><code>@since</code></td>
+                    <td>Bilo gdje</td>
+                    <td>Od koje verzije postoji</td>
+                    <td>Preporučeno</td>
+                </tr>
+                <tr>
+                    <td><code>@deprecated</code></td>
+                    <td>Bilo gdje</td>
+                    <td>Zastarjelo, ne koristiti</td>
+                    <td>Kada je zastarjelo</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Slide 11: Praktični primjeri oznaka -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>🔧 Praktični primjeri oznaka</h2>
+            <div class="code-block"><span class="comment">/**
+ * Sprema podatke studenta u bazu podataka.
+ * 
+ * Metoda provjerava valjanost podataka prije spremanja
+ * i automatski generira ID ako ne postoji.
+ * 
+ * <span class="annotation">@param</span> student objekt studenta za spremanje (ne smije biti null)
+ * <span class="annotation">@return</span> true ako je spremanje uspješno, false inače
+ * <span class="annotation">@throws</span> DatabaseException ako dođe do greške pri povezivanju
+ * <span class="annotation">@throws</span> ValidationException ako podaci nisu valjani
+ * <span class="annotation">@see</span> #loadStudent(int)
+ * <span class="annotation">@see</span> Student
+ * <span class="annotation">@since</span> 2.0
+ * <span class="annotation">@deprecated</span> Koristite {@link #saveStudentAsync(Student)} 
+ *             za bolju performansu u Java 25
+ */</span>
+                <span class="annotation">@Deprecated</span>(since = <span class="string">"2.0"</span>, forRemoval =
+                <span class="keyword">true</span>)
+                <span class="keyword">public boolean</span> <span class="method">saveStudent</span>(<span
+                        class="class-name">Student</span> student)
+                <span class="keyword">throws</span> <span class="class-name">DatabaseException</span>, <span
+                        class="class-name">ValidationException</span> {
+
+                <span class="comment">// Validacija</span>
+                <span class="keyword">if</span> (student == <span class="keyword">null</span>) {
+                <span class="keyword">throw new</span> <span class="class-name">ValidationException</span>(<span
+                        class="string">"Student ne smije biti null"</span>);
+                }
+
+                <span class="comment">// Spremanje...</span>
+                <span class="keyword">return true</span>;
+                }
+
+                <span class="comment">/**
+ * Asinkrono sprema podatke studenta.
+ * 
+ * <span class="annotation">@param</span> student objekt studenta
+ * <span class="annotation">@return</span> CompletableFuture sa rezultatom spremanja
+ * <span class="annotation">@since</span> 2.0
+ */</span>
+                <span class="keyword">public</span> CompletableFuture&lt;Boolean&gt; <span class="method">saveStudentAsync</span>(<span
+                        class="class-name">Student</span> student) {
+                <span class="keyword">return</span> CompletableFuture.supplyAsync(() -> {
+                <span class="comment">// Asinkrono spremanje...</span>
+                <span class="keyword">return true</span>;
+                });
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 12: Stil pisanja -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>✍️ Stil pisanja Javadoc dokumentacije</h2>
+
+            <div class="two-column">
+                <div>
+                    <h3>📝 Pravila pisanja</h3>
+                    <ul>
+                        <li>Piši u <strong>trećem licu</strong> ("dohvaća", ne "dohvaćam")</li>
+                        <li>Opisi metoda <strong>počinju glagolom</strong></li>
+                        <li>Koristi <code>&lt;code&gt;</code> za kod</li>
+                        <li>Koristi <code>&lt;p&gt;</code> za paragrafe</li>
+                        <li>Koristi HTML oznake za formatiranje</li>
+                    </ul>
+
+                    <div class="tip-box">
+                        <strong>💡 HTML u Javadoc:</strong> Možeš koristiti osnovne HTML tagove poput &lt;ul&gt;, &lt;ol&gt;,
+                        &lt;li&gt;, &lt;b&gt;, &lt;i&gt;, &lt;code&gt;, &lt;pre&gt;
+                    </div>
+                </div>
+                <div>
+                    <h3>✅ Primjer dobrog stila</h3>
+                    <div class="code-block"><span class="comment">/**
+ * Dohvaća listu aktivnih studenata.
+ * <span class="keyword">&lt;p&gt;</span>
+ * Metoda filtrira studente prema
+ * sljedećim kriterijima:
+ * <span class="keyword">&lt;ul&gt;</span>
+ *   <span class="keyword">&lt;li&gt;</span>Status: aktivan<span class="keyword">&lt;/li&gt;</span>
+ *   <span class="keyword">&lt;li&gt;</span>Prosjek: &gt; 2.0<span class="keyword">&lt;/li&gt;</span>
+ * <span class="keyword">&lt;/ul&gt;</span>
+ * <span class="keyword">&lt;p&gt;</span>
+ * Rezultati su sortirani po 
+ * prezimenu.
+ *
+ * <span class="annotation">@return</span> nemodificibilna lista 
+ *         {@code Student} objekata
+ * <span class="annotation">@since</span> 2.0
+ */</span></div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <strong>❌ Što ne raditi:</strong> Ne pišite "metoda()" sa zagradama, već samo "metoda". Javadoc
+                automatski prepoznaje metode!
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 13: Moderne značajke -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>🚀 Moderne Javadoc značajke u Java 25</h2>
+
+            <h3>1. {@snippet} tag (od Java 18+)</h3>
+            <div class="code-block"><span class="comment">/**
+ * Primjer korištenja:
+ * {@snippet :
+ *   Student student = new Student("Marko", "Marić", "0036512345");
+ *   student.setProsjek(4.5);
+ *   database.save(student);
+ * }
+ */</span></div>
+
+            <h3>2. {@link} i {@linkplain}</h3>
+            <div class="code-block"><span class="comment">/**
+ * Koristi {@link Student} klasu za manipulaciju studentima.
+ * Vidi također {@linkplain DatabaseManager#connect()}.
+ */</span></div>
+
+            <h3>3. {@value} za konstante</h3>
+            <div class="code-block"><span class="comment">/**
+ * Maksimalni broj studenata: {@value MAX_STUDENTS}
+ */</span>
+                <span class="keyword">public static final int</span> MAX_STUDENTS = <span class="number">1000</span>;
+            </div>
+
+            <div class="tip-box">
+                <strong>🎯 Pro tip:</strong> Moderne IDE-ove automatski prikazuju Javadoc dok tipkate - iskoristite to!
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 14: Generiranje dokumentacije -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>⚙️ Generiranje Javadoc dokumentacije</h2>
+
+            <h3>1️⃣ Putem naredbenog retka</h3>
+            <div class="code-block"><span class="comment"># Osnovna naredba</span>
+                javadoc -d docs -sourcepath src -subpackages hr.fer.oop
+
+                <span class="comment"># Sa dodatnim opcijama</span>
+                javadoc -d docs \
+                -sourcepath src \
+                -subpackages hr.fer.oop \
+                -author \
+                -version \
+                -private \
+                -link https://docs.oracle.com/en/java/javase/25/docs/api/
+            </div>
+
+            <h3>2️⃣ Putem Maven-a</h3>
+            <div class="code-block">mvn javadoc:javadoc</div>
+
+            <h3>3️⃣ Putem Gradle-a</h3>
+            <div class="code-block">./gradlew javadoc</div>
+
+            <h3>4️⃣ IntelliJ IDEA</h3>
+            <p>Tools → Generate JavaDoc...</p>
+        </div>
+    </div>
+
+    <!-- Slide 15: Best Practices -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>🏆 Best Practices - Pravila profića</h2>
+
+            <div class="two-column">
+                <div>
+                    <h3>✅ UVIJEK</h3>
+                    <ul>
+                        <li>Dokumentiraj sve public metode</li>
+                        <li>Dokumentiraj sve parametre</li>
+                        <li>Objasni što metoda radi, NE kako</li>
+                        <li>Koristi primjere koda</li>
+                        <li>Navedi edge case-eve</li>
+                        <li>Navedi sve moguće iznimke</li>
+                        <li>Ažuriraj dokumentaciju kad mijenjašaš kod!</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>❌ NIKAD</h3>
+                    <ul>
+                        <li>Ne pišite očite stvari</li>
+                        <li>Ne kopirajte kod u dokumentaciju</li>
+                        <li>Ne ostavljaj zastarjelu dokumentaciju</li>
+                        <li>Ne dokumentiraj private metode (osim ako su kompleksne)</li>
+                        <li>Ne pišite romane - budi koncizan</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>💎 Zlatna pravila</h3>
+                <p><strong>1. Dokumentacija koja laže je gora od nedostatka dokumentacije</strong></p>
+                <p><strong>2. Ako trebaš dokumentirati "zašto" metoda postoji - možda je problem u dizajnu</strong></p>
+                <p><strong>3. Dobar kod se sam dokumentira, ali Javadoc je i dalje neophodan!</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 16: Česti problemi -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>⚠️ Česti problemi i kako ih riješiti</h2>
+
+            <div class="warning-box">
+                <h3>❌ Problem 1: Neažurirana dokumentacija</h3>
+                <div class="code-block"><span class="comment">/**
+ * <span class="annotation">@param</span> ime ime studenta
+ * <span class="annotation">@param</span> prezime prezime studenta
+ */</span>
+                    <span class="keyword">public</span> <span class="method">Student</span>(String ime, String prezime,
+                    String jmbag) {
+                    <span class="comment">// Zaboravio si dodati @param za jmbag! ⚠️</span>
+                    <span class="keyword">this</span>.ime = ime;
+                    <span class="keyword">this</span>.prezime = prezime;
+                    <span class="keyword">this</span>.jmbag = jmbag;
+                    }
+                </div>
+                <p><strong>Rješenje:</strong> Koristi IDE upozorenja i provjere prije commit-a!</p>
+            </div>
+
+            <div class="warning-box">
+                <h3>❌ Problem 2: Nejasne @param oznake</h3>
+                <div class="code-block"><span class="comment">/**
+ * <span class="annotation">@param</span> x broj  <span style="color: #ff5555;">// LOŠE - što je x?</span>
+ */</span></div>
+                <p><strong>Rješenje:</strong> Uvijek koristi opisna imena i detaljne opise!</p>
+                <div class="code-block"><span class="comment">/**
+ * <span class="annotation">@param</span> brojStudenata ukupan broj studenata (min: 1, max: 50)
+ * <span style="color: #50fa7b;">// DOBRO! ✓</span>
+ */</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 17: Stvarni primjer projekta -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>🎯 Stvarni primjer: Kompletan projekt</h2>
+            <div class="code-block" style="font-size: 0.92em;"><span class="keyword">package</span> hr.fer.oop.studenti;
+
+                <span class="keyword">import</span> java.util.*;
+
+                <span class="comment">/**
+ * Menadžer za upravljanje studentima na fakultetu.
+ * <span class="keyword">&lt;p&gt;</span>
+ * Ova klasa pruža funkcionalnosti za:
+ * <span class="keyword">&lt;ul&gt;</span>
+ *   <span class="keyword">&lt;li&gt;</span>Dodavanje i brisanje studenata<span class="keyword">&lt;/li&gt;</span>
+ *   <span class="keyword">&lt;li&gt;</span>Pretraživanje studenata po različitim kriterijima<span class="keyword">&lt;/li&gt;</span>
+ *   <span class="keyword">&lt;li&gt;</span>Generiranje izvještaja<span class="keyword">&lt;/li&gt;</span>
+ * <span class="keyword">&lt;/ul&gt;</span>
+ * <span class="keyword">&lt;p&gt;</span>
+ * Primjer korištenja:
+ * {@snippet :
+ *   StudentManager manager = new StudentManager();
+ *   Student s = new Student("Ana", "Anić", "0036512345");
+ *   manager.addStudent(s);
+ * }
+ * 
+ * <span class="annotation">@author</span> Vaše Ime
+ * <span class="annotation">@version</span> 3.0
+ * <span class="annotation">@since</span> Java 25
+ * <span class="annotation">@see</span> Student
+ */</span>
+                <span class="keyword">public class</span> <span class="class-name">StudentManager</span> {
+
+                <span class="keyword">private</span> Map&lt;String, Student&gt; studenti = <span
+                        class="keyword">new</span> HashMap&lt;&gt;();
+
+                <span class="comment">/**
+     * Dodaje novog studenta u sustav.
+     * <span class="keyword">&lt;p&gt;</span>
+     * Ako student sa istim JMBAG-om već postoji, 
+     * baca se iznimka.
+     * 
+     * <span class="annotation">@param</span> student student za dodavanje (ne smije biti null)
+     * <span class="annotation">@throws</span> IllegalArgumentException ako je student null
+     * <span class="annotation">@throws</span> DuplicateStudentException ako student već postoji
+     * <span class="annotation">@since</span> 1.0
+     */</span>
+                <span class="keyword">public void</span> <span class="method">addStudent</span>(<span
+                        class="class-name">Student</span> student) {
+
+                <span class="keyword">if</span> (student == <span class="keyword">null</span>) {
+                <span class="keyword">throw new</span> <span class="class-name">IllegalArgumentException</span>(<span
+                        class="string">"Student ne smije biti null"</span>);
+                }
+
+                <span class="keyword">if</span> (studenti.containsKey(student.getJmbag())) {
+                <span class="keyword">throw new</span> <span class="class-name">DuplicateStudentException</span>(
+                <span class="string">"Student sa JMBAG-om već postoji"</span>
+                );
+                }
+
+                studenti.put(student.getJmbag(), student);
+                }
+
+                <span class="comment">/**
+     * Dohvaća studenta po JMBAG-u.
+     * 
+     * <span class="annotation">@param</span> jmbag jedinstveni matični broj studenta
+     * <span class="annotation">@return</span> Student objekt ili null ako ne postoji
+     * <span class="annotation">@since</span> 1.0
+     */</span>
+                <span class="keyword">public</span> <span class="class-name">Student</span> <span class="method">getStudent</span>(String
+                jmbag) {
+                <span class="keyword">return</span> studenti.get(jmbag);
+                }
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 18: Alati i resursi -->
+    <div class="slide">
+        <div class="slide-content">
+            <h2>🛠️ Korisni alati i resursi</h2>
+
+            <div class="two-column">
+                <div>
+                    <h3>🔧 Alati</h3>
+                    <ul>
+                        <li><strong>CheckStyle:</strong> Provjera Javadoc standarda</li>
+                        <li><strong>SpotBugs:</strong> Detektira nedostajuću dokumentaciju</li>
+                        <li><strong>SonarQube:</strong> Analiza kvalitete dokumentacije</li>
+                        <li><strong>JApiCmp:</strong> Usporedba API verzija</li>
+                    </ul>
+
+                    <h3>📚 Resursi</h3>
+                    <ul>
+                        <li>Oracle Javadoc Guide</li>
+                        <li>Google Java Style Guide</li>
+                        <li>Effective Java (Joshua Bloch)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>💡 IDE plugin-ovi</h3>
+                    <ul>
+                        <li><strong>IntelliJ:</strong> Automatska Javadoc generacija (Alt+Enter)</li>
+                        <li><strong>Eclipse:</strong> Generate Javadoc (Source menu)</li>
+                        <li><strong>VS Code:</strong> Java Doc Generator extension</li>
+                    </ul>
+
+                    <div class="tip-box">
+                        <strong>🎓 Zadaća:</strong> Provjerite Javadoc dokumentaciju Java API-ja na:
+                        <br><br>
+                        <a href="https://docs.oracle.com/en/java/javase/25/docs/api/"
+                           style="color: #667eea; word-break: break-all;"
+                           target="_blank">
+                            docs.oracle.com/en/java/javase/25/docs/api/
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 19: Zaključak -->
+    <div class="slide">
+        <div class="slide-content center">
+            <h2>🎓 Zaključak</h2>
+            <div class="highlight-box" style="text-align: left; font-size: 1.2em;">
+                <p><span class="emoji">✅</span> Javadoc je OBAVEZAN dio profesionalnog razvoja</p>
+                <p><span class="emoji">📝</span> Piši dokumentaciju dok pišeš kod, ne naknadno</p>
+                <p><span class="emoji">🎯</span> Fokusiraj se na ŠTO metoda radi, ne KAKO</p>
+                <p><span class="emoji">🔄</span> Ažuriraj dokumentaciju s kodom</p>
+                <p><span class="emoji">👥</span> Piši za buduće programere (uključujući sebe)</p>
+                <p><span class="emoji">🏆</span> Kvalitetna dokumentacija = profesionalnost</p>
+            </div>
+
+            <div style="margin-top: 50px; font-size: 1.5em; color: #667eea;">
+                <p><strong>"Kod se piše jednom, čita tisuću puta."</strong></p>
+                <p style="font-size: 0.8em; color: #666; margin-top: 10px;">- Programerska mudrost</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 20: Pitanja -->
+    <div class="slide">
+        <div class="slide-content center">
+            <h1>❓ Pitanja?</h1>
+            <p style="font-size: 1.8em; color: #764ba2; margin: 40px 0;">
+                Slobodno pitajte! 🎯
+            </p>
+            <div style="margin-top: 60px;">
+                <p style="font-size: 1.3em; color: #666;">
+                    Hvala na pažnji! 🙏
+                </p>
+                <p style="font-size: 1.1em; color: #999; margin-top: 20px;">
+                    Sretno s dokumentiranjem vašeg koda! 🚀
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-counter" id="slideCounter">1 / 20</div>
+
+<div class="navigation">
+    <button class="nav-btn" id="prevBtn" onclick="previousSlide()">← Prethodni</button>
+    <button class="nav-btn" id="nextBtn" onclick="nextSlide()">Sljedeći →</button>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const totalSlides = 20;
+    const slidesContainer = document.getElementById('slidesContainer');
+    const slideCounter = document.getElementById('slideCounter');
+
+    function updateSlide() {
+        slidesContainer.style.transform = `translateX(-${currentSlide * 100}vw)`;
+        slideCounter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+        // Disable/enable buttons
+        document.getElementById('prevBtn').disabled = currentSlide === 0;
+        document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            updateSlide();
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            updateSlide();
+        }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            e.preventDefault();
+            nextSlide();
+        } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            previousSlide();
+        } else if (e.key === 'Home') {
+            e.preventDefault();
+            currentSlide = 0;
+            updateSlide();
+        } else if (e.key === 'End') {
+            e.preventDefault();
+            currentSlide = totalSlides - 1;
+            updateSlide();
+        }
+    });
+
+    // Touch support for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+
+    document.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+
+    function handleSwipe() {
+        if (touchEndX < touchStartX - 50) {
+            nextSlide();
+        }
+        if (touchEndX > touchStartX + 50) {
+            previousSlide();
+        }
+    }
+
+    // Initialize
+    updateSlide();
+</script>
+</body>
+</html>

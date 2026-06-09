@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Zbirke podataka u Javi - Moderna prezentacija</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --accent: #007bff;
+            --accent-hover: #0056b3;
+            --code-bg: #f4f4f4;
+            --code-border: #ddd;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --block-border: #3498db;
+            --block-bg: #ecf0f1;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --text-primary: #eaeaea;
+            --text-secondary: #a8a8a8;
+            --accent: #0f4c75;
+            --accent-hover: #3282b8;
+            --code-bg: #2d2d44;
+            --code-border: #3e3e56;
+            --shadow: rgba(0, 0, 0, 0.5);
+            --block-border: #3498db;
+            --block-bg: #1e2936;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background 0.3s, color 0.3s;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .theme-toggle {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px var(--shadow);
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            padding: 60px 80px;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 0.5em;
+            color: var(--accent);
+            text-align: center;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            margin-bottom: 0.8em;
+            color: var(--accent);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            margin: 0.8em 0 0.5em;
+            color: var(--accent);
+        }
+
+        h4 {
+            font-size: 1.4em;
+            margin: 0.6em 0 0.4em;
+            color: var(--text-primary);
+        }
+
+        p, li {
+            font-size: 1.3em;
+            line-height: 1.6;
+            margin-bottom: 0.5em;
+        }
+
+        ul, ol {
+            margin-left: 2em;
+            margin-bottom: 1em;
+        }
+
+        li {
+            margin-bottom: 0.8em;
+        }
+
+        /* Improved code block styling with structure visualization */
+        .code-block {
+            background: var(--code-bg);
+            border: 2px solid var(--code-border);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 1.05em;
+            overflow-x: auto;
+            box-shadow: 0 2px 8px var(--shadow);
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .code-line {
+            position: relative;
+            padding-left: 0;
+            white-space: pre-wrap;
+        }
+
+        /* Block structure indicators */
+        .code-block .indent-0 {
+            padding-left: 0;
+        }
+
+        .code-block .indent-1 {
+            padding-left: 2em;
+            border-left: 3px solid rgba(52, 152, 219, 0.3);
+            margin-left: 0.5em;
+        }
+
+        .code-block .indent-2 {
+            padding-left: 4em;
+            border-left: 3px solid rgba(52, 152, 219, 0.4);
+            margin-left: 0.5em;
+        }
+
+        .code-block .indent-3 {
+            padding-left: 6em;
+            border-left: 3px solid rgba(52, 152, 219, 0.5);
+            margin-left: 0.5em;
+        }
+
+        .code-block .indent-4 {
+            padding-left: 8em;
+            border-left: 3px solid rgba(52, 152, 219, 0.6);
+            margin-left: 0.5em;
+        }
+
+        /* Block markers */
+        .block-start {
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 4px;
+            padding: 2px 0;
+        }
+
+        .block-end {
+            background: rgba(52, 152, 219, 0.05);
+            border-radius: 4px;
+            padding: 2px 0;
+        }
+
+        .keyword {
+            color: #0000ff;
+            font-weight: bold;
+        }
+
+        [data-theme="dark"] .keyword {
+            color: #569cd6;
+        }
+
+        .string {
+            color: #a31515;
+        }
+
+        [data-theme="dark"] .string {
+            color: #ce9178;
+        }
+
+        .comment {
+            color: #008000;
+            font-style: italic;
+        }
+
+        [data-theme="dark"] .comment {
+            color: #6a9955;
+        }
+
+        .type {
+            color: #2b91af;
+            font-weight: 500;
+        }
+
+        [data-theme="dark"] .type {
+            color: #4ec9b0;
+        }
+
+        .number {
+            color: #098658;
+        }
+
+        [data-theme="dark"] .number {
+            color: #b5cea8;
+        }
+
+        .method {
+            color: #795e26;
+        }
+
+        [data-theme="dark"] .method {
+            color: #dcdcaa;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px var(--shadow);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--bg-secondary);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 18px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .title-slide {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .title-slide h1 {
+            color: white;
+            font-size: 4em;
+            margin-bottom: 0.3em;
+        }
+
+        .title-slide p {
+            font-size: 1.5em;
+            opacity: 0.9;
+        }
+
+        .highlight-box {
+            background: var(--bg-secondary);
+            border-left: 5px solid var(--accent);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .emoji {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .new-badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .lts-badge {
+            background: #27ae60;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 40px 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.8em;
+            }
+
+            p, li {
+                font-size: 1em;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="presentation-container">
+    <div class="controls">
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 Promijeni temu</button>
+    </div>
+
+    <!-- Slide 1: Naslovni slide -->
+    <div class="slide active title-slide">
+        <h1>☕ Zbirke podataka u Javi</h1>
+        <p>Moderne strukture podataka i najnovije funkcionalnosti</p>
+        <p style="margin-top: 2em; font-size: 1.2em;">Java 8 → Java 25 LTS 🚀</p>
+        <p style="margin-top: 1em; font-size: 1em; opacity: 0.8;">Ažurirano za najnovije verzije</p>
+    </div>
+
+    <!-- Slide 2: Sadržaj -->
+    <div class="slide">
+        <h2>📋 Sadržaj prezentacije</h2>
+        <div class="two-column">
+            <div>
+                <h3>Osnovni koncepti</h3>
+                <ul>
+                    <li>Uvod u zbirke podataka</li>
+                    <li>Collection sučelje</li>
+                    <li>Liste, Setovi, Mape</li>
+                    <li>Enumeracije</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Moderne funkcionalnosti</h3>
+                <ul>
+                    <li>Stream API (Java 8+)</li>
+                    <li>Immutable kolekcije (Java 9+)</li>
+                    <li>Stream.toList() (Java 17)</li>
+                    <li>Sequenced Collections (Java 21)</li>
+                    <li><strong>Stream Gatherers (Java 24) 🎯</strong></li>
+                    <li><strong>Performance (Java 25 LTS) ⚡</strong></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: Uvod u zbirke -->
+    <div class="slide">
+        <h2>🗂️ Što su zbirke podataka?</h2>
+        <div class="highlight-box">
+            <p><strong>Zbirka (Collection)</strong> je objektna struktura podataka koja može sadržavati reference drugih
+                objekata.</p>
+        </div>
+        <h3>Glavna sučelja u Java Collections Framework:</h3>
+        <ul>
+            <li><strong>Collection</strong> – osnovno sučelje za sve zbirke</li>
+            <li><strong>List</strong> – dopušta duplikate, čuva redoslijed</li>
+            <li><strong>Set</strong> – ne dopušta duplikate</li>
+            <li><strong>Map</strong> – pohranjuje parove "ključ-vrijednost"</li>
+        </ul>
+        <div class="highlight-box">
+            <p>⚠️ <strong>Važno:</strong> Zbirke ne mogu sadržavati primitivne tipove! Koristi se autoboxing (npr.
+                <code>int</code> → <code>Integer</code>)</p>
+        </div>
+    </div>
+
+    <!-- Slide 4: Liste -->
+    <div class="slide">
+        <h2>📝 Liste (List interface)</h2>
+        <h3>Karakteristike:</h3>
+        <ul>
+            <li>Poredana zbirka koja <strong>čuva redoslijed</strong> elemenata</li>
+            <li>Može sadržavati <strong>duplikate</strong></li>
+            <li>Pristup elementima putem <strong>indeksa</strong></li>
+        </ul>
+        <h3>Najčešće implementacije:</h3>
+        <div class="two-column">
+            <div>
+                <h4>ArrayList</h4>
+                <p>✅ Brzo dohvaćanje po indeksu</p>
+                <p>❌ Sporije umetanje/brisanje</p>
+                <p>💡 Najbolji za čitanje</p>
+            </div>
+            <div>
+                <h4>LinkedList</h4>
+                <p>✅ Brzo umetanje/brisanje</p>
+                <p>❌ Sporije dohvaćanje</p>
+                <p>💡 Najbolji za česte izmjene</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: ArrayList primjer sa strukturom -->
+    <div class="slide">
+        <h2>ArrayList - Primjer sa strukturom blokova</h2>
+        <div class="code-block">
+            <div class="code-line indent-0"><span class="comment">// Diamond operator (&lt;&gt;) - od Java 7</span>
+            </div>
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">String</span>&gt;
+                godisnjaDoba = <span class="keyword">new</span> <span class="type">ArrayList</span>&lt;&gt;();
+            </div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="comment">// Dodavanje elemenata</span></div>
+            <div class="code-line indent-0">godisnjaDoba.<span class="method">add</span>(<span
+                    class="string">"Proljeće"</span>);
+            </div>
+            <div class="code-line indent-0">godisnjaDoba.<span class="method">add</span>(<span
+                    class="string">"Ljeto"</span>);
+            </div>
+            <div class="code-line indent-0">godisnjaDoba.<span class="method">add</span>(<span
+                    class="string">"Jesen"</span>);
+            </div>
+            <div class="code-line indent-0">godisnjaDoba.<span class="method">add</span>(<span
+                    class="string">"Zima"</span>);
+            </div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="comment">// For-each petlja (od Java 5)</span></div>
+            <div class="code-line indent-0 block-start"><span class="keyword">for</span> (<span
+                    class="type">String</span> doba : godisnjaDoba) {
+            </div>
+            <div class="code-line indent-1"><span class="type">System</span>.out.<span class="method">println</span>(doba);
+            </div>
+            <div class="code-line indent-0 block-end">}</div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="comment">// Dohvaćanje elementa po indeksu</span></div>
+            <div class="code-line indent-0"><span class="type">String</span> prvo = godisnjaDoba.<span class="method">get</span>(<span
+                    class="number">0</span>); <span class="comment">// "Proljeće"</span></div>
+        </div>
+    </div>
+
+    <!-- Slide 6: Nested blokovi -->
+    <div class="slide">
+        <h2>Ugniježđeni blokovi - Jasna struktura</h2>
+        <div class="code-block">
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">Integer</span>&gt;
+                brojevi = <span class="type">Arrays</span>.<span class="method">asList</span>(<span
+                        class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span
+                        class="number">4</span>, <span class="number">5</span>);
+            </div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0 block-start"><span class="keyword">for</span> (<span
+                    class="type">Integer</span> broj : brojevi) {
+            </div>
+            <div class="code-line indent-1">&nbsp;</div>
+            <div class="code-line indent-1 block-start"><span class="keyword">if</span> (broj % <span
+                    class="number">2</span> == <span class="number">0</span>) {
+            </div>
+            <div class="code-line indent-2"><span class="type">System</span>.out.<span
+                    class="method">println</span>(<span class="string">"Paran: "</span> + broj);
+            </div>
+            <div class="code-line indent-1 block-end">}</div>
+            <div class="code-line indent-1 block-start"><span class="keyword">else</span> {</div>
+            <div class="code-line indent-2"><span class="type">System</span>.out.<span
+                    class="method">println</span>(<span class="string">"Neparan: "</span> + broj);
+            </div>
+            <div class="code-line indent-1 block-end">}</div>
+            <div class="code-line indent-0 block-end">}</div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span
+                    class="comment">// Vertikalne linije pokazuju hijerarhiju blokova!</span></div>
+        </div>
+    </div>
+
+    <!-- Slide 7: Setovi -->
+    <div class="slide">
+        <h2>🎯 Setovi (Set interface)</h2>
+        <h3>Karakteristike:</h3>
+        <ul>
+            <li><strong>Bez duplikata</strong> – svaki element može biti samo jednom</li>
+            <li>Ne čuva nužno redoslijed umetanja</li>
+            <li>Brzo provjera postoji li element</li>
+        </ul>
+        <div class="code-block">
+            <div class="code-line indent-0"><span class="type">Set</span>&lt;<span class="type">String</span>&gt;
+                jedinstvenaImena = <span class="keyword">new</span> <span class="type">HashSet</span>&lt;&gt;();
+            </div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0">jedinstvenaImena.<span class="method">add</span>(<span
+                    class="string">"Ana"</span>);
+            </div>
+            <div class="code-line indent-0">jedinstvenaImena.<span class="method">add</span>(<span class="string">"Marko"</span>);
+            </div>
+            <div class="code-line indent-0">jedinstvenaImena.<span class="method">add</span>(<span
+                    class="string">"Ana"</span>); <span class="comment">// Neće se dodati!</span></div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="type">System</span>.out.<span class="method">println</span>(jedinstvenaImena.<span
+                    class="method">size</span>()); <span class="comment">// 2</span></div>
+        </div>
+    </div>
+
+    <!-- Slide 8: Mape -->
+    <div class="slide">
+        <h2>🗺️ Mape (Map interface)</h2>
+        <div class="code-block">
+            <div class="code-line indent-0"><span class="type">Map</span>&lt;<span class="type">String</span>, <span
+                    class="type">Integer</span>&gt; brojStudenata = <span class="keyword">new</span> <span class="type">HashMap</span>&lt;&gt;();
+            </div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="comment">// Dodavanje parova</span></div>
+            <div class="code-line indent-0">brojStudenata.<span class="method">put</span>(<span
+                    class="string">"FER"</span>, <span class="number">1500</span>);
+            </div>
+            <div class="code-line indent-0">brojStudenata.<span class="method">put</span>(<span
+                    class="string">"PMF"</span>, <span class="number">1200</span>);
+            </div>
+            <div class="code-line indent-0">brojStudenata.<span class="method">put</span>(<span
+                    class="string">"TVZ"</span>, <span class="number">800</span>);
+            </div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="comment">// Dohvaćanje vrijednosti</span></div>
+            <div class="code-line indent-0"><span class="type">Integer</span> ferStudenti = brojStudenata.<span
+                    class="method">get</span>(<span class="string">"FER"</span>);
+            </div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="comment">// Iteracija kroz sve parove</span></div>
+            <div class="code-line indent-0 block-start"><span class="keyword">for</span> (<span
+                    class="type">String</span> fakultet : brojStudenata.<span class="method">keySet</span>()) {
+            </div>
+            <div class="code-line indent-1"><span class="type">System</span>.out.<span class="method">println</span>(fakultet
+                + <span class="string">": "</span> +
+            </div>
+            <div class="code-line indent-1"> brojStudenata.<span class="method">get</span>(fakultet));</div>
+            <div class="code-line indent-0 block-end">}</div>
+        </div>
+    </div>
+
+    <!-- Slide 9: Collections klasa -->
+    <div class="slide">
+        <h2>🛠️ Collections utility klasa</h2>
+        <p>Sadrži statičke metode za rad sa zbirkama:</p>
+        <div class="two-column">
+            <div>
+                <h4>Algoritmi:</h4>
+                <ul>
+                    <li><code>sort()</code> – sortiranje</li>
+                    <li><code>shuffle()</code> – miješanje</li>
+                    <li><code>reverse()</code> – obrat</li>
+                    <li><code>binarySearch()</code> – pretraživanje</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Utility metode:</h4>
+                <ul>
+                    <li><code>min()</code>, <code>max()</code></li>
+                    <li><code>frequency()</code> – brojanje</li>
+                    <li><code>copy()</code> – kopiranje</li>
+                    <li><code>fill()</code> – popunjavanje</li>
+                </ul>
+            </div>
+        </div>
+        <div class="code-block">
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">Integer</span>&gt;
+                brojevi = <span class="type">Arrays</span>.<span class="method">asList</span>(<span
+                        class="number">5</span>, <span class="number">2</span>, <span class="number">8</span>, <span
+                        class="number">1</span>, <span class="number">9</span>);
+            </div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="type">Collections</span>.<span class="method">sort</span>(brojevi);
+                <span class="comment">// [1, 2, 5, 8, 9]</span></div>
+            <div class="code-line indent-0"><span class="type">Collections</span>.<span class="method">reverse</span>(brojevi);
+                <span class="comment">// [9, 8, 5, 2, 1]</span></div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="type">Integer</span> max = <span
+                    class="type">Collections</span>.<span class="method">max</span>(brojevi); <span
+                    class="comment">// 9</span></div>
+        </div>
+    </div>
+
+    <!-- Slide 10: Enumeracije -->
+    <div class="slide">
+        <h2>🏷️ Enumeracije (Enum)</h2>
+        <div class="two-column">
+            <div>
+                <h4>Jednostavna enum:</h4>
+                <div class="code-block">
+                    <div class="code-line indent-0 block-start"><span class="keyword">public enum</span> <span
+                            class="type">GodisnjeDoba</span> {
+                    </div>
+                    <div class="code-line indent-1">PROLJECE,</div>
+                    <div class="code-line indent-1">LJETO,</div>
+                    <div class="code-line indent-1">JESEN,</div>
+                    <div class="code-line indent-1">ZIMA</div>
+                    <div class="code-line indent-0 block-end">}</div>
+                </div>
+            </div>
+            <div>
+                <h4>Enum s poljima:</h4>
+                <div class="code-block">
+                    <div class="code-line indent-0 block-start"><span class="keyword">public enum</span> <span
+                            class="type">Status</span> {
+                    </div>
+                    <div class="code-line indent-1">USPJEH(<span class="number">1</span>, <span
+                            class="string">"OK"</span>),
+                    </div>
+                    <div class="code-line indent-1">GRESKA(<span class="number">2</span>, <span
+                            class="string">"Fail"</span>);
+                    </div>
+                    <div class="code-line indent-1">&nbsp;</div>
+                    <div class="code-line indent-1"><span class="keyword">private final int</span> kod;</div>
+                    <div class="code-line indent-1"><span class="keyword">private final</span> <span
+                            class="type">String</span> opis;
+                    </div>
+                    <div class="code-line indent-1">&nbsp;</div>
+                    <div class="code-line indent-1 block-start"><span class="type">Status</span>(<span class="keyword">int</span>
+                        kod, <span class="type">String</span> opis) {
+                    </div>
+                    <div class="code-line indent-2"><span class="keyword">this</span>.kod = kod;</div>
+                    <div class="code-line indent-2"><span class="keyword">this</span>.opis = opis;</div>
+                    <div class="code-line indent-1 block-end">}</div>
+                    <div class="code-line indent-0 block-end">}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 11: Stream API - Uvod -->
+    <div class="slide">
+        <h2>🌊 Stream API (Java 8)</h2>
+        <h3>Što su tokovi (Streams)?</h3>
+        <ul>
+            <li>Omogućavaju <strong>funkcionalno programiranje</strong> u Javi</li>
+            <li>Deklarativna obrada podataka (kažemo "što" ne "kako")</li>
+            <li>Podržavaju <strong>paralelno procesiranje</strong></li>
+            <li><strong>Lenivo evaluiranje</strong> (lazy evaluation)</li>
+        </ul>
+        <div class="code-block">
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">Integer</span>&gt;
+                brojevi = <span class="type">Arrays</span>.<span class="method">asList</span>(<span
+                        class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span
+                        class="number">4</span>, <span class="number">5</span>);
+            </div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="comment">// Tradicionalni pristup</span></div>
+            <div class="code-line indent-0"><span class="keyword">int</span> suma = <span class="number">0</span>;</div>
+            <div class="code-line indent-0 block-start"><span class="keyword">for</span> (<span
+                    class="type">Integer</span> broj : brojevi) {
+            </div>
+            <div class="code-line indent-1 block-start"><span class="keyword">if</span> (broj % <span
+                    class="number">2</span> == <span class="number">0</span>) {
+            </div>
+            <div class="code-line indent-2">suma += broj;</div>
+            <div class="code-line indent-1 block-end">}</div>
+            <div class="code-line indent-0 block-end">}</div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="comment">// Stream API pristup</span></div>
+            <div class="code-line indent-0"><span class="keyword">int</span> suma = brojevi.<span
+                    class="method">stream</span>()
+            </div>
+            <div class="code-line indent-1">.<span class="method">filter</span>(b -> b % <span class="number">2</span>
+                == <span class="number">0</span>)
+            </div>
+            <div class="code-line indent-1">.<span class="method">mapToInt</span>(<span class="type">Integer</span>::intValue)
+            </div>
+            <div class="code-line indent-1">.<span class="method">sum</span>();</div>
+        </div>
+    </div>
+
+    <!-- Slide 12: Stream operacije -->
+    <div class="slide">
+        <h2>Stream operacije</h2>
+        <div class="two-column">
+            <div>
+                <h3>⚙️ Međuoperacije</h3>
+                <ul>
+                    <li><code>filter()</code> – filtriranje</li>
+                    <li><code>map()</code> – transformacija</li>
+                    <li><code>distinct()</code> – ukloni duplikate</li>
+                    <li><code>sorted()</code> – sortiranje</li>
+                    <li><code>limit()</code> – ograniči broj</li>
+                </ul>
+            </div>
+            <div>
+                <h3>🎯 Završne operacije</h3>
+                <ul>
+                    <li><code>forEach()</code> – obradi sve</li>
+                    <li><code>collect()</code> – skupi rezultate</li>
+                    <li><code>count()</code> – broji elemente</li>
+                    <li><code>reduce()</code> – reduciraj</li>
+                    <li><code>findFirst()</code> – prvi element</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 13: Stream primjer sa strukturom -->
+    <div class="slide">
+        <h2>Stream API - Primjer sa strukturom</h2>
+        <div class="code-block">
+            <div class="code-line indent-0 block-start"><span class="keyword">class</span> <span
+                    class="type">Student</span> {
+            </div>
+            <div class="code-line indent-1"><span class="type">String</span> ime;</div>
+            <div class="code-line indent-1"><span class="keyword">int</span> ocjena;</div>
+            <div class="code-line indent-1"><span class="comment">// konstruktor, getteri...</span></div>
+            <div class="code-line indent-0 block-end">}</div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">Student</span>&gt;
+                studenti = <span class="type">Arrays</span>.<span class="method">asList</span>(
+            </div>
+            <div class="code-line indent-1"><span class="keyword">new</span> <span class="type">Student</span>(<span
+                    class="string">"Ana"</span>, <span class="number">5</span>),
+            </div>
+            <div class="code-line indent-1"><span class="keyword">new</span> <span class="type">Student</span>(<span
+                    class="string">"Marko"</span>, <span class="number">3</span>),
+            </div>
+            <div class="code-line indent-1"><span class="keyword">new</span> <span class="type">Student</span>(<span
+                    class="string">"Ivana"</span>, <span class="number">4</span>)
+            </div>
+            <div class="code-line indent-0">);</div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="comment">// Pronađi imena studenata s ocjenom 5</span></div>
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">String</span>&gt;
+                odlikasi = studenti.<span class="method">stream</span>()
+            </div>
+            <div class="code-line indent-1">.<span class="method">filter</span>(s -> s.<span
+                    class="method">getOcjena</span>() == <span class="number">5</span>)
+            </div>
+            <div class="code-line indent-1">.<span class="method">map</span>(<span class="type">Student</span>::getIme)
+            </div>
+            <div class="code-line indent-1">.<span class="method">sorted</span>()</div>
+            <div class="code-line indent-1">.<span class="method">collect</span>(<span
+                    class="type">Collectors</span>.<span class="method">toList</span>());
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 14: Java 9 - Factory metode -->
+    <div class="slide">
+        <h2>Java 9 - Factory metode <span class="new-badge">JAVA 9</span></h2>
+        <h3>Jednostavno kreiranje immutable kolekcija:</h3>
+        <div class="code-block">
+            <div class="code-line indent-0"><span class="comment">// Prije Java 9 - komplicirano 😓</span></div>
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">String</span>&gt; lista
+                = <span class="keyword">new</span> <span class="type">ArrayList</span>&lt;&gt;();
+            </div>
+            <div class="code-line indent-0">lista.<span class="method">add</span>(<span class="string">"A"</span>);
+            </div>
+            <div class="code-line indent-0">lista.<span class="method">add</span>(<span class="string">"B"</span>);
+            </div>
+            <div class="code-line indent-0">lista = <span class="type">Collections</span>.<span class="method">unmodifiableList</span>(lista);
+            </div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="comment">// Java 9 - jednostavno! 🎉</span></div>
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">String</span>&gt; lista
+                = <span class="type">List</span>.<span class="method">of</span>(<span class="string">"A"</span>, <span
+                        class="string">"B"</span>, <span class="string">"C"</span>);
+            </div>
+            <div class="code-line indent-0"><span class="type">Set</span>&lt;<span class="type">Integer</span>&gt; set =
+                <span class="type">Set</span>.<span class="method">of</span>(<span class="number">1</span>, <span
+                        class="number">2</span>, <span class="number">3</span>);
+            </div>
+            <div class="code-line indent-0"><span class="type">Map</span>&lt;<span class="type">String</span>, <span
+                    class="type">Integer</span>&gt; mapa = <span class="type">Map</span>.<span class="method">of</span>(
+            </div>
+            <div class="code-line indent-1"><span class="string">"Ana"</span>, <span class="number">25</span>,</div>
+            <div class="code-line indent-1"><span class="string">"Marko"</span>, <span class="number">30</span></div>
+            <div class="code-line indent-0">);</div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="comment">// Pokušaj izmjene baca iznimku!</span></div>
+            <div class="code-line indent-0">lista.<span class="method">add</span>(<span class="string">"D"</span>);
+                <span class="comment">// UnsupportedOperationException</span></div>
+        </div>
+    </div>
+
+    <!-- Slide 15: Java 17 - Stream.toList() -->
+    <div class="slide">
+        <h2>Java 17 - Stream.toList() <span class="new-badge">JAVA 17</span></h2>
+        <h3>Kraći i čitljiviji kod!</h3>
+        <div class="code-block">
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">String</span>&gt; imena
+                = <span class="type">List</span>.<span class="method">of</span>(<span class="string">"Ana"</span>, <span
+                        class="string">"Marko"</span>, <span class="string">"Ivana"</span>);
+            </div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="comment">// Prije Java 17 - verbose</span></div>
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">String</span>&gt;
+                velkaSlova1 = imena.<span class="method">stream</span>()
+            </div>
+            <div class="code-line indent-1">.<span class="method">map</span>(<span class="type">String</span>::toUpperCase)
+            </div>
+            <div class="code-line indent-1">.<span class="method">collect</span>(<span
+                    class="type">Collectors</span>.<span class="method">toList</span>());
+            </div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="comment">// Java 17 - jednostavnije! 🎯</span></div>
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">String</span>&gt;
+                velkaSlova2 = imena.<span class="method">stream</span>()
+            </div>
+            <div class="code-line indent-1">.<span class="method">map</span>(<span class="type">String</span>::toUpperCase)
+            </div>
+            <div class="code-line indent-1">.<span class="method">toList</span>();</div>
+        </div>
+    </div>
+
+    <!-- Slide 16: Java 21 - Sequenced Collections -->
+    <div class="slide">
+        <h2>Java 21 - Sequenced Collections <span class="lts-badge">JAVA 21 LTS</span></h2>
+        <h3>Najveća novost u Collections Frameworku!</h3>
+        <div class="highlight-box">
+            <p><strong>Problem:</strong> Dosad nije bilo konzistentnog načina za pristup prvom/zadnjem elementu</p>
+        </div>
+        <div class="code-block">
+            <div class="code-line indent-0"><span class="comment">// Lista sada ima konzistentan API</span></div>
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">String</span>&gt; lista
+                = <span class="keyword">new</span> <span class="type">ArrayList</span>&lt;&gt;();
+            </div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0">lista.<span class="method">addFirst</span>(<span
+                    class="string">"Prvi"</span>); <span class="comment">// Dodaj na početak</span></div>
+            <div class="code-line indent-0">lista.<span class="method">addLast</span>(<span
+                    class="string">"Zadnji"</span>); <span class="comment">// Dodaj na kraj</span></div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="type">String</span> prvi = lista.<span
+                    class="method">getFirst</span>();
+            </div>
+            <div class="code-line indent-0"><span class="type">String</span> zadnji = lista.<span
+                    class="method">getLast</span>();
+            </div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="comment">// Obrnuti redoslijed - nova mogućnost!</span></div>
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">String</span>&gt;
+                obrnuto = lista.<span class="method">reversed</span>();
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 17: Java 24 - Stream Gatherers -->
+    <div class="slide">
+        <h2>Java 24 - Stream Gatherers <span class="new-badge">JAVA 24</span></h2>
+        <h3>Custom intermediate operations za Stream!</h3>
+        <div class="highlight-box">
+            <p><strong>Problem:</strong> Stream API nema sve potrebne međuoperacije (npr. batching, windowing)</p>
+        </div>
+        <h4>Novi ugrađeni Gatherers:</h4>
+        <ul>
+            <li><code>windowFixed(n)</code> – podijeli u grupe fiksne veličine</li>
+            <li><code>windowSliding(n)</code> – klizni prozor</li>
+            <li><code>fold()</code> – složena redukcija</li>
+            <li><code>scan()</code> – akumulacija s međurezultatima</li>
+            <li><code>mapConcurrent()</code> – konkurentna obrada</li>
+        </ul>
+    </div>
+
+    <!-- Slide 18: Gatherers primjer -->
+    <div class="slide">
+        <h2>Stream Gatherers - Primjer</h2>
+        <div class="code-block">
+            <div class="code-line indent-0"><span class="comment">// Podjela u grupe od po 3 elementa</span></div>
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">Integer</span>&gt;
+                brojevi = <span class="type">List</span>.<span class="method">of</span>(<span class="number">1</span>,
+                <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span
+                        class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>);
+            </div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">List</span>&lt;<span
+                    class="type">Integer</span>&gt;&gt; grupe = brojevi.<span class="method">stream</span>()
+            </div>
+            <div class="code-line indent-1">.<span class="method">gather</span>(<span
+                    class="type">Gatherers</span>.<span class="method">windowFixed</span>(<span class="number">3</span>))
+            </div>
+            <div class="code-line indent-1">.<span class="method">toList</span>();</div>
+            <div class="code-line indent-0"><span class="comment">// [[1, 2, 3], [4, 5, 6], [7]]</span></div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="comment">// Klizni prozor veličine 2</span></div>
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">List</span>&lt;<span
+                    class="type">Integer</span>&gt;&gt; prozori = brojevi.<span class="method">stream</span>()
+            </div>
+            <div class="code-line indent-1">.<span class="method">gather</span>(<span
+                    class="type">Gatherers</span>.<span class="method">windowSliding</span>(<span
+                    class="number">2</span>))
+            </div>
+            <div class="code-line indent-1">.<span class="method">toList</span>();</div>
+            <div class="code-line indent-0"><span class="comment">// [[1,2], [2,3], [3,4], [4,5], [5,6], [6,7]]</span>
+            </div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="comment">// Konkurentna transformacija (max 3 paralelna)</span>
+            </div>
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">String</span>&gt;
+                rezultati = brojevi.<span class="method">stream</span>()
+            </div>
+            <div class="code-line indent-1">.<span class="method">gather</span>(<span
+                    class="type">Gatherers</span>.<span class="method">mapConcurrent</span>(<span
+                    class="number">3</span>,
+            </div>
+            <div class="code-line indent-2">n -> <span class="string">"Obrađeno: "</span> + n))</div>
+            <div class="code-line indent-1">.<span class="method">toList</span>();</div>
+        </div>
+    </div>
+
+    <!-- Slide 19: Java 25 - Performance -->
+    <div class="slide">
+        <h2>Java 25 - Performance & Memory <span class="lts-badge">JAVA 25 LTS</span></h2>
+        <h3>🚀 Compact Object Headers (JEP 519)</h3>
+        <div class="highlight-box">
+            <p><strong>Smanjenje memorijskog footprinta za 50%!</strong></p>
+            <p>Header objekta: 128 bitova → 64 bita</p>
+        </div>
+        <ul>
+            <li>✅ Automatski aktivno u Java 25 (ne treba nikakva konfiguracija)</li>
+            <li>✅ Posebno učinkovito za aplikacije s puno malih objekata</li>
+            <li>✅ Smanjuje broj GC ciklusa</li>
+            <li>💡 Idealno za microservices i cloud deploymente</li>
+        </ul>
+        <div class="code-block">
+            <div class="code-line indent-0"><span class="comment">// Primjer: Lista od milijun malih objekata</span>
+            </div>
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">Point</span>&gt; tocke
+                = <span class="keyword">new</span> <span class="type">ArrayList</span>&lt;&gt;();
+            </div>
+            <div class="code-line indent-0 block-start"><span class="keyword">for</span> (<span
+                    class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span
+                    class="number">1_000_000</span>; i++) {
+            </div>
+            <div class="code-line indent-1">tocke.<span class="method">add</span>(<span class="keyword">new</span> <span
+                    class="type">Point</span>(i, i));
+            </div>
+            <div class="code-line indent-0 block-end">}</div>
+            <div class="code-line indent-0"><span class="comment">// Java 24: ~48 MB memorije</span></div>
+            <div class="code-line indent-0"><span class="comment">// Java 25: ~32 MB memorije ⚡</span></div>
+        </div>
+    </div>
+
+    <!-- Slide 20: Java 25 - Generational Shenandoah -->
+    <div class="slide">
+        <h2>Java 25 - Generational Shenandoah <span class="lts-badge">JAVA 25 LTS</span></h2>
+        <h3>⚡ Poboljšani Garbage Collector (JEP 521)</h3>
+        <ul>
+            <li><strong>Low-latency GC</strong> s generacijskim pristupom</li>
+            <li>Dijeli heap na <strong>young</strong> i <strong>old</strong> generaciju</li>
+            <li>Bolje performanse za aplikacije s puno kratkoživećih objekata</li>
+            <li>Manji pause times (&lt;10ms)</li>
+        </ul>
+        <div class="code-block">
+            <div class="code-line indent-0"><span class="comment">// Pokretanje s Generational Shenandoah</span></div>
+            <div class="code-line indent-0">java -XX:+UseShenandoahGC \</div>
+            <div class="code-line indent-1">-XX:ShenandoahGCMode=generational \</div>
+            <div class="code-line indent-1">MojaAplikacija</div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span
+                    class="comment">// Više ne treba -XX:+UnlockExperimentalVMOptions!</span></div>
+        </div>
+        <div class="highlight-box">
+            <p>💡 <strong>Kada koristiti:</strong> Latency-sensitive aplikacije (web serveri, real-time sustavi)</p>
+        </div>
+    </div>
+
+    <!-- Slide 21: Java 25 - Flexible Constructors -->
+    <div class="slide">
+        <h2>Java 25 - Flexible Constructor Bodies <span class="lts-badge">JAVA 25</span></h2>
+        <h3>Omogućava kod PRIJE super() poziva!</h3>
+        <div class="code-block">
+            <div class="code-line indent-0 block-start"><span class="keyword">class</span> <span
+                    class="type">Rectangle</span> <span class="keyword">extends</span> <span class="type">Shape</span> {
+            </div>
+            <div class="code-line indent-1"><span class="keyword">final int</span> width;</div>
+            <div class="code-line indent-1"><span class="keyword">final int</span> height;</div>
+            <div class="code-line indent-1">&nbsp;</div>
+            <div class="code-line indent-1 block-start"><span class="keyword">public</span> <span
+                    class="type">Rectangle</span>(<span class="keyword">int</span> width, <span
+                    class="keyword">int</span> height) {
+            </div>
+            <div class="code-line indent-2"><span class="comment">// Java 25: Validacija PRIJE super()! 🎉</span></div>
+            <div class="code-line indent-2 block-start"><span class="keyword">if</span> (width &lt;= <span
+                    class="number">0</span> || height &lt;= <span class="number">0</span>) {
+            </div>
+            <div class="code-line indent-3"><span class="keyword">throw new</span> <span class="type">IllegalArgumentException</span>(
+            </div>
+            <div class="code-line indent-4"><span class="string">"Dimenzije moraju biti pozitivne"</span>);</div>
+            <div class="code-line indent-2 block-end">}</div>
+            <div class="code-line indent-2">&nbsp;</div>
+            <div class="code-line indent-2"><span class="comment">// Računanje prije super()</span></div>
+            <div class="code-line indent-2"><span class="keyword">int</span> area = width * height;</div>
+            <div class="code-line indent-2">&nbsp;</div>
+            <div class="code-line indent-2"><span class="keyword">super</span>(area); <span class="comment">// Sada je moguće!</span>
+            </div>
+            <div class="code-line indent-2">&nbsp;</div>
+            <div class="code-line indent-2"><span class="keyword">this</span>.width = width;</div>
+            <div class="code-line indent-2"><span class="keyword">this</span>.height = height;</div>
+            <div class="code-line indent-1 block-end">}</div>
+            <div class="code-line indent-0 block-end">}</div>
+        </div>
+    </div>
+
+    <!-- Slide 22: Java 25 - Module Imports -->
+    <div class="slide">
+        <h2>Java 25 - Module Import Declarations <span class="lts-badge">JAVA 25</span></h2>
+        <h3>Import cijelog modula odjednom!</h3>
+        <div class="code-block">
+            <div class="code-line indent-0"><span class="comment">// Prije Java 25 - mnogobrojna importanja</span></div>
+            <div class="code-line indent-0"><span class="keyword">import</span> java.util.Map;</div>
+            <div class="code-line indent-0"><span class="keyword">import</span> java.util.List;</div>
+            <div class="code-line indent-0"><span class="keyword">import</span> java.util.Set;</div>
+            <div class="code-line indent-0"><span class="keyword">import</span> java.util.stream.Collectors;</div>
+            <div class="code-line indent-0"><span class="keyword">import</span> java.util.stream.Stream;</div>
+            <div class="code-line indent-0"><span class="keyword">import</span> java.util.function.Function;</div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="comment">// Java 25 - import cijelog modula 🎯</span></div>
+            <div class="code-line indent-0"><span class="keyword">import module</span> java.base;</div>
+            <div class="code-line indent-0"><span class="comment">// Sve klase iz java.base modula su dostupne!</span>
+            </div>
+        </div>
+        <div class="highlight-box">
+            <p>💡 Koristi se za manje projekte, prototipove ili skripte</p>
+        </div>
+    </div>
+
+    <!-- Slide 23: Best Practices -->
+    <div class="slide">
+        <h2>💡 Best Practices</h2>
+        <div class="two-column">
+            <div>
+                <h3>✅ Radi ovo:</h3>
+                <ul>
+                    <li>Koristi <strong>sučelja</strong> kao tipove</li>
+                    <li>Koristi <strong>diamond operator</strong></li>
+                    <li>Koristi <strong>Stream API</strong></li>
+                    <li>Koristi <strong>immutable</strong> kolekcije</li>
+                    <li>Koristi <strong>var</strong> (Java 10+)</li>
+                    <li>Koristi <strong>Gatherers</strong> (Java 24+)</li>
+                </ul>
+            </div>
+            <div>
+                <h3>❌ Izbjegavaj:</h3>
+                <ul>
+                    <li>Konkretne implementacije kao tipove</li>
+                    <li>Ponavljanje tipova</li>
+                    <li>Ručno pisanje petlji</li>
+                    <li>Mijenjanje tijekom iteracije</li>
+                    <li>Null vrijednosti u zbirkama</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 24: Sažetak -->
+    <div class="slide">
+        <h2>📚 Sažetak - Evolution of Java Collections</h2>
+        <ul style="font-size: 1.15em;">
+            <li><strong>Java 5:</strong> Generics, For-each, Enums</li>
+            <li><strong>Java 7:</strong> Diamond operator (&lt;&gt;)</li>
+            <li><strong>Java 8:</strong> 🌊 Stream API, Lambda izrazi</li>
+            <li><strong>Java 9:</strong> 🏭 Factory metode (List.of, Set.of, Map.of)</li>
+            <li><strong>Java 10:</strong> 🎯 Var keyword</li>
+            <li><strong>Java 17 LTS:</strong> ✨ Stream.toList()</li>
+            <li><strong>Java 21 LTS:</strong> 📊 Sequenced Collections</li>
+            <li><strong>Java 24:</strong> 🎨 Stream Gatherers</li>
+            <li><strong>Java 25 LTS:</strong> ⚡ Compact Headers, Generational Shenandoah, Flexible Constructors</li>
+        </ul>
+        <div class="highlight-box" style="margin-top: 30px; text-align: center;">
+            <h3>Java 25 je najnoviji LTS release!</h3>
+            <p>Sljedeći LTS: Java 29 (2027)</p>
+        </div>
+    </div>
+
+    <!-- Slide 25: Usporedba prije/sada -->
+    <div class="slide">
+        <h2>Napredak kroz verzije - Primjer</h2>
+        <div class="code-block">
+            <div class="code-line indent-0"><span class="comment">// Java 8 - verbose</span></div>
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">String</span>&gt;
+                rezultat = brojevi.<span class="method">stream</span>()
+            </div>
+            <div class="code-line indent-1">.<span class="method">filter</span>(n -> n % <span class="number">2</span>
+                == <span class="number">0</span>)
+            </div>
+            <div class="code-line indent-1">.<span class="method">map</span>(<span class="type">String</span>::valueOf)
+            </div>
+            <div class="code-line indent-1">.<span class="method">collect</span>(<span
+                    class="type">Collectors</span>.<span class="method">toList</span>());
+            </div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="comment">// Java 17 - jednostavnije</span></div>
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">String</span>&gt;
+                rezultat = brojevi.<span class="method">stream</span>()
+            </div>
+            <div class="code-line indent-1">.<span class="method">filter</span>(n -> n % <span class="number">2</span>
+                == <span class="number">0</span>)
+            </div>
+            <div class="code-line indent-1">.<span class="method">map</span>(<span class="type">String</span>::valueOf)
+            </div>
+            <div class="code-line indent-1">.<span class="method">toList</span>();</div>
+            <div class="code-line indent-0">&nbsp;</div>
+            <div class="code-line indent-0"><span class="comment">// Java 24 - s grupiranjem</span></div>
+            <div class="code-line indent-0"><span class="type">List</span>&lt;<span class="type">List</span>&lt;<span
+                    class="type">Integer</span>&gt;&gt; grupe = brojevi.<span class="method">stream</span>()
+            </div>
+            <div class="code-line indent-1">.<span class="method">filter</span>(n -> n % <span class="number">2</span>
+                == <span class="number">0</span>)
+            </div>
+            <div class="code-line indent-1">.<span class="method">gather</span>(<span
+                    class="type">Gatherers</span>.<span class="method">windowFixed</span>(<span class="number">3</span>))
+            </div>
+            <div class="code-line indent-1">.<span class="method">toList</span>();</div>
+        </div>
+    </div>
+
+    <!-- Slide 26: Resursi -->
+    <div class="slide">
+        <h2>🔗 Korisni resursi</h2>
+        <div class="two-column">
+            <div>
+                <h3>Dokumentacija:</h3>
+                <ul>
+                    <li><a href="https://docs.oracle.com/en/java/javase/25/" target="_blank">Java 25 Documentation</a>
+                    </li>
+                    <li><a href="https://openjdk.org/jeps/431" target="_blank">JEP 431: Sequenced Collections</a></li>
+                    <li><a href="https://openjdk.org/jeps/485" target="_blank">JEP 485: Stream Gatherers</a></li>
+                    <li><a href="https://dev.java/learn/" target="_blank">Oracle Dev.java</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3>Za vježbanje:</h3>
+                <ul>
+                    <li><a href="https://www.hackerrank.com/domains/java" target="_blank">HackerRank Java</a></li>
+                    <li><a href="https://leetcode.com/" target="_blank">LeetCode</a></li>
+                    <li><a href="https://exercism.org/tracks/java" target="_blank">Exercism Java Track</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 27: Pitanja -->
+    <div class="slide title-slide">
+        <h1>❓ Pitanja?</h1>
+        <p style="margin-top: 2em;">Hvala na pažnji!</p>
+        <p style="margin-top: 1em; font-size: 1.2em;">☕ Happy coding with Java 25! 🚀</p>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()">◀ Prethodna</button>
+        <button class="nav-btn" onclick="nextSlide()">Sljedeća ▶</button>
+    </div>
+
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">27</span>
+    </div>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    document.getElementById('total-slides').textContent = totalSlides;
+
+    function showSlide(n) {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (n + totalSlides) % totalSlides;
+        slides[currentSlide].classList.add('active');
+        document.getElementById('current-slide').textContent = currentSlide + 1;
+
+        const prevBtn = document.querySelector('.navigation button:first-child');
+        const nextBtn = document.querySelector('.navigation button:last-child');
+        prevBtn.disabled = currentSlide === 0;
+        nextBtn.disabled = currentSlide === totalSlides - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            showSlide(currentSlide + 1);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            showSlide(currentSlide - 1);
+        }
+    }
+
+    function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            e.preventDefault();
+            nextSlide();
+        } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            previousSlide();
+        } else if (e.key === 'Home') {
+            e.preventDefault();
+            showSlide(0);
+        } else if (e.key === 'End') {
+            e.preventDefault();
+            showSlide(totalSlides - 1);
+        }
+    });
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    // Initialize
+    showSlide(0);
+</script>
+</body>
+</html>

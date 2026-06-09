@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Klase i objekti u Javi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.6s ease;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+
+        h1 {
+            font-size: 3.5em;
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+            animation: fadeInDown 0.8s ease;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            color: white;
+            margin-bottom: 40px;
+            text-align: center;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        h3 {
+            font-size: 1.8em;
+            color: #FFD700;
+            margin: 20px 0 10px 0;
+        }
+
+        .content-box {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 20px 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            max-width: 1100px;
+            width: 100%;
+            animation: fadeIn 1s ease;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .column {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        ul {
+            list-style: none;
+            color: white;
+            font-size: 1.2em;
+            line-height: 2;
+        }
+
+        ul li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        ul li::before {
+            content: "☕";
+            position: absolute;
+            left: 0;
+            font-size: 1.2em;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #f8f8f2;
+            overflow-x: auto;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border-left: 4px solid #FFD700;
+        }
+
+        .keyword {
+            color: #ff79c6;
+        }
+
+        .class-name {
+            color: #50fa7b;
+        }
+
+        .method {
+            color: #8be9fd;
+        }
+
+        .string {
+            color: #f1fa8c;
+        }
+
+        .comment {
+            color: #6272a4;
+            font-style: italic;
+        }
+
+        .fun-fact {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-left: 5px solid #FFD700;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.1em;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .tip {
+            background: rgba(100, 200, 255, 0.3);
+            border-left: 4px solid #4ecdc4;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .warning {
+            background: rgba(255, 100, 100, 0.3);
+            border-left: 4px solid #ff6b6b;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .analogy {
+            background: rgba(255, 200, 100, 0.3);
+            border-left: 4px solid #ffa500;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            font-size: 1.1em;
+            color: white;
+        }
+
+        .memory-diagram {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .object-box {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            border: 3px solid #FFD700;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px;
+            min-width: 200px;
+        }
+
+        .reference-arrow {
+            font-size: 3em;
+            color: #FFD700;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            border: none;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.1);
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            color: white;
+            font-size: 1.2em;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 20px;
+        }
+
+        .emoji {
+            font-size: 3em;
+            margin: 20px 0;
+            animation: bounce 2s infinite;
+        }
+
+        .highlight {
+            color: #FFD700;
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .camel-case {
+            font-size: 4em;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .comparison-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .vs {
+            font-size: 2em;
+            color: #FFD700;
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="presentation">
+    <!-- Slide 1: Naslovna -->
+    <div class="slide active">
+        <div class="emoji">☕</div>
+        <h1>Klase i objekti u Javi</h1>
+        <div class="content-box">
+            <div class="fun-fact">
+                💡 <strong>Fun fact:</strong> Java ima preko 9 milijuna developera širom svijeta!
+                Danas učimo temelj objektno orijentiranog programiranja - klase i objekte! 🚀
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 2: Sadržaj -->
+    <div class="slide">
+        <h2>📚 Što danas učimo?</h2>
+        <div class="two-column">
+            <div class="column">
+                <h3>🎯 Osnove</h3>
+                <ul>
+                    <li>Uvod u klase i objekte</li>
+                    <li>Primjer klase Account</li>
+                    <li>Konvencije nazivanja</li>
+                    <li>Kreiranje objekata</li>
+                    <li>Import deklaracije</li>
+                </ul>
+            </div>
+            <div class="column">
+                <h3>🔥 Napredno</h3>
+                <ul>
+                    <li>Primitivni vs referentni tipovi</li>
+                    <li>Konstruktori</li>
+                    <li>Date and Time API</li>
+                    <li>Reference i memorija</li>
+                    <li>Uspoređivanje objekata</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: Što su klase? -->
+    <div class="slide">
+        <h2>🏗️ Što su klase i objekti?</h2>
+        <div class="content-box">
+            <div class="analogy">
+                <strong>🍪 Analogija s kolačićima:</strong><br><br>
+                <strong>Klasa</strong> = Kalup za kolačiće (blueprint, recept)<br>
+                <strong>Objekt</strong> = Pojedini kolačić napravljen tim kalupom<br><br>
+                Jedan kalup → Bezbroj kolačića! 🎉
+            </div>
+            <ul style="font-size: 1.1em;">
+                <li><strong>Klase</strong> definiraju vlastite tipove podataka</li>
+                <li><strong>Atributi</strong> (varijable) = karakteristike entiteta</li>
+                <li><strong>Metode</strong> (funkcije) = ponašanje entiteta</li>
+                <li>Mogu se višestruko koristiti nasljeđivanjem</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Slide 4: Primjer Account -->
+    <div class="slide">
+        <h2>💳 Primjer: Klasa Account</h2>
+        <div class="content-box">
+            <div class="code-block">
+                <span class="keyword">package</span> account;<br><br>
+
+                <span class="keyword">public class</span> <span class="class-name">Account</span> {<br>
+                <span class="keyword">private</span> String name; <span
+                    class="comment">// atribut (varijabla instance)</span><br><br>
+                <span class="comment">// Getter metoda - dohvaća vrijednost</span><br>
+                <span class="keyword">public</span> String <span class="method">getName</span>() {<br>
+                <span class="keyword">return</span> name;<br>
+                }<br>
+
+                <span class="comment">// Setter metoda - postavlja vrijednost</span><br>
+                <span class="keyword">public void</span> <span class="method">setName</span>(String name) {<br>
+                <span class="keyword">this</span>.name = name; <span class="comment">// 'this' razlikuje parametar od varijable</span><br>
+                }<br>
+                }
+            </div>
+            <div class="tip">
+                💡 <strong>Tip:</strong> U IntelliJ-u koristi <strong>Alt+Insert</strong> za automatsko generiranje
+                getter/setter metoda!
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Public vs Private -->
+    <div class="slide">
+        <h2>🔒 Public vs Private</h2>
+        <div class="content-box">
+            <div class="comparison-table">
+                <div class="comparison-item">
+                    <h3>🔓 public</h3>
+                    <p style="color: white; margin-top: 15px;">
+                        Pristupačno <strong>svugdje</strong><br>
+                        (unutar i izvan klase)
+                    </p>
+                </div>
+                <div class="comparison-item">
+                    <h3>🔒 private</h3>
+                    <p style="color: white; margin-top: 15px;">
+                        Pristupačno samo<br>
+                        <strong>unutar klase</strong>
+                    </p>
+                </div>
+            </div>
+            <div class="fun-fact" style="margin-top: 30px;">
+                🛡️ <strong>Enkapsulacija:</strong> Sakrivanje podataka i kontrola pristupa kroz metode!<br>
+                Ovo je jedan od temeljnih principa OOP-a (Object-Oriented Programming)
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: Konvencija nazivanja -->
+    <div class="slide">
+        <h2>📝 Konvencija nazivanja (Naming Convention)</h2>
+        <div class="content-box">
+            <div class="camel-case">🐫</div>
+            <ul style="font-size: 1.1em;">
+                <li><strong>Klase:</strong> <span class="highlight">PascalCase</span> → velika početno slovo</li>
+                <li><strong>Objekti i varijable:</strong> <span class="highlight">camelCase</span> → malo početno slovo
+                </li>
+                <li><strong>Metode:</strong> <span class="highlight">camelCase</span> → malo početno slovo</li>
+                <li>Svaka klasa mora biti u <span class="highlight">istoimenu .java datoteku</span></li>
+                <li>❌ Izbjegavati hrvatske znakove (č, ć, š, ž, đ)</li>
+            </ul>
+            <div class="code-block" style="margin-top: 20px;">
+                <span class="comment">// ✅ Dobro</span><br>
+                <span class="keyword">class</span> <span class="class-name">PrvaLaboratorijskaVjezba</span><br>
+                <span class="keyword">int</span> brojacStudenata;<br>
+                <span class="keyword">void</span> <span class="method">izracunajProsjek</span>()<br>
+
+                <span class="comment">// ❌ Loše</span><br>
+                <span class="keyword">class</span> prvaLaboratorijskaVjezba<br>
+                <span class="keyword">int</span> BrojacStudenata<br>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 7: Kreiranje objekta -->
+    <div class="slide">
+        <h2>🎨 Kreiranje objekta</h2>
+        <div class="content-box">
+            <div class="code-block">
+                <span class="keyword">import</span> java.util.Scanner;<br>
+
+                <span class="keyword">public class</span> <span class="class-name">AccountTest</span> {<br>
+                <span class="keyword">public static void</span> <span class="method">main</span>(String[] args) {<br>
+                <span class="comment">// Kreiranje Scanner objekta za unos</span><br>
+                Scanner unos = <span class="keyword">new</span> Scanner(System.in);<br>
+
+                <span class="comment">// Kreiranje Account objekta pomoću konstruktora</span><br>
+                Account mojRacun = <span class="keyword">new</span> <span class="class-name">Account</span>();<br>
+
+                System.out.<span class="method">println</span>(<span
+                    class="string">"Unesite naziv računa: "</span>);<br>
+                String brojRacuna = unos.<span class="method">nextLine</span>();<br>
+
+                mojRacun.<span class="method">setName</span>(brojRacuna); <span
+                    class="comment">// Postavljanje naziva</span><br>
+
+                unos.<span class="method">close</span>();<br>
+                }<br>
+                }<br>
+            </div>
+            <div class="tip">
+                🔑 <strong>new</strong> = ključna riječ za kreiranje novog objekta (poziva konstruktor)
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 8: Import deklaracije -->
+    <div class="slide">
+        <h2>📦 Import deklaracije</h2>
+        <div class="content-box">
+            <div class="code-block">
+                <span class="comment">// 1. Deklaracija paketa</span><br>
+                <span class="keyword">package</span> account;<br>
+
+                <span class="comment">// 2. Import deklaracije (klase iz drugih paketa)</span><br>
+                <span class="keyword">import</span> java.util.Scanner;<br>
+                <span class="keyword">import</span> java.time.LocalDateTime;<br>
+
+                <span class="comment">// 3. Deklaracija klase</span><br>
+                <span class="keyword">public class</span> <span class="class-name">AccountTest</span> { ... }
+            </div>
+            <div style="margin-top: 20px;">
+                <div class="tip">
+                    ⌨️ <strong>Shortcut:</strong> <strong>Ctrl+Space</strong> = Auto-complete<br>
+                    ⌨️ <strong>Shortcut:</strong> <strong>Alt+Enter</strong> = Automatski dodaj import
+                </div>
+                <div class="code-block" style="margin-top: 15px;">
+                    <span class="comment">// Alternativa bez importa (rijetko korišteno)</span><br>
+                    java.util.Scanner unos = <span class="keyword">new</span> java.util.Scanner(System.in);
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 9: Primitivni vs Referentni -->
+    <div class="slide">
+        <h2>⚡ Primitivni vs Referentni tipovi</h2>
+        <div class="two-column">
+            <div class="column">
+                <h3>Primitivni tipovi</h3>
+                <ul style="font-size: 1em;">
+                    <li>int, long, short, byte</li>
+                    <li>float, double</li>
+                    <li>boolean</li>
+                    <li>char</li>
+                </ul>
+                <div class="fun-fact" style="margin-top: 20px;">
+                    📊 Defaultna vrijednost:<br>
+                    <strong>0</strong> ili <strong>false</strong>
+                </div>
+            </div>
+            <div class="column">
+                <h3>Referentni tipovi</h3>
+                <ul style="font-size: 1em;">
+                    <li>String</li>
+                    <li>Account</li>
+                    <li>Scanner</li>
+                    <li>Sve klase...</li>
+                </ul>
+                <div class="fun-fact" style="margin-top: 20px;">
+                    📊 Defaultna vrijednost:<br>
+                    <strong>null</strong>
+                </div>
+            </div>
+        </div>
+        <div class="warning" style="margin-top: 20px;">
+            ⚠️ <strong>NullPointerException:</strong> Događa se kad pokušaš koristiti metodu ili varijablu objekta koji
+            je <strong>null</strong>!
+        </div>
+    </div>
+
+    <!-- Slide 10: Konstruktori -->
+    <div class="slide">
+        <h2>🏗️ Konstruktori</h2>
+        <div class="content-box">
+            <div class="analogy">
+                <strong>🏭 Konstruktor = Tvornica za objekte!</strong><br>
+                Specijalna metoda koja "sastavlja" objekt i inicijalizira njegove vrijednosti
+            </div>
+            <div class="code-block">
+                <span class="keyword">public class</span> <span class="class-name">Account</span> {<br>
+                <span class="keyword">private</span> String name;<br>
+
+                <span class="comment">// Konstruktor - isto ime kao klasa, nema return type!</span><br>
+                <span class="keyword">public</span> <span class="class-name">Account</span>(String name) {<br>
+                <span class="keyword">this</span>.name = name;<br>
+                }<br>
+                }<br>
+
+                <span class="comment">// Korištenje:</span><br>
+                Account racun = <span class="keyword">new</span> <span class="class-name">Account</span>(<span
+                    class="string">"Tekući račun"</span>);
+            </div>
+            <div class="tip">
+                💡 Ako ne napišeš konstruktor, Java automatski kreira <strong>defaultni konstruktor</strong> (bez
+                parametara)
+            </div>
+            <div class="tip">
+                🎯 IntelliJ: <strong>Code → Generate... → Constructor</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 11: Date and Time API -->
+    <div class="slide">
+        <h2>📅 Date and Time API (Java 8+)</h2>
+        <div class="content-box">
+            <div class="fun-fact">
+                🎉 Java 8 donosi <strong>novi Date/Time API</strong> inspiriran JodaTime bibliotekom!<br>
+                Stari Date i Calendar su zastarjeli i konfuzni
+            </div>
+            <div style="margin-top: 20px;">
+                <h3>Glavne klase:</h3>
+                <ul>
+                    <li><strong>LocalDate</strong> - samo datum (godina, mjesec, dan)</li>
+                    <li><strong>LocalTime</strong> - samo vrijeme (sati, minute, sekunde)</li>
+                    <li><strong>LocalDateTime</strong> - datum + vrijeme</li>
+                    <li><strong>Instant</strong> - timestamp (nanosekunde od 01.01.1970.)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 12: LocalDateTime primjer -->
+    <div class="slide">
+        <h2>⏰ Primjer: LocalDateTime</h2>
+        <div class="content-box">
+            <div class="code-block">
+                <span class="keyword">import</span> java.time.LocalDateTime;<br>
+                <span class="keyword">import</span> java.time.format.DateTimeFormatter;<br>
+
+                LocalDateTime trenutno = LocalDateTime.<span class="method">now</span>();<br>
+                System.out.<span class="method">println</span>(<span class="string">"Trenutni datum: "</span> +
+                trenutno);<br>
+
+                <span class="comment">// Dodavanje vremena</span><br>
+                LocalDateTime zaKvaTjedna = trenutno.<span class="method">plusWeeks</span>(<span
+                    class="highlight">2</span>);<br>
+                System.out.<span class="method">println</span>(<span class="string">"Nakon dva tjedna: "</span> +
+                zaKvaTjedna);<br>
+
+                <span class="comment">// Formatiranje</span><br>
+                String formatiran = trenutno.<span class="method">format</span>(<br>
+                DateTimeFormatter.<span class="method">ofPattern</span>(<span class="string">"dd.MM.yyyy."</span>)
+                );<br>
+                System.out.<span class="method">println</span>(<span class="string">"Formatirani: "</span> +
+                formatiran);<br>
+            </div>
+            <div class="code-block" style="background: rgba(0, 100, 0, 0.3);">
+                <span class="comment">// Output:</span><br>
+                Trenutni datum: 2025-10-10T12:37:29.035
+                Nakon dva tjedna: 2025-10-24T12:37:29.035
+                Formatirani: 10.10.2025.
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 13: Reference 1 -->
+    <div class="slide">
+        <h2>🔗 Objekti i reference (1)</h2>
+        <div class="content-box">
+            <div class="memory-diagram">
+                <h3 style="color: white; margin-bottom: 30px;">Nakon deklaracije:</h3>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 40px;">
+                    <div class="object-box">
+                        <strong style="color: #FFD700;">firstDate</strong>
+                    </div>
+                    <div class="reference-arrow">⊥</div>
+                    <div style="color: white; font-size: 1.5em;">null</div>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 40px; margin-top: 30px;">
+                    <div class="object-box">
+                        <strong style="color: #FFD700;">secondDate</strong>
+                    </div>
+                    <div class="reference-arrow">⊥</div>
+                    <div style="color: white; font-size: 1.5em;">null</div>
+                </div>
+            </div>
+            <div class="tip" style="margin-top: 20px;">
+                💡 Varijable referentnih tipova ne sadrže objekt, već <strong>adresu</strong> (referencu) gdje se objekt
+                nalazi u memoriji!
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 14: Reference 2 -->
+    <div class="slide">
+        <h2>🔗 Objekti i reference (2)</h2>
+        <div class="content-box">
+            <div class="memory-diagram">
+                <h3 style="color: white; margin-bottom: 30px;">Nakon kreiranja objekta:</h3>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+                    <div class="object-box">
+                        <strong style="color: #FFD700;">firstDate</strong>
+                    </div>
+                    <div class="reference-arrow">→</div>
+                    <div class="object-box" style="background: rgba(100, 200, 100, 0.3);">
+                        <div style="color: white; text-align: left;">
+                            <strong>day:</strong> 0<br>
+                            <strong>month:</strong> null<br>
+                            <strong>year:</strong> 0
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 40px; margin-top: 30px;">
+                    <div class="object-box">
+                        <strong style="color: #FFD700;">secondDate</strong>
+                    </div>
+                    <div class="reference-arrow">⊥</div>
+                    <div style="color: white; font-size: 1.5em;">null</div>
+                </div>
+            </div>
+            <div class="fun-fact" style="margin-top: 20px;">
+                🧠 Objekt je rezervirao prostor u memoriji! Primitivni tipovi dobivaju <strong>0</strong>, referentni
+                <strong>null</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 15: Reference 3 -->
+    <div class="slide">
+        <h2>🔗 Objekti i reference (3)</h2>
+        <div class="content-box">
+            <div class="memory-diagram">
+                <h3 style="color: white; margin-bottom: 30px;">Nakon postavljanja vrijednosti:</h3>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+                    <div class="object-box">
+                        <strong style="color: #FFD700;">firstDate</strong>
+                    </div>
+                    <div class="reference-arrow">→</div>
+                    <div class="object-box" style="background: rgba(100, 200, 255, 0.3);">
+                        <div style="color: white; text-align: left;">
+                            <strong>day:</strong> 1<br>
+                            <strong>month:</strong> "Listopad"<br>
+                            <strong>year:</strong> 2025
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 40px; margin-top: 30px;">
+                    <div class="object-box">
+                        <strong style="color: #FFD700;">secondDate</strong>
+                    </div>
+                    <div class="reference-arrow">⊥</div>
+                    <div style="color: white; font-size: 1.5em;">null</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 16: Reference 4 -->
+    <div class="slide">
+        <h2>🔗 Objekti i reference (4)</h2>
+        <div class="content-box">
+            <div class="code-block">
+                secondDate = firstDate; <span class="comment">// Kopiranje reference!</span>
+            </div>
+            <div class="memory-diagram">
+                <h3 style="color: white; margin: 30px 0;">Obje varijable pokazuju na isti objekt!</h3>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div class="object-box">
+                            <strong style="color: #FFD700;">firstDate</strong>
+                        </div>
+                        <div class="object-box">
+                            <strong style="color: #FFD700;">secondDate</strong>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div class="reference-arrow">→</div>
+                        <div class="reference-arrow">→</div>
+                    </div>
+                    <div class="object-box" style="background: rgba(255, 100, 100, 0.3);">
+                        <div style="color: white; text-align: left;">
+                            <strong>day:</strong> 1<br>
+                            <strong>month:</strong> "Listopad"<br>
+                            <strong>year:</strong> 2025
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="warning" style="margin-top: 20px;">
+                ⚠️ Promjena preko jedne varijable mijenja objekt za obje! Dijele memorijsku lokaciju!
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 17: Uspoređivanje -->
+    <div class="slide">
+        <h2>⚖️ Uspoređivanje objekata</h2>
+        <div class="content-box">
+            <h3>Dva načina usporedbe:</h3>
+            <div class="comparison-table" style="margin: 30px 0;">
+                <div class="column">
+                    <h3>== (usporedba referenci)</h3>
+                    <div class="code-block" style="margin-top: 15px;">
+                        <span class="keyword">if</span> (firstDate == secondDate) {
+                        <span class="comment">// Jesu li isti objekti?</span><br>
+                        <span class="comment">// (ista memorijska lokacija)</span><br>
+                        }
+                    </div>
+                    <div class="warning" style="margin-top: 10px;">
+                        ⚠️ Često se koristi <strong>pogrešno</strong>!
+                    </div>
+                </div>
+                <div class="column">
+                    <h3>.equals() (usporedba vrijednosti)</h3>
+                    <div class="code-block" style="margin-top: 15px;">
+                        <span class="keyword">boolean</span> <span class="method">areDatesEqual</span>(Date f, Date s) {
+                        <span class="keyword">return</span> f.day == s.day &&
+                        f.month.<span class="method">equals</span>(s.month) &&
+                        f.year == s.year;
+                        }
+                    </div>
+                    <div class="tip" style="margin-top: 10px;">
+                        ✅ <strong>Pravilan</strong> način!
+                    </div>
+                </div>
+            </div>
+            <div class="fun-fact">
+                💡 Za String UVIJEK koristi <strong>.equals()</strong>, ne ==!
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 18: Recap -->
+    <div class="slide">
+        <h2>🎯 Što smo naučili danas?</h2>
+        <div class="content-box">
+            <ul style="font-size: 1.2em;">
+                <li>✅ Klase su blueprint za objekte</li>
+                <li>✅ Objekti se kreiraju pomoću konstruktora (new)</li>
+                <li>✅ Atributi = karakteristike, Metode = ponašanje</li>
+                <li>✅ public vs private (enkapsulacija)</li>
+                <li>✅ Konvencije: PascalCase za klase, camelCase za ostalo</li>
+                <li>✅ Primitivni vs referentni tipovi</li>
+                <li>✅ Reference pokazuju na memorijsku lokaciju</li>
+                <li>✅ Usporedba: == za reference, .equals() za vrijednosti</li>
+            </ul>
+            <div class="fun-fact" style="margin-top: 30px;">
+                🚀 Čestitamo! Ovladali ste temeljima OOP-a u Javi! Keep coding! ☕
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 19: Pitanja -->
+    <div class="slide">
+        <div class="emoji">❓</div>
+        <h1>Pitanja?</h1>
+        <div class="emoji">🙋‍♂️🙋‍♀️</div>
+        <div class="fun-fact" style="max-width: 800px;">
+            💬 Sjetite se: <strong>"Nema glupih pitanja, samo glupe greške u kodu!"</strong> 😄
+        </div>
+    </div>
+</div>
+
+<div class="slide-counter">
+    <span id="current-slide">1</span> / <span id="total-slides">19</span>
+</div>
+
+<div class="navigation">
+    <button class="nav-btn" onclick="previousSlide()">←</button>
+    <button class="nav-btn" onclick="nextSlide()">→</button>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    document.getElementById('total-slides').textContent = totalSlides;
+
+    function showSlide(n) {
+        slides[currentSlide].classList.remove('active');
+        slides[currentSlide].classList.add('prev');
+
+        currentSlide = (n + totalSlides) % totalSlides;
+
+        slides.forEach(slide => slide.classList.remove('prev'));
+        slides[currentSlide].classList.add('active');
+
+        document.getElementById('current-slide').textContent = currentSlide + 1;
+    }
+
+    function nextSlide() {
+        showSlide(currentSlide + 1);
+    }
+
+    function previousSlide() {
+        showSlide(currentSlide - 1);
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            nextSlide();
+        } else if (e.key === 'ArrowLeft') {
+            previousSlide();
+        }
+    });
+
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+
+    document.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+
+    function handleSwipe() {
+        if (touchEndX < touchStartX - 50) {
+            nextSlide();
+        }
+        if (touchEndX > touchStartX + 50) {
+            previousSlide();
+        }
+    }
+</script>
+</body>
+</html>
