@@ -1,5 +1,6 @@
 package com.alex.sustavzaupravljanjebolnice;
 
+import com.alex.sustavzaupravljanjebolnice.db.DatabaseManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,6 +14,12 @@ import java.io.IOException;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
+        try {
+            DatabaseManager.getConnection();
+            System.out.println("In-memory database initialized successfully.");
+        } catch (Exception e) {
+            System.err.println("Warning: could not initialize in-memory DB: " + e.getMessage());
+        }
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
         stage.setTitle("Hello!");
