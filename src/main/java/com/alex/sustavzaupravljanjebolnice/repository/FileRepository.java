@@ -7,6 +7,9 @@ import com.alex.sustavzaupravljanjebolnice.entity.Staff;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type File repository.
+ */
 public class FileRepository implements RepositoryInterface {
     @Override
     public void addAppointment(Appointment appointment) {

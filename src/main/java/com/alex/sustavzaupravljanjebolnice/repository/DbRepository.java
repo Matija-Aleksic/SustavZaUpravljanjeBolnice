@@ -7,6 +7,9 @@ import com.alex.sustavzaupravljanjebolnice.entity.Staff;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Db repository.
+ */
 public class DbRepository implements RepositoryInterface {
     @Override
     public void addAppointment(Appointment appointment) {
@@ -25,7 +28,6 @@ public class DbRepository implements RepositoryInterface {
 
     @Override
     public void updateAppointment(String appointmentId, Appointment appointment) {
-
     }
 
     @Override

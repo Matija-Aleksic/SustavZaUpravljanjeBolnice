@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Hospital.
+ */
 public class Hospital implements Conactable, Serializable {
     private transient List<Department> departments;
     private String name;
@@ -13,6 +16,14 @@ public class Hospital implements Conactable, Serializable {
     private String phoneNumber;
     private String email;
 
+    /**
+     * Instantiates a new Hospital.
+     *
+     * @param name        the name
+     * @param address     the address
+     * @param phoneNumber the phone number
+     * @param email       the email
+     */
     public Hospital(String name, String address, String phoneNumber, String email) {
         this.name = name;
         this.address = address;
@@ -51,18 +62,38 @@ public class Hospital implements Conactable, Serializable {
         this.address = address;
     }
 
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets name.
+     *
+     * @param name the name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Gets departments.
+     *
+     * @return the departments
+     */
     public List<Department> getDepartments() {
         return departments;
     }
 
+    /**
+     * Sets departments.
+     *
+     * @param departments the departments
+     */
     public void setDepartments(List<Department> departments) {
         this.departments = departments;
     }
