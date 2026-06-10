@@ -1,11 +1,12 @@
 package com.alex.sustavzaupravljanjebolnice.entity.hospital;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Department {
+public class Department implements Serializable {
     private String name;
-    private List<Ward> wards;
+    private transient List<Ward> wards;
 
     public Department(String name) {
         this.name = name;

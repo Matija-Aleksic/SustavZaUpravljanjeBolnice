@@ -2,13 +2,14 @@ package com.alex.sustavzaupravljanjebolnice.entity.hospital;
 
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Ward {
+public class Ward implements Serializable {
     private final int maxCapacity;
     private String name;
     private int capacity;
-    private Department department;
+    private transient Department department;
     private List<Patient> patients;
 
 
@@ -42,4 +43,15 @@ public class Ward {
         this.department = department;
     }
 
+    public int getMaxCapacity() {
+        return maxCapacity;
+    }
+
+    public List<Patient> getPatients() {
+        return patients;
+    }
+
+    public void setPatients(List<Patient> patients) {
+        this.patients = patients;
+    }
 }

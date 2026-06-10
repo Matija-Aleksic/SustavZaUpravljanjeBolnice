@@ -4,19 +4,18 @@ import com.alex.sustavzaupravljanjebolnice.entity.hospital.Department;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Ward;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public non-sealed class Nurse extends Staff {
-    private Hospital hospital;
+    private transient Hospital hospital;
     private Department department;
     private List<Ward> wards;
 
-    public Nurse(String firstName, String lastName, String oib, LocalDate birthDate, StaffRoles role, String email, double salary, Hospital hospital, Department department, List<Ward> wards) {
-        super(firstName, lastName, oib, birthDate, role, email, salary);
-        this.hospital = hospital;
-        this.department = department;
-        this.wards = wards;
+    public Nurse(NurseBuilder nusrseBuilder) {
+        super(nusrseBuilder.getFirstName(), nusrseBuilder.getLastName(), nusrseBuilder.getOib(), nusrseBuilder.getBirthDate(), nusrseBuilder.getRole(), nusrseBuilder.getEmail(), nusrseBuilder.getSalary());
+        this.hospital = nusrseBuilder.getHospital();
+        this.department = nusrseBuilder.getDepartment();
+        this.wards = nusrseBuilder.getWards();
     }
 
     public Hospital getHospital() {

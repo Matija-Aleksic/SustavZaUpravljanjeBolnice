@@ -10,20 +10,27 @@ import java.util.List;
 public class Patient extends Person implements Schedulable, Treatable {
     protected PatientStatus status;
     protected String mbo;
-    private Hospital hospital;
+    private transient Hospital hospital;
     private List<Appointment> appointments;
     private List<Perscription> prescriptions;
     private Doctor assignedDoctor;
 
 
-    public Patient(String firstName, String lastName, String oib, LocalDate birthDate, PatientStatus status, String mbo, Hospital hospital, List<Appointment> appointments, List<Perscription> prescriptions, Doctor assignedDoctor) {
+    public Patient(String firstName, String lastName, String oib, LocalDate birthDate, PatientStatus status, String mbo) {
         super(firstName, lastName, oib, birthDate);
         this.status = status;
         this.mbo = mbo;
-        this.hospital = hospital;
-        this.appointments = appointments;
-        this.prescriptions = prescriptions;
-        this.assignedDoctor = assignedDoctor;
+
+    }
+
+    public Patient(PatientBuilder builder) {
+        super(builder.getFirstName(), builder.getLastName(), builder.getOib(), builder.getBirthDate());
+        this.status = builder.getStatus();
+        this.mbo = builder.getMbo();
+        this.hospital = builder.getHospital();
+        this.appointments = builder.getAppointments();
+        this.prescriptions = builder.getPrescriptions();
+        this.assignedDoctor = builder.getAssignedDoctor();
     }
 
     public PatientStatus getStatus() {
@@ -71,10 +78,6 @@ public class Patient extends Person implements Schedulable, Treatable {
     @Override
     public Boolean isAvailable(Appointment appointment) {
         return !this.appointments.contains(appointment);
-    }
-
-    public List<Perscription> getPrescriptions() {
-        return prescriptions;
     }
 
     public void setPrescriptions(List<Perscription> prescriptions) {

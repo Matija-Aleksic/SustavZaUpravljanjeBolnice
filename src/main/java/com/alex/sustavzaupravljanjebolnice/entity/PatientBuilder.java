@@ -68,6 +68,46 @@ public class PatientBuilder {
     }
 
     public Patient createPatient() {
-        return new Patient(firstName, lastName, oib, birthDate, status, mbo, hospital, appointments, prescriptions, assignedDoctor);
+        return new Patient(this);
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getOib() {
+        return oib;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public PatientStatus getStatus() {
+        return status;
+    }
+
+    public String getMbo() {
+        return mbo;
+    }
+
+    public Hospital getHospital() {
+        return hospital;
+    }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public List<Perscription> getPrescriptions() {
+        return prescriptions;
+    }
+
+    public Doctor getAssignedDoctor() {
+        return assignedDoctor;
     }
 }

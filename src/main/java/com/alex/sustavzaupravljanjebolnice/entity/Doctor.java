@@ -3,19 +3,18 @@ package com.alex.sustavzaupravljanjebolnice.entity;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
 import com.alex.sustavzaupravljanjebolnice.entity.interfaces.Schedulable;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public non-sealed class Doctor extends Staff implements Schedulable {
     private Hospital hospital;
-    protected List<Patient> assignedPatients;
-    protected List<Appointment> appointments;
+    private List<Patient> assignedPatients;
+    private List<Appointment> appointments;
 
-    public Doctor(String firstName, String lastName, String oib, LocalDate birthDate, StaffRoles role, String email, double salary, Hospital hospital, List<Patient> assignedPatients, List<Appointment> appointments) {
-        super(firstName, lastName, oib, birthDate, role, email, salary);
-        this.hospital = hospital;
-        this.assignedPatients = assignedPatients;
-        this.appointments = appointments;
+    public Doctor(DoctorBuilder doctor) {
+        super(doctor.getFirstName(), doctor.getLastName(), doctor.getOib(), doctor.getBirthDate(), doctor.getRole(), doctor.getEmail(), doctor.getSalary());
+        this.hospital = doctor.getHospital();
+        this.assignedPatients = doctor.getAssignedPatients();
+        this.appointments = doctor.getAppointments();
     }
 
     public Hospital getHospital() {

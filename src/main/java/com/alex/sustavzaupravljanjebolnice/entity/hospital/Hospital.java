@@ -2,10 +2,12 @@ package com.alex.sustavzaupravljanjebolnice.entity.hospital;
 
 import com.alex.sustavzaupravljanjebolnice.entity.interfaces.Conactable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
-public class Hospital implements Conactable {
-    ArrayList<Department> departments;
+public class Hospital implements Conactable, Serializable {
+    private transient List<Department> departments;
     private String name;
     private String address;
     private String phoneNumber;
@@ -57,11 +59,11 @@ public class Hospital implements Conactable {
         this.name = name;
     }
 
-    public ArrayList<Department> getDepartments() {
+    public List<Department> getDepartments() {
         return departments;
     }
 
-    public void setDepartments(ArrayList<Department> departments) {
+    public void setDepartments(List<Department> departments) {
         this.departments = departments;
     }
 }
