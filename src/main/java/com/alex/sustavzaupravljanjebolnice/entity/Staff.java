@@ -33,8 +33,8 @@ public sealed class Staff extends Person implements Salaried permits Administrat
      * @param email     the email
      * @param salary    the salary
      */
-    public Staff(String firstName, String lastName, String oib, LocalDate birthDate, StaffRoles role, String email, double salary) {
-        super(firstName, lastName, oib, birthDate);
+    public Staff(Integer id, String firstName, String lastName, String oib, LocalDate birthDate, StaffRoles role, String email, double salary) {
+        super(id, firstName, lastName, oib, birthDate);
         this.role = role;
         this.email = email;
         this.salary = salary;

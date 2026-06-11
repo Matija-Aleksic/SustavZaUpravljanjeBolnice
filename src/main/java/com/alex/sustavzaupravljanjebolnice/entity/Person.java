@@ -24,6 +24,8 @@ public abstract class Person implements Serializable {
      */
     protected final LocalDate birthDate;
 
+    protected final Integer Id;
+
 
     /**
      * Instantiates a new Person.
@@ -33,7 +35,8 @@ public abstract class Person implements Serializable {
      * @param oib       the oib
      * @param birthDate the birth date
      */
-    protected Person(String firstName, String lastName, String oib, LocalDate birthDate) {
+    protected Person(Integer id, String firstName, String lastName, String oib, LocalDate birthDate) {
+        this.Id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.oib = oib;
@@ -75,4 +78,9 @@ public abstract class Person implements Serializable {
     public LocalDate getBirthDate() {
         return birthDate;
     }
+
+    public Integer getId() {
+        return Id;
+    }
+
 }

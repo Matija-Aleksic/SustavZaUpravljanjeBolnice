@@ -11,6 +11,7 @@ import java.util.List;
  * The type Nurse builder.
  */
 public class NurseBuilder {
+    private Integer id;
     private String firstName;
     private String lastName;
     private String oib;
@@ -218,6 +219,14 @@ public class NurseBuilder {
      */
     public List<Ward> getWards() {
         return wards;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     /**

@@ -1,57 +1,63 @@
 package com.alex.sustavzaupravljanjebolnice.db;
 
+import com.alex.sustavzaupravljanjebolnice.entity.Doctor;
+import com.alex.sustavzaupravljanjebolnice.entity.DoctorBuilder;
+import com.alex.sustavzaupravljanjebolnice.entity.StaffRoles;
+import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
-import static java.lang.Thread.sleep;
-
-/**
- * DatabaseManager that initializes an H2 database using SQL scripts.
- *
- * On first run: Creates tables and seeds data
- * On subsequent runs: Uses existing database and preserves all changes
- *
- * SQL scripts:
- * - `src/main/resources/db/schema.sql` (creates tables)
- * - `src/main/resources/db/seed.sql` (initial data)
- */
 public class DatabaseManager {
-	private static final String JDBC_URL = "jdbc:h2:./testdb;DB_CLOSE_DELAY=-1;FILE_LOCK=NO";
-	private static final String USER = "sa";
-	private static final String PASS = "";
+	private static final Properties props = new Properties();
+	private static final String JDBC_URL;
+	private static final String USER;
+	private static final String PASS;
 	private static Connection connection;
 
 	static {
-		try {
-			init();
-		} catch (Exception e) {
-			throw new RuntimeException("Failed to initialize database", e);
+		try (InputStream input = DatabaseManager.class.getClassLoader().getResourceAsStream("db.properties")) {
+			if (input == null) throw new FileNotFoundException("Unable to find db.properties");
+			props.load(input);
+			JDBC_URL = props.getProperty("db.url");
+			USER = props.getProperty("db.user");
+			PASS = props.getProperty("db.password");
+		} catch (IOException e) {
+			throw new ExceptionInInitializerError("Failed to load db.properties: " + e.getMessage());
 		}
 	}
 
-	private static void init() throws Exception {
-		connection = DriverManager.getConnection(JDBC_URL, USER, PASS);
-		connection.setAutoCommit(false);
-		sleep(500);
+	private DatabaseManager() {
+	}
 
-		try {
-			if (databaseExists()) {
-				System.out.println("Database already exists. Using existing data.");
-			} else {
-				System.out.println("Creating new database...");
-				runSqlScript("/db/schema.sql");
-				System.out.println("Database schema initialized successfully.");
+	public static Connection getConnection() throws SQLException {
+		if (connection == null || connection.isClosed()) {
+			connection = DriverManager.getConnection(JDBC_URL, USER, PASS);
+			connection.setAutoCommit(false);
 
-				runSqlScript("/db/seed.sql");
-				System.out.println("Database seed data inserted successfully.");
-
-				connection.commit();
-
+			try {
+				init();
+			} catch (Exception e) {
+				throw new SQLException("Database initialization failed", e);
 			}
-		} catch (Exception e) {
-			connection.rollback();
-			throw e;
+		}
+		return connection;
+	}
+
+	private static void init() throws Exception {
+		if (databaseExists()) {
+			System.out.println("Database already exists. Using existing data.");
+		} else {
+			System.out.println("Creating new database...");
+			runSqlScript("/db/schema.sql");
+			runSqlScript("/db/seed.sql");
+			connection.commit();
 		}
 	}
 
@@ -64,34 +70,55 @@ public class DatabaseManager {
 
 	private static void runSqlScript(String resourcePath) throws Exception {
 		try (InputStream is = DatabaseManager.class.getResourceAsStream(resourcePath)) {
-			if (is == null) {
-				System.out.println("Resource not found: " + resourcePath);
-				return;
-			}
+			if (is == null) throw new FileNotFoundException("Resource not found: " + resourcePath);
+
 			String sql = new String(is.readAllBytes(), StandardCharsets.UTF_8);
 			String[] statements = sql.split(";");
 			try (Statement st = connection.createStatement()) {
 				for (String s : statements) {
 					String stmt = s.trim();
-					if (stmt.isEmpty()) continue;
-					try {
-						st.execute(stmt);
-						System.out.println("✓ Executed: " + stmt.substring(0, Math.min(50, stmt.length())) + "...");
-					} catch (SQLException e) {
-						System.err.println("✗ Failed: " + stmt);
-						e.printStackTrace();
-						throw e;
-					}
+					if (!stmt.isEmpty()) st.execute(stmt);
 				}
 			}
 		}
 	}
 
-	public static Connection getConnection() throws SQLException {
-		if (connection == null || connection.isClosed()) {
-			connection = DriverManager.getConnection(JDBC_URL, USER, PASS);
-			connection.setAutoCommit(false);
+	public static List<Doctor> getDoctors() throws SQLException {
+		List<Doctor> doctors = new ArrayList<>();
+
+		String sql = "SELECT * FROM STAFF WHERE role = 'DOCTOR'";
+
+
+		try (PreparedStatement ps = connection.prepareStatement(sql);
+		     ResultSet rs = ps.executeQuery()) {
+
+			while (rs.next()) {
+				doctors.add(mapDoctor(rs));
+			}
 		}
-		return connection;
+
+		return doctors;
+	}
+
+	private static Doctor mapDoctor(ResultSet rs) throws SQLException {
+
+		Long hospitalId = rs.getLong("hospital_id");
+		Hospital hospital = null;
+
+
+		return new DoctorBuilder()
+				.setFirstName(rs.getString("first_name"))
+				.setLastName(rs.getString("last_name"))
+				.setOib(rs.getString("oib"))
+				.setBirthDate(rs.getDate("birth_date").toLocalDate())
+				.setRole(StaffRoles.valueOf(rs.getString("role")))
+				.setEmail(rs.getString("email"))
+				.setSalary(rs.getDouble("salary"))
+				.setHospital(hospital)
+				.setPhoneNumber(rs.getString("phone_number"))
+				.setAddress(rs.getString("address"))
+				.setAssignedPatients(new ArrayList<>())
+				.setAppointments(new ArrayList<>())
+				.createDoctor();
 	}
 }

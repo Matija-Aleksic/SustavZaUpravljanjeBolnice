@@ -9,6 +9,7 @@ import java.util.List;
  * The type Doctor builder.
  */
 public class DoctorBuilder {
+    private Integer id;
     private String firstName;
     private String lastName;
     private String oib;
@@ -19,6 +20,8 @@ public class DoctorBuilder {
     private Hospital hospital;
     private List<Patient> assignedPatients;
     private List<Appointment> appointments;
+    private String phoneNumber;
+    private String address;
 
     /**
      * Create doctor doctor.
@@ -218,14 +221,44 @@ public class DoctorBuilder {
         return appointments;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+
+    }
+
+    public DoctorBuilder setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+        return this;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public DoctorBuilder setAddress(String address) {
+        this.address = address;
+        return this;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     /**
      * Sets appointments.
      *
      * @param appointments the appointments
      * @return the appointments
      */
+
+
     public DoctorBuilder setAppointments(List<Appointment> appointments) {
         this.appointments = appointments;
         return this;
     }
+
 }

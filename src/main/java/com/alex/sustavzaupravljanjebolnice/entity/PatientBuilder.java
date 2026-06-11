@@ -9,6 +9,7 @@ import java.util.List;
  * The type Patient builder.
  */
 public class PatientBuilder {
+    private Integer id;
     private String firstName;
     private String lastName;
     private String oib;
@@ -216,6 +217,14 @@ public class PatientBuilder {
      */
     public Doctor getAssignedDoctor() {
         return assignedDoctor;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     /**

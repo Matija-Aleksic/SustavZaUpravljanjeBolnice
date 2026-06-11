@@ -1,6 +1,7 @@
 package com.alex.sustavzaupravljanjebolnice.entity;
 
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
+import com.alex.sustavzaupravljanjebolnice.entity.interfaces.Conactable;
 import com.alex.sustavzaupravljanjebolnice.entity.interfaces.Schedulable;
 
 import java.util.List;
@@ -8,10 +9,12 @@ import java.util.List;
 /**
  * The type Doctor.
  */
-public non-sealed class Doctor extends Staff implements Schedulable {
+public non-sealed class Doctor extends Staff implements Schedulable, Conactable {
     private Hospital hospital;
     private List<Patient> assignedPatients;
     private List<Appointment> appointments;
+    private String phoneNumber;
+    private String address;
 
     /**
      * Instantiates a new Doctor.
@@ -19,10 +22,12 @@ public non-sealed class Doctor extends Staff implements Schedulable {
      * @param doctor the doctor
      */
     public Doctor(DoctorBuilder doctor) {
-        super(doctor.getFirstName(), doctor.getLastName(), doctor.getOib(), doctor.getBirthDate(), doctor.getRole(), doctor.getEmail(), doctor.getSalary());
+        super(doctor.getId(), doctor.getFirstName(), doctor.getLastName(), doctor.getOib(), doctor.getBirthDate(), doctor.getRole(), doctor.getEmail(), doctor.getSalary());
         this.hospital = doctor.getHospital();
         this.assignedPatients = doctor.getAssignedPatients();
         this.appointments = doctor.getAppointments();
+        this.phoneNumber = doctor.getPhoneNumber();
+        this.address = doctor.getAddress();
     }
 
     /**
@@ -126,4 +131,25 @@ public non-sealed class Doctor extends Staff implements Schedulable {
             }
         }
     }
+
+    @Override
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    @Override
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    @Override
+    public String getAddress() {
+        return address;
+    }
+
+    @Override
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
 }

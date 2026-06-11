@@ -20,7 +20,7 @@ public non-sealed class Nurse extends Staff {
      * @param nusrseBuilder the nusrse builder
      */
     public Nurse(NurseBuilder nusrseBuilder) {
-        super(nusrseBuilder.getFirstName(), nusrseBuilder.getLastName(), nusrseBuilder.getOib(), nusrseBuilder.getBirthDate(), nusrseBuilder.getRole(), nusrseBuilder.getEmail(), nusrseBuilder.getSalary());
+        super(nusrseBuilder.getId(), nusrseBuilder.getFirstName(), nusrseBuilder.getLastName(), nusrseBuilder.getOib(), nusrseBuilder.getBirthDate(), nusrseBuilder.getRole(), nusrseBuilder.getEmail(), nusrseBuilder.getSalary());
         this.hospital = nusrseBuilder.getHospital();
         this.department = nusrseBuilder.getDepartment();
         this.wards = nusrseBuilder.getWards();

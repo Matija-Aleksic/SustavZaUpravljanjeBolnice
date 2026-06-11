@@ -29,8 +29,8 @@ public final class Administrator extends Staff {
      * @param email     the email
      * @param salary    the salary
      */
-    public Administrator(String firstName, String lastName, String oib, LocalDate birthDate, StaffRoles role, String email, double salary) {
-        super(firstName, lastName, oib, birthDate, role, email, salary);
+    public Administrator(Integer id, String firstName, String lastName, String oib, LocalDate birthDate, StaffRoles role, String email, double salary) {
+        super(id, firstName, lastName, oib, birthDate, role, email, salary);
         logger.debug("Administrator created with oib: {}", oib);
     }
 

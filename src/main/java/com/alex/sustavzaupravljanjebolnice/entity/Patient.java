@@ -35,8 +35,8 @@ public class Patient extends Person implements Schedulable, Treatable {
      * @param status    the status
      * @param mbo       the mbo
      */
-    public Patient(String firstName, String lastName, String oib, LocalDate birthDate, PatientStatus status, String mbo) {
-        super(firstName, lastName, oib, birthDate);
+    public Patient(Integer id, String firstName, String lastName, String oib, LocalDate birthDate, PatientStatus status, String mbo) {
+        super(id, firstName, lastName, oib, birthDate);
         this.status = status;
         this.mbo = mbo;
 
@@ -48,7 +48,7 @@ public class Patient extends Person implements Schedulable, Treatable {
      * @param builder the builder
      */
     public Patient(PatientBuilder builder) {
-        super(builder.getFirstName(), builder.getLastName(), builder.getOib(), builder.getBirthDate());
+        super(builder.getId(), builder.getFirstName(), builder.getLastName(), builder.getOib(), builder.getBirthDate());
         this.status = builder.getStatus();
         this.mbo = builder.getMbo();
         this.hospital = builder.getHospital();

@@ -6,5 +6,6 @@ module com.alex.sustavzaupravljanjebolnice {
 
 
     opens com.alex.sustavzaupravljanjebolnice to javafx.fxml;
+    opens com.alex.sustavzaupravljanjebolnice.controller to javafx.fxml;
     exports com.alex.sustavzaupravljanjebolnice;
 }

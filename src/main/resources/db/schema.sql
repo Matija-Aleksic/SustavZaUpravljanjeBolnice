@@ -53,6 +53,8 @@ CREATE TABLE staff
 
     email       VARCHAR(255) NOT NULL UNIQUE,
     salary      DOUBLE PRECISION,
+    phone_number VARCHAR(50),
+    address      VARCHAR(255),
 
     hospital_id BIGINT,
 

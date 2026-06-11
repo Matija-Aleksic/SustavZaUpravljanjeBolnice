@@ -1,154 +1,225 @@
-/* General Styling */
+/* ====================== Theme Variables & Root ====================== */
 .root {
-    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-font-family: "Inter", "Segoe UI", Arial, sans-serif;
     -fx-font-size: 14px;
-    -fx-base: #f0f2f5; /* Light gray background */
-    -fx-background: #ffffff; /* White background for main content */
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #1a1c1c;
+    -fx-base: #f9f9f9;
 }
 
-/* Buttons */
-.button {
-    -fx-background-color: #007bff; /* Primary blue */
-    -fx-text-fill: white;
+/* ====================== Primary Buttons ====================== */
+.custom-button {
+    -fx-background-color: linear-gradient(to bottom, #005fac, #0078d7);
+    -fx-text-fill: #ffffff;
+    -fx-font-family: "Inter", sans-serif;
     -fx-font-size: 14px;
-    -fx-padding: 8px 15px;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
+    -fx-font-weight: 500;
+    -fx-padding: 8px 16px;
+    -fx-border-radius: 0.125rem;
+    -fx-background-radius: 0.125rem;
     -fx-cursor: hand;
 }
 
-.button:hover {
-    -fx-background-color: #0056b3; /* Darker blue on hover */
+.custom-button:hover {
+    -fx-background-color: #0078d7;
 }
 
-.button:pressed {
-    -fx-background-color: #004085; /* Even darker blue on press */
+.custom-button:pressed {
+    -fx-background-color: #004884;
 }
 
-/* Text Fields and Password Fields */
-.text-field, .password-field {
-    -fx-background-color: #e9ecef; /* Light gray input background */
-    -fx-border-color: #ced4da;
-    -fx-border-width: 1px;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
-    -fx-padding: 8px;
-}
-
-.text-field:focused, .password-field:focused {
-    -fx-border-color: #007bff;
-    -fx-background-color: #ffffff;
-}
-
-/* Labels */
-.label {
+/* ====================== Input Fields (Ghost Style) ====================== */
+.input-field,
+.text-field,
+.password-field {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(192, 199, 212, 0.5);
+    -fx-border-width: 0 0 1px 0;
+    -fx-border-radius: 0;
+    -fx-padding: 8px 0 8px 0;
+    -fx-font-family: "Inter", sans-serif;
     -fx-font-size: 14px;
-    -fx-text-fill: #343a40; /* Dark gray text */
+    -fx-text-fill: #1a1c1c;
+    -fx-prompt-text-fill: #8e8e8e;
+}
+
+.input-field:focused,
+.text-field:focused,
+.password-field:focused {
+    -fx-border-color: #005fac;
+    -fx-border-width: 0 0 2px 0;
+    -fx-background-color: transparent;
+}
+
+/* ====================== Labels ====================== */
+.label {
+    -fx-font-family: "Inter", sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: #1a1c1c;
 }
 
 .label.header {
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #007bff;
+    -fx-font-size: 24px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #005fac;
 }
 
 .label.error {
-    -fx-text-fill: #dc3545; /* Red for errors */
+    -fx-text-fill: #ba1a1a;
     -fx-font-size: 12px;
+    -fx-font-weight: 500;
 }
 
-/* TableView */
+/* ====================== Cards ====================== */
+.card,
+.card-subtle {
+    -fx-background-color: #ffffff;
+    -fx-padding: 1.5rem;
+    -fx-background-radius: 0.125rem;
+    -fx-border-width: 0;
+}
+
+.card-subtle {
+    -fx-background-color: #f3f3f3;
+}
+
+/* ====================== Sidebar ====================== */
+.sidebar {
+    -fx-background-color: #f3f3f3;
+    -fx-padding: 2rem 0;
+    -fx-border-width: 0;
+}
+
+.sidebar-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: #414752;
+    -fx-font-family: "Inter", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-padding: 0.75rem 1.5rem;
+    -fx-background-radius: 0.125rem;
+}
+
+.sidebar-item:hover {
+    -fx-background-color: #e8e8e8;
+    -fx-text-fill: #1a1c1c;
+}
+
+.sidebar-item.active {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #005fac;
+    -fx-font-weight: 600;
+    -fx-border-color: #005fac;
+    -fx-border-width: 0 0 0 4px;
+    -fx-padding: 0.75rem 1.5rem 0.75rem calc(1.5rem - 4px);
+}
+
+/* ====================== TableView ====================== */
 .table-view {
-    -fx-base: #f8f9fa;
-    -fx-background-color: white;
-    -fx-border-color: #dee2e6;
-    -fx-border-width: 1px;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 0;
 }
 
 .table-view .column-header-background {
-    -fx-background-color: #e9ecef;
+    -fx-background-color: #f9f9f9;
+    -fx-border-width: 0;
 }
 
-.table-view .column-header {
-    -fx-font-weight: bold;
-    -fx-text-fill: #495057;
+.table-view .column-header .label {
+    -fx-font-family: "Inter", sans-serif;
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #414752;
+    -fx-padding: 1rem 1.5rem;
+}
+
+.table-view .table-cell {
+    -fx-font-family: "Inter", sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: #1a1c1c;
+    -fx-padding: 1rem 1.5rem;
+    -fx-border-width: 0;
 }
 
 .table-view .table-row-cell {
-    -fx-background-color: -fx-table-cell-border-color, #ffffff;
-    -fx-border-color: transparent;
-    -fx-background-insets: 0, 0 0 1 0;
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}
+
+.table-view .table-row-cell:hover {
+    -fx-background-color: #e8e8e8;
 }
 
 .table-view .table-row-cell:selected {
-    -fx-background-color: #cfe2ff;
+    -fx-background-color: #d0e2ff;
+    -fx-text-fill: #001c39;
 }
 
-/* TabPane */
-.tab-pane {
-    -fx-tab-min-width: 100px;
-}
-
-.tab-pane .tab-header-area {
-    -fx-background-color: #e9ecef;
-}
-
-.tab {
-    -fx-background-color: #e9ecef;
-    -fx-border-color: #dee2e6;
-    -fx-border-width: 0 0 1px 0;
-    -fx-background-insets: 0;
-    -fx-padding: 8px 15px;
-}
-
-.tab:selected {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #007bff #dee2e6 #ffffff #dee2e6;
-    -fx-border-width: 2px 1px 0 1px;
-    -fx-padding: 8px 15px 7px 15px;
-}
-
-/* DialogPane */
+/* ====================== DialogPane / Modals ====================== */
 .dialog-pane {
     -fx-background-color: #ffffff;
-    -fx-border-color: #dee2e6;
-    -fx-border-width: 1px;
-    -fx-background-radius: 5px;
-    -fx-border-radius: 5px;
+    -fx-padding: 2rem;
+    -fx-background-radius: 0.125rem;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(26, 28, 28, 0.12), 32, 0.5, 0, 12);
 }
 
 .dialog-pane .header-panel {
-    -fx-background-color: #007bff;
-    -fx-padding: 10px;
+    -fx-background-color: #f9f9f9;
+    -fx-padding: 1rem 1.5rem;
+    -fx-border-width: 0 0 1px 0;
+    -fx-border-color: #e0e0e0;
 }
 
 .dialog-pane .header-panel .label {
-    -fx-text-fill: white;
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #1a1c1c;
 }
 
 .dialog-pane .content {
-    -fx-padding: 15px;
+    -fx-padding: 1.5rem 0;
 }
 
-/* Other common elements */
-.combo-box, .date-picker {
-    -fx-background-color: #e9ecef;
-    -fx-border-color: #ced4da;
-    -fx-border-width: 1px;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
-    -fx-padding: 5px;
+/* Dialog Buttons */
+.dialog-pane .button {
+    -fx-padding: 0.5rem 1rem;
+    -fx-background-radius: 0.125rem;
+    -fx-font-weight: 500;
 }
 
-.text-area {
-    -fx-background-color: #e9ecef;
-    -fx-border-color: #ced4da;
-    -fx-border-width: 1px;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
-    -fx-padding: 5px;
+.dialog-pane .button-cancel {
+    -fx-background-color: transparent;
+    -fx-text-fill: #005fac;
+}
+
+.dialog-pane .button-cancel:hover {
+    -fx-background-color: #d0e2ff;
+}
+
+.dialog-pane .button-confirm {
+    -fx-background-color: linear-gradient(to bottom, #005fac, #0078d7);
+    -fx-text-fill: #ffffff;
+}
+
+.dialog-pane .button-confirm:hover {
+    -fx-background-color: #0078d7;
+}
+
+/* ====================== Additional Useful Styles ====================== */
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+/* ComboBox & DatePicker */
+.combo-box,
+.date-picker {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(192, 199, 212, 0.5);
+    -fx-border-width: 0 0 1px 0;
 }
