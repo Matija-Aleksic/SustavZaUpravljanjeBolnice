@@ -10,6 +10,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Prescription repo.
+ */
 public class PrescriptionRepo implements Repository<Prescription, String> {
 
     @Override

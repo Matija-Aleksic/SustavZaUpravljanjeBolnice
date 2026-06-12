@@ -15,7 +15,9 @@ public class Department implements Serializable {
     /**
      * Instantiates a new Department.
      *
-     * @param name the name
+     * @param id    the id
+     * @param name  the name
+     * @param wards the wards
      */
     public Department(Long id, String name, List<Ward> wards) {
         this.id = id;
@@ -23,6 +25,9 @@ public class Department implements Serializable {
         this.wards = wards;
     }
 
+    /**
+     * Instantiates a new Department.
+     */
     public Department() {
     }
 
@@ -62,18 +67,38 @@ public class Department implements Serializable {
         this.wards = wards;
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * Gets hospital.
+     *
+     * @return the hospital
+     */
     public Hospital getHospital() {
         return hospital;
     }
 
+    /**
+     * Sets hospital.
+     *
+     * @param hospital the hospital
+     */
     public void setHospital(Hospital hospital) {
         this.hospital = hospital;
     }

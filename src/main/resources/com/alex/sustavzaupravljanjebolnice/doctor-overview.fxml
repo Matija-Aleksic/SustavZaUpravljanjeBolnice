@@ -3,9 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1"
-            prefHeight="940.0"
-            prefWidth="1294.0"
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="940.0" prefWidth="1294.0"
             xmlns="http://javafx.com/javafx/26"
             fx:controller="com.alex.sustavzaupravljanjebolnice.controller.DoctorViewController">
 
@@ -14,15 +12,10 @@
         <BorderPane prefHeight="940.0" prefWidth="1294.0">
 
             <left>
-                <TableView fx:id="doctorsTable"
-                           prefHeight="913.0"
-                           prefWidth="321.0"
-                           BorderPane.alignment="CENTER">
+                <TableView fx:id="doctorsTable" prefHeight="913.0" prefWidth="321.0" BorderPane.alignment="CENTER">
 
                     <columns>
-                        <TableColumn fx:id="doctorColumn"
-                                     prefWidth="320.8"
-                                     text="Doctors"/>
+                        <TableColumn fx:id="doctorColumn" prefWidth="320.8" text="Doctors"/>
                     </columns>
 
                 </TableView>
@@ -58,9 +51,7 @@
 
             <center>
 
-                <VBox prefHeight="705.0"
-                      prefWidth="1094.0"
-                      BorderPane.alignment="CENTER">
+                <VBox prefHeight="705.0" prefWidth="1094.0" BorderPane.alignment="CENTER">
 
                     <children>
 
@@ -88,51 +79,29 @@
 
                                     <children>
 
-                                        <ImageView fx:id="picture"
-                                                   fitHeight="148.0"
-                                                   fitWidth="192.0"
-                                                   pickOnBounds="true"
-                                                   preserveRatio="true"
-                                                   GridPane.rowIndex="2"/>
+                                        <ImageView fx:id="picture" fitHeight="148.0" fitWidth="192.0"
+                                                   pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2"/>
 
-                                        <Label fx:id="nameSurname"
-                                               text="Name Surname"
-                                               GridPane.columnIndex="1"
+                                        <Label fx:id="nameSurname" text="Name Surname" GridPane.columnIndex="1"
                                                GridPane.rowIndex="1"/>
 
-                                        <Label fx:id="oib"
-                                               text="OIB"
-                                               GridPane.columnIndex="1"
+                                        <Label fx:id="oib" text="OIB" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                                        <Label fx:id="role" text="Role" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+                                        <Label fx:id="email" text="Email" GridPane.columnIndex="3"
+                                               GridPane.rowIndex="1"/>
+
+                                        <Label fx:id="salary" text="Salary" GridPane.columnIndex="3"
                                                GridPane.rowIndex="2"/>
 
-                                        <Label fx:id="Role"
-                                               text="Role"
-                                               GridPane.columnIndex="2"
-                                               GridPane.rowIndex="1"/>
-
-                                        <Label fx:id="email"
-                                               text="Email"
-                                               GridPane.columnIndex="3"
-                                               GridPane.rowIndex="1"/>
-
-                                        <Label fx:id="Salary"
-                                               text="Salary"
-                                               GridPane.columnIndex="3"
-                                               GridPane.rowIndex="2"/>
-
-                                        <Label fx:id="hospital"
-                                               text="Hospital"
-                                               GridPane.columnIndex="3"
+                                        <Label fx:id="hospital" text="Hospital" GridPane.columnIndex="3"
                                                GridPane.rowIndex="3"/>
 
-                                        <Label fx:id="phoneNumber"
-                                               text="Phone Number"
-                                               GridPane.columnIndex="4"
+                                        <Label fx:id="phoneNumber" text="Phone Number" GridPane.columnIndex="4"
                                                GridPane.rowIndex="1"/>
 
-                                        <Label fx:id="address"
-                                               text="Address"
-                                               GridPane.columnIndex="4"
+                                        <Label fx:id="address" text="Address" GridPane.columnIndex="4"
                                                GridPane.rowIndex="2"/>
 
                                     </children>
@@ -143,37 +112,25 @@
 
                         </HBox>
 
-                        <TableView fx:id="patientsTable"
-                                   prefHeight="259.0"
-                                   prefWidth="973.0">
+                        <TableView fx:id="patientsTable" prefHeight="259.0" prefWidth="973.0">
 
                             <columns>
 
-                                <TableColumn fx:id="patientNameColumn"
-                                             prefWidth="300.0"
-                                             text="Patient"/>
+                                <TableColumn fx:id="patientNameColumn" prefWidth="300.0" text="Patient"/>
 
-                                <TableColumn fx:id="patientOibColumn"
-                                             prefWidth="250.0"
-                                             text="OIB"/>
+                                <TableColumn fx:id="patientOibColumn" prefWidth="250.0" text="OIB"/>
 
                             </columns>
 
                         </TableView>
 
-                        <TableView fx:id="appointmentsTable"
-                                   prefHeight="200.0"
-                                   prefWidth="973.0">
+                        <TableView fx:id="appointmentsTable" prefHeight="200.0" prefWidth="973.0">
 
                             <columns>
 
-                                <TableColumn fx:id="appointmentDateColumn"
-                                             prefWidth="300.0"
-                                             text="Appointment"/>
+                                <TableColumn fx:id="appointmentDateColumn" prefWidth="300.0" text="Appointment"/>
 
-                                <TableColumn fx:id="appointmentPatientColumn"
-                                             prefWidth="300.0"
-                                             text="Patient"/>
+                                <TableColumn fx:id="appointmentPatientColumn" prefWidth="300.0" text="Patient"/>
 
                             </columns>
 

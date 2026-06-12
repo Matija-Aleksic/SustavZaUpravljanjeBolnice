@@ -8,6 +8,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Department repo.
+ */
 public class DepartmentRepo implements Repository<Department, Long> {
 
     @Override

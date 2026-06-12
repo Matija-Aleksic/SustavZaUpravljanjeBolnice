@@ -221,44 +221,77 @@ public class DoctorBuilder {
         return appointments;
     }
 
+
     /**
      * Sets appointments.
      *
      * @param appointments the appointments
      * @return the appointments
      */
-
-
     public DoctorBuilder setAppointments(List<Appointment> appointments) {
         this.appointments = appointments;
         return this;
     }
 
+    /**
+     * Gets phone number.
+     *
+     * @return the phone number
+     */
     public String getPhoneNumber() {
         return phoneNumber;
 
     }
 
+    /**
+     * Sets phone number.
+     *
+     * @param phoneNumber the phone number
+     * @return the phone number
+     */
     public DoctorBuilder setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
         return this;
     }
 
+    /**
+     * Gets address.
+     *
+     * @return the address
+     */
     public String getAddress() {
         return address;
     }
 
+    /**
+     * Sets address.
+     *
+     * @param address the address
+     * @return the address
+     */
     public DoctorBuilder setAddress(String address) {
         this.address = address;
         return this;
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     * @return the id
+     */
+    public DoctorBuilder setId(Integer id) {
         this.id = id;
+        return this;
     }
 
 }

@@ -2,6 +2,11 @@ package com.alex.sustavzaupravljanjebolnice.util;
 
 import javafx.scene.control.Alert;
 
+/**
+ * The type Info box.
+ *
+ * @param <T> the type parameter
+ */
 public class InfoBox<T> {
 
     private InfoBox(T message) {
@@ -12,6 +17,12 @@ public class InfoBox<T> {
         alert.showAndWait();
     }
 
+    /**
+     * Show.
+     *
+     * @param <T>     the type parameter
+     * @param message the message
+     */
     public static <T> void show(T message) {
         new InfoBox<>(message);
     }

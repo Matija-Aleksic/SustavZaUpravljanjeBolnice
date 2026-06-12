@@ -21,6 +21,8 @@ public class Prescription implements Serializable {
      * @param id          the id
      * @param name        the name
      * @param description the description
+     * @param doctorId    the doctor id
+     * @param patientId   the patient id
      * @param startDate   the start date
      * @param endDate     the end date
      */
@@ -34,6 +36,9 @@ public class Prescription implements Serializable {
         this.endDate = endDate;
     }
 
+    /**
+     * Instantiates a new Prescription.
+     */
     public Prescription() {
     }
 
@@ -91,18 +96,38 @@ public class Prescription implements Serializable {
         this.description = description;
     }
 
+    /**
+     * Gets doctor id.
+     *
+     * @return the doctor id
+     */
     public Integer getDoctorId() {
         return doctorId;
     }
 
+    /**
+     * Sets doctor id.
+     *
+     * @param doctorId the doctor id
+     */
     public void setDoctorId(Integer doctorId) {
         this.doctorId = doctorId;
     }
 
+    /**
+     * Gets patient id.
+     *
+     * @return the patient id
+     */
     public Integer getPatientId() {
         return patientId;
     }
 
+    /**
+     * Sets patient id.
+     *
+     * @param patientId the patient id
+     */
     public void setPatientId(Integer patientId) {
         this.patientId = patientId;
     }

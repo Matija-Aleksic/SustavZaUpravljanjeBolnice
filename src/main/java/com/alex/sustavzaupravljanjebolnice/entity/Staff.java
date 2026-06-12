@@ -25,6 +25,7 @@ public sealed class Staff extends Person implements Salaried permits Administrat
     /**
      * Instantiates a new Staff.
      *
+     * @param id        the id
      * @param firstName the first name
      * @param lastName  the last name
      * @param oib       the oib
@@ -40,6 +41,9 @@ public sealed class Staff extends Person implements Salaried permits Administrat
         this.salary = salary;
     }
 
+    /**
+     * Instantiates a new Staff.
+     */
     public Staff() {
     }
 
@@ -89,6 +93,11 @@ public sealed class Staff extends Person implements Salaried permits Administrat
         this.salary = salary;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param aLong the a long
+     */
     public void setId(long aLong) {
         super.Id = Math.toIntExact(aLong);
     }

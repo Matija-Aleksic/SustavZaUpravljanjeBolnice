@@ -9,11 +9,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Hospital repo.
+ */
 public class HospitalRepo implements Repository<Hospital, Long> {
 
     @Override
     public Hospital getById(Long aLong) throws SQLException {
-        String query = "select * from hospital where hospital_id = ?";
+        String query = "select * from hospital where id = ?";
         try (Connection conn = DatabaseManager.getConnection(); var ps = conn.prepareStatement(query)) {
             ps.setLong(1, aLong);
             try (var rs = ps.executeQuery()) {
@@ -43,7 +46,7 @@ public class HospitalRepo implements Repository<Hospital, Long> {
     @Override
     public void save(Hospital entity) throws SQLException {
         String sql = "insert into hospital (name, address, phone_number, email) values (?, ?, ?, ?)";
-        try (var conn = DatabaseManager.getConnection(); var ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseManager.getConnection(); var ps = conn.prepareStatement(sql)) {
             ps.setString(1, entity.getName());
             ps.setString(2, entity.getAddress());
             ps.setString(3, entity.getPhoneNumber());
@@ -54,25 +57,27 @@ public class HospitalRepo implements Repository<Hospital, Long> {
 
     @Override
     public void update(Hospital entity) throws SQLException {
-        String sql = " update hospital set name = ?, address = ?, phone_number = ?, email = ? where hospital_id = ?";
-        try (Connection conn = DatabaseManager.getConnection()) {
-            var ps = conn.prepareStatement(sql);
+        String sql = " update hospital set name = ?, address = ?, phone_number = ?, email = ? where id = ?";
+
+        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, entity.getName());
             ps.setString(2, entity.getAddress());
             ps.setString(3, entity.getPhoneNumber());
             ps.setString(4, entity.getEmail());
             ps.setLong(5, entity.getId());
             ps.executeUpdate();
+
         }
     }
 
     @Override
-    public void deleteById(Long aLong) throws SQLException {
-        String sql = "delete from hospital where hospital_id = ?";
-        try (Connection conn = DatabaseManager.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setLong(1, aLong);
+    public void deleteById(Long id) throws SQLException {
+        String sql = "DELETE FROM hospital WHERE id = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, id);
             ps.executeUpdate();
+
         }
     }
 }

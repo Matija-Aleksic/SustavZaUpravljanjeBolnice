@@ -28,6 +28,7 @@ public class Patient extends Person implements Schedulable, Treatable {
     /**
      * Instantiates a new Patient.
      *
+     * @param id        the id
      * @param firstName the first name
      * @param lastName  the last name
      * @param oib       the oib
@@ -57,6 +58,9 @@ public class Patient extends Person implements Schedulable, Treatable {
         this.assignedDoctor = builder.getAssignedDoctor();
     }
 
+    /**
+     * Instantiates a new Patient.
+     */
     public Patient() {
     }
 
@@ -179,10 +183,7 @@ public class Patient extends Person implements Schedulable, Treatable {
     public void setPatientStatus(PatientStatus patientStatus) {
         this.status = patientStatus;
     }
-
-    public List<Prescription> getPrescriptions() {
-        return prescriptions;
-    }
+    
 
     /**
      * Sets prescriptions.

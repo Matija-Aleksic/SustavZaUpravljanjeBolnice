@@ -20,6 +20,7 @@ public class Hospital implements Conactable, Serializable {
     /**
      * Instantiates a new Hospital.
      *
+     * @param id          the id
      * @param name        the name
      * @param address     the address
      * @param phoneNumber the phone number
@@ -34,6 +35,9 @@ public class Hospital implements Conactable, Serializable {
         this.departments = new ArrayList<>();
     }
 
+    /**
+     * Instantiates a new Hospital.
+     */
     public Hospital() {
     }
 
@@ -103,10 +107,20 @@ public class Hospital implements Conactable, Serializable {
         this.departments = departments;
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(Long id) {
         this.id = id;
     }

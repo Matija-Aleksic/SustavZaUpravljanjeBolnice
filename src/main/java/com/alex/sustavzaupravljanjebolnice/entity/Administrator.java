@@ -21,6 +21,7 @@ public final class Administrator extends Staff {
     /**
      * Instantiates a new Administrator.
      *
+     * @param id        the id
      * @param firstName the first name
      * @param lastName  the last name
      * @param oib       the oib

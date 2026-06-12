@@ -232,10 +232,20 @@ public class NurseBuilder {
         return this;
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(Integer id) {
         this.id = id;
     }

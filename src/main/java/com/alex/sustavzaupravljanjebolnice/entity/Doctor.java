@@ -30,6 +30,9 @@ public non-sealed class Doctor extends Staff implements Schedulable, Conactable 
         this.address = doctor.getAddress();
     }
 
+    /**
+     * Instantiates a new Doctor.
+     */
     public Doctor() {
     }
 

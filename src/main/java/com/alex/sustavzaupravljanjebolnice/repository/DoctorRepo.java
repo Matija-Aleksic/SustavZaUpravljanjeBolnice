@@ -1,6 +1,5 @@
 package com.alex.sustavzaupravljanjebolnice.repository;
 
-
 import com.alex.sustavzaupravljanjebolnice.db.DatabaseManager;
 import com.alex.sustavzaupravljanjebolnice.entity.Doctor;
 import com.alex.sustavzaupravljanjebolnice.entity.DoctorBuilder;
@@ -11,11 +10,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Doctor repo.
+ */
 public class DoctorRepo implements Repository<Doctor, Long> {
 
     @Override
     public Doctor getById(Long id) throws SQLException {
-        String query = "select * from STAFF where id = ?";
+        String query = "SELECT * FROM STAFF WHERE id = ?";
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -73,14 +75,13 @@ public class DoctorRepo implements Repository<Doctor, Long> {
             }
             conn.commit();
         }
-
     }
 
     @Override
     public void update(Doctor entity) throws SQLException {
         String sql = "UPDATE STAFF SET first_name = ?, last_name = ?, oib = ?, birth_date = ?, role = ?, email = ?, salary = ?, hospital_id = ?, phone_number = ?, address = ? WHERE id = ?";
-        try (Connection conn = DatabaseManager.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setString(1, entity.getFirstName());
             ps.setString(2, entity.getLastName());
             ps.setString(3, entity.getOib());
@@ -99,27 +100,28 @@ public class DoctorRepo implements Repository<Doctor, Long> {
             ps.setString(10, entity.getAddress());
             ps.setLong(11, entity.getId());
             ps.executeUpdate();
+
+            conn.commit();
         }
     }
 
     @Override
     public void deleteById(Long id) throws SQLException {
         String sql = "DELETE FROM STAFF WHERE id = ?";
-
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-
             ps.setLong(1, id);
             ps.executeUpdate();
-
+            conn.commit();
         }
     }
 
-
     private Doctor mapDoctor(ResultSet rs) throws SQLException {
-        Long hospitalId = rs.getLong("hospital_id");
-        Hospital hospital = new Hospital();
-        hospital.setId(hospitalId);
-
-        return new DoctorBuilder().setFirstName(rs.getString("first_name")).setLastName(rs.getString("last_name")).setOib(rs.getString("oib")).setBirthDate(rs.getDate("birth_date").toLocalDate()).setRole(StaffRoles.valueOf(rs.getString("role"))).setEmail(rs.getString("email")).setSalary(rs.getDouble("salary")).setHospital(hospital).setPhoneNumber(rs.getString("phone_number")).setAddress(rs.getString("address")).setAssignedPatients(new ArrayList<>()).setAppointments(new ArrayList<>()).createDoctor();
+        Hospital hospital = null;
+        long hospitalId = rs.getLong("hospital_id");
+        if (!rs.wasNull()) {
+            hospital = new Hospital();
+            hospital.setId(hospitalId);
+        }
+        return new DoctorBuilder().setId(rs.getInt("id")).setFirstName(rs.getString("first_name")).setLastName(rs.getString("last_name")).setOib(rs.getString("oib")).setBirthDate(rs.getDate("birth_date").toLocalDate()).setRole(StaffRoles.valueOf(rs.getString("role"))).setEmail(rs.getString("email")).setSalary(rs.getDouble("salary")).setHospital(hospital).setPhoneNumber(rs.getString("phone_number")).setAddress(rs.getString("address")).setAssignedPatients(new ArrayList<>()).setAppointments(new ArrayList<>()).createDoctor();
     }
 }

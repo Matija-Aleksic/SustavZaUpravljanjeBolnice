@@ -7,6 +7,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Appointment repo.
+ */
 public class AppointmentRepo implements Repository<Appointment, Long> {
 
     @Override

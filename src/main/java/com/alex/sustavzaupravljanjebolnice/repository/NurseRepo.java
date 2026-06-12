@@ -8,13 +8,15 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Nurse repo.
+ */
 public class NurseRepo implements Repository<Nurse, Long> {
 
     @Override
     public Nurse getById(Long aLong) throws SQLException {
-        String sql = "select * from nurse where id = ?";
-        try (Connection conn = DatabaseManager.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        String sql = "select * from STAFF where id = ?";
+        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, aLong);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -34,9 +36,9 @@ public class NurseRepo implements Repository<Nurse, Long> {
 
     @Override
     public List<Nurse> getAll() throws SQLException {
-        String sql = "select * from nurse";
-        try (Connection conn = DatabaseManager.getConnection()) {
-            Statement stmt = conn.createStatement();
+        String sql = "select * from STAFF";
+        try (Connection conn = DatabaseManager.getConnection(); Statement stmt = conn.createStatement()) {
+
             ResultSet rs = stmt.executeQuery(sql);
             List<Nurse> nurses = new ArrayList<>();
             while (rs.next()) {
@@ -57,9 +59,9 @@ public class NurseRepo implements Repository<Nurse, Long> {
 
     @Override
     public void save(Nurse entity) throws SQLException {
-        String sql = "insert into nurse (first_name, last_name, oib, birth_date, email, salary) values (?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DatabaseManager.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        String sql = "insert into STAFF (first_name, last_name, oib, birth_date, email, salary) values (?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setString(1, entity.getFirstName());
             ps.setString(2, entity.getLastName());
             ps.setString(3, entity.getOib());
@@ -73,9 +75,9 @@ public class NurseRepo implements Repository<Nurse, Long> {
 
     @Override
     public void update(Nurse entity) throws SQLException {
-        String sql = "update nurse set first_name = ?, last_name = ?, oib = ?, birth_date = ?, email = ?, salary = ? where id = ?";
-        try (Connection conn = DatabaseManager.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        String sql = "update STAFF set first_name = ?, last_name = ?, oib = ?, birth_date = ?, email = ?, salary = ? where id = ?";
+        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setString(1, entity.getFirstName());
             ps.setString(2, entity.getLastName());
             ps.setString(3, entity.getOib());
@@ -90,9 +92,9 @@ public class NurseRepo implements Repository<Nurse, Long> {
 
     @Override
     public void deleteById(Long aLong) throws SQLException {
-        String sql = "delete from nurse where id = ?";
-        try (Connection conn = DatabaseManager.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        String sql = "delete from STAFF where id = ?";
+        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setLong(1, aLong);
             ps.executeUpdate();
         }

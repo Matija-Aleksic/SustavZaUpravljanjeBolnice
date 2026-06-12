@@ -11,10 +11,19 @@ import java.util.Base64;
 import java.util.Properties;
 
 
+/**
+ * The type Password manager.
+ */
 public class PasswordManager {
     private final Properties properties = new Properties();
     private final File file;
 
+    /**
+     * Instantiates a new Password manager.
+     *
+     * @param filePath the file path
+     * @throws IOException the io exception
+     */
     public PasswordManager(String filePath) throws IOException {
         this.file = new File(filePath);
         if (file.exists()) {
@@ -24,6 +33,13 @@ public class PasswordManager {
         }
     }
 
+    /**
+     * Save password.
+     *
+     * @param username the username
+     * @param password the password
+     * @throws Exception the exception
+     */
     public void savePassword(String username, String password) throws Exception {
         String salt = generateSalt();
         String hash = hashPassword(password, salt);
@@ -33,6 +49,14 @@ public class PasswordManager {
         // new Activity(Date.from(Instant.now()), "Saved employee with name: " + username, "System");
     }
 
+    /**
+     * Verify password boolean.
+     *
+     * @param username the username
+     * @param password the password
+     * @return the boolean
+     * @throws Exception the exception
+     */
     public boolean verifyPassword(String username, String password) throws Exception {
         String stored = properties.getProperty(username);
         if (stored == null) {

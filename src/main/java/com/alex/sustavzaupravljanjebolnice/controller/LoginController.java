@@ -9,6 +9,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
+/**
+ * The type Login controller.
+ */
 public class LoginController {
     @FXML
     private TextField usernameTextField;
@@ -23,11 +26,20 @@ public class LoginController {
     private Label loginMessageLabel;
 
 
+    /**
+     * Initialize.
+     */
     public void initialize() {
         usernameTextField.setText("Alice Smith");
 
     }
 
+    /**
+     * Login.
+     *
+     * @param event the event
+     * @throws Exception the exception
+     */
     @FXML
     public void login(ActionEvent event) throws Exception {
         if (usernameTextField.getText().isBlank() || passwordTextField.getText().isBlank()) {

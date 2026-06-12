@@ -1,9 +1,11 @@
 package com.alex.sustavzaupravljanjebolnice.controller;
 
-import com.alex.sustavzaupravljanjebolnice.db.DatabaseManager;
 import com.alex.sustavzaupravljanjebolnice.entity.Appointment;
 import com.alex.sustavzaupravljanjebolnice.entity.Doctor;
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
+import com.alex.sustavzaupravljanjebolnice.repository.AppointmentRepo;
+import com.alex.sustavzaupravljanjebolnice.repository.DoctorRepo;
+import com.alex.sustavzaupravljanjebolnice.repository.PatientRepo;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -14,107 +16,93 @@ import javafx.scene.image.ImageView;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
+/**
+ * The type Doctor view controller.
+ */
 public class DoctorViewController {
 
+    private final PatientRepo patientRepo = new PatientRepo();
+    private final AppointmentRepo appointmentRepo = new AppointmentRepo();
     @FXML
     private TableView<Doctor> doctorsTable;
-
     @FXML
     private TableColumn<Doctor, String> doctorColumn;
-
     @FXML
     private TableView<Patient> patientsTable;
-
     @FXML
     private TableColumn<Patient, String> patientNameColumn;
-
     @FXML
     private TableColumn<Patient, String> patientOibColumn;
-
     @FXML
     private TableView<Appointment> appointmentsTable;
-
     @FXML
     private TableColumn<Appointment, String> appointmentDateColumn;
-
     @FXML
     private TableColumn<Appointment, String> appointmentPatientColumn;
-
     @FXML
     private ImageView picture;
-
     @FXML
-    private Label nameSurname;
+    private Label nameSurname, oib, role, email, salary, hospital, phoneNumber, address;
+    private List<Patient> allPatients;
+    private List<Appointment> allAppointments;
 
-    @FXML
-    private Label oib;
-
-    @FXML
-    private Label role;
-
-    @FXML
-    private Label email;
-
-    @FXML
-    private Label salary;
-
-    @FXML
-    private Label hospital;
-
-    @FXML
-    private Label phoneNumber;
-
-    @FXML
-    private Label address;
-
+    /**
+     * Initialize.
+     *
+     * @throws SQLException the sql exception
+     */
     @FXML
     public void initialize() throws SQLException {
 
+        // Load global lists
+        allPatients = patientRepo.getAll();
+        allAppointments = appointmentRepo.getAll();
+
+        // Maps MUST use Long, since getId() returns Long
+        Map<Integer, Patient> patientMap = allPatients.stream().collect(Collectors.toMap(Patient::getId, p -> p));
+
+
         try {
-            setDoctors(DatabaseManager.getDoctors());
+            DoctorRepo doctorRepo = new DoctorRepo();
+            setDoctors(doctorRepo.getAll());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("Doctor view controller");
 
+        // Setup Columns
+        doctorColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getFirstName() + " " + data.getValue().getLastName()));
 
-        doctorColumn.setCellValueFactory(data ->
-                new ReadOnlyStringWrapper(
-                        data.getValue().getFirstName() + " " + data.getValue().getLastName()
-                ));
+        patientNameColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getFirstName() + " " + data.getValue().getLastName()));
 
-        patientNameColumn.setCellValueFactory(data ->
-                new ReadOnlyStringWrapper(
-                        data.getValue().getFirstName() + " " + data.getValue().getLastName()
-                ));
+        patientOibColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getOib()));
 
-        patientOibColumn.setCellValueFactory(data ->
-                new ReadOnlyStringWrapper(
-                        data.getValue().getOib()
-                ));
+        appointmentDateColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().toString()));
 
-        appointmentDateColumn.setCellValueFactory(data ->
-                new ReadOnlyStringWrapper(
-                        data.getValue().toString()
-                ));
-        //todo FIX
-        appointmentPatientColumn.setCellValueFactory(data ->
-                new ReadOnlyStringWrapper(
-                        data.getValue().patient().getFirstName()
-                                + " "
-                                + data.getValue().patient().getLastName()
-                ));
+        appointmentPatientColumn.setCellValueFactory(data -> {
+            Appointment appt = data.getValue();
+            Patient p = patientMap.get(appt.patientId());
 
-        doctorsTable.getSelectionModel()
-                .selectedItemProperty()
-                .addListener((obs, oldDoctor, newDoctor) -> {
-                    if (newDoctor != null) {
-                        displayDoctor(newDoctor);
-                    }
-                });
+            String name = (p != null) ? (p.getFirstName() + " " + p.getLastName()) : "Unknown";
+            return new ReadOnlyStringWrapper(name);
+        });
+
+        // Add Listener
+        doctorsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldDoctor, newDoctor) -> {
+            if (newDoctor != null) {
+                displayDoctor(newDoctor);
+            }
+        });
     }
 
+    /**
+     * Sets doctors.
+     *
+     * @param doctors the doctors
+     */
     public void setDoctors(List<Doctor> doctors) {
         doctorsTable.setItems(FXCollections.observableArrayList(doctors));
 
@@ -124,43 +112,19 @@ public class DoctorViewController {
     }
 
     private void displayDoctor(Doctor doctor) {
-
-        nameSurname.setText(
-                doctor.getFirstName() + " " + doctor.getLastName()
-        );
-
+        nameSurname.setText(doctor.getFirstName() + " " + doctor.getLastName());
         oib.setText(doctor.getOib());
-
-//        role.setText(
-//                doctor.getRole() != null
-//                        ? doctor.getRole().toString()
-//                        : ""
-//        );
-
+        role.setText(doctor.getRole() != null ? doctor.getRole().toString() : "");
         email.setText(doctor.getEmail());
-
         salary.setText(String.valueOf(doctor.getSalary()));
-
-        hospital.setText(
-                doctor.getHospital() != null
-                        ? doctor.getHospital().getName()
-                        : ""
-        );
-
+        hospital.setText(doctor.getHospital() != null ? doctor.getHospital().getName() : "");
         phoneNumber.setText(doctor.getPhoneNumber());
-
         address.setText(doctor.getAddress());
 
-        patientsTable.setItems(
-                FXCollections.observableArrayList(
-                        doctor.getAssignedPatients()
-                )
-        );
+        List<Patient> filteredPatients = allPatients.stream().filter(patient -> patient.getAssignedDoctor() != null && Objects.equals(patient.getAssignedDoctor().getId(), doctor.getId())).toList();
+        patientsTable.setItems(FXCollections.observableArrayList(filteredPatients));
 
-        appointmentsTable.setItems(
-                FXCollections.observableArrayList(
-                        doctor.getAppointments()
-                )
-        );
+        List<Appointment> filteredAppointments = allAppointments.stream().filter(appointment -> Objects.equals(appointment.doctorId(), doctor.getId())).toList();
+        appointmentsTable.setItems(FXCollections.observableArrayList(filteredAppointments));
     }
 }

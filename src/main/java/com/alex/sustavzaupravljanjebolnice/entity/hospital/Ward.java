@@ -20,8 +20,10 @@ public class Ward implements Serializable {
     /**
      * Instantiates a new Ward.
      *
-     * @param name        the name
      * @param maxCapacity the max capacity
+     * @param id          the id
+     * @param name        the name
+     * @param capacity    the capacity
      * @param department  the department
      */
     public Ward(int maxCapacity, Long id, String name, int capacity, Department department) {
@@ -32,6 +34,9 @@ public class Ward implements Serializable {
         this.department = department;
     }
 
+    /**
+     * Instantiates a new Ward.
+     */
     public Ward() {
     }
 
@@ -98,6 +103,11 @@ public class Ward implements Serializable {
         return maxCapacity;
     }
 
+    /**
+     * Sets max capacity.
+     *
+     * @param maxCapacity the max capacity
+     */
     public void setMaxCapacity(int maxCapacity) {
         this.maxCapacity = maxCapacity;
     }
@@ -116,15 +126,24 @@ public class Ward implements Serializable {
      *
      * @param patients the patients
      */
-
     public void setPatients(List<Patient> patients) {
         this.patients = patients;
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(Long id) {
         this.id = id;
     }

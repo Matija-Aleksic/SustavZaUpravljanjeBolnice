@@ -2,6 +2,12 @@ package com.alex.sustavzaupravljanjebolnice.util;
 
 import javafx.scene.control.Alert;
 
+/**
+ * The type Alert box.
+ *
+ * @param <K> the type parameter
+ * @param <V> the type parameter
+ */
 public class AlertBox<K, V> {
 
     private AlertBox(K title, V content) {
@@ -12,6 +18,14 @@ public class AlertBox<K, V> {
         alert.showAndWait();
     }
 
+    /**
+     * Show.
+     *
+     * @param <K>     the type parameter
+     * @param <V>     the type parameter
+     * @param title   the title
+     * @param content the content
+     */
     public static <K, V> void show(K title, V content) {
         new AlertBox<>(title, content);
     }

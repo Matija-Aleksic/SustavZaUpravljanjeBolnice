@@ -24,12 +24,16 @@ public abstract class Person implements Serializable {
      */
     protected LocalDate birthDate;
 
+    /**
+     * The Id.
+     */
     protected Integer Id;
 
 
     /**
      * Instantiates a new Person.
      *
+     * @param id        the id
      * @param firstName the first name
      * @param lastName  the last name
      * @param oib       the oib
@@ -43,6 +47,9 @@ public abstract class Person implements Serializable {
         this.birthDate = birthDate;
     }
 
+    /**
+     * Instantiates a new Person.
+     */
     protected Person() {
     }
 
@@ -55,6 +62,11 @@ public abstract class Person implements Serializable {
         return firstName;
     }
 
+    /**
+     * Sets first name.
+     *
+     * @param firstName the first name
+     */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -68,6 +80,11 @@ public abstract class Person implements Serializable {
         return lastName;
     }
 
+    /**
+     * Sets last name.
+     *
+     * @param lastName the last name
+     */
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
@@ -81,6 +98,11 @@ public abstract class Person implements Serializable {
         return oib;
     }
 
+    /**
+     * Sets oib.
+     *
+     * @param oib the oib
+     */
     public void setOib(String oib) {
         this.oib = oib;
     }
@@ -94,14 +116,29 @@ public abstract class Person implements Serializable {
         return birthDate;
     }
 
+    /**
+     * Sets birth date.
+     *
+     * @param birthDate the birth date
+     */
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public Integer getId() {
         return Id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(Integer id) {
         Id = id;
     }
