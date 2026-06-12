@@ -18,7 +18,7 @@ public class PatientBuilder {
     private String mbo;
     private Hospital hospital;
     private List<Appointment> appointments;
-    private List<Perscription> prescriptions;
+    private List<Prescription> prescriptions;
     private Doctor assignedDoctor;
 
     /**
@@ -195,7 +195,7 @@ public class PatientBuilder {
      *
      * @return the prescriptions
      */
-    public List<Perscription> getPrescriptions() {
+    public List<Prescription> getPrescriptions() {
         return prescriptions;
     }
 
@@ -205,7 +205,7 @@ public class PatientBuilder {
      * @param prescriptions the prescriptions
      * @return the prescriptions
      */
-    public PatientBuilder setPrescriptions(List<Perscription> prescriptions) {
+    public PatientBuilder setPrescriptions(List<Prescription> prescriptions) {
         this.prescriptions = prescriptions;
         return this;
     }
@@ -219,14 +219,6 @@ public class PatientBuilder {
         return assignedDoctor;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     /**
      * Sets assigned doctor.
      *
@@ -236,5 +228,13 @@ public class PatientBuilder {
     public PatientBuilder setAssignedDoctor(Doctor assignedDoctor) {
         this.assignedDoctor = assignedDoctor;
         return this;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

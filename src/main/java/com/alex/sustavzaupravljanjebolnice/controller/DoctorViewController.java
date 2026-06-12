@@ -70,7 +70,7 @@ public class DoctorViewController {
 
     @FXML
     public void initialize() throws SQLException {
-        List<Doctor> doctors = DatabaseManager.getDoctors();
+
         try {
             setDoctors(DatabaseManager.getDoctors());
         } catch (Exception e) {
@@ -98,7 +98,7 @@ public class DoctorViewController {
                 new ReadOnlyStringWrapper(
                         data.getValue().toString()
                 ));
-
+        //todo FIX
         appointmentPatientColumn.setCellValueFactory(data ->
                 new ReadOnlyStringWrapper(
                         data.getValue().patient().getFirstName()

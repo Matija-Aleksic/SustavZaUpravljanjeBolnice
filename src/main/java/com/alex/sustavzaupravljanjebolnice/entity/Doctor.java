@@ -30,6 +30,9 @@ public non-sealed class Doctor extends Staff implements Schedulable, Conactable 
         this.address = doctor.getAddress();
     }
 
+    public Doctor() {
+    }
+
     /**
      * Gets hospital.
      *
@@ -70,16 +73,6 @@ public non-sealed class Doctor extends Staff implements Schedulable, Conactable 
         return appointments;
     }
 
-    @Override
-    public void setAppointment(Appointment appointment) {
-        this.appointments.add(appointment);
-    }
-
-    @Override
-    public Boolean isAvailable(Appointment appointment) {
-        return !this.appointments.contains(appointment);
-    }
-
     /**
      * Sets appointments.
      *
@@ -89,6 +82,15 @@ public non-sealed class Doctor extends Staff implements Schedulable, Conactable 
         this.appointments = appointments;
     }
 
+    @Override
+    public void setAppointment(Appointment appointment) {
+        this.appointments.add(appointment);
+    }
+
+    @Override
+    public Boolean isAvailable(Appointment appointment) {
+        return !this.appointments.contains(appointment);
+    }
 
     /**
      * Add patient.
@@ -104,33 +106,6 @@ public non-sealed class Doctor extends Staff implements Schedulable, Conactable 
         }
     }
 
-    /**
-     * Remove patient.
-     *
-     * @param patient the patient
-     */
-    public void removePatient(Patient patient) {
-        if (this.assignedPatients.contains(patient)) {
-            this.assignedPatients.remove(patient);
-            if (patient.getAssignedDoctor() == this) {
-                patient.setAssignedDoctor(null);
-            }
-        }
-    }
-
-    /**
-     * Add appointment.
-     *
-     * @param appointment the appointment
-     */
-    public void addAppointment(Appointment appointment) {
-        if (!this.appointments.contains(appointment)) {
-            this.appointments.add(appointment);
-            if (!appointment.patient().getAppointments().contains(appointment)) {
-                appointment.patient().setAppointment(appointment);
-            }
-        }
-    }
 
     @Override
     public String getPhoneNumber() {

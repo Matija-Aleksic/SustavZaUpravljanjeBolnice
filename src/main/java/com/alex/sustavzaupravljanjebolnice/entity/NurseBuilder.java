@@ -221,14 +221,6 @@ public class NurseBuilder {
         return wards;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     /**
      * Sets wards.
      *
@@ -238,5 +230,13 @@ public class NurseBuilder {
     public NurseBuilder setWards(List<Ward> wards) {
         this.wards = wards;
         return this;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

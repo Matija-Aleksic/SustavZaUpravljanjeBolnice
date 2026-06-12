@@ -6,12 +6,12 @@ import java.time.LocalDate;
 /**
  * The type Perscription.
  */
-public class Perscription implements Serializable {
+public class Prescription implements Serializable {
     private String id;
     private String name;
     private String description;
-    private Doctor doctor;
-    private Patient patient;
+    private Integer doctorId;
+    private Integer patientId;
     private LocalDate startDate;
     private LocalDate endDate;
 
@@ -21,19 +21,20 @@ public class Perscription implements Serializable {
      * @param id          the id
      * @param name        the name
      * @param description the description
-     * @param doctor      the doctor
-     * @param patient     the patient
      * @param startDate   the start date
      * @param endDate     the end date
      */
-    public Perscription(String id, String name, String description, Doctor doctor, Patient patient, LocalDate startDate, LocalDate endDate) {
+    public Prescription(String id, String name, String description, Integer doctorId, Integer patientId, LocalDate startDate, LocalDate endDate) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.doctor = doctor;
-        this.patient = patient;
+        this.doctorId = doctorId;
+        this.patientId = patientId;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public Prescription() {
     }
 
     /**
@@ -90,40 +91,20 @@ public class Perscription implements Serializable {
         this.description = description;
     }
 
-    /**
-     * Gets doctor.
-     *
-     * @return the doctor
-     */
-    public Doctor getDoctor() {
-        return doctor;
+    public Integer getDoctorId() {
+        return doctorId;
     }
 
-    /**
-     * Sets doctor.
-     *
-     * @param doctor the doctor
-     */
-    public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
+    public void setDoctorId(Integer doctorId) {
+        this.doctorId = doctorId;
     }
 
-    /**
-     * Gets patient.
-     *
-     * @return the patient
-     */
-    public Patient getPatient() {
-        return patient;
+    public Integer getPatientId() {
+        return patientId;
     }
 
-    /**
-     * Sets patient.
-     *
-     * @param patient the patient
-     */
-    public void setPatient(Patient patient) {
-        this.patient = patient;
+    public void setPatientId(Integer patientId) {
+        this.patientId = patientId;
     }
 
     /**

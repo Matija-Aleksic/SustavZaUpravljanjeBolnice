@@ -10,21 +10,21 @@ public abstract class Person implements Serializable {
     /**
      * The First name.
      */
-    protected final String firstName;
+    protected String firstName;
     /**
      * The Last name.
      */
-    protected final String lastName;
+    protected String lastName;
     /**
      * The Oib.
      */
-    protected final String oib;
+    protected String oib;
     /**
      * The Birth date.
      */
-    protected final LocalDate birthDate;
+    protected LocalDate birthDate;
 
-    protected final Integer Id;
+    protected Integer Id;
 
 
     /**
@@ -33,7 +33,7 @@ public abstract class Person implements Serializable {
      * @param firstName the first name
      * @param lastName  the last name
      * @param oib       the oib
-     * @param birthDate the birth date
+     * @param birthDate the birthdate
      */
     protected Person(Integer id, String firstName, String lastName, String oib, LocalDate birthDate) {
         this.Id = id;
@@ -41,6 +41,9 @@ public abstract class Person implements Serializable {
         this.lastName = lastName;
         this.oib = oib;
         this.birthDate = birthDate;
+    }
+
+    protected Person() {
     }
 
     /**
@@ -52,6 +55,10 @@ public abstract class Person implements Serializable {
         return firstName;
     }
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
     /**
      * Gets last name.
      *
@@ -59,6 +66,10 @@ public abstract class Person implements Serializable {
      */
     public String getLastName() {
         return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     /**
@@ -70,17 +81,28 @@ public abstract class Person implements Serializable {
         return oib;
     }
 
+    public void setOib(String oib) {
+        this.oib = oib;
+    }
+
     /**
-     * Gets birth date.
+     * Gets birthdate.
      *
-     * @return the birth date
+     * @return the birthdate
      */
     public LocalDate getBirthDate() {
         return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
     }
 
     public Integer getId() {
         return Id;
     }
 
+    public void setId(Integer id) {
+        Id = id;
+    }
 }

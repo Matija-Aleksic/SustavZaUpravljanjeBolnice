@@ -9,7 +9,8 @@ import java.util.List;
  * The type Ward.
  */
 public class Ward implements Serializable {
-    private final int maxCapacity;
+    private int maxCapacity;
+    private Long id;
     private String name;
     private int capacity;
     private transient Department department;
@@ -23,10 +24,15 @@ public class Ward implements Serializable {
      * @param maxCapacity the max capacity
      * @param department  the department
      */
-    public Ward(String name, int maxCapacity, Department department) {
-        this.name = name;
+    public Ward(int maxCapacity, Long id, String name, int capacity, Department department) {
         this.maxCapacity = maxCapacity;
+        this.id = id;
+        this.name = name;
+        this.capacity = capacity;
         this.department = department;
+    }
+
+    public Ward() {
     }
 
     /**
@@ -92,6 +98,10 @@ public class Ward implements Serializable {
         return maxCapacity;
     }
 
+    public void setMaxCapacity(int maxCapacity) {
+        this.maxCapacity = maxCapacity;
+    }
+
     /**
      * Gets patients.
      *
@@ -106,7 +116,16 @@ public class Ward implements Serializable {
      *
      * @param patients the patients
      */
+
     public void setPatients(List<Patient> patients) {
         this.patients = patients;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -21,7 +21,7 @@ public class Patient extends Person implements Schedulable, Treatable {
     protected String mbo;
     private transient Hospital hospital;
     private List<Appointment> appointments;
-    private List<Perscription> prescriptions;
+    private List<Prescription> prescriptions;
     private Doctor assignedDoctor;
 
 
@@ -31,7 +31,7 @@ public class Patient extends Person implements Schedulable, Treatable {
      * @param firstName the first name
      * @param lastName  the last name
      * @param oib       the oib
-     * @param birthDate the birth date
+     * @param birthDate the birthdate
      * @param status    the status
      * @param mbo       the mbo
      */
@@ -55,6 +55,9 @@ public class Patient extends Person implements Schedulable, Treatable {
         this.appointments = builder.getAppointments();
         this.prescriptions = builder.getPrescriptions();
         this.assignedDoctor = builder.getAssignedDoctor();
+    }
+
+    public Patient() {
     }
 
     /**
@@ -126,26 +129,12 @@ public class Patient extends Person implements Schedulable, Treatable {
 
     @Override
     public void setAppointment(Appointment appointment) {
-        if (!this.appointments.contains(appointment)) {
-            this.appointments.add(appointment);
-            if (!appointment.doctor().getAppointments().contains(appointment)) {
-                appointment.doctor().setAppointment(appointment);
-            }
-        }
+        this.appointments.add(appointment);
     }
 
     @Override
     public Boolean isAvailable(Appointment appointment) {
         return !this.appointments.contains(appointment);
-    }
-
-    /**
-     * Sets prescriptions.
-     *
-     * @param prescriptions the prescriptions
-     */
-    public void setPrescriptions(List<Perscription> prescriptions) {
-        this.prescriptions = prescriptions;
     }
 
     /**
@@ -166,19 +155,18 @@ public class Patient extends Person implements Schedulable, Treatable {
         this.assignedDoctor = assignedDoctor;
     }
 
-
     @Override
-    public List<Perscription> getPrescription() {
+    public List<Prescription> getPrescription() {
         return prescriptions;
     }
 
     @Override
-    public void setPrescription(Perscription prescription) {
+    public void setPrescription(Prescription prescription) {
         this.prescriptions.add(prescription);
     }
 
     @Override
-    public void removePrescription(Perscription prescription) {
+    public void removePrescription(Prescription prescription) {
         this.prescriptions.remove(prescription);
     }
 
@@ -192,16 +180,18 @@ public class Patient extends Person implements Schedulable, Treatable {
         this.status = patientStatus;
     }
 
+    public List<Prescription> getPrescriptions() {
+        return prescriptions;
+    }
 
     /**
-     * Remove appointment.
+     * Sets prescriptions.
      *
-     * @param appointment the appointment
+     * @param prescriptions the prescriptions
      */
-    public void removeAppointment(Appointment appointment) {
-        if (this.appointments.contains(appointment)) {
-            this.appointments.remove(appointment);
-            appointment.doctor().getAppointments().remove(appointment);
-        }
+    public void setPrescriptions(List<Prescription> prescriptions) {
+        this.prescriptions = prescriptions;
     }
+
+
 }

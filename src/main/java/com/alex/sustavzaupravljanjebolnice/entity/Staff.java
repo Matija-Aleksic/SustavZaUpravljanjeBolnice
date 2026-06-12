@@ -40,6 +40,9 @@ public sealed class Staff extends Person implements Salaried permits Administrat
         this.salary = salary;
     }
 
+    public Staff() {
+    }
+
     /**
      * Gets role.
      *
@@ -84,5 +87,9 @@ public sealed class Staff extends Person implements Salaried permits Administrat
     @Override
     public void setSalary(double salary) {
         this.salary = salary;
+    }
+
+    public void setId(long aLong) {
+        super.Id = Math.toIntExact(aLong);
     }
 }

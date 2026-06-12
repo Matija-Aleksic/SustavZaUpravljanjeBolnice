@@ -221,6 +221,19 @@ public class DoctorBuilder {
         return appointments;
     }
 
+    /**
+     * Sets appointments.
+     *
+     * @param appointments the appointments
+     * @return the appointments
+     */
+
+
+    public DoctorBuilder setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
+        return this;
+    }
+
     public String getPhoneNumber() {
         return phoneNumber;
 
@@ -246,19 +259,6 @@ public class DoctorBuilder {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    /**
-     * Sets appointments.
-     *
-     * @param appointments the appointments
-     * @return the appointments
-     */
-
-
-    public DoctorBuilder setAppointments(List<Appointment> appointments) {
-        this.appointments = appointments;
-        return this;
     }
 
 }

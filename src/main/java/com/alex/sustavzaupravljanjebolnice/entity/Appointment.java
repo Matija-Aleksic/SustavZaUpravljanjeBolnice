@@ -6,11 +6,9 @@ import java.time.LocalDateTime;
 /**
  * The type Appointment.
  */
-public record Appointment(int id, Doctor doctor, Patient patient, LocalDateTime dateTime) implements Serializable {
+public record Appointment(int id, Integer doctorId, Integer patientId, LocalDateTime dateTime) implements Serializable {
     @Override
     public String toString() {
-        return "Pregled #" + id + " | " + doctor + " -> " + patient + " u " + dateTime;
+        return "Appointment{" + "id=" + id + ", doctorId=" + doctorId + ", patientId=" + patientId + ", dateTime=" + dateTime + '}';
     }
-
-
 }

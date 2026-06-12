@@ -1,7 +1,7 @@
 package com.alex.sustavzaupravljanjebolnice.entity.interfaces;
 
 import com.alex.sustavzaupravljanjebolnice.entity.PatientStatus;
-import com.alex.sustavzaupravljanjebolnice.entity.Perscription;
+import com.alex.sustavzaupravljanjebolnice.entity.Prescription;
 
 import java.util.List;
 
@@ -14,21 +14,21 @@ public interface Treatable {
      *
      * @return the prescription
      */
-    List<Perscription> getPrescription();
+    List<Prescription> getPrescription();
 
     /**
      * Sets prescription.
      *
      * @param prescription the prescription
      */
-    void setPrescription(Perscription prescription);
+    void setPrescription(Prescription prescription);
 
     /**
      * Remove prescription.
      *
      * @param prescription the prescription
      */
-    void removePrescription(Perscription prescription);
+    void removePrescription(Prescription prescription);
 
     /**
      * Gets patient status.

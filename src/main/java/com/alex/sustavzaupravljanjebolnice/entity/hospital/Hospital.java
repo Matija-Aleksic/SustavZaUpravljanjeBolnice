@@ -10,6 +10,7 @@ import java.util.List;
  * The type Hospital.
  */
 public class Hospital implements Conactable, Serializable {
+    private Long id;
     private transient List<Department> departments;
     private String name;
     private String address;
@@ -24,12 +25,16 @@ public class Hospital implements Conactable, Serializable {
      * @param phoneNumber the phone number
      * @param email       the email
      */
-    public Hospital(String name, String address, String phoneNumber, String email) {
+    public Hospital(Long id, String name, String address, String phoneNumber, String email) {
+        this.id = id;
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.departments = new ArrayList<>();
+    }
+
+    public Hospital() {
     }
 
     @Override
@@ -96,5 +101,13 @@ public class Hospital implements Conactable, Serializable {
      */
     public void setDepartments(List<Department> departments) {
         this.departments = departments;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
