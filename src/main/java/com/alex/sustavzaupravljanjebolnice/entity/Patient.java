@@ -5,7 +5,6 @@ import com.alex.sustavzaupravljanjebolnice.entity.hospital.Ward;
 import com.alex.sustavzaupravljanjebolnice.entity.interfaces.Schedulable;
 import com.alex.sustavzaupravljanjebolnice.entity.interfaces.Treatable;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -23,28 +22,9 @@ public class Patient extends Person implements Schedulable, Treatable {
     private transient Hospital hospital;
     private List<Appointment> appointments;
     private List<Prescription> prescriptions;
-    private Doctor assignedDoctor;
+    private transient Doctor assignedDoctor;
     private Ward assignedWard;
 
-
-    /**
-     * Instantiates a new Patient.
-     *
-     * @param id        the id
-     * @param firstName the first name
-     * @param lastName  the last name
-     * @param oib       the oib
-     * @param birthDate the birthdate
-     * @param status    the status
-     * @param mbo       the mbo
-     */
-    public Patient(Integer id, String firstName, String lastName, String oib, LocalDate birthDate, PatientStatus status, String mbo, Ward assignedWard) {
-        super(id, firstName, lastName, oib, birthDate);
-        this.status = status;
-        this.mbo = mbo;
-        this.assignedWard = assignedWard;
-
-    }
 
     /**
      * Instantiates a new Patient.
@@ -187,9 +167,6 @@ public class Patient extends Person implements Schedulable, Treatable {
         this.status = patientStatus;
     }
 
-    public List<Prescription> getPrescriptions() {
-        return prescriptions;
-    }
 
     /**
      * Sets prescriptions.
@@ -200,10 +177,20 @@ public class Patient extends Person implements Schedulable, Treatable {
         this.prescriptions = prescriptions;
     }
 
+    /**
+     * Gets assigned ward.
+     *
+     * @return the assigned ward
+     */
     public Ward getAssignedWard() {
         return assignedWard;
     }
 
+    /**
+     * Sets assigned ward.
+     *
+     * @param assignedWard the assigned ward
+     */
     public void setAssignedWard(Ward assignedWard) {
         this.assignedWard = assignedWard;
     }

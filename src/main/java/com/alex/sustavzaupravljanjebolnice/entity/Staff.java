@@ -2,8 +2,6 @@ package com.alex.sustavzaupravljanjebolnice.entity;
 
 import com.alex.sustavzaupravljanjebolnice.entity.interfaces.Salaried;
 
-import java.time.LocalDate;
-
 /**
  * The type Staff.
  */
@@ -24,28 +22,23 @@ public sealed class Staff extends Person implements Salaried permits Administrat
 
     /**
      * Instantiates a new Staff.
-     *
-     * @param id        the id
-     * @param firstName the first name
-     * @param lastName  the last name
-     * @param oib       the oib
-     * @param birthDate the birth date
-     * @param role      the role
-     * @param email     the email
-     * @param salary    the salary
      */
-    public Staff(Integer id, String firstName, String lastName, String oib, LocalDate birthDate, StaffRoles role, String email, double salary) {
-        super(id, firstName, lastName, oib, birthDate);
-        this.role = role;
-        this.email = email;
-        this.salary = salary;
+    public Staff() {
+        super(null, null, null, null, null);
     }
 
     /**
      * Instantiates a new Staff.
+     *
+     * @param b the b
      */
-    public Staff() {
+    public Staff(StaffBuilder b) {
+        super(b.getId(), b.getFirstName(), b.getLastName(), b.getOib(), b.getBirthDate());
+        this.role = b.getRole();
+        this.email = b.getEmail();
+        this.salary = b.getSalary();
     }
+
 
     /**
      * Gets role.
@@ -99,6 +92,6 @@ public sealed class Staff extends Person implements Salaried permits Administrat
      * @param aLong the a long
      */
     public void setId(long aLong) {
-        super.Id = Math.toIntExact(aLong);
+        super.id = Math.toIntExact(aLong);
     }
 }

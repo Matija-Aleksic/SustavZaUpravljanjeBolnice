@@ -3,8 +3,6 @@ package com.alex.sustavzaupravljanjebolnice.entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDate;
-
 import static com.alex.sustavzaupravljanjebolnice.entity.Permissions.FULL;
 
 /**
@@ -21,18 +19,11 @@ public final class Administrator extends Staff {
     /**
      * Instantiates a new Administrator.
      *
-     * @param id        the id
-     * @param firstName the first name
-     * @param lastName  the last name
-     * @param oib       the oib
-     * @param birthDate the birth date
-     * @param role      the role
-     * @param email     the email
-     * @param salary    the salary
+     * @param administratorBuilder the administrator builder
      */
-    public Administrator(Integer id, String firstName, String lastName, String oib, LocalDate birthDate, StaffRoles role, String email, double salary) {
-        super(id, firstName, lastName, oib, birthDate, role, email, salary);
-        logger.debug("Administrator created with oib: {}", oib);
+    public Administrator(AdministratorBuilder administratorBuilder) {
+        super(administratorBuilder);
+        logger.info("Administrator Builder created");
     }
 
     /**

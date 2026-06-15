@@ -17,7 +17,7 @@ public class DoctorRepo implements Repository<Doctor, Long> {
 
     @Override
     public Doctor getById(Long id) throws SQLException {
-        String query = "SELECT * FROM STAFF WHERE id = ?";
+        String query = "SELECT id, first_name, last_name, oib, birth_date, role, permissions, email, salary, phone_number, address, hospital_id FROM STAFF WHERE id = ?";
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -32,7 +32,7 @@ public class DoctorRepo implements Repository<Doctor, Long> {
     @Override
     public List<Doctor> getAll() throws SQLException {
         List<Doctor> doctors = new ArrayList<>();
-        String sql = "SELECT * FROM STAFF WHERE role = 'DOCTOR'";
+        String sql = "SELECT id, first_name, last_name, oib, birth_date, role, permissions, email, salary, phone_number, address, hospital_id FROM STAFF WHERE role = 'DOCTOR'";
 
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
@@ -122,6 +122,6 @@ public class DoctorRepo implements Repository<Doctor, Long> {
             hospital = new Hospital();
             hospital.setId(hospitalId);
         }
-        return new DoctorBuilder().setId(rs.getInt("id")).setFirstName(rs.getString("first_name")).setLastName(rs.getString("last_name")).setOib(rs.getString("oib")).setBirthDate(rs.getDate("birth_date").toLocalDate()).setRole(StaffRoles.valueOf(rs.getString("role"))).setEmail(rs.getString("email")).setSalary(rs.getDouble("salary")).setHospital(hospital).setPhoneNumber(rs.getString("phone_number")).setAddress(rs.getString("address")).setAssignedPatients(new ArrayList<>()).setAppointments(new ArrayList<>()).createDoctor();
+        return new DoctorBuilder().setId(rs.getInt("id")).setFirstName(rs.getString("first_name")).setLastName(rs.getString("last_name")).setOib(rs.getString("oib")).setBirthDate(rs.getDate("birth_date").toLocalDate()).setRole(StaffRoles.valueOf(rs.getString("role"))).setEmail(rs.getString("email")).setSalary(rs.getDouble("salary")).setHospital(hospital).setPhoneNumber(rs.getString("phone_number")).setAddress(rs.getString("address")).setAssignedPatients(new ArrayList<>()).setAppointments(new ArrayList<>()).build();
     }
 }

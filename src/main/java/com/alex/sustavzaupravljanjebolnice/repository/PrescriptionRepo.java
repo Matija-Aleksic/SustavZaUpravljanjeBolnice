@@ -17,7 +17,7 @@ public class PrescriptionRepo implements Repository<Prescription, String> {
 
     @Override
     public Prescription getById(String id) throws SQLException {
-        String query = "SELECT * FROM prescription WHERE id = ?";
+        String query = "SELECT id, name, description, doctor_id, patient_id, start_date, end_date FROM prescription WHERE id = ?";
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -32,7 +32,7 @@ public class PrescriptionRepo implements Repository<Prescription, String> {
     @Override
     public List<Prescription> getAll() throws SQLException {
         List<Prescription> prescriptions = new ArrayList<>();
-        String sql = "SELECT * FROM prescription";
+        String sql = "SELECT id, name, description, doctor_id, patient_id, start_date, end_date FROM prescription";
 
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 

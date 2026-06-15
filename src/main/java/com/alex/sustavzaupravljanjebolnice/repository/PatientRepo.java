@@ -17,7 +17,7 @@ public class PatientRepo implements Repository<Patient, Long> {
 
     @Override
     public Patient getById(Long id) throws SQLException {
-        String query = "SELECT * FROM patient WHERE id = ?";
+        String query = "SELECT id, first_name, last_name, oib, birth_date, status, mbo, hospital_id, assigned_doctor_id FROM patient WHERE id = ?";
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -32,7 +32,7 @@ public class PatientRepo implements Repository<Patient, Long> {
     @Override
     public List<Patient> getAll() throws SQLException {
         List<Patient> patients = new ArrayList<>();
-        String sql = "SELECT * FROM patient";
+        String sql = "SELECT id, first_name, last_name, oib, birth_date, status, mbo, hospital_id, assigned_doctor_id FROM patient";
 
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);

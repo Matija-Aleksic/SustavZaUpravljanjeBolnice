@@ -22,7 +22,8 @@ public non-sealed class Doctor extends Staff implements Schedulable, Conactable 
      * @param doctor the doctor
      */
     public Doctor(DoctorBuilder doctor) {
-        super(doctor.getId(), doctor.getFirstName(), doctor.getLastName(), doctor.getOib(), doctor.getBirthDate(), doctor.getRole(), doctor.getEmail(), doctor.getSalary());
+        super(doctor);
+
         this.hospital = doctor.getHospital();
         this.assignedPatients = doctor.getAssignedPatients();
         this.appointments = doctor.getAppointments();

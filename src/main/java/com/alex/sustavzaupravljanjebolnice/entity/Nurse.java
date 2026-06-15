@@ -14,16 +14,18 @@ public non-sealed class Nurse extends Staff {
     private Department department;
     private List<Ward> wards;
 
+
     /**
      * Instantiates a new Nurse.
      *
-     * @param nusrseBuilder the nusrse builder
+     * @param b the b
      */
-    public Nurse(NurseBuilder nusrseBuilder) {
-        super(nusrseBuilder.getId(), nusrseBuilder.getFirstName(), nusrseBuilder.getLastName(), nusrseBuilder.getOib(), nusrseBuilder.getBirthDate(), nusrseBuilder.getRole(), nusrseBuilder.getEmail(), nusrseBuilder.getSalary());
-        this.hospital = nusrseBuilder.getHospital();
-        this.department = nusrseBuilder.getDepartment();
-        this.wards = nusrseBuilder.getWards();
+    public Nurse(NurseBuilder b) {
+        super(b);
+
+        this.hospital = b.getHospital();
+        this.department = b.getDepartment();
+        this.wards = b.getWards();
     }
 
     /**

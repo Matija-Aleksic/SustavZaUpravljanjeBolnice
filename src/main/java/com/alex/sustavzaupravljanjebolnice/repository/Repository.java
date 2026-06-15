@@ -4,12 +4,12 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Generic interface for CRUD operations.
+ * The interface Repository.
  *
- * @param <T>  The entity type (e.g., Doctor, Patient)
- * @param <ID> The primary key type (e.g., Long, String)
+ * @param <T> the type parameter
+ * @param <I> the type parameter
  */
-public interface Repository<T, ID> {
+public interface Repository<T, I> {
     /**
      * Gets by id.
      *
@@ -17,7 +17,7 @@ public interface Repository<T, ID> {
      * @return the by id
      * @throws SQLException the sql exception
      */
-    T getById(ID id) throws SQLException;
+    T getById(I id) throws SQLException;
 
     /**
      * Gets all.
@@ -49,5 +49,5 @@ public interface Repository<T, ID> {
      * @param id the id
      * @throws SQLException the sql exception
      */
-    void deleteById(ID id) throws SQLException;
+    void deleteById(I id) throws SQLException;
 }

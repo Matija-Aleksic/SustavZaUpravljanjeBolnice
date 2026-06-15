@@ -9,6 +9,9 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * The type Database manager.
+ */
 public class DatabaseManager {
 
     private static final Logger logger = Logger.getLogger(DatabaseManager.class.getName());
@@ -43,27 +46,30 @@ public class DatabaseManager {
     private DatabaseManager() {
     }
 
+    /**
+     * Gets connection.
+     *
+     * @return the connection
+     * @throws SQLException the sql exception
+     */
     public static Connection getConnection() throws SQLException {
-        Connection conn = DriverManager.getConnection(JDBC_URL, USER, PASS);
-        conn.setAutoCommit(false);
-        return conn;
+        return DriverManager.getConnection(JDBC_URL, USER, PASS);
     }
 
     private static void initDatabase() {
         try (Connection conn = getConnection()) {
+
+            conn.setAutoCommit(false);
 
             if (databaseExists(conn)) {
                 logger.info("Database already initialized");
                 return;
             }
 
-            logger.info("Creating database schema + seed data");
-
             runSqlScript(conn, "/db/schema.sql");
             runSqlScript(conn, "/db/seed.sql");
 
             conn.commit();
-            logger.info("Database initialized successfully");
 
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Database initialization failed", e);

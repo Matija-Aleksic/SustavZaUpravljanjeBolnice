@@ -3,172 +3,65 @@ package com.alex.sustavzaupravljanjebolnice.entity;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The type Doctor builder.
  */
-public class DoctorBuilder {
-    private Integer id;
-    private String firstName;
-    private String lastName;
-    private String oib;
-    private LocalDate birthDate;
-    private StaffRoles role;
-    private String email;
-    private double salary;
+public class DoctorBuilder extends StaffBuilder {
+
     private Hospital hospital;
-    private List<Patient> assignedPatients;
-    private List<Appointment> appointments;
+    private List<Patient> assignedPatients = new ArrayList<>();
+    private List<Appointment> appointments = new ArrayList<>();
     private String phoneNumber;
     private String address;
 
-    /**
-     * Create doctor doctor.
-     *
-     * @return the doctor
-     */
-    public Doctor createDoctor() {
-        return new Doctor(this);
+    @Override
+    public DoctorBuilder setId(Integer id) {
+        super.setId(id);
+        return this;
     }
 
-    /**
-     * Gets first name.
-     *
-     * @return the first name
-     */
-    public String getFirstName() {
-        return firstName;
-    }
-
-    /**
-     * Sets first name.
-     *
-     * @param firstName the first name
-     * @return the first name
-     */
+    @Override
     public DoctorBuilder setFirstName(String firstName) {
-        this.firstName = firstName;
+        super.setFirstName(firstName);
         return this;
     }
 
-    /**
-     * Gets last name.
-     *
-     * @return the last name
-     */
-    public String getLastName() {
-        return lastName;
-    }
-
-    /**
-     * Sets last name.
-     *
-     * @param lastName the last name
-     * @return the last name
-     */
+    @Override
     public DoctorBuilder setLastName(String lastName) {
-        this.lastName = lastName;
+        super.setLastName(lastName);
         return this;
     }
 
-    /**
-     * Gets oib.
-     *
-     * @return the oib
-     */
-    public String getOib() {
-        return oib;
-    }
-
-    /**
-     * Sets oib.
-     *
-     * @param oib the oib
-     * @return the oib
-     */
+    @Override
     public DoctorBuilder setOib(String oib) {
-        this.oib = oib;
+        super.setOib(oib);
         return this;
     }
 
-    /**
-     * Gets birth date.
-     *
-     * @return the birth date
-     */
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-    /**
-     * Sets birth date.
-     *
-     * @param birthDate the birth date
-     * @return the birth date
-     */
+    @Override
     public DoctorBuilder setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
+        super.setBirthDate(birthDate);
         return this;
     }
 
-    /**
-     * Gets role.
-     *
-     * @return the role
-     */
-    public StaffRoles getRole() {
-        return role;
-    }
-
-    /**
-     * Sets role.
-     *
-     * @param role the role
-     * @return the role
-     */
+    @Override
     public DoctorBuilder setRole(StaffRoles role) {
-        this.role = role;
+        super.setRole(role);
         return this;
     }
 
-    /**
-     * Gets email.
-     *
-     * @return the email
-     */
-    public String getEmail() {
-        return email;
-    }
-
-    /**
-     * Sets email.
-     *
-     * @param email the email
-     * @return the email
-     */
+    @Override
     public DoctorBuilder setEmail(String email) {
-        this.email = email;
+        super.setEmail(email);
         return this;
     }
 
-    /**
-     * Gets salary.
-     *
-     * @return the salary
-     */
-    public double getSalary() {
-        return salary;
-    }
-
-    /**
-     * Sets salary.
-     *
-     * @param salary the salary
-     * @return the salary
-     */
+    @Override
     public DoctorBuilder setSalary(double salary) {
-        this.salary = salary;
+        super.setSalary(salary);
         return this;
     }
 
@@ -221,7 +114,6 @@ public class DoctorBuilder {
         return appointments;
     }
 
-
     /**
      * Sets appointments.
      *
@@ -240,7 +132,6 @@ public class DoctorBuilder {
      */
     public String getPhoneNumber() {
         return phoneNumber;
-
     }
 
     /**
@@ -275,23 +166,11 @@ public class DoctorBuilder {
     }
 
     /**
-     * Gets id.
+     * Build doctor.
      *
-     * @return the id
+     * @return the doctor
      */
-    public Integer getId() {
-        return id;
+    public Doctor build() {
+        return new Doctor(this);
     }
-
-    /**
-     * Sets id.
-     *
-     * @param id the id
-     * @return the id
-     */
-    public DoctorBuilder setId(Integer id) {
-        this.id = id;
-        return this;
-    }
-
 }

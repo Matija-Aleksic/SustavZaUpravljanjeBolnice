@@ -46,7 +46,14 @@ public class DoctorViewController {
     @FXML
     private ImageView picture;
     @FXML
-    private Label nameSurname, oib, role, email, salary, hospital, phoneNumber, address;
+    private Label nameSurname;
+    private Label oib;
+    private Label role;
+    private Label email;
+    private Label salary;
+    private Label hospital;
+    private Label phoneNumber;
+    private Label address;
     private List<Patient> allPatients;
     private List<Appointment> allAppointments;
 
@@ -58,11 +65,9 @@ public class DoctorViewController {
     @FXML
     public void initialize() throws SQLException {
 
-        // Load global lists
         allPatients = patientRepo.getAll();
         allAppointments = appointmentRepo.getAll();
 
-        // Maps MUST use Long, since getId() returns Long
         Map<Integer, Patient> patientMap = allPatients.stream().collect(Collectors.toMap(Patient::getId, p -> p));
 
 
@@ -73,7 +78,6 @@ public class DoctorViewController {
             e.printStackTrace();
         }
 
-        // Setup Columns
         doctorColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getFirstName() + " " + data.getValue().getLastName()));
 
         patientNameColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getFirstName() + " " + data.getValue().getLastName()));
@@ -90,7 +94,6 @@ public class DoctorViewController {
             return new ReadOnlyStringWrapper(name);
         });
 
-        // Add Listener
         doctorsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldDoctor, newDoctor) -> {
             if (newDoctor != null) {
                 displayDoctor(newDoctor);

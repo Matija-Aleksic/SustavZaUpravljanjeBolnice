@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
- * The type Perscription.
+ * The type Prescription.
  */
 public class Prescription implements Serializable {
     private String id;
@@ -16,7 +16,7 @@ public class Prescription implements Serializable {
     private LocalDate endDate;
 
     /**
-     * Instantiates a new Perscription.
+     * Instantiates a new Prescription.
      *
      * @param id          the id
      * @param name        the name

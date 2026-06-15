@@ -15,7 +15,7 @@ public class DepartmentRepo implements Repository<Department, Long> {
 
     @Override
     public Department getById(Long id) throws SQLException {
-        String query = "SELECT * FROM department WHERE id = ?";
+        String query = "SELECT id, NAME, HOSPITAL_ID FROM department WHERE id = ?";
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -30,7 +30,7 @@ public class DepartmentRepo implements Repository<Department, Long> {
     @Override
     public List<Department> getAll() throws SQLException {
         List<Department> departments = new ArrayList<>();
-        String sql = "SELECT * FROM department";
+        String sql = "SELECT id, NAME, HOSPITAL_ID FROM department";
 
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);

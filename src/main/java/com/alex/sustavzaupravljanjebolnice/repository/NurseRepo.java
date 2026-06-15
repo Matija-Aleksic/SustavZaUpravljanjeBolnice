@@ -19,7 +19,7 @@ public class NurseRepo implements Repository<Nurse, Long> {
 
     @Override
     public Nurse getById(Long id) throws SQLException {
-        String sql = "SELECT * FROM STAFF WHERE id = ? AND role = 'NURSE'";
+        String sql = "SELECT id, first_name, last_name, oib, birth_date, role, permissions, email, salary, phone_number, address, hospital_id FROM STAFF WHERE id = ? AND role = 'NURSE'";
 
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -50,7 +50,7 @@ public class NurseRepo implements Repository<Nurse, Long> {
 
     @Override
     public List<Nurse> getAll() throws SQLException {
-        String sql = "SELECT * FROM STAFF WHERE role = 'NURSE'";
+        String sql = "SELECT id, first_name, last_name, oib, birth_date, role, permissions, email, salary, phone_number, address, hospital_id FROM STAFF WHERE role = 'NURSE'";
 
         try (Connection conn = DatabaseManager.getConnection(); Statement stmt = conn.createStatement()) {
             List<Hospital> allHospitals = hospitalRepo.getAll();
@@ -69,11 +69,8 @@ public class NurseRepo implements Repository<Nurse, Long> {
                     builder.setEmail(rs.getString("email"));
                     builder.setSalary(rs.getDouble("salary"));
                     long hospitalId = rs.getLong("hospital_id");
-                    Hospital hospital = allHospitals.stream()
-                            .filter(h -> h.getId() == hospitalId)
-                            .findFirst()
-                            .orElse(null);
-                    List<Ward> assignedWards = allWards.stream().filter(w -> w.getNurseId() != null && w.getNurseId().longValue() == nurseId).toList();
+                    Hospital hospital = allHospitals.stream().filter(h -> h.getId() == hospitalId).findFirst().orElse(null);
+                    List<Ward> assignedWards = allWards.stream().filter(w -> w.getNurseId() != null && w.getNurseId() == nurseId).toList();
 
                     builder.setWards(assignedWards);
                     builder.setHospital(hospital);
@@ -88,7 +85,7 @@ public class NurseRepo implements Repository<Nurse, Long> {
 
     @Override
     public void save(Nurse entity) throws SQLException {
-        String sql = "insert into STAFF (first_name, last_name, oib, birth_date, email, salary) values (?, ?, ?, ?, ?, ?)";
+        String sql = "insert into STAFF (first_name, last_name, oib, birth_date, email, salary,ROLE) values (?, ?, ?, ?, ?, ?,?)";
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, entity.getFirstName());
@@ -97,6 +94,7 @@ public class NurseRepo implements Repository<Nurse, Long> {
             ps.setDate(4, java.sql.Date.valueOf(entity.getBirthDate()));
             ps.setString(5, entity.getEmail());
             ps.setDouble(6, entity.getSalary());
+            ps.setString(7, String.valueOf(entity.getRole()));
             ps.executeUpdate();
         }
 

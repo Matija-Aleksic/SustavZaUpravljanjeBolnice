@@ -250,10 +250,20 @@ public class PatientBuilder {
         this.id = id;
     }
 
+    /**
+     * Gets assigned ward.
+     *
+     * @return the assigned ward
+     */
     public Ward getAssignedWard() {
         return assignedWard;
     }
 
+    /**
+     * Sets assigned ward.
+     *
+     * @param assignedWard the assigned ward
+     */
     public void setAssignedWard(Ward assignedWard) {
         this.assignedWard = assignedWard;
     }

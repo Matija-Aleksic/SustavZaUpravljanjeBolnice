@@ -18,6 +18,9 @@ import javafx.scene.control.TableView;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * The type Hospital overview controller.
+ */
 public class HospitalOverviewController {
 
     private final HospitalRepo hospitalRepo = new HospitalRepo();
@@ -63,6 +66,11 @@ public class HospitalOverviewController {
     private List<Doctor> allDoctors;
     private List<Nurse> allNurses;
 
+    /**
+     * Initialize.
+     *
+     * @throws SQLException the sql exception
+     */
     @FXML
     public void initialize() throws SQLException {
         List<Hospital> hospitals = hospitalRepo.getAll();
@@ -88,6 +96,11 @@ public class HospitalOverviewController {
         setHospitals(hospitals);
     }
 
+    /**
+     * Sets hospitals.
+     *
+     * @param hospitals the hospitals
+     */
     public void setHospitals(List<Hospital> hospitals) {
         hospitalsTable.setItems(FXCollections.observableArrayList(hospitals));
         if (!hospitals.isEmpty()) {
@@ -100,15 +113,15 @@ public class HospitalOverviewController {
         lblHospitalAddress.setText(hospital.getAddress() != null ? hospital.getAddress() : "N/A");
         lblHospitalPhone.setText(hospital.getPhoneNumber() != null ? hospital.getPhoneNumber() : "N/A");
 
-        long targetHospitalId = hospital.getId().longValue();
+        long targetHospitalId = hospital.getId();
 
-        List<Department> hospitalDepartments = allDepartments.stream().filter(d -> d.getHospital().getId() != null && d.getHospital().getId().longValue() == targetHospitalId).toList();
+        List<Department> hospitalDepartments = allDepartments.stream().filter(d -> d.getHospital().getId() != null && d.getHospital().getId() == targetHospitalId).toList();
         departmentsTable.setItems(FXCollections.observableArrayList(hospitalDepartments));
 
-        List<Doctor> hospitalDoctors = allDoctors.stream().filter(doc -> doc.getHospital().getId() != null && doc.getHospital().getId().longValue() == targetHospitalId).toList();
+        List<Doctor> hospitalDoctors = allDoctors.stream().filter(doc -> doc.getHospital().getId() != null && doc.getHospital().getId() == targetHospitalId).toList();
         doctorsTable.setItems(FXCollections.observableArrayList(hospitalDoctors));
 
-        List<Nurse> hospitalNurses = allNurses.stream().filter(nurse -> nurse.getHospital().getId() != null && nurse.getHospital().getId().longValue() == targetHospitalId).toList();
+        List<Nurse> hospitalNurses = allNurses.stream().filter(nurse -> nurse.getHospital().getId() != null && nurse.getHospital().getId() == targetHospitalId).toList();
         nursesTable.setItems(FXCollections.observableArrayList(hospitalNurses));
     }
 }

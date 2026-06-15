@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * The type Nurse view controller.
+ */
 public class NurseViewController {
 
     private final NurseRepo nurseRepo = new NurseRepo();
@@ -64,6 +67,11 @@ public class NurseViewController {
     private List<Patient> allPatients;
     private List<Ward> allWards;
 
+    /**
+     * Initialize.
+     *
+     * @throws SQLException the sql exception
+     */
     @FXML
     public void initialize() throws SQLException {
         // Load data once to keep memory lookups performant
@@ -71,19 +79,15 @@ public class NurseViewController {
         allPatients = patientRepo.getAll();
         allWards = wardRepo.getAll();
         List<Nurse> nurses = nurseRepo.getAll();
-        //     nurses = nurses.stream().filter(nurse -> nurse.getRole().equals("Nurse")).toList();
 
-        // Configure Nurse Table Columns
         nurseColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getFirstName() + " " + data.getValue().getLastName()));
 
-        // Configure Patient Table Columns
         patientNameColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getFirstName() + " " + data.getValue().getLastName()));
 
         patientOibColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getOib()));
 
         patientWardColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(resolveWardName(data.getValue())));
 
-        // Configure Prescription Table Columns
         prescriptionNameColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getName()));
 
         prescriptionPatientColumn.setCellValueFactory(data -> {
@@ -93,7 +97,6 @@ public class NurseViewController {
 
         prescriptionDurationColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getStartDate() + " - " + data.getValue().getEndDate()));
 
-        // Setup Selection Listeners
         nursesTable.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
             if (newV != null) displayNurse(newV);
         });
@@ -101,6 +104,11 @@ public class NurseViewController {
         setNurses(nurses);
     }
 
+    /**
+     * Sets nurses.
+     *
+     * @param nurses the nurses
+     */
     public void setNurses(List<Nurse> nurses) {
         nursesTable.setItems(FXCollections.observableArrayList(nurses));
         if (!nurses.isEmpty()) {
@@ -109,7 +117,6 @@ public class NurseViewController {
     }
 
     private void displayNurse(Nurse nurse) {
-        // 1. Fill Text Labels
         nameSurname.setText(nurse.getFirstName() + " " + nurse.getLastName());
         oib.setText(nurse.getOib());
         email.setText(nurse.getEmail());
@@ -135,8 +142,8 @@ public class NurseViewController {
             return "No Ward Assigned";
         }
 
-        long wardId = patient.getAssignedWard().getId().longValue();
-        return allWards.stream().filter(w -> w.getId() != null && w.getId().longValue() == wardId).map(Ward::getName).findFirst().orElse("Unknown Ward");
+        long wardId = patient.getAssignedWard().getId();
+        return allWards.stream().filter(w -> w.getId() != null && w.getId() == wardId).map(Ward::getName).findFirst().orElse("Unknown Ward");
     }
 
     private Patient findPatient(Number id) {

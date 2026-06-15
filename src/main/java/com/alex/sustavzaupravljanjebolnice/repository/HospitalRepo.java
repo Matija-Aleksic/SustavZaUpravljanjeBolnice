@@ -16,7 +16,7 @@ public class HospitalRepo implements Repository<Hospital, Long> {
 
     @Override
     public Hospital getById(Long aLong) throws SQLException {
-        String query = "select * from hospital where id = ?";
+        String query = "select id, name, address, phone_number, email from hospital where id = ?";
         try (Connection conn = DatabaseManager.getConnection(); var ps = conn.prepareStatement(query)) {
             ps.setLong(1, aLong);
             try (var rs = ps.executeQuery()) {

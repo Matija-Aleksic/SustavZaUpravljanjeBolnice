@@ -14,7 +14,7 @@ public class AppointmentRepo implements Repository<Appointment, Long> {
 
     @Override
     public Appointment getById(Long id) throws SQLException {
-        String query = "SELECT * FROM appointment WHERE id = ?";
+        String query = "SELECT id, doctor_id, patient_id, date_time FROM appointment WHERE id = ?";
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -29,7 +29,7 @@ public class AppointmentRepo implements Repository<Appointment, Long> {
     @Override
     public List<Appointment> getAll() throws SQLException {
         List<Appointment> appointments = new ArrayList<>();
-        String sql = "SELECT * FROM appointment";
+        String sql = "SELECT id, doctor_id, patient_id, date_time FROM appointment";
 
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -54,12 +54,6 @@ public class AppointmentRepo implements Repository<Appointment, Long> {
             ps.setTimestamp(3, Timestamp.valueOf(entity.dateTime()));
 
             ps.executeUpdate();
-
-//            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-//                if (generatedKeys.next()) {
-//                    entity.id(generatedKeys.getLong(1));
-//                }
-//            }
             conn.commit();
         }
     }
