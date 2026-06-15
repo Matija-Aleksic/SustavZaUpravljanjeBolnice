@@ -1,6 +1,7 @@
 package com.alex.sustavzaupravljanjebolnice.entity;
 
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
+import com.alex.sustavzaupravljanjebolnice.entity.hospital.Ward;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,6 +21,7 @@ public class PatientBuilder {
     private List<Appointment> appointments;
     private List<Prescription> prescriptions;
     private Doctor assignedDoctor;
+    private Ward assignedWard;
 
     /**
      * Create patient patient.
@@ -246,5 +248,13 @@ public class PatientBuilder {
      */
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Ward getAssignedWard() {
+        return assignedWard;
+    }
+
+    public void setAssignedWard(Ward assignedWard) {
+        this.assignedWard = assignedWard;
     }
 }

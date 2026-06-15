@@ -20,7 +20,7 @@ public class HelloApplication extends Application {
         } catch (Exception e) {
             System.err.println("Warning: could not initialize in-memory DB: " + e.getMessage());
         }
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("doctor-overview.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("nurse-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1300, 940);
         stage.setTitle("Hello!");
         stage.setScene(scene);

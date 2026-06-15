@@ -3,6 +3,7 @@ package com.alex.sustavzaupravljanjebolnice.repository;
 import com.alex.sustavzaupravljanjebolnice.db.DatabaseManager;
 import com.alex.sustavzaupravljanjebolnice.entity.Nurse;
 import com.alex.sustavzaupravljanjebolnice.entity.NurseBuilder;
+import com.alex.sustavzaupravljanjebolnice.entity.hospital.Ward;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,48 +13,70 @@ import java.util.List;
  * The type Nurse repo.
  */
 public class NurseRepo implements Repository<Nurse, Long> {
+    private final WardRepo wardRepo = new WardRepo();
 
     @Override
-    public Nurse getById(Long aLong) throws SQLException {
-        String sql = "select * from STAFF where id = ?";
+    public Nurse getById(Long id) throws SQLException {
+        String sql = "SELECT * FROM STAFF WHERE id = ? AND role = 'NURSE'";
+
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setLong(1, aLong);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                NurseBuilder builder = new NurseBuilder();
-                builder.setId(rs.getInt("id"));
-                builder.setFirstName(rs.getString("first_name"));
-                builder.setLastName(rs.getString("last_name"));
-                builder.setOib(rs.getString("oib"));
-                builder.setBirthDate(rs.getDate("birth_date").toLocalDate());
-                builder.setEmail(rs.getString("email"));
-                builder.setSalary(rs.getDouble("salary"));
-                return builder.build();
+
+            ps.setLong(1, id);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    NurseBuilder builder = new NurseBuilder();
+                    builder.setId(rs.getInt("id"));
+                    builder.setFirstName(rs.getString("first_name"));
+                    builder.setLastName(rs.getString("last_name"));
+                    builder.setOib(rs.getString("oib"));
+                    builder.setBirthDate(rs.getDate("birth_date").toLocalDate());
+                    builder.setEmail(rs.getString("email"));
+                    builder.setSalary(rs.getDouble("salary"));
+
+                    List<Ward> associatedWards = wardRepo.getAll().stream().filter(w -> w.getNurseId() != null && w.getNurseId().longValue() == id).toList();
+                    builder.setWards(associatedWards);
+
+                    conn.commit();
+                    return builder.build();
+                }
             }
+            conn.commit();
             return null;
         }
     }
 
     @Override
     public List<Nurse> getAll() throws SQLException {
-        String sql = "select * from STAFF";
+        String sql = "SELECT * FROM STAFF WHERE role = 'NURSE'";
+
         try (Connection conn = DatabaseManager.getConnection(); Statement stmt = conn.createStatement()) {
 
-            ResultSet rs = stmt.executeQuery(sql);
+            List<Ward> allWards = wardRepo.getAll();
             List<Nurse> nurses = new ArrayList<>();
-            while (rs.next()) {
-                NurseBuilder builder = new NurseBuilder();
-                builder.setId(rs.getInt("id"));
-                builder.setFirstName(rs.getString("first_name"));
-                builder.setLastName(rs.getString("last_name"));
-                builder.setOib(rs.getString("oib"));
-                builder.setBirthDate(rs.getDate("birth_date").toLocalDate());
-                builder.setEmail(rs.getString("email"));
-                builder.setSalary(rs.getDouble("salary"));
-                nurses.add(builder.build());
-            }
-            return nurses;
 
+            try (ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    long nurseId = rs.getLong("id");
+                    NurseBuilder builder = new NurseBuilder();
+                    builder.setId((int) nurseId);
+                    builder.setFirstName(rs.getString("first_name"));
+                    builder.setLastName(rs.getString("last_name"));
+                    builder.setOib(rs.getString("oib"));
+                    builder.setBirthDate(rs.getDate("birth_date").toLocalDate());
+                    builder.setEmail(rs.getString("email"));
+                    builder.setSalary(rs.getDouble("salary"));
+
+                    List<Ward> assignedWards = allWards.stream().filter(w -> w.getNurseId() != null && w.getNurseId().longValue() == nurseId).toList();
+
+                    builder.setWards(assignedWards);
+
+                    nurses.add(builder.build());
+                }
+            }
+
+            conn.commit();
+            return nurses;
         }
     }
 

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/26"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.alex.sustavzaupravljanjebolnice.controller.NurseViewController">
+
+    <children>
+
+        <BorderPane prefWidth="1294.0" prefHeight="940.0">
+
+            <left>
+                <TableView fx:id="nursesTable" prefWidth="300.0">
+
+                    <columns>
+                        <TableColumn fx:id="nurseColumn"
+                                     text="Nurses"
+                                     prefWidth="300.0"/>
+                    </columns>
+
+                </TableView>
+            </left>
+
+            <top>
+                <MenuBar>
+                    <menus>
+
+                        <Menu text="File">
+                            <items>
+                                <MenuItem text="Close"/>
+                            </items>
+                        </Menu>
+
+                        <Menu text="Edit">
+                            <items>
+                                <MenuItem text="Edit Nurse"/>
+                            </items>
+                        </Menu>
+
+                        <Menu text="Help">
+                            <items>
+                                <MenuItem text="About"/>
+                            </items>
+                        </Menu>
+
+                    </menus>
+                </MenuBar>
+            </top>
+
+            <center>
+
+                <VBox spacing="10.0" style="-fx-padding: 10;">
+
+                    <HBox spacing="20.0">
+
+                        <VBox spacing="5.0">
+                            <Label text="Name:"/>
+                            <Label fx:id="nameSurname" text="-"/>
+                        </VBox>
+
+                        <VBox spacing="5.0">
+                            <Label text="OIB:"/>
+                            <Label fx:id="oib" text="-"/>
+                        </VBox>
+
+                        <VBox spacing="5.0">
+                            <Label text="Email:"/>
+                            <Label fx:id="email" text="-"/>
+                        </VBox>
+
+                        <VBox spacing="5.0">
+                            <Label text="Salary:"/>
+                            <Label fx:id="salary" text="-"/>
+                        </VBox>
+
+                    </HBox>
+
+                    <Label text="Patients in Assigned Wards"/>
+
+                    <TableView fx:id="patientsTable">
+
+                        <columns>
+
+                            <TableColumn fx:id="patientNameColumn"
+                                         text="Patient"
+                                         prefWidth="250.0"/>
+
+                            <TableColumn fx:id="patientOibColumn"
+                                         text="OIB"
+                                         prefWidth="200.0"/>
+
+                            <TableColumn fx:id="patientWardColumn"
+                                         text="Ward"
+                                         prefWidth="200.0"/>
+
+                        </columns>
+
+                    </TableView>
+
+                    <Label text="Prescriptions for Patients"/>
+
+                    <TableView fx:id="prescriptionsTable">
+
+                        <columns>
+
+                            <TableColumn fx:id="prescriptionNameColumn"
+                                         text="Prescription"
+                                         prefWidth="250.0"/>
+
+                            <TableColumn fx:id="prescriptionPatientColumn"
+                                         text="Patient"
+                                         prefWidth="250.0"/>
+
+                            <TableColumn fx:id="prescriptionDurationColumn"
+                                         text="Duration"
+                                         prefWidth="300.0"/>
+
+                        </columns>
+
+                    </TableView>
+
+                </VBox>
+
+            </center>
+
+        </BorderPane>
+
+    </children>
+
+</AnchorPane>

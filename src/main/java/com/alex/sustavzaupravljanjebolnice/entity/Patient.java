@@ -1,6 +1,7 @@
 package com.alex.sustavzaupravljanjebolnice.entity;
 
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
+import com.alex.sustavzaupravljanjebolnice.entity.hospital.Ward;
 import com.alex.sustavzaupravljanjebolnice.entity.interfaces.Schedulable;
 import com.alex.sustavzaupravljanjebolnice.entity.interfaces.Treatable;
 
@@ -23,6 +24,7 @@ public class Patient extends Person implements Schedulable, Treatable {
     private List<Appointment> appointments;
     private List<Prescription> prescriptions;
     private Doctor assignedDoctor;
+    private Ward assignedWard;
 
 
     /**
@@ -36,10 +38,11 @@ public class Patient extends Person implements Schedulable, Treatable {
      * @param status    the status
      * @param mbo       the mbo
      */
-    public Patient(Integer id, String firstName, String lastName, String oib, LocalDate birthDate, PatientStatus status, String mbo) {
+    public Patient(Integer id, String firstName, String lastName, String oib, LocalDate birthDate, PatientStatus status, String mbo, Ward assignedWard) {
         super(id, firstName, lastName, oib, birthDate);
         this.status = status;
         this.mbo = mbo;
+        this.assignedWard = assignedWard;
 
     }
 
@@ -183,7 +186,10 @@ public class Patient extends Person implements Schedulable, Treatable {
     public void setPatientStatus(PatientStatus patientStatus) {
         this.status = patientStatus;
     }
-    
+
+    public List<Prescription> getPrescriptions() {
+        return prescriptions;
+    }
 
     /**
      * Sets prescriptions.
@@ -194,5 +200,11 @@ public class Patient extends Person implements Schedulable, Treatable {
         this.prescriptions = prescriptions;
     }
 
+    public Ward getAssignedWard() {
+        return assignedWard;
+    }
 
+    public void setAssignedWard(Ward assignedWard) {
+        this.assignedWard = assignedWard;
+    }
 }
