@@ -3,6 +3,7 @@ package com.alex.sustavzaupravljanjebolnice.repository;
 import com.alex.sustavzaupravljanjebolnice.db.DatabaseManager;
 import com.alex.sustavzaupravljanjebolnice.entity.Nurse;
 import com.alex.sustavzaupravljanjebolnice.entity.NurseBuilder;
+import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Ward;
 
 import java.sql.*;
@@ -14,6 +15,7 @@ import java.util.List;
  */
 public class NurseRepo implements Repository<Nurse, Long> {
     private final WardRepo wardRepo = new WardRepo();
+    private final HospitalRepo hospitalRepo = new HospitalRepo();
 
     @Override
     public Nurse getById(Long id) throws SQLException {
@@ -51,7 +53,7 @@ public class NurseRepo implements Repository<Nurse, Long> {
         String sql = "SELECT * FROM STAFF WHERE role = 'NURSE'";
 
         try (Connection conn = DatabaseManager.getConnection(); Statement stmt = conn.createStatement()) {
-
+            List<Hospital> allHospitals = hospitalRepo.getAll();
             List<Ward> allWards = wardRepo.getAll();
             List<Nurse> nurses = new ArrayList<>();
 
@@ -66,11 +68,15 @@ public class NurseRepo implements Repository<Nurse, Long> {
                     builder.setBirthDate(rs.getDate("birth_date").toLocalDate());
                     builder.setEmail(rs.getString("email"));
                     builder.setSalary(rs.getDouble("salary"));
-
+                    long hospitalId = rs.getLong("hospital_id");
+                    Hospital hospital = allHospitals.stream()
+                            .filter(h -> h.getId() == hospitalId)
+                            .findFirst()
+                            .orElse(null);
                     List<Ward> assignedWards = allWards.stream().filter(w -> w.getNurseId() != null && w.getNurseId().longValue() == nurseId).toList();
 
                     builder.setWards(assignedWards);
-
+                    builder.setHospital(hospital);
                     nurses.add(builder.build());
                 }
             }

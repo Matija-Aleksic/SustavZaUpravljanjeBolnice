@@ -23,6 +23,5 @@ public enum PatientStatus {
     /**
      * Completed patient status.
      */
-    COMPLETED,
-
+    COMPLETED, STABLE
 }

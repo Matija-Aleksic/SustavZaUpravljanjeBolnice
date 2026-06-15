@@ -30,13 +30,19 @@ public class HospitalRepo implements Repository<Hospital, Long> {
 
     @Override
     public List<Hospital> getAll() throws SQLException {
-        String sql = "select * from hospital";
+        String sql = "SELECT id, name, address, phone_number, email FROM hospital";
         try (Connection conn = DatabaseManager.getConnection()) {
             var ps = conn.prepareStatement(sql);
             try (var rs = ps.executeQuery()) {
                 List<Hospital> hospitals = new ArrayList<>();
                 while (rs.next()) {
-                    hospitals.add(new Hospital(rs.getLong("hospital_id"), rs.getString("name"), rs.getString("address"), rs.getString("phone_number"), rs.getString("email")));
+                    hospitals.add(new Hospital(
+                            rs.getLong("id"),
+                            rs.getString("name"),
+                            rs.getString("address"),
+                            rs.getString("phone_number"),
+                            rs.getString("email")
+                    ));
                 }
                 return hospitals;
             }

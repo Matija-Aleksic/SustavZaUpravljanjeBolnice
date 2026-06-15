@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns="http://javafx.com/javafx/26"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.alex.sustavzaupravljanjebolnice.controller.HospitalOverviewController">
+
+    <children>
+        <BorderPane prefWidth="1294.0" prefHeight="940.0"
+                    AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+
+            <top>
+                <MenuBar>
+                    <menus>
+                        <Menu text="File">
+                            <items>
+                                <MenuItem text="Main Dashboard"/>
+                                <MenuItem text="Close"/>
+                            </items>
+                        </Menu>
+                        <Menu text="View">
+                            <items>
+                                <MenuItem text="Refresh Data"/>
+                            </items>
+                        </Menu>
+                        <Menu text="Help">
+                            <items>
+                                <MenuItem text="About System"/>
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+            </top>
+
+            <left>
+                <VBox spacing="5.0" style="-fx-padding: 10; -fx-background-color: #f4f4f4;" prefWidth="320.0">
+                    <Label text="Hospitals" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                    <TableView fx:id="hospitalsTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="hospitalNameColumn" text="Hospital Name" prefWidth="298.0"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </left>
+
+            <center>
+                <VBox spacing="15.0" style="-fx-padding: 15;">
+
+                    <HBox spacing="30.0"
+                          style="-fx-background-color: #e8e8e8; -fx-padding: 10; -fx-background-radius: 5;">
+                        <VBox spacing="2.0">
+                            <Label text="Selected Hospital:" style="-fx-text-fill: #666; -fx-font-size: 11px;"/>
+                            <Label fx:id="lblHospitalName" text="Select a hospital..."
+                                   style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                        </VBox>
+                        <VBox spacing="2.0">
+                            <Label text="Address:" style="-fx-text-fill: #666; -fx-font-size: 11px;"/>
+                            <Label fx:id="lblHospitalAddress" text="-" style="-fx-font-size: 13px;"/>
+                        </VBox>
+                        <VBox spacing="2.0">
+                            <Label text="Phone:" style="-fx-text-fill: #666; -fx-font-size: 11px;"/>
+                            <Label fx:id="lblHospitalPhone" text="-" style="-fx-font-size: 13px;"/>
+                        </VBox>
+                    </HBox>
+
+                    <VBox spacing="5.0" VBox.vgrow="ALWAYS">
+                        <Label text="Departments Available" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+                        <TableView fx:id="departmentsTable" prefHeight="220.0">
+                            <columns>
+                                <TableColumn fx:id="departmentIdColumn" text="ID" prefWidth="80.0"/>
+                                <TableColumn fx:id="departmentNameColumn" text="Department Name" prefWidth="400.0"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+
+                    <HBox spacing="15.0" VBox.vgrow="ALWAYS">
+
+                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                            <Label text="Assigned Doctors"
+                                   style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #2a52be;"/>
+                            <TableView fx:id="doctorsTable" VBox.vgrow="ALWAYS">
+                                <columns>
+                                    <TableColumn fx:id="doctorNameColumn" text="Doctor Name" prefWidth="220.0"/>
+                                    <TableColumn fx:id="doctorEmailColumn" text="Email Address" prefWidth="230.0"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+
+                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                            <Label text="Assigned Nurses"
+                                   style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #17b074;"/>
+                            <TableView fx:id="nursesTable" VBox.vgrow="ALWAYS">
+                                <columns>
+                                    <TableColumn fx:id="nurseNameColumn" text="Nurse Name" prefWidth="220.0"/>
+                                    <TableColumn fx:id="nurseEmailColumn" text="Email Address" prefWidth="230.0"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+
+                    </HBox>
+
+                </VBox>
+            </center>
+
+        </BorderPane>
+    </children>
+</AnchorPane>
