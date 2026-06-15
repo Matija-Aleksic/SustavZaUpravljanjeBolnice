@@ -6,11 +6,13 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 /**
  * The type Database manager.
  */
 public class DatabaseManager {
+    private static final Logger logger = Logger.getLogger(DatabaseManager.class.getName());
     private static final Properties props = new Properties();
     private static final String JDBC_URL;
     private static final String USER;
@@ -37,7 +39,7 @@ public class DatabaseManager {
      * Gets connection.
      *
      * @return the connection
-     * @throws SQLException the sql exception
+     * @throws SQLException the SQL exception
      */
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(JDBC_URL, USER, PASS);
@@ -46,12 +48,13 @@ public class DatabaseManager {
     private static void initDatabase() {
         try (Connection conn = getConnection()) {
             if (databaseExists(conn)) {
-                System.out.println("Database already exists. Using existing data.");
+                logger.info("Database already exists");
             } else {
-                System.out.println("Creating new database...");
+                logger.info("Creating db");
                 runSqlScript(conn, "/db/schema.sql");
                 runSqlScript(conn, "/db/seed.sql");
                 conn.commit();
+                logger.info("Database created");
             }
 
         } catch (IOException | SQLException e) {
