@@ -1,5 +1,6 @@
-package com.alex.sustavzaupravljanjebolnice.entity;
+package com.alex.sustavzaupravljanjebolnice.entity.builders;
 
+import com.alex.sustavzaupravljanjebolnice.entity.*;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Ward;
 

@@ -1,5 +1,9 @@
-package com.alex.sustavzaupravljanjebolnice.entity;
+package com.alex.sustavzaupravljanjebolnice.entity.builders;
 
+import com.alex.sustavzaupravljanjebolnice.entity.Appointment;
+import com.alex.sustavzaupravljanjebolnice.entity.Doctor;
+import com.alex.sustavzaupravljanjebolnice.entity.Patient;
+import com.alex.sustavzaupravljanjebolnice.entity.StaffRoles;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
 
 import java.time.LocalDate;

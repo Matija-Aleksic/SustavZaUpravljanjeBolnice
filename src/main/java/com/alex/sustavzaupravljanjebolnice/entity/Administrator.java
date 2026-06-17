@@ -1,5 +1,6 @@
 package com.alex.sustavzaupravljanjebolnice.entity;
 
+import com.alex.sustavzaupravljanjebolnice.entity.builders.AdministratorBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

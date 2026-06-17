@@ -1,4 +1,6 @@
-package com.alex.sustavzaupravljanjebolnice.entity;
+package com.alex.sustavzaupravljanjebolnice.entity.builders;
+
+import com.alex.sustavzaupravljanjebolnice.entity.Administrator;
 
 /**
  * The type Administrator builder.

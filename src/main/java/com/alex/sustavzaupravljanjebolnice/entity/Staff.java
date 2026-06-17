@@ -1,5 +1,6 @@
 package com.alex.sustavzaupravljanjebolnice.entity;
 
+import com.alex.sustavzaupravljanjebolnice.entity.builders.StaffBuilder;
 import com.alex.sustavzaupravljanjebolnice.entity.interfaces.Salaried;
 
 /**

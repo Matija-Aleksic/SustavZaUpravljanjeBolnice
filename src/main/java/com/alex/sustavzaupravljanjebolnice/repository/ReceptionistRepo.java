@@ -2,6 +2,7 @@ package com.alex.sustavzaupravljanjebolnice.repository;
 
 import com.alex.sustavzaupravljanjebolnice.db.DatabaseManager;
 import com.alex.sustavzaupravljanjebolnice.entity.Receptionist;
+import com.alex.sustavzaupravljanjebolnice.entity.StaffRoles;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
 
 import java.sql.*;
@@ -123,7 +124,7 @@ public class ReceptionistRepo implements Repository<Receptionist, Long> {
         receptionist.setLastName(rs.getString("last_name"));
         receptionist.setOib(rs.getString("oib"));
         receptionist.setBirthDate(rs.getDate("birth_date").toLocalDate());
-
+        receptionist.setRole(StaffRoles.RECEPTIONIST);
         receptionist.setEmail(rs.getString("email"));
         receptionist.setSalary(rs.getDouble("salary"));
 

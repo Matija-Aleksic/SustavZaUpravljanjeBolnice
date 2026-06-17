@@ -2,8 +2,8 @@ package com.alex.sustavzaupravljanjebolnice.repository;
 
 import com.alex.sustavzaupravljanjebolnice.db.DatabaseManager;
 import com.alex.sustavzaupravljanjebolnice.entity.Administrator;
-import com.alex.sustavzaupravljanjebolnice.entity.AdministratorBuilder;
 import com.alex.sustavzaupravljanjebolnice.entity.StaffRoles;
+import com.alex.sustavzaupravljanjebolnice.entity.builders.AdministratorBuilder;
 
 import java.sql.*;
 import java.util.ArrayList;

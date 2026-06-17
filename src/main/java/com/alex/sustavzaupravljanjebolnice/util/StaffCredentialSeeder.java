@@ -57,7 +57,7 @@ public class StaffCredentialSeeder {
                     accountsCreated++;
                 } else {
                     // This will show you the ones that already exist!
-                    System.out.println("SKIPPED: Account already exists for " + firstName); // DEBUG
+                    System.out.println("SKIPPED: Account already exists for " + firstName + lastName);
                 }
             }
 

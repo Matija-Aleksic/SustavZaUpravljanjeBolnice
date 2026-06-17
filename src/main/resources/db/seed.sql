@@ -28,11 +28,10 @@ FROM hospital h
 ) dept;
 
 --- ==========================================
---- 3. SEED STAFF (200 rows) - 100% UNIQUE NAME GRID
+--- 3. SEED STAFF (200 rows)
 --- ==========================================
 INSERT INTO staff (first_name, last_name, oib, birth_date, role, permissions, email, salary, phone_number, address, hospital_id)
 SELECT
-    -- Sequential math cycles through 15 first names cleanly
     CASE CAST(MOD(X, 15) + 1 AS INT)
         WHEN 1 THEN 'Ivan' WHEN 2 THEN 'Luka' WHEN 3 THEN 'Marko' WHEN 4 THEN 'Ana' WHEN 5 THEN 'Marija'
         WHEN 6 THEN 'Petra'
@@ -46,7 +45,6 @@ SELECT
         WHEN 14 THEN 'Lana'
         ELSE 'Matej'
         END AS first_name,
-    -- Moves to a new last name every 15 rows, creating 210 unique pair combinations
     CASE CAST(FLOOR((X - 1) / 15) AS INT) + 1
         WHEN 1 THEN 'Horvat' WHEN 2 THEN 'Kovačević' WHEN 3 THEN 'Babić' WHEN 4 THEN 'Marić' WHEN 5 THEN 'Jurić'
         WHEN 6 THEN 'Novak'
@@ -77,7 +75,8 @@ SELECT
     ROUND(RAND() * (3500 - 1200) + 1200, 2) AS salary,
     CONCAT('+385 91 ', CAST(FLOOR(RAND() * 9000000 + 1000000) AS INT)) AS phone_number,
     CONCAT('Staff Address ', X) AS address,
-    (SELECT id FROM hospital ORDER BY RAND(X) LIMIT 1) AS hospital_id
+    -- FIXED: Direct math bypasses subquery caching entirely for true row-level randomness
+    CAST(FLOOR(RAND() * 5) + 1 AS INT) AS hospital_id
 FROM SYSTEM_RANGE(1, 200) AS target(X);
 
 --- ==========================================
@@ -89,14 +88,15 @@ SELECT
     30 AS max_capacity,
     0 AS capacity,
     d.id AS department_id,
-    (SELECT id FROM staff WHERE role = 'NURSE' ORDER BY RAND(d.id) LIMIT 1) AS nurse_id
+    -- FIXED: Injected 'staff.id <> d.id * 0' to smash the subquery cache, forcing a fresh calculation per row
+    (SELECT id FROM staff WHERE role = 'NURSE' AND staff.id <> d.id * 0 ORDER BY RAND() LIMIT 1) AS nurse_id
 FROM department d
          CROSS JOIN (SELECT 'Ward A' AS name UNION ALL SELECT 'Ward B' UNION ALL SELECT 'ICU') w_names
          CROSS JOIN (SELECT 1 AS sec UNION ALL SELECT 2 AS sec) w_sec
 LIMIT 70;
 
 --- ==========================================
---- 5. SEED PATIENTS (2,000 rows) - NO DUPLICATE NAMES
+--- 5. SEED PATIENTS (2,000 rows)
 --- ==========================================
 INSERT INTO patient (first_name, last_name, oib, birth_date, status, mbo, hospital_id, assigned_doctor_id, ward_id)
 SELECT
@@ -104,7 +104,6 @@ SELECT
         WHEN 1 THEN 'Ivan' WHEN 2 THEN 'Luka' WHEN 3 THEN 'Marko' WHEN 4 THEN 'Ana' WHEN 5 THEN 'Marija'
         WHEN 6 THEN 'Petra' WHEN 7 THEN 'Josip' WHEN 8 THEN 'Stjepan' WHEN 9 THEN 'Ivana' ELSE 'Martina'
         END AS first_name,
-    -- Appending X guarantees that every patient profile name is completely unique
     CONCAT(
             CASE CAST(FLOOR(RAND() * 10) + 1 AS INT)
                 WHEN 1 THEN 'Horvat'
@@ -118,16 +117,22 @@ SELECT
                 WHEN 9 THEN 'Vuković'
                 ELSE 'Marković'
                 END, ' ', X
-    )                                                                     AS last_name,
+    )                                                                           AS last_name,
     CAST(20000000000 + X AS VARCHAR) AS oib,
     DATEADD('DAY', -CAST(FLOOR(RAND() * 28000 + 365) AS INT), CURRENT_DATE) AS birth_date,
     CASE CAST(FLOOR(RAND() * 5) + 1 AS INT)
         WHEN 1 THEN 'PENDING' WHEN 2 THEN 'APPROVED' WHEN 3 THEN 'REJECTED' WHEN 4 THEN 'CANCELLED' ELSE 'COMPLETED'
         END AS status,
     CAST(900000000 + X AS VARCHAR) AS mbo,
-    (SELECT id FROM hospital ORDER BY RAND(X) LIMIT 1)                    AS hospital_id,
-    (SELECT id FROM staff WHERE role = 'DOCTOR' ORDER BY RAND(X) LIMIT 1) AS assigned_doctor_id,
-    (SELECT id FROM ward ORDER BY RAND(X) LIMIT 1)                        AS ward_id
+    CAST(FLOOR(RAND() * 5) + 1 AS INT)                                          AS hospital_id, -- FIXED: Random distribution across all 5 hospitals
+    -- FIXED: Dummy correlation via 'target.X' breaks optimization blocks for true random row matching
+    (SELECT id
+     FROM staff
+     WHERE role = 'DOCTOR'
+       AND staff.id <> target.X * 0
+     ORDER BY RAND()
+     LIMIT 1)                                                                   AS assigned_doctor_id,
+    (SELECT id FROM ward WHERE ward.id <> target.X * 0 ORDER BY RAND() LIMIT 1) AS ward_id
 FROM SYSTEM_RANGE(1, 2000) AS target(X);
 
 --- ==========================================
@@ -147,8 +152,10 @@ MERGE INTO ward KEY(id)
 --- 7. SEED APPOINTMENTS (5,000 rows)
 --- ==========================================
 INSERT INTO appointment (doctor_id, patient_id, date_time)
-SELECT (SELECT assigned_doctor_id FROM patient WHERE id = r.patient_id) AS doctor_id,
-       r.patient_id,
+SELECT
+    -- Automatically randomizes because each patient now points to a unique, randomized doctor
+    (SELECT assigned_doctor_id FROM patient WHERE id = r.patient_id) AS doctor_id,
+    r.patient_id,
     DATEADD('DAY', CAST(FLOOR(RAND() * 30 - 15) AS INT), CURRENT_TIMESTAMP) AS date_time
 FROM (SELECT CAST(FLOOR(RAND() * 2000) + 1 AS INT) AS patient_id
       FROM SYSTEM_RANGE(1, 5000)) r
@@ -164,6 +171,7 @@ SELECT CONCAT('RX-', r.X, '-', CAST(FLOOR(RAND() * 10000) AS INT))      AS id,
         WHEN 4 THEN 'Lisinopril 10mg' WHEN 5 THEN 'Atorvastatin 20mg' ELSE 'Metformin 850mg'
         END AS name,
     'Take once daily after meals.' AS description,
+       -- Automatically randomizes based on the randomized patient layout
        (SELECT assigned_doctor_id FROM patient WHERE id = r.patient_id) AS doctor_id,
        r.patient_id,
     DATEADD('DAY', -CAST(FLOOR(RAND() * 10) + 1 AS INT), CURRENT_DATE) AS start_date,
@@ -173,15 +181,15 @@ FROM (SELECT X, CAST(FLOOR(RAND() * 2000) + 1 AS INT) AS patient_id
 WHERE (SELECT assigned_doctor_id FROM patient WHERE id = r.patient_id) IS NOT NULL;
 
 --- ==========================================
---- 9. SEED MANUAL ADMINS - ISOLATED UNIQUE NAMES
+--- 9. SEED MANUAL ADMINS
 --- ==========================================
 INSERT INTO staff (first_name, last_name, oib, birth_date, role, permissions, email, salary, phone_number, address,
                    hospital_id)
 VALUES ('Goran', 'Radić', '12345678901', '1985-04-12', 'ADMIN', 'FULL', 'goran.radic@hospital.com', 2500.00,
         '+385 91 123 4567', 'Ilica 10, Zagreb', 1),
        ('Elena', 'Brkić', '23456789012', '1990-08-23', 'ADMIN', 'FULL', 'elena.brkic@hospital.com', 2500.00,
-        '+385 92 987 6543', 'Vukovarska 45, Split', 1),
+        '+385 92 987 6543', 'Vukovarska 45, Split', 2),
        ('Davor', 'Blažević', '34567890123', '1978-11-02', 'ADMIN', 'FULL', 'davor.blazeveic@hospital.com', 2700.00,
-        '+385 95 444 5555', 'Strossmayerova 12, Osijek', 1),
+        '+385 95 444 5555', 'Strossmayerova 12, Osijek', 3),
        ('Zrinka', 'Krpan', '45678901234', '1993-01-15', 'ADMIN', 'FULL', 'zrinka.krpan@hospital.com', 2400.00,
-        '+385 98 777 8888', 'Korzo 4, Rijeka', 1);
+        '+385 98 777 8888', 'Korzo 4, Rijeka', 4);
