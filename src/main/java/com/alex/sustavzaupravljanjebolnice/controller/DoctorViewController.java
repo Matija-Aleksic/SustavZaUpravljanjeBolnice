@@ -47,12 +47,19 @@ public class DoctorViewController {
     private ImageView picture;
     @FXML
     private Label nameSurname;
+    @FXML
     private Label oib;
+    @FXML
     private Label role;
+    @FXML
     private Label email;
+    @FXML
     private Label salary;
+    @FXML
     private Label hospital;
+    @FXML
     private Label phoneNumber;
+    @FXML
     private Label address;
     private List<Patient> allPatients;
     private List<Appointment> allAppointments;
