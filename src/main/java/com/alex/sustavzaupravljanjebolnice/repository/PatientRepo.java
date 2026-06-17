@@ -34,9 +34,7 @@ public class PatientRepo implements Repository<Patient, Long> {
         List<Patient> patients = new ArrayList<>();
         String sql = "SELECT id, first_name, last_name, oib, birth_date, status, mbo, hospital_id, assigned_doctor_id FROM patient";
 
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 patients.add(mapPatient(rs));
@@ -49,8 +47,7 @@ public class PatientRepo implements Repository<Patient, Long> {
     public void save(Patient entity) throws SQLException {
         String sql = "INSERT INTO patient (first_name, last_name, oib, birth_date, status, mbo, hospital_id, assigned_doctor_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(1, entity.getFirstName());
             ps.setString(2, entity.getLastName());
@@ -86,8 +83,7 @@ public class PatientRepo implements Repository<Patient, Long> {
     public void update(Patient entity) throws SQLException {
         String sql = "UPDATE patient SET first_name = ?, last_name = ?, oib = ?, birth_date = ?, status = ?, mbo = ?, hospital_id = ?, assigned_doctor_id = ? WHERE id = ?";
 
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, entity.getFirstName());
             ps.setString(2, entity.getLastName());
@@ -117,8 +113,7 @@ public class PatientRepo implements Repository<Patient, Long> {
     public void deleteById(Long id) throws SQLException {
         String sql = "DELETE FROM patient WHERE id = ?";
 
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setLong(1, id);
             ps.executeUpdate();
@@ -134,7 +129,6 @@ public class PatientRepo implements Repository<Patient, Long> {
         patient.setBirthDate(rs.getDate("birth_date").toLocalDate());
         patient.setStatus(PatientStatus.valueOf(rs.getString("status")));
         patient.setMbo(rs.getString("mbo"));
-
         Hospital hospital = new Hospital();
         hospital.setId(rs.getLong("hospital_id"));
         patient.setHospital(hospital);

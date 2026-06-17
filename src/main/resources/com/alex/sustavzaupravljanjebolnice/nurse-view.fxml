@@ -2,8 +2,8 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane xmlns="http://javafx.com/javafx/26"
-            xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/26" stylesheets="@hospital-styles.css"
             fx:controller="com.alex.sustavzaupravljanjebolnice.controller.NurseViewController">
 
     <children>
@@ -27,9 +27,7 @@
                     <menus>
 
                         <Menu text="File">
-                            <items>
-                                <MenuItem text="Close"/>
-                            </items>
+                            <MenuItem text="Close"/>
                         </Menu>
 
                         <Menu text="Edit">
@@ -37,9 +35,9 @@
                         </Menu>
 
                         <Menu text="Help">
-                            <items>
-                                <MenuItem text="About"/>
-                            </items>
+
+                            <MenuItem text="About"/>
+
                         </Menu>
 
                     </menus>

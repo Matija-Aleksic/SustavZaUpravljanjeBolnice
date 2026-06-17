@@ -1,26 +1,21 @@
 package com.alex.sustavzaupravljanjebolnice.repository;
 
 import com.alex.sustavzaupravljanjebolnice.db.DatabaseManager;
-import com.alex.sustavzaupravljanjebolnice.entity.Nurse;
-import com.alex.sustavzaupravljanjebolnice.entity.NurseBuilder;
+import com.alex.sustavzaupravljanjebolnice.entity.Administrator;
+import com.alex.sustavzaupravljanjebolnice.entity.AdministratorBuilder;
 import com.alex.sustavzaupravljanjebolnice.entity.StaffRoles;
-import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
-import com.alex.sustavzaupravljanjebolnice.entity.hospital.Ward;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The type Nurse repo.
- */
-public class NurseRepo implements Repository<Nurse, Long> {
-    private final WardRepo wardRepo = new WardRepo();
+
+public class AdminRepo implements Repository<Administrator, Integer> {
     private final HospitalRepo hospitalRepo = new HospitalRepo();
 
     @Override
-    public Nurse getById(Long id) throws SQLException {
-        String sql = "SELECT id, first_name, last_name, oib, birth_date, role, permissions, email, salary, phone_number, address, hospital_id FROM STAFF WHERE id = ? AND role = 'NURSE'";
+    public Administrator getById(Integer id) throws SQLException {
+        String sql = "SELECT id, first_name, last_name, oib, birth_date, role, permissions, email, salary, phone_number, address,  FROM STAFF WHERE id = ? AND role = 'ADMIN'";
 
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -28,7 +23,7 @@ public class NurseRepo implements Repository<Nurse, Long> {
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    NurseBuilder builder = new NurseBuilder();
+                    AdministratorBuilder builder = new AdministratorBuilder();
                     builder.setId(rs.getInt("id"));
                     builder.setFirstName(rs.getString("first_name"));
                     builder.setLastName(rs.getString("last_name"));
@@ -36,9 +31,8 @@ public class NurseRepo implements Repository<Nurse, Long> {
                     builder.setBirthDate(rs.getDate("birth_date").toLocalDate());
                     builder.setEmail(rs.getString("email"));
                     builder.setSalary(rs.getDouble("salary"));
-                    builder.setRole(StaffRoles.NURSE);
-                    List<Ward> associatedWards = wardRepo.getAll().stream().filter(w -> w.getNurseId() != null && w.getNurseId().longValue() == id).toList();
-                    builder.setWards(associatedWards);
+                    builder.setRole(StaffRoles.ADMIN);
+
 
                     conn.commit();
                     return builder.build();
@@ -50,18 +44,18 @@ public class NurseRepo implements Repository<Nurse, Long> {
     }
 
     @Override
-    public List<Nurse> getAll() throws SQLException {
-        String sql = "SELECT id, first_name, last_name, oib, birth_date, role, permissions, email, salary, phone_number, address, hospital_id FROM STAFF WHERE role = 'NURSE'";
+    public List<Administrator> getAll() throws SQLException {
+        String sql = "SELECT id, first_name, last_name, oib, birth_date, role, permissions, email, salary, phone_number, address, hospital_id FROM STAFF WHERE role = 'ADMIN'";
 
         try (Connection conn = DatabaseManager.getConnection(); Statement stmt = conn.createStatement()) {
-            List<Hospital> allHospitals = hospitalRepo.getAll();
-            List<Ward> allWards = wardRepo.getAll();
-            List<Nurse> nurses = new ArrayList<>();
+
+
+            List<Administrator> administrators = new ArrayList<>();
 
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 while (rs.next()) {
                     long nurseId = rs.getLong("id");
-                    NurseBuilder builder = new NurseBuilder();
+                    AdministratorBuilder builder = new AdministratorBuilder();
                     builder.setId((int) nurseId);
                     builder.setFirstName(rs.getString("first_name"));
                     builder.setLastName(rs.getString("last_name"));
@@ -69,24 +63,20 @@ public class NurseRepo implements Repository<Nurse, Long> {
                     builder.setBirthDate(rs.getDate("birth_date").toLocalDate());
                     builder.setEmail(rs.getString("email"));
                     builder.setSalary(rs.getDouble("salary"));
+                    builder.setRole(StaffRoles.ADMIN);
                     long hospitalId = rs.getLong("hospital_id");
-                    builder.setRole(StaffRoles.NURSE);
-                    Hospital hospital = allHospitals.stream().filter(h -> h.getId() == hospitalId).findFirst().orElse(null);
-                    List<Ward> assignedWards = allWards.stream().filter(w -> w.getNurseId() != null && w.getNurseId() == nurseId).toList();
 
-                    builder.setWards(assignedWards);
-                    builder.setHospital(hospital);
-                    nurses.add(builder.build());
+                    administrators.add(builder.build());
                 }
             }
 
             conn.commit();
-            return nurses;
+            return administrators;
         }
     }
 
     @Override
-    public void save(Nurse entity) throws SQLException {
+    public void save(Administrator entity) throws SQLException {
         String sql = "insert into STAFF (first_name, last_name, oib, birth_date, email, salary,ROLE) values (?, ?, ?, ?, ?, ?,?)";
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -99,11 +89,10 @@ public class NurseRepo implements Repository<Nurse, Long> {
             ps.setString(7, String.valueOf(entity.getRole()));
             ps.executeUpdate();
         }
-
     }
 
     @Override
-    public void update(Nurse entity) throws SQLException {
+    public void update(Administrator entity) throws SQLException {
         String sql = "update STAFF set first_name = ?, last_name = ?, oib = ?, birth_date = ?, email = ?, salary = ? where id = ?";
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -116,17 +105,15 @@ public class NurseRepo implements Repository<Nurse, Long> {
             ps.setLong(7, entity.getId());
             ps.executeUpdate();
         }
-
     }
 
     @Override
-    public void deleteById(Long aLong) throws SQLException {
+    public void deleteById(Integer id) throws SQLException {
         String sql = "delete from STAFF where id = ?";
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setLong(1, aLong);
+            ps.setLong(1, id);
             ps.executeUpdate();
         }
-
     }
 }

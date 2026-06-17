@@ -10,7 +10,6 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Properties;
 
-
 /**
  * The type Password manager.
  */
@@ -19,14 +18,17 @@ public class PasswordManager {
     private final File file;
 
     /**
-     * Instantiates a new Password manager.
+     * Instantiates a new Password manager using a standardized File object.
+     * Pass an external file path (e.g., "passwords.properties" or System.getProperty("user.home") + "/passwords.properties")
      *
-     * @param filePath the file path
+     * @param file the file reference to use for reading/writing storage
      * @throws IOException the io exception
      */
-    public PasswordManager(String filePath) throws IOException {
-        this.file = new File(filePath);
-        if (file.exists()) {
+    public PasswordManager(File file) throws IOException {
+        this.file = file;
+        if (!file.exists()) {
+            file.createNewFile();
+        } else {
             try (FileInputStream fis = new FileInputStream(file)) {
                 properties.load(fis);
             }
@@ -46,11 +48,10 @@ public class PasswordManager {
         String value = salt + ":" + hash;
         properties.setProperty(username, value);
         saveToFile();
-        // new Activity(Date.from(Instant.now()), "Saved employee with name: " + username, "System");
     }
 
     /**
-     * Verify password boolean.
+     * Verify password boolean safely using constant-time evaluation.
      *
      * @param username the username
      * @param password the password
@@ -69,13 +70,13 @@ public class PasswordManager {
         String salt = parts[0];
         String storedHash = parts[1];
         String computedHash = hashPassword(password, salt);
-        // new Activity(Date.from(Instant.now()), "Verified employee with name: " + username, "System");
-        return storedHash.equals(computedHash);
+
+        return MessageDigest.isEqual(storedHash.getBytes(), computedHash.getBytes());
     }
 
     private void saveToFile() throws IOException {
         try (FileOutputStream fos = new FileOutputStream(file)) {
-            properties.store(fos, null);
+            properties.store(fos, "Hospital Management System User Credentials");
         }
     }
 

@@ -15,8 +15,8 @@
     -fx-font-size: 14px;
     -fx-font-weight: 500;
     -fx-padding: 8px 16px;
-    -fx-border-radius: 0.125rem;
-    -fx-background-radius: 0.125rem;
+    -fx-border-radius: 2px;
+    -fx-background-radius: 2px;
     -fx-cursor: hand;
 }
 
@@ -74,8 +74,8 @@
 .card,
 .card-subtle {
     -fx-background-color: #ffffff;
-    -fx-padding: 1.5rem;
-    -fx-background-radius: 0.125rem;
+    -fx-padding: 24px;
+    -fx-background-radius: 2px;
     -fx-border-width: 0;
 }
 
@@ -86,7 +86,7 @@
 /* ====================== Sidebar ====================== */
 .sidebar {
     -fx-background-color: #f3f3f3;
-    -fx-padding: 2rem 0;
+    -fx-padding: 32px 0;
     -fx-border-width: 0;
 }
 
@@ -96,8 +96,8 @@
     -fx-font-family: "Inter", sans-serif;
     -fx-font-size: 14px;
     -fx-font-weight: 500;
-    -fx-padding: 0.75rem 1.5rem;
-    -fx-background-radius: 0.125rem;
+    -fx-padding: 12px 24px;
+    -fx-background-radius: 2px;
 }
 
 .sidebar-item:hover {
@@ -111,7 +111,7 @@
     -fx-font-weight: 600;
     -fx-border-color: #005fac;
     -fx-border-width: 0 0 0 4px;
-    -fx-padding: 0.75rem 1.5rem 0.75rem calc(1.5rem - 4px);
+    -fx-padding: 12px 24px 12px 20px; /* Replaced calc expression manually */
 }
 
 /* ====================== TableView ====================== */
@@ -131,14 +131,14 @@
     -fx-font-size: 12px;
     -fx-font-weight: 500;
     -fx-text-fill: #414752;
-    -fx-padding: 1rem 1.5rem;
+    -fx-padding: 16px 24px;
 }
 
 .table-view .table-cell {
     -fx-font-family: "Inter", sans-serif;
     -fx-font-size: 14px;
     -fx-text-fill: #1a1c1c;
-    -fx-padding: 1rem 1.5rem;
+    -fx-padding: 16px 24px;
     -fx-border-width: 0;
 }
 
@@ -159,15 +159,15 @@
 /* ====================== DialogPane / Modals ====================== */
 .dialog-pane {
     -fx-background-color: #ffffff;
-    -fx-padding: 2rem;
-    -fx-background-radius: 0.125rem;
+    -fx-padding: 32px;
+    -fx-background-radius: 2px;
     -fx-border-width: 0;
     -fx-effect: dropshadow(gaussian, rgba(26, 28, 28, 0.12), 32, 0.5, 0, 12);
 }
 
 .dialog-pane .header-panel {
     -fx-background-color: #f9f9f9;
-    -fx-padding: 1rem 1.5rem;
+    -fx-padding: 16px 24px;
     -fx-border-width: 0 0 1px 0;
     -fx-border-color: #e0e0e0;
 }
@@ -179,13 +179,13 @@
 }
 
 .dialog-pane .content {
-    -fx-padding: 1.5rem 0;
+    -fx-padding: 24px 0;
 }
 
 /* Dialog Buttons */
 .dialog-pane .button {
-    -fx-padding: 0.5rem 1rem;
-    -fx-background-radius: 0.125rem;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 2px;
     -fx-font-weight: 500;
 }
 

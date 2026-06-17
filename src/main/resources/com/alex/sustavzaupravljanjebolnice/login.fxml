@@ -43,7 +43,7 @@
                 GridPane.halignment="CENTER" GridPane.rowIndex="4"/>
 
         <Label fx:id="loginMessageLabel" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER"
-               GridPane.rowIndex="4" GridPane.valignment="CENTER"/>
+               GridPane.rowIndex="5" GridPane.valignment="CENTER"/>
 
     </GridPane>
 </AnchorPane>

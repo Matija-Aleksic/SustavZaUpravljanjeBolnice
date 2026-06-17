@@ -5,7 +5,7 @@ import com.alex.sustavzaupravljanjebolnice.entity.interfaces.Salaried;
 /**
  * The type Staff.
  */
-public sealed class Staff extends Person implements Salaried permits Administrator, Doctor, Nurse {
+public sealed class Staff extends Person implements Salaried permits Administrator, Doctor, Nurse, Receptionist {
     /**
      * The Role.
      */

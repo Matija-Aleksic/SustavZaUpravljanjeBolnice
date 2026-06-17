@@ -28,7 +28,7 @@ public class HelloApplication extends Application {
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hospital-overview.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1300, 940);
         stage.setTitle("Hello!");
         stage.setScene(scene);

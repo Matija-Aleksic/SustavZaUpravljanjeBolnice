@@ -122,6 +122,6 @@ public class DoctorRepo implements Repository<Doctor, Long> {
             hospital = new Hospital();
             hospital.setId(hospitalId);
         }
-        return new DoctorBuilder().setId(rs.getInt("id")).setFirstName(rs.getString("first_name")).setLastName(rs.getString("last_name")).setOib(rs.getString("oib")).setBirthDate(rs.getDate("birth_date").toLocalDate()).setRole(StaffRoles.valueOf(rs.getString("role"))).setEmail(rs.getString("email")).setSalary(rs.getDouble("salary")).setHospital(hospital).setPhoneNumber(rs.getString("phone_number")).setAddress(rs.getString("address")).setAssignedPatients(new ArrayList<>()).setAppointments(new ArrayList<>()).build();
+        return new DoctorBuilder().setId(rs.getInt("id")).setFirstName(rs.getString("first_name")).setLastName(rs.getString("last_name")).setOib(rs.getString("oib")).setBirthDate(rs.getDate("birth_date").toLocalDate()).setRole(StaffRoles.valueOf(rs.getString("role"))).setEmail(rs.getString("email")).setSalary(rs.getDouble("salary")).setHospital(hospital).setRole(StaffRoles.DOCTOR).setPhoneNumber(rs.getString("phone_number")).setAddress(rs.getString("address")).setAssignedPatients(new ArrayList<>()).setAppointments(new ArrayList<>()).build();
     }
 }
