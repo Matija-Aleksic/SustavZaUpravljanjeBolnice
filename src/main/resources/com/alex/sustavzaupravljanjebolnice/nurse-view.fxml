@@ -33,9 +33,7 @@
                         </Menu>
 
                         <Menu text="Edit">
-                            <items>
-                                <MenuItem text="Edit Nurse"/>
-                            </items>
+                            <MenuItem text="Edit Nurse"/>
                         </Menu>
 
                         <Menu text="Help">
