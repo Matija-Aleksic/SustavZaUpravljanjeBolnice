@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+<?import java.lang.String?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="600.0" prefWidth="400.0" stylesheets="@hospital-styles.css"
             xmlns="http://javafx.com/javafx/21"
             fx:controller="com.alex.sustavzaupravljanjebolnice.controller.LoginController">
@@ -28,6 +29,10 @@
 
         <Label text="Login" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1"
                GridPane.valignment="CENTER">
+            <styleClass>
+                <String fx:value="label"/>
+                <String fx:value="title"/>
+            </styleClass>
             <font>
                 <Font size="24"/>
             </font>
@@ -40,7 +45,11 @@
                        GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3"/>
 
         <Button fx:id="loginButton" onAction="#login" prefHeight="40" text="Login" GridPane.columnIndex="1"
-                GridPane.halignment="CENTER" GridPane.rowIndex="4"/>
+                GridPane.halignment="CENTER" GridPane.rowIndex="4">
+            <styleClass>
+                <String fx:value="btn-primary"/>
+            </styleClass>
+        </Button>
 
         <Label fx:id="loginMessageLabel" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER"
                GridPane.rowIndex="5" GridPane.valignment="CENTER"/>

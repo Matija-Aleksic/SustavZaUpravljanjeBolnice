@@ -1,139 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
+<?import java.lang.String?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="940.0" prefWidth="1294.0"
             xmlns="http://javafx.com/javafx/21" stylesheets="@hospital-styles.css"
             fx:controller="com.alex.sustavzaupravljanjebolnice.controller.DoctorViewController">
 
     <children>
-
         <BorderPane prefHeight="940.0" prefWidth="1294.0">
-
             <left>
-                <TableView fx:id="doctorsTable" prefHeight="913.0" prefWidth="321.0" BorderPane.alignment="CENTER">
-
-                    <columns>
-                        <TableColumn fx:id="doctorColumn" prefWidth="320.8" text="Doctors"/>
-                    </columns>
-
-                </TableView>
+                <VBox prefHeight="913.0" prefWidth="321.0" spacing="10" BorderPane.alignment="CENTER">
+                    <children>
+                        <TableView fx:id="doctorsTable" VBox.vgrow="ALWAYS" prefWidth="321.0">
+                            <columns>
+                                <TableColumn fx:id="doctorColumn" prefWidth="320.0" text="Doctors"/>
+                            </columns>
+                        </TableView>
+                        <HBox alignment="CENTER" spacing="10">
+                            <padding>
+                                <Insets bottom="10.0" left="5.0" right="5.0" top="5.0"/>
+                            </padding>
+                            <Button text="Add" onAction="#handleAddDoctor" prefWidth="90.0">
+                                <styleClass>
+                                    <String fx:value="btn-primary"/>
+                                </styleClass>
+                            </Button>
+                            <Button text="Edit" onAction="#handleEditDoctor" prefWidth="90.0">
+                                <styleClass>
+                                    <String fx:value="btn-warning"/>
+                                </styleClass>
+                            </Button>
+                            <Button text="Delete" onAction="#handleDeleteDoctor" prefWidth="90.0">
+                                <styleClass>
+                                    <String fx:value="btn-danger"/>
+                                </styleClass>
+                            </Button>
+                        </HBox>
+                    </children>
+                </VBox>
             </left>
 
             <top>
                 <MenuBar BorderPane.alignment="CENTER">
-
                     <Menu mnemonicParsing="false" text="File">
                         <MenuItem mnemonicParsing="false" text="Close"/>
                     </Menu>
-
                     <Menu mnemonicParsing="false" text="Edit">
-                        <MenuItem mnemonicParsing="false" text="Delete"/>
+                        <MenuItem mnemonicParsing="false" text="Delete" onAction="#handleDeleteDoctor"/>
                     </Menu>
-
                     <Menu mnemonicParsing="false" text="Help">
                         <MenuItem mnemonicParsing="false" text="About"/>
                     </Menu>
-
                 </MenuBar>
             </top>
 
             <center>
-
                 <VBox prefHeight="705.0" prefWidth="1094.0" BorderPane.alignment="CENTER">
-
-                    <children>
-
-                        <HBox prefHeight="144.0" prefWidth="1094.0">
-
+                    <HBox prefHeight="144.0" prefWidth="1094.0">
+                        <GridPane prefHeight="144.0" prefWidth="1102.0">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                            </rowConstraints>
                             <children>
-
-                                <GridPane prefHeight="144.0" prefWidth="1102.0">
-
-                                    <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                                    </columnConstraints>
-
-                                    <rowConstraints>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                    </rowConstraints>
-
-                                    <children>
-
-                                        <ImageView fx:id="picture" fitHeight="148.0" fitWidth="192.0"
-                                                   pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2"/>
-
-                                        <Label fx:id="nameSurname" text="Name Surname" GridPane.columnIndex="1"
-                                               GridPane.rowIndex="1"/>
-
-                                        <Label fx:id="oib" text="OIB" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-
-                                        <Label fx:id="role" text="Role" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-
-                                        <Label fx:id="email" text="Email" GridPane.columnIndex="3"
-                                               GridPane.rowIndex="1"/>
-
-                                        <Label fx:id="salary" text="Salary" GridPane.columnIndex="3"
-                                               GridPane.rowIndex="2"/>
-
-                                        <Label fx:id="hospital" text="Hospital" GridPane.columnIndex="3"
-                                               GridPane.rowIndex="3"/>
-
-                                        <Label fx:id="phoneNumber" text="Phone Number" GridPane.columnIndex="4"
-                                               GridPane.rowIndex="1"/>
-
-                                        <Label fx:id="address" text="Address" GridPane.columnIndex="4"
-                                               GridPane.rowIndex="2"/>
-
-                                    </children>
-
-                                </GridPane>
-
+                                <ImageView fx:id="picture" fitHeight="148.0" fitWidth="192.0"
+                                           pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2"/>
+                                <Label fx:id="nameSurname" text="Name Surname" GridPane.columnIndex="1"
+                                       GridPane.rowIndex="1"/>
+                                <Label fx:id="oib" text="OIB" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                                <Label fx:id="role" text="Role" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                                <Label fx:id="email" text="Email" GridPane.columnIndex="3"
+                                       GridPane.rowIndex="1"/>
+                                <Label fx:id="salary" text="Salary" GridPane.columnIndex="3"
+                                       GridPane.rowIndex="2"/>
+                                <Label fx:id="hospital" text="Hospital" GridPane.columnIndex="3"
+                                       GridPane.rowIndex="3"/>
+                                <Label fx:id="phoneNumber" text="Phone Number" GridPane.columnIndex="4"
+                                       GridPane.rowIndex="1"/>
+                                <Label fx:id="address" text="Address" GridPane.columnIndex="4"
+                                       GridPane.rowIndex="2"/>
                             </children>
+                        </GridPane>
+                    </HBox>
 
-                        </HBox>
+                    <TableView fx:id="patientsTable" prefHeight="259.0" prefWidth="973.0">
+                        <columns>
+                            <TableColumn fx:id="patientNameColumn" prefWidth="300.0" text="Patient"/>
+                            <TableColumn fx:id="patientOibColumn" prefWidth="250.0" text="OIB"/>
+                        </columns>
+                    </TableView>
 
-                        <TableView fx:id="patientsTable" prefHeight="259.0" prefWidth="973.0">
-
-                            <columns>
-
-                                <TableColumn fx:id="patientNameColumn" prefWidth="300.0" text="Patient"/>
-
-                                <TableColumn fx:id="patientOibColumn" prefWidth="250.0" text="OIB"/>
-
-                            </columns>
-
-                        </TableView>
-
-                        <TableView fx:id="appointmentsTable" prefHeight="200.0" prefWidth="973.0">
-
-                            <columns>
-
-                                <TableColumn fx:id="appointmentDateColumn" prefWidth="300.0" text="Appointment"/>
-
-                                <TableColumn fx:id="appointmentPatientColumn" prefWidth="300.0" text="Patient"/>
-
-                            </columns>
-
-                        </TableView>
-
-                    </children>
-
+                    <TableView fx:id="appointmentsTable" prefHeight="200.0" prefWidth="973.0">
+                        <columns>
+                            <TableColumn fx:id="appointmentDateColumn" prefWidth="300.0" text="Appointment"/>
+                            <TableColumn fx:id="appointmentPatientColumn" prefWidth="300.0" text="Patient"/>
+                        </columns>
+                    </TableView>
                 </VBox>
-
             </center>
-
         </BorderPane>
-
     </children>
-
 </AnchorPane>

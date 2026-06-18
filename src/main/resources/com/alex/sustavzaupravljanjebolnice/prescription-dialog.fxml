@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import java.lang.String?>
+<VBox xmlns:fx="http://javafx.com/fxml/1" prefWidth="480.0" prefHeight="550.0" spacing="20.0"
+      xmlns="http://javafx.com/javafx/21" stylesheets="@hospital-styles.css"
+      fx:controller="com.alex.sustavzaupravljanjebolnice.controller.PrescriptionDialogController">
+    <padding>
+        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0"/>
+    </padding>
+    <children>
+        <Label text="Prescription Record Details">
+            <styleClass>
+                <String fx:value="label"/>
+                <String fx:value="title"/>
+            </styleClass>
+            <font>
+                <Font name="System Bold" size="18.0"/>
+            </font>
+        </Label>
+
+        <GridPane hgap="15.0" vgap="15.0" VBox.vgrow="ALWAYS">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" minWidth="100.0" prefWidth="110.0"/>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="200.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="30.0" vgrow="NEVER"/>
+                <RowConstraints minHeight="30.0" vgrow="NEVER"/>
+                <RowConstraints minHeight="100.0" vgrow="ALWAYS"/>
+                <RowConstraints minHeight="30.0" vgrow="NEVER"/>
+                <RowConstraints minHeight="30.0" vgrow="NEVER"/>
+                <RowConstraints minHeight="30.0" vgrow="NEVER"/>
+                <RowConstraints minHeight="30.0" vgrow="NEVER"/>
+            </rowConstraints>
+            <children>
+                <Label text="Prescription ID:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField fx:id="txtId" promptText="e.g., RX-99231" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                <Label text="Medication Name:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <TextField fx:id="txtName" promptText="e.g., Amoxicillin 500mg" GridPane.columnIndex="1"
+                           GridPane.rowIndex="1"/>
+
+                <Label text="Instructions:" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP"/>
+                <TextArea fx:id="txtDescription"
+                          promptText="Enter dosage details, frequencies, or specific administration constraints..."
+                          wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                <Label text="Doctor ID:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <TextField fx:id="txtDoctorId" promptText="System reference number" GridPane.columnIndex="1"
+                           GridPane.rowIndex="3"/>
+
+                <Label text="Patient ID:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                <TextField fx:id="txtPatientId" promptText="System reference number" GridPane.columnIndex="1"
+                           GridPane.rowIndex="4"/>
+
+                <Label text="Start Date:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                <DatePicker fx:id="dpStartDate" maxWidth="1.7976931348623157E308" promptText="MM/DD/YYYY"
+                            GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+                <Label text="End Date:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                <DatePicker fx:id="dpEndDate" maxWidth="1.7976931348623157E308" promptText="MM/DD/YYYY"
+                            GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+            </children>
+        </GridPane>
+
+        <HBox alignment="CENTER_RIGHT" spacing="12.0">
+            <children>
+                <Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" prefWidth="90.0"
+                        text="Cancel">
+                    <styleClass>
+                        <String fx:value="btn-ghost"/>
+                    </styleClass>
+                </Button>
+                <Button defaultButton="true" mnemonicParsing="false" onAction="#handleSave" prefWidth="90.0"
+                        text="Save">
+                    <styleClass>
+                        <String fx:value="btn-success"/>
+                    </styleClass>
+                </Button>
+            </children>
+        </HBox>
+    </children>
+</VBox>

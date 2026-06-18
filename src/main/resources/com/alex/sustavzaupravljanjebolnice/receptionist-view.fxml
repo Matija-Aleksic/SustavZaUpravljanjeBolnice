@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import java.lang.String?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="700.0"
             prefWidth="1000.0" xmlns="http://javafx.com/javafx/21"
             stylesheets="@hospital-styles.css"
@@ -22,10 +23,24 @@
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
             </padding>
             <HBox alignment="CENTER_LEFT" spacing="15.0">
-                <Button mnemonicParsing="false" text="New Appointment" onAction="#handleAddAppointment"/>
-                <Button mnemonicParsing="false" text="Edit Selected" onAction="#handleEditAppointment"/>
-                <Button mnemonicParsing="false" text="Delete Selected" onAction="#handleDeleteAppointment"
-                        style="-fx-text-fill: red;"/>
+                <styleClass>
+                    <String fx:value="toolbar"/>
+                </styleClass>
+                <Button mnemonicParsing="false" text="New Appointment" onAction="#handleAddAppointment">
+                    <styleClass>
+                        <String fx:value="btn-primary"/>
+                    </styleClass>
+                </Button>
+                <Button mnemonicParsing="false" text="Edit Selected" onAction="#handleEditAppointment">
+                    <styleClass>
+                        <String fx:value="btn-primary"/>
+                    </styleClass>
+                </Button>
+                <Button mnemonicParsing="false" text="Delete Selected" onAction="#handleDeleteAppointment">
+                    <styleClass>
+                        <String fx:value="btn-danger"/>
+                    </styleClass>
+                </Button>
 
                 <Region HBox.hgrow="ALWAYS"/>
 
