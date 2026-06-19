@@ -1,9 +1,9 @@
 package com.alex.sustavzaupravljanjebolnice.entity.builders;
 
-import com.alex.sustavzaupravljanjebolnice.entity.Nurse;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Department;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Ward;
+import com.alex.sustavzaupravljanjebolnice.entity.staff.Nurse;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.alex.sustavzaupravljanjebolnice.entity;
+package com.alex.sustavzaupravljanjebolnice.entity.hospital;
 
 import java.io.Serializable;
 import java.time.LocalDate;

@@ -1,7 +1,7 @@
 package com.alex.sustavzaupravljanjebolnice.entity.builders;
 
-import com.alex.sustavzaupravljanjebolnice.entity.Staff;
 import com.alex.sustavzaupravljanjebolnice.entity.StaffRoles;
+import com.alex.sustavzaupravljanjebolnice.entity.staff.Staff;
 
 import java.time.LocalDate;
 

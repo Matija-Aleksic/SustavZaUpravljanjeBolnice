@@ -1,10 +1,10 @@
 package com.alex.sustavzaupravljanjebolnice.entity.builders;
 
-import com.alex.sustavzaupravljanjebolnice.entity.Appointment;
-import com.alex.sustavzaupravljanjebolnice.entity.Doctor;
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
 import com.alex.sustavzaupravljanjebolnice.entity.StaffRoles;
+import com.alex.sustavzaupravljanjebolnice.entity.hospital.Appointment;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
+import com.alex.sustavzaupravljanjebolnice.entity.staff.Doctor;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

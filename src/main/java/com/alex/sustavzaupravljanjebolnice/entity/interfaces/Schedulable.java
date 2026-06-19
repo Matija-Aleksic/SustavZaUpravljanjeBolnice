@@ -1,6 +1,6 @@
 package com.alex.sustavzaupravljanjebolnice.entity.interfaces;
 
-import com.alex.sustavzaupravljanjebolnice.entity.Appointment;
+import com.alex.sustavzaupravljanjebolnice.entity.hospital.Appointment;
 
 import java.util.List;
 

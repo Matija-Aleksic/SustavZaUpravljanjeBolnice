@@ -1,11 +1,13 @@
 package com.alex.sustavzaupravljanjebolnice.controller;
 
-import com.alex.sustavzaupravljanjebolnice.entity.Appointment;
-import com.alex.sustavzaupravljanjebolnice.entity.Doctor;
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
+import com.alex.sustavzaupravljanjebolnice.entity.hospital.Appointment;
+import com.alex.sustavzaupravljanjebolnice.entity.staff.Doctor;
+import com.alex.sustavzaupravljanjebolnice.entity.staff.Staff;
 import com.alex.sustavzaupravljanjebolnice.repository.AppointmentRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.DoctorRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.PatientRepo;
+import com.alex.sustavzaupravljanjebolnice.util.UserSession;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -49,6 +51,8 @@ public class ReceptionistViewController {
     @FXML
     public void initialize() {
         try {
+            Staff sessionStaff = UserSession.getInstance().getLoggedInStaff();
+
             patientMap = patientRepo.getAll().stream().collect(Collectors.toMap(Patient::getId, p -> p));
             doctorMap = doctorRepo.getAll().stream().collect(Collectors.toMap(Doctor::getId, d -> d));
 

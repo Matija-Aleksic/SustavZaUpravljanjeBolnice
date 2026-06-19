@@ -1,6 +1,6 @@
 package com.alex.sustavzaupravljanjebolnice.util;
 
-import com.alex.sustavzaupravljanjebolnice.entity.Staff;
+import com.alex.sustavzaupravljanjebolnice.entity.staff.Staff;
 
 public class UserSession {
     private static UserSession instance;

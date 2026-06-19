@@ -1,5 +1,6 @@
-package com.alex.sustavzaupravljanjebolnice.entity;
+package com.alex.sustavzaupravljanjebolnice.entity.staff;
 
+import com.alex.sustavzaupravljanjebolnice.entity.Permissions;
 import com.alex.sustavzaupravljanjebolnice.entity.builders.AdministratorBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import static com.alex.sustavzaupravljanjebolnice.entity.Permissions.FULL;
  */
 public final class Administrator extends Staff {
     private static final Logger logger = LoggerFactory.getLogger(Administrator.class);
+    private final Long hospitalId;
     /**
      * The Permissions.
      */
@@ -24,6 +26,7 @@ public final class Administrator extends Staff {
      */
     public Administrator(AdministratorBuilder administratorBuilder) {
         super(administratorBuilder);
+        this.hospitalId = administratorBuilder.getHospitalId();
         logger.info("Administrator Builder created");
     }
 
@@ -43,5 +46,9 @@ public final class Administrator extends Staff {
      */
     public void setPermissions(Permissions permissions) {
         this.permissions = permissions;
+    }
+
+    public long getHospitalId() {
+        return hospitalId;
     }
 }

@@ -1,4 +1,4 @@
-package com.alex.sustavzaupravljanjebolnice.entity;
+package com.alex.sustavzaupravljanjebolnice.entity.staff;
 
 import com.alex.sustavzaupravljanjebolnice.entity.builders.NurseBuilder;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Department;

@@ -1,6 +1,8 @@
-package com.alex.sustavzaupravljanjebolnice.entity;
+package com.alex.sustavzaupravljanjebolnice.entity.staff;
 
+import com.alex.sustavzaupravljanjebolnice.entity.Patient;
 import com.alex.sustavzaupravljanjebolnice.entity.builders.DoctorBuilder;
+import com.alex.sustavzaupravljanjebolnice.entity.hospital.Appointment;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
 import com.alex.sustavzaupravljanjebolnice.entity.interfaces.Conactable;
 import com.alex.sustavzaupravljanjebolnice.entity.interfaces.Schedulable;

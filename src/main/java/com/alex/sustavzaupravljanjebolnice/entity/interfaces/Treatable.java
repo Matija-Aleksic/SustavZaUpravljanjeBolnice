@@ -1,7 +1,7 @@
 package com.alex.sustavzaupravljanjebolnice.entity.interfaces;
 
 import com.alex.sustavzaupravljanjebolnice.entity.PatientStatus;
-import com.alex.sustavzaupravljanjebolnice.entity.Prescription;
+import com.alex.sustavzaupravljanjebolnice.entity.hospital.Prescription;
 
 import java.util.List;
 

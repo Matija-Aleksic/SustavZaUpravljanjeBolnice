@@ -1,9 +1,9 @@
 package com.alex.sustavzaupravljanjebolnice.repository;
 
 import com.alex.sustavzaupravljanjebolnice.db.DatabaseManager;
-import com.alex.sustavzaupravljanjebolnice.entity.Administrator;
 import com.alex.sustavzaupravljanjebolnice.entity.StaffRoles;
 import com.alex.sustavzaupravljanjebolnice.entity.builders.AdministratorBuilder;
+import com.alex.sustavzaupravljanjebolnice.entity.staff.Administrator;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,11 +11,10 @@ import java.util.List;
 
 
 public class AdminRepo implements Repository<Administrator, Integer> {
-    private final HospitalRepo hospitalRepo = new HospitalRepo();
 
     @Override
     public Administrator getById(Integer id) throws SQLException {
-        String sql = "SELECT id, first_name, last_name, oib, birth_date, role, permissions, email, salary, phone_number, address,  FROM STAFF WHERE id = ? AND role = 'ADMIN'";
+        String sql = "SELECT id, first_name, last_name, oib, birth_date, role, permissions, email, salary, phone_number, address, HOSPITAL_ID  FROM STAFF WHERE id = ? AND role = 'ADMIN'";
 
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -64,7 +63,7 @@ public class AdminRepo implements Repository<Administrator, Integer> {
                     builder.setEmail(rs.getString("email"));
                     builder.setSalary(rs.getDouble("salary"));
                     builder.setRole(StaffRoles.ADMIN);
-                    long hospitalId = rs.getLong("hospital_id");
+                    builder.setHospitalId(rs.getLong("hospital_id"));
 
                     administrators.add(builder.build());
                 }

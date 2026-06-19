@@ -1,10 +1,13 @@
 package com.alex.sustavzaupravljanjebolnice.entity;
 
 import com.alex.sustavzaupravljanjebolnice.entity.builders.PatientBuilder;
+import com.alex.sustavzaupravljanjebolnice.entity.hospital.Appointment;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
+import com.alex.sustavzaupravljanjebolnice.entity.hospital.Prescription;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Ward;
 import com.alex.sustavzaupravljanjebolnice.entity.interfaces.Schedulable;
 import com.alex.sustavzaupravljanjebolnice.entity.interfaces.Treatable;
+import com.alex.sustavzaupravljanjebolnice.entity.staff.Doctor;
 
 import java.util.List;
 

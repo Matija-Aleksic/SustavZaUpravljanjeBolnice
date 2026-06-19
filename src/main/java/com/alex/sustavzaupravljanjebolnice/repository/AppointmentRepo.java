@@ -1,7 +1,7 @@
 package com.alex.sustavzaupravljanjebolnice.repository;
 
 import com.alex.sustavzaupravljanjebolnice.db.DatabaseManager;
-import com.alex.sustavzaupravljanjebolnice.entity.Appointment;
+import com.alex.sustavzaupravljanjebolnice.entity.hospital.Appointment;
 
 import java.sql.*;
 import java.util.ArrayList;

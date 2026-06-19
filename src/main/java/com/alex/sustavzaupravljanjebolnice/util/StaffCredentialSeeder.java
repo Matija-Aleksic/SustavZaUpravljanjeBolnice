@@ -1,10 +1,12 @@
 package com.alex.sustavzaupravljanjebolnice.util;
 
-import com.alex.sustavzaupravljanjebolnice.entity.Staff;
+import com.alex.sustavzaupravljanjebolnice.entity.staff.Staff;
 import com.alex.sustavzaupravljanjebolnice.repository.AdminRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.DoctorRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.NurseRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.ReceptionistRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -12,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StaffCredentialSeeder {
+
+    private static final Logger log = LoggerFactory.getLogger(StaffCredentialSeeder.class);
 
     /**
      * Pulls all categories of staff from the database and initializes credentials if missing.
@@ -37,7 +41,7 @@ public class StaffCredentialSeeder {
         try {
             PasswordManager pm = new PasswordManager(credentialStorage);
 
-            System.out.println("--- Starting Staff Credential Seeding ---");
+            log.info("--- Starting Staff Credential Seeding ---");
             int accountsCreated = 0;
 
             for (Staff staff : staffList) {
@@ -47,24 +51,23 @@ public class StaffCredentialSeeder {
                 String username = firstName + " " + lastName;
 
                 if (username.isBlank()) {
-                    System.out.println("SKIPPED: Staff ID " + staff.getId() + " has no name."); // DEBUG
+                    log.info("SKIPPED: Staff ID {} has no name.", staff.getId()); // DEBUG
                     continue;
                 }
 
                 if (!pm.verifyPassword(username, firstName)) {
                     pm.savePassword(username, firstName);
-                    System.out.println("Generated login for: " + username + " (Password: " + firstName + ")");
+                    log.info("Generated login for: {} (Password: {})", username, firstName);
                     accountsCreated++;
                 } else {
-                    // This will show you the ones that already exist!
-                    System.out.println("SKIPPED: Account already exists for " + firstName + lastName);
+                    log.info("SKIPPED: Account already exists for {}{}", firstName, lastName);
                 }
             }
 
-            System.out.println("--- Seeding Finished. Accounts created/updated: " + accountsCreated + " ---");
+            log.info("--- Seeding Finished. Accounts created/updated: {} ---", accountsCreated);
 
         } catch (Exception e) {
-            System.err.println("Security error while hashing passwords: " + e.getMessage());
+            log.error("Security error while hashing passwords: {}", e.getMessage());
             e.printStackTrace();
         }
     }

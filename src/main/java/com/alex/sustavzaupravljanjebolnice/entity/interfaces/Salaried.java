@@ -1,6 +1,6 @@
 package com.alex.sustavzaupravljanjebolnice.entity.interfaces;
 
-import com.alex.sustavzaupravljanjebolnice.entity.Staff;
+import com.alex.sustavzaupravljanjebolnice.entity.staff.Staff;
 
 /**
  * The interface Salaried.

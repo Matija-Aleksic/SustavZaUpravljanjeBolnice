@@ -1,8 +1,8 @@
 package com.alex.sustavzaupravljanjebolnice.controller;
 
-import com.alex.sustavzaupravljanjebolnice.entity.Appointment;
-import com.alex.sustavzaupravljanjebolnice.entity.Doctor;
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
+import com.alex.sustavzaupravljanjebolnice.entity.hospital.Appointment;
+import com.alex.sustavzaupravljanjebolnice.entity.staff.Doctor;
 import com.alex.sustavzaupravljanjebolnice.repository.AppointmentRepo;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -72,7 +72,7 @@ public class AppointmentDialogController {
 
         doctorCombo.getItems().stream().filter(d -> d.getId() == appointment.doctorId()).findFirst().ifPresent(doctorCombo::setValue);
 
-        patientCombo.getItems().stream().filter(p -> p.getId() == appointment.patientId()).findFirst().ifPresent(patientCombo::setValue);
+        patientCombo.getItems().stream().filter(p -> p.getId().equals() == appointment.patientId()).findFirst().ifPresent(patientCombo::setValue);
 
         datePicker.setValue(appointment.dateTime().toLocalDate());
         timeField.setText(appointment.dateTime().toLocalTime().toString());
@@ -103,7 +103,7 @@ public class AppointmentDialogController {
 
         } catch (SQLException e) {
             showAlert("Database Error", "Failed to save appointment: " + e.getMessage());
-        } catch (Exception e) {
+        } catch (Exception _) {
             showAlert("Format Error", "Please ensure the time is in HH:mm format (e.g., 14:30)");
         }
     }

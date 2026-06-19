@@ -1,5 +1,7 @@
-package com.alex.sustavzaupravljanjebolnice.entity;
+package com.alex.sustavzaupravljanjebolnice.entity.staff;
 
+import com.alex.sustavzaupravljanjebolnice.entity.Person;
+import com.alex.sustavzaupravljanjebolnice.entity.StaffRoles;
 import com.alex.sustavzaupravljanjebolnice.entity.builders.StaffBuilder;
 import com.alex.sustavzaupravljanjebolnice.entity.interfaces.Salaried;
 
