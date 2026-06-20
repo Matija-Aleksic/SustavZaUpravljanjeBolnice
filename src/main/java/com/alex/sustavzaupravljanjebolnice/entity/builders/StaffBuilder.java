@@ -9,6 +9,7 @@ import java.time.LocalDate;
  * The type Staff builder.
  */
 public class StaffBuilder {
+    protected Long hospitalId;
     private Integer id;
     private String firstName;
     private String lastName;
@@ -185,5 +186,13 @@ public class StaffBuilder {
     public StaffBuilder setSalary(double salary) {
         this.salary = salary;
         return this;
+    }
+
+    public Long getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(Long hospitalId) {
+        this.hospitalId = hospitalId;
     }
 }
