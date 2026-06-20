@@ -8,177 +8,165 @@
             stylesheets="@hospital-styles.css"
             fx:controller="com.alex.sustavzaupravljanjebolnice.controller.NurseViewController">
 
-    <children>
-        <BorderPane prefWidth="1294.0" prefHeight="940.0">
+    <BorderPane prefWidth="1294.0" prefHeight="940.0">
 
-            <top>
-                <MenuBar>
-                    <menus>
-                        <Menu text="File">
-                            <MenuItem text="Close"/>
-                        </Menu>
-                        <Menu text="Edit">
-                            <MenuItem text="Edit Nurse" onAction="#handleEditNurse"/>
-                        </Menu>
-                        <Menu text="Help">
-                            <MenuItem text="About"/>
-                        </Menu>
-                    </menus>
-                </MenuBar>
-            </top>
+        <top>
+            <MenuBar>
+                <Menu text="File">
+                    <MenuItem text="Close"/>
+                </Menu>
+                <Menu text="Edit">
+                    <MenuItem text="Edit Nurse" onAction="#handleEditNurse"/>
+                </Menu>
+                <Menu text="Help">
+                    <MenuItem text="About"/>
+                </Menu>
+            </MenuBar>
+        </top>
 
-            <left>
-                <VBox spacing="10.0">
-                    <styleClass>
-                        <String fx:value="sidebar"/>
-                        <String fx:value="panel"/>
-                    </styleClass>
-                    <children>
-                        <TableView fx:id="nursesTable" prefWidth="300.0" VBox.vgrow="ALWAYS">
-                            <columns>
-                                <TableColumn fx:id="nurseColumn" text="Nurses" prefWidth="298.0"/>
-                            </columns>
-                        </TableView>
+        <left>
+            <VBox spacing="10.0">
+                <styleClass>
+                    <String fx:value="sidebar"/>
+                    <String fx:value="panel"/>
+                </styleClass>
+                <TableView fx:id="nursesTable" prefWidth="300.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="nurseColumn" text="Nurses" prefWidth="298.0"/>
+                    </columns>
+                </TableView>
 
-                        <HBox spacing="6.0" alignment="CENTER">
-                            <children>
-                                <Button text="Add Nurse" onAction="#handleAddNurse" prefWidth="94.0">
-                                    <styleClass>
-                                        <String fx:value="btn-success"/>
-                                    </styleClass>
-                                </Button>
-                                <Button text="Edit" onAction="#handleEditNurse" prefWidth="94.0">
-                                    <styleClass>
-                                        <String fx:value="btn-warning"/>
-                                    </styleClass>
-                                </Button>
-                                <Button text="Delete" onAction="#handleDeleteNurse" prefWidth="94.0">
-                                    <styleClass>
-                                        <String fx:value="btn-danger"/>
-                                    </styleClass>
-                                </Button>
-                            </children>
-                        </HBox>
-                    </children>
-                </VBox>
-            </left>
+                <HBox spacing="6.0" alignment="CENTER">
+                    <Button text="Add Nurse" onAction="#handleAddNurse" prefWidth="94.0">
 
-            <center>
-                <VBox spacing="15.0">
 
-                    <HBox spacing="25.0">
                         <styleClass>
-                            <String fx:value="panel-muted"/>
-                            <String fx:value="rounded"/>
-                            <String fx:value="p-10"/>
+                            <String fx:value="btn-success"/>
                         </styleClass>
-                        <children>
-                            <VBox spacing="5.0">
-                                <Label text="Name:">
-                                    <styleClass>
-                                        <String fx:value="label"/>
-                                        <String fx:value="muted"/>
-                                    </styleClass>
-                                </Label>
-                                <Label fx:id="nameSurname" text="-"/>
-                            </VBox>
-                            <VBox spacing="5.0">
-                                <Label text="OIB:">
-                                    <styleClass>
-                                        <String fx:value="label"/>
-                                        <String fx:value="muted"/>
-                                    </styleClass>
-                                </Label>
-                                <Label fx:id="oib" text="-"/>
-                            </VBox>
-                            <VBox spacing="5.0">
-                                <Label text="Email:">
-                                    <styleClass>
-                                        <String fx:value="label"/>
-                                        <String fx:value="muted"/>
-                                    </styleClass>
-                                </Label>
-                                <Label fx:id="email" text="-"/>
-                            </VBox>
-                            <VBox spacing="5.0">
-                                <Label text="Salary:">
-                                    <styleClass>
-                                        <String fx:value="label"/>
-                                        <String fx:value="muted"/>
-                                    </styleClass>
-                                </Label>
-                                <Label fx:id="salary" text="-"/>
-                            </VBox>
-                        </children>
+                    </Button>
+                    <Button text="Edit" onAction="#handleEditNurse" prefWidth="94.0">
+                        <styleClass>
+                            <String fx:value="btn-warning"/>
+                        </styleClass>
+                    </Button>
+                    <Button text="Delete" onAction="#handleDeleteNurse" prefWidth="94.0">
+                        <styleClass>
+                            <String fx:value="btn-danger"/>
+                        </styleClass>
+                    </Button>
+                </HBox>
+            </VBox>
+        </left>
+
+        <center>
+            <VBox spacing="15.0">
+
+                <HBox spacing="25.0">
+                    <styleClass>
+                        <String fx:value="panel-muted"/>
+                        <String fx:value="rounded"/>
+                        <String fx:value="p-10"/>
+                    </styleClass>
+                    <VBox spacing="5.0">
+                        <Label text="Name:">
+                            <styleClass>
+                                <String fx:value="label"/>
+                                <String fx:value="muted"/>
+                            </styleClass>
+                        </Label>
+                        <Label fx:id="nameSurname" text="-"/>
+                    </VBox>
+                    <VBox spacing="5.0">
+                        <Label text="OIB:">
+                            <styleClass>
+                                <String fx:value="label"/>
+                                <String fx:value="muted"/>
+                            </styleClass>
+                        </Label>
+                        <Label fx:id="oib" text="-"/>
+                    </VBox>
+                    <VBox spacing="5.0">
+                        <Label text="Email:">
+                            <styleClass>
+                                <String fx:value="label"/>
+                                <String fx:value="muted"/>
+                            </styleClass>
+                        </Label>
+                        <Label fx:id="email" text="-"/>
+                    </VBox>
+                    <VBox spacing="5.0">
+                        <Label text="Salary:">
+                            <styleClass>
+                                <String fx:value="label"/>
+                                <String fx:value="muted"/>
+                            </styleClass>
+                        </Label>
+                        <Label fx:id="salary" text="-"/>
+                    </VBox>
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <Label text="Patients in Assigned Wards"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <HBox spacing="8.0">
+                        <Button text="Add Patient" onAction="#handleAddPatient">
+                            <styleClass>
+                                <String fx:value="btn-success"/>
+                            </styleClass>
+                        </Button>
+                        <Button text="Edit Patient" onAction="#handleEditPatient">
+                            <styleClass>
+                                <String fx:value="btn-warning"/>
+                            </styleClass>
+                        </Button>
+                        <Button text="Discharge Patient" onAction="#handleDeletePatient">
+                            <styleClass>
+                                <String fx:value="btn-danger"/>
+                            </styleClass>
+                        </Button>
                     </HBox>
+                </HBox>
 
-                    <HBox alignment="CENTER_LEFT" spacing="10.0">
-                        <children>
-                            <Label text="Patients in Assigned Wards"/>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <HBox spacing="8.0">
-                                <Button text="Add Patient" onAction="#handleAddPatient">
-                                    <styleClass>
-                                        <String fx:value="btn-success"/>
-                                    </styleClass>
-                                </Button>
-                                <Button text="Edit Patient" onAction="#handleEditPatient">
-                                    <styleClass>
-                                        <String fx:value="btn-warning"/>
-                                    </styleClass>
-                                </Button>
-                                <Button text="Discharge Patient" onAction="#handleDeletePatient">
-                                    <styleClass>
-                                        <String fx:value="btn-danger"/>
-                                    </styleClass>
-                                </Button>
-                            </HBox>
-                        </children>
+                <TableView fx:id="patientsTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="patientNameColumn" text="Patient" prefWidth="250.0"/>
+                        <TableColumn fx:id="patientOibColumn" text="OIB" prefWidth="200.0"/>
+                        <TableColumn fx:id="patientWardColumn" text="Ward" prefWidth="200.0"/>
+                    </columns>
+                </TableView>
+
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <Label text="Prescriptions for Patients"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <HBox spacing="8.0">
+                        <Button text="Add Prescription" onAction="#handleAddPrescription">
+                            <styleClass>
+                                <String fx:value="btn-success"/>
+                            </styleClass>
+                        </Button>
+                        <Button text="Modify Details" onAction="#handleEditPrescription">
+                            <styleClass>
+                                <String fx:value="btn-warning"/>
+                            </styleClass>
+                        </Button>
+                        <Button text="Revoke" onAction="#handleDeletePrescription">
+                            <styleClass>
+                                <String fx:value="btn-danger"/>
+                            </styleClass>
+                        </Button>
                     </HBox>
+                </HBox>
 
-                    <TableView fx:id="patientsTable" VBox.vgrow="ALWAYS">
-                        <columns>
-                            <TableColumn fx:id="patientNameColumn" text="Patient" prefWidth="250.0"/>
-                            <TableColumn fx:id="patientOibColumn" text="OIB" prefWidth="200.0"/>
-                            <TableColumn fx:id="patientWardColumn" text="Ward" prefWidth="200.0"/>
-                        </columns>
-                    </TableView>
+                <TableView fx:id="prescriptionsTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="prescriptionNameColumn" text="Prescription" prefWidth="250.0"/>
+                        <TableColumn fx:id="prescriptionPatientColumn" text="Patient" prefWidth="250.0"/>
+                        <TableColumn fx:id="prescriptionDurationColumn" text="Duration" prefWidth="300.0"/>
+                    </columns>
+                </TableView>
 
-                    <HBox alignment="CENTER_LEFT" spacing="10.0">
-                        <children>
-                            <Label text="Prescriptions for Patients"/>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <HBox spacing="8.0">
-                                <Button text="Add Prescription" onAction="#handleAddPrescription">
-                                    <styleClass>
-                                        <String fx:value="btn-success"/>
-                                    </styleClass>
-                                </Button>
-                                <Button text="Modify Details" onAction="#handleEditPrescription">
-                                    <styleClass>
-                                        <String fx:value="btn-warning"/>
-                                    </styleClass>
-                                </Button>
-                                <Button text="Revoke" onAction="#handleDeletePrescription">
-                                    <styleClass>
-                                        <String fx:value="btn-danger"/>
-                                    </styleClass>
-                                </Button>
-                            </HBox>
-                        </children>
-                    </HBox>
+            </VBox>
+        </center>
 
-                    <TableView fx:id="prescriptionsTable" VBox.vgrow="ALWAYS">
-                        <columns>
-                            <TableColumn fx:id="prescriptionNameColumn" text="Prescription" prefWidth="250.0"/>
-                            <TableColumn fx:id="prescriptionPatientColumn" text="Patient" prefWidth="250.0"/>
-                            <TableColumn fx:id="prescriptionDurationColumn" text="Duration" prefWidth="300.0"/>
-                        </columns>
-                    </TableView>
-
-                </VBox>
-            </center>
-
-        </BorderPane>
-    </children>
+    </BorderPane>
 </AnchorPane>

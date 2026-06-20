@@ -7,144 +7,134 @@
             xmlns="http://javafx.com/javafx/21" stylesheets="@hospital-styles.css"
             fx:controller="com.alex.sustavzaupravljanjebolnice.controller.HospitalOverviewController">
 
-    <children>
-        <BorderPane prefWidth="1294.0" prefHeight="940.0"
-                    AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
-                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+    <BorderPane prefWidth="1294.0" prefHeight="940.0"
+                AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
 
-            <top>
-                <MenuBar>
-                    <menus>
-                        <Menu text="File">
-                            <items>
-                                <MenuItem text="Main Dashboard"/>
-                                <MenuItem text="Close"/>
-                            </items>
-                        </Menu>
-                        <Menu text="View">
-                            <items>
-                                <MenuItem text="Refresh Data"/>
-                            </items>
-                        </Menu>
-                        <Menu text="Help">
-                            <items>
-                                <MenuItem text="About System"/>
-                            </items>
-                        </Menu>
-                    </menus>
-                </MenuBar>
-            </top>
+        <top>
+            <MenuBar>
+                <Menu text="File">
+                    <MenuItem text="Main Dashboard"/>
+                    <MenuItem text="Close"/>
+                </Menu>
+                <Menu text="View">
+                    <MenuItem text="Refresh Data"/>
+                </Menu>
+                <Menu text="Help">
+                    <MenuItem text="About System"/>
+                </Menu>
+            </MenuBar>
+        </top>
 
-            <left>
-                <VBox spacing="5.0" prefWidth="320.0">
+        <left>
+            <VBox spacing="5.0" prefWidth="320.0">
+                <styleClass>
+                    <String fx:value="sidebar"/>
+                    <String fx:value="panel-muted"/>
+                </styleClass>
+                <Label text="Hospitals">
                     <styleClass>
-                        <String fx:value="sidebar"/>
-                        <String fx:value="panel-muted"/>
+                        <String fx:value="label"/>
+                        <String fx:value="subtitle"/>
                     </styleClass>
-                    <Label text="Hospitals">
+                </Label>
+                <TableView fx:id="hospitalsTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="hospitalNameColumn" text="Hospital Name" prefWidth="298.0"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </left>
+
+        <center>
+            <VBox spacing="15.0">
+
+                <HBox spacing="30.0">
+                    <styleClass>
+                        <String fx:value="panel-muted"/>
+                        <String fx:value="rounded"/>
+                        <String fx:value="p-10"/>
+                    </styleClass>
+                    <VBox spacing="2.0">
+                        <Label text="Selected Hospital:">
+                            <styleClass>
+                                <String fx:value="label"/>
+                                <String fx:value="muted"/>
+                            </styleClass>
+                        </Label>
+                        <Label fx:id="lblHospitalName" text="Select a hospital..."/>
+                    </VBox>
+                    <VBox spacing="2.0">
+                        <Label text="Address:">
+                            <styleClass>
+                                <String fx:value="label"/>
+                                <String fx:value="muted"/>
+                            </styleClass>
+                        </Label>
+                        <Label fx:id="lblHospitalAddress" text="-"/>
+                    </VBox>
+                    <VBox spacing="2.0">
+                        <Label text="Phone:">
+                            <styleClass>
+                                <String fx:value="label"/>
+                                <String fx:value="muted"/>
+                            </styleClass>
+                        </Label>
+                        <Label fx:id="lblHospitalPhone" text="-"/>
+                    </VBox>
+                </HBox>
+
+                <VBox spacing="5.0" VBox.vgrow="ALWAYS">
+                    <Label text="Departments Available">
                         <styleClass>
                             <String fx:value="label"/>
                             <String fx:value="subtitle"/>
                         </styleClass>
                     </Label>
-                    <TableView fx:id="hospitalsTable" VBox.vgrow="ALWAYS">
+                    <TableView fx:id="departmentsTable" prefHeight="220.0">
                         <columns>
-                            <TableColumn fx:id="hospitalNameColumn" text="Hospital Name" prefWidth="298.0"/>
+                            <TableColumn fx:id="departmentIdColumn" text="ID"/>
+                            <TableColumn fx:id="departmentNameColumn" text="Department Name" prefWidth="400.0"/>
                         </columns>
                     </TableView>
                 </VBox>
-            </left>
 
-            <center>
-                <VBox spacing="15.0">
+                <HBox spacing="15.0" VBox.vgrow="ALWAYS">
 
-                    <HBox spacing="30.0">
-                        <styleClass>
-                            <String fx:value="panel-muted"/>
-                            <String fx:value="rounded"/>
-                            <String fx:value="p-10"/>
-                        </styleClass>
-                        <VBox spacing="2.0">
-                            <Label text="Selected Hospital:">
-                                <styleClass>
-                                    <String fx:value="label"/>
-                                    <String fx:value="muted"/>
-                                </styleClass>
-                            </Label>
-                            <Label fx:id="lblHospitalName" text="Select a hospital..."/>
-                        </VBox>
-                        <VBox spacing="2.0">
-                            <Label text="Address:">
-                                <styleClass>
-                                    <String fx:value="label"/>
-                                    <String fx:value="muted"/>
-                                </styleClass>
-                            </Label>
-                            <Label fx:id="lblHospitalAddress" text="-"/>
-                        </VBox>
-                        <VBox spacing="2.0">
-                            <Label text="Phone:">
-                                <styleClass>
-                                    <String fx:value="label"/>
-                                    <String fx:value="muted"/>
-                                </styleClass>
-                            </Label>
-                            <Label fx:id="lblHospitalPhone" text="-"/>
-                        </VBox>
-                    </HBox>
-
-                    <VBox spacing="5.0" VBox.vgrow="ALWAYS">
-                        <Label text="Departments Available">
+                    <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                        <Label text="Assigned Doctors">
                             <styleClass>
                                 <String fx:value="label"/>
                                 <String fx:value="subtitle"/>
                             </styleClass>
                         </Label>
-                        <TableView fx:id="departmentsTable" prefHeight="220.0">
+                        <TableView fx:id="doctorsTable" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="departmentIdColumn" text="ID" prefWidth="80.0"/>
-                                <TableColumn fx:id="departmentNameColumn" text="Department Name" prefWidth="400.0"/>
+                                <TableColumn fx:id="doctorNameColumn" text="Doctor Name" prefWidth="220.0"/>
+                                <TableColumn fx:id="doctorEmailColumn" text="Email Address" prefWidth="230.0"/>
                             </columns>
                         </TableView>
                     </VBox>
 
-                    <HBox spacing="15.0" VBox.vgrow="ALWAYS">
+                    <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                        <Label text="Assigned Nurses">
+                            <styleClass>
+                                <String fx:value="label"/>
+                                <String fx:value="subtitle"/>
+                            </styleClass>
+                        </Label>
+                        <TableView fx:id="nursesTable" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="nurseNameColumn" text="Nurse Name" prefWidth="220.0"/>
+                                <TableColumn fx:id="nurseEmailColumn" text="Email Address" prefWidth="230.0"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
 
-                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
-                            <Label text="Assigned Doctors">
-                                <styleClass>
-                                    <String fx:value="label"/>
-                                    <String fx:value="subtitle"/>
-                                </styleClass>
-                            </Label>
-                            <TableView fx:id="doctorsTable" VBox.vgrow="ALWAYS">
-                                <columns>
-                                    <TableColumn fx:id="doctorNameColumn" text="Doctor Name" prefWidth="220.0"/>
-                                    <TableColumn fx:id="doctorEmailColumn" text="Email Address" prefWidth="230.0"/>
-                                </columns>
-                            </TableView>
-                        </VBox>
+                </HBox>
 
-                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
-                            <Label text="Assigned Nurses">
-                                <styleClass>
-                                    <String fx:value="label"/>
-                                    <String fx:value="subtitle"/>
-                                </styleClass>
-                            </Label>
-                            <TableView fx:id="nursesTable" VBox.vgrow="ALWAYS">
-                                <columns>
-                                    <TableColumn fx:id="nurseNameColumn" text="Nurse Name" prefWidth="220.0"/>
-                                    <TableColumn fx:id="nurseEmailColumn" text="Email Address" prefWidth="230.0"/>
-                                </columns>
-                            </TableView>
-                        </VBox>
+            </VBox>
+        </center>
 
-                    </HBox>
-
-                </VBox>
-            </center>
-
-        </BorderPane>
-    </children>
+    </BorderPane>
 </AnchorPane>
