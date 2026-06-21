@@ -12,7 +12,6 @@ import static com.alex.sustavzaupravljanjebolnice.entity.Permissions.FULL;
  */
 public final class Administrator extends Staff {
     private static final Logger logger = LoggerFactory.getLogger(Administrator.class);
-    private final Long hospitalId;
     /**
      * The Permissions.
      */
@@ -48,7 +47,5 @@ public final class Administrator extends Staff {
         this.permissions = permissions;
     }
 
-    public long getHospitalId() {
-        return hospitalId;
-    }
+
 }

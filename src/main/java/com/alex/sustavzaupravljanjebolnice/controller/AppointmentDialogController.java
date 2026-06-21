@@ -4,10 +4,10 @@ import com.alex.sustavzaupravljanjebolnice.entity.Patient;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Appointment;
 import com.alex.sustavzaupravljanjebolnice.entity.staff.Doctor;
 import com.alex.sustavzaupravljanjebolnice.repository.AppointmentRepo;
+import com.alex.sustavzaupravljanjebolnice.util.AlertBox;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
@@ -36,7 +36,6 @@ public class AppointmentDialogController {
 
     @FXML
     public void initialize() {
-        // Setup display formats for comboboxes
         doctorCombo.setConverter(new StringConverter<>() {
             @Override
             public String toString(Doctor d) {
@@ -72,7 +71,7 @@ public class AppointmentDialogController {
 
         doctorCombo.getItems().stream().filter(d -> d.getId() == appointment.doctorId()).findFirst().ifPresent(doctorCombo::setValue);
 
-        patientCombo.getItems().stream().filter(p -> p.getId().equals() == appointment.patientId()).findFirst().ifPresent(patientCombo::setValue);
+        patientCombo.getItems().stream().filter(p -> p.getId() == appointment.patientId()).findFirst().ifPresent(patientCombo::setValue);
 
         datePicker.setValue(appointment.dateTime().toLocalDate());
         timeField.setText(appointment.dateTime().toLocalTime().toString());
@@ -126,10 +125,7 @@ public class AppointmentDialogController {
     }
 
     private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setContentText(content);
-        alert.showAndWait();
+        AlertBox.show(title, content);
     }
 
     private void closeStage() {

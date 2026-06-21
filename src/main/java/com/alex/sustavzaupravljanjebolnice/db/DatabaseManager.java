@@ -9,13 +9,9 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * The type Database manager.
- */
 public class DatabaseManager {
 
     private static final Logger logger = Logger.getLogger(DatabaseManager.class.getName());
-
     private static final Properties props = new Properties();
 
     private static final String JDBC_URL;
@@ -24,7 +20,6 @@ public class DatabaseManager {
 
     static {
         try (InputStream input = DatabaseManager.class.getClassLoader().getResourceAsStream("db.properties")) {
-
             if (input == null) {
                 throw new FileNotFoundException("Unable to find db.properties");
             }
@@ -46,12 +41,7 @@ public class DatabaseManager {
     private DatabaseManager() {
     }
 
-    /**
-     * Gets connection.
-     *
-     * @return the connection
-     * @throws SQLException the sql exception
-     */
+
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(JDBC_URL, USER, PASS);
     }
@@ -70,6 +60,7 @@ public class DatabaseManager {
             runSqlScript(conn, "/db/seed.sql");
 
             conn.commit();
+            logger.info("Database generation and initialization completed successfully.");
 
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Database initialization failed", e);
@@ -78,12 +69,10 @@ public class DatabaseManager {
 
     private static boolean databaseExists(Connection conn) throws SQLException {
         DatabaseMetaData meta = conn.getMetaData();
-
         try (ResultSet rs = meta.getTables(null, "PUBLIC", "HOSPITAL", null)) {
             return rs.next();
         }
     }
-
 
     private static void runSqlScript(Connection conn, String resourcePath) throws IOException, SQLException {
         try (InputStream is = DatabaseManager.class.getResourceAsStream(resourcePath)) {
@@ -92,11 +81,8 @@ public class DatabaseManager {
             }
 
             String sql = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-
             try (Statement st = conn.createStatement()) {
-
                 String[] statements = sql.split(";\\s*\\r?\\n");
-
                 for (String stmt : statements) {
                     String s = stmt.trim();
                     if (!s.isEmpty()) {
