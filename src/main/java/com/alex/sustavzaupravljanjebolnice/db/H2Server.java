@@ -10,11 +10,7 @@ public class H2Server {
 
         try {
 
-            tcpServer = Server.createTcpServer(
-                    "-tcp",
-                    "-tcpPort", "9092",
-                    "-tcpAllowOthers"
-            ).start();
+            tcpServer = Server.createTcpServer("-tcp", "-tcpPort", "9092", "-tcpAllowOthers").start();
 
             System.out.println("H2 TCP server started");
 

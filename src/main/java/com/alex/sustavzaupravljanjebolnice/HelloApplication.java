@@ -27,6 +27,6 @@ public class HelloApplication extends Application {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
-        WindowManager.switchScene(stage, "/com/alex/sustavzaupravljanjebolnice/login.fxml", "Hello!", 1300, 940);
+        WindowManager.switchScene(stage, "/com/alex/sustavzaupravljanjebolnice/login.fxml", "Hello!", 400, 600);
     }
 }
