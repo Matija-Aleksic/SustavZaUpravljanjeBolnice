@@ -1,18 +1,22 @@
 package com.alex.sustavzaupravljanjebolnice.controller;
 
+import com.alex.sustavzaupravljanjebolnice.entity.StaffRoles;
 import com.alex.sustavzaupravljanjebolnice.entity.staff.Doctor;
 import com.alex.sustavzaupravljanjebolnice.repository.DoctorRepo;
+import com.alex.sustavzaupravljanjebolnice.util.UserSession;
+import com.alex.sustavzaupravljanjebolnice.util.boxes.AlertBox;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class DoctorDialogController {
 
     private final DoctorRepo doctorRepo = new DoctorRepo();
+
     @FXML
     private TextField txtFirstName;
     @FXML
@@ -27,11 +31,33 @@ public class DoctorDialogController {
     private TextField txtPhone;
     @FXML
     private TextField txtAddress;
-    private Doctor existingDoctor = null;
-    private boolean operationSaved = false;
 
-    public void setDoctorToEdit(Doctor doctor) {
+    private Integer currentDoctorId = null;
+    private Doctor existingDoctor = null;
+    private boolean saved = false;
+
+    @FXML
+    public void initialize() {
+        //intellij complains if not commented
+    }
+
+    public void setNewDoctorContext() {
+        this.currentDoctorId = null;
+        this.existingDoctor = null;
+
+        txtFirstName.clear();
+        txtLastName.clear();
+        txtOib.clear();
+        txtEmail.clear();
+        txtSalary.clear();
+        txtPhone.clear();
+        txtAddress.clear();
+    }
+
+    public void setDoctor(Doctor doctor) {
         this.existingDoctor = doctor;
+        this.currentDoctorId = doctor.getId();
+
         txtFirstName.setText(doctor.getFirstName());
         txtLastName.setText(doctor.getLastName());
         txtOib.setText(doctor.getOib());
@@ -43,67 +69,75 @@ public class DoctorDialogController {
 
     @FXML
     public void handleSave(ActionEvent event) {
-        if (isInputInvalid()) {
-            showAlert("Validation Missing", "Please complete all fields with accurate data formats.");
-            return;
-        }
+        if (!validateForm()) return;
 
         try {
-            String fName = txtFirstName.getText().trim();
-            String lName = txtLastName.getText().trim();
-            String oibNum = txtOib.getText().trim();
-            String emailAddr = txtEmail.getText().trim();
             double salaryVal = Double.parseDouble(txtSalary.getText().trim());
-            String phoneNum = txtPhone.getText().trim();
-            String location = txtAddress.getText().trim();
 
-            if (existingDoctor == null) {
-                // Doctor freshDoctor = new Doctor(0, fName, lName, oibNum, emailAddr, salaryVal, phoneNum, location);
-                //  doctorRepo.save(freshDoctor);
+            Doctor doc;
+            if (existingDoctor != null) {
+                doc = existingDoctor;
             } else {
-                existingDoctor.setFirstName(fName);
-                existingDoctor.setLastName(lName);
-                existingDoctor.setOib(oibNum);
-                existingDoctor.setEmail(emailAddr);
-                existingDoctor.setSalary(salaryVal);
-                existingDoctor.setPhoneNumber(phoneNum);
-                existingDoctor.setAddress(location);
-                doctorRepo.update(existingDoctor);
+                doc = new Doctor();
+                doc.setRole(StaffRoles.DOCTOR);
+                doc.setBirthDate(LocalDate.of(1990, 1, 1));
             }
 
-            operationSaved = true;
-            closeWindow();
+            doc.setId(currentDoctorId == null ? 0 : currentDoctorId);
+            doc.setFirstName(txtFirstName.getText().trim());
+            doc.setLastName(txtLastName.getText().trim());
+            doc.setOib(txtOib.getText().trim());
+            doc.setEmail(txtEmail.getText().trim());
+            doc.setSalary(salaryVal);
+            doc.setPhoneNumber(txtPhone.getText().trim());
+            doc.setAddress(txtAddress.getText().trim());
 
-        } catch (NumberFormatException exc) {
-            showAlert("Input Format Misalignment", "Salary input must match numeric parameters (e.g., 4500.50).");
-        } catch (SQLException exc) {
-            showAlert("Persistence Database Exception", exc.getMessage());
+            if (existingDoctor == null) {
+                doc.setHospital(UserSession.getInstance().getLoggedInStaff().getHospital());
+            }
+
+            if (currentDoctorId == null) {
+                doctorRepo.save(doc);
+            } else {
+                doctorRepo.update(doc);
+            }
+
+            saved = true;
+            closeStage();
+
+        } catch (NumberFormatException _) {
+            AlertBox.show("Validation Format Error", "Salary field configuration demands numerical precision values.");
+        } catch (SQLException e) {
+            AlertBox.show("Persistence Fail", "Database engine rejected updating: " + e.getMessage());
         }
     }
 
     @FXML
     public void handleCancel(ActionEvent event) {
-        closeWindow();
+        closeStage();
     }
 
-    public boolean isOperationSaved() {
-        return operationSaved;
+    public boolean isSaved() {
+        return saved;
     }
 
-    private boolean isInputInvalid() {
-        return txtFirstName.getText().isBlank() || txtLastName.getText().isBlank() ||
-                txtOib.getText().isBlank() || txtEmail.getText().isBlank() || txtSalary.getText().isBlank();
+    private boolean validateForm() {
+        if (txtFirstName.getText().isBlank() ||
+                txtLastName.getText().isBlank() ||
+                txtOib.getText().isBlank() ||
+                txtEmail.getText().isBlank() ||
+                txtSalary.getText().isBlank() ||
+                txtPhone.getText().isBlank() ||
+                txtAddress.getText().isBlank()) {
+
+            AlertBox.show("Validation Failure", "Every data field configuration value must explicitly be set.");
+            return false;
+        }
+        return true;
     }
 
-    private void showAlert(String header, String message) {
-        Alert box = new Alert(Alert.AlertType.ERROR);
-        box.setTitle(header);
-        box.setContentText(message);
-        box.showAndWait();
-    }
-
-    private void closeWindow() {
-        Stage win = (Stage) txtFirstName.getScene().getWindow();
-        win.close();
+    private void closeStage() {
+        Stage targetStage = (Stage) txtFirstName.getScene().getWindow();
+        targetStage.close();
     }
 }

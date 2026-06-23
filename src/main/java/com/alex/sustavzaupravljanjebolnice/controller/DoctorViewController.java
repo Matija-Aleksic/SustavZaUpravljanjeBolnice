@@ -1,48 +1,45 @@
 package com.alex.sustavzaupravljanjebolnice.controller;
 
-import com.alex.sustavzaupravljanjebolnice.entity.Appointment;
-import com.alex.sustavzaupravljanjebolnice.entity.Doctor;
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
+import com.alex.sustavzaupravljanjebolnice.entity.hospital.Appointment;
+import com.alex.sustavzaupravljanjebolnice.entity.staff.Doctor;
+import com.alex.sustavzaupravljanjebolnice.entity.staff.Staff;
 import com.alex.sustavzaupravljanjebolnice.repository.AppointmentRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.DoctorRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.PatientRepo;
-import javafx.beans.property.ReadOnlyStringWrapper;
+import com.alex.sustavzaupravljanjebolnice.util.UserSession;
+import com.alex.sustavzaupravljanjebolnice.util.WindowManager;
+import com.alex.sustavzaupravljanjebolnice.util.boxes.AlertBox;
+import com.alex.sustavzaupravljanjebolnice.util.boxes.ConfirmationBox;
+import com.alex.sustavzaupravljanjebolnice.util.boxes.InfoBox;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * The type Doctor view controller.
- */
 public class DoctorViewController {
-
+    private static final Logger log = LoggerFactory.getLogger(DoctorViewController.class);
+    private final Staff loggedInStaff = UserSession.getInstance().getLoggedInStaff();
+    private final DoctorRepo doctorRepo = new DoctorRepo();
     private final PatientRepo patientRepo = new PatientRepo();
     private final AppointmentRepo appointmentRepo = new AppointmentRepo();
     @FXML
     private TableView<Doctor> doctorsTable;
     @FXML
     private TableColumn<Doctor, String> doctorColumn;
-    @FXML
-    private TableView<Patient> patientsTable;
-    @FXML
-    private TableColumn<Patient, String> patientNameColumn;
-    @FXML
-    private TableColumn<Patient, String> patientOibColumn;
-    @FXML
-    private TableView<Appointment> appointmentsTable;
-    @FXML
-    private TableColumn<Appointment, String> appointmentDateColumn;
-    @FXML
-    private TableColumn<Appointment, String> appointmentPatientColumn;
     @FXML
     private ImageView picture;
     @FXML
@@ -61,80 +58,149 @@ public class DoctorViewController {
     private Label phoneNumber;
     @FXML
     private Label address;
-    private List<Patient> allPatients;
-    private List<Appointment> allAppointments;
 
-    /**
-     * Initialize.
-     *
-     * @throws SQLException the sql exception
-     */
+    // Sub-tables
     @FXML
-    public void initialize() throws SQLException {
+    private TableView<Patient> patientsTable;
+    @FXML
+    private TableColumn<Patient, String> patientNameColumn;
+    @FXML
+    private TableColumn<Patient, String> patientOibColumn;
 
-        allPatients = patientRepo.getAll();
-        allAppointments = appointmentRepo.getAll();
+    @FXML
+    private TableView<Appointment> appointmentsTable;
+    @FXML
+    private TableColumn<Appointment, String> appointmentDateColumn;
+    @FXML
+    private TableColumn<Appointment, String> appointmentPatientColumn;
 
-        Map<Integer, Patient> patientMap = allPatients.stream().collect(Collectors.toMap(Patient::getId, p -> p));
+    private List<Patient> patients = List.of();
+    private List<Appointment> allAppointments = List.of();
 
-
-        try {
-            DoctorRepo doctorRepo = new DoctorRepo();
-            setDoctors(doctorRepo.getAll());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        doctorColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getFirstName() + " " + data.getValue().getLastName()));
-
-        patientNameColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getFirstName() + " " + data.getValue().getLastName()));
-
-        patientOibColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getOib()));
-
-        appointmentDateColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().toString()));
-
-        appointmentPatientColumn.setCellValueFactory(data -> {
-            Appointment appt = data.getValue();
-            Patient p = patientMap.get(appt.patientId());
-
-            String name = (p != null) ? (p.getFirstName() + " " + p.getLastName()) : "Unknown";
-            return new ReadOnlyStringWrapper(name);
+    @FXML
+    public void initialize() {
+        doctorColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFirstName() + " " + c.getValue().getLastName()));
+        patientNameColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFirstName() + " " + c.getValue().getLastName()));
+        patientOibColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getOib()));
+        appointmentDateColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().dateTime().toString()));
+        appointmentPatientColumn.setCellValueFactory(c -> {
+            Appointment a = c.getValue();
+            String pName = patients.stream().filter(p -> Objects.equals(p.getId(), a.patientId())).map(p -> p.getFirstName() + " " + p.getLastName()).findFirst().orElse("Unknown");
+            return new SimpleStringProperty(pName);
         });
 
-        doctorsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldDoctor, newDoctor) -> {
-            if (newDoctor != null) {
-                displayDoctor(newDoctor);
+        doctorsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                showDoctorDetails(newSelection);
+            } else {
+                clearDoctorDetails();
+            }
+        });
+
+        reload();
+    }
+
+    private void loadData() throws SQLException {
+        ArrayList<Doctor> doctors = doctorRepo.getAll().stream().filter(d -> d.getHospital() != null && Objects.equals(d.getHospital().getId(), loggedInStaff.getHospital().getId())).toList();
+        patients = patientRepo.getAll();
+        allAppointments = appointmentRepo.getAll();
+
+        Platform.runLater(() -> {
+            doctorsTable.setItems(FXCollections.observableArrayList(doctors));
+            Doctor selected = doctorsTable.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                showDoctorDetails(selected);
+            } else {
+                clearDoctorDetails();
+            }
+        });
+        log.info("Doctors overview data synchronized securely.");
+    }
+
+    private void showDoctorDetails(Doctor doctor) {
+        nameSurname.setText(doctor.getFirstName() + " " + doctor.getLastName());
+        oib.setText("OIB: " + doctor.getOib());
+        role.setText("Role: Doctor");
+        email.setText("Email: " + doctor.getEmail());
+        salary.setText("Salary: " + doctor.getSalary() + " €");
+        hospital.setText("Hospital: " + (doctor.getHospital() != null ? doctor.getHospital().getName() : "N/A"));
+        phoneNumber.setText("Phone: " + doctor.getPhoneNumber());
+        address.setText("Address: " + doctor.getAddress());
+
+        List<Appointment> filteredAppointments = allAppointments.stream().filter(a -> Objects.equals(a.doctorId(), doctor.getId())).toList();
+        appointmentsTable.setItems(FXCollections.observableArrayList(filteredAppointments));
+        Set<Integer> assignedPatientIds = filteredAppointments.stream().map(Appointment::patientId).collect(Collectors.toSet());
+        List<Patient> filteredPatients = patients.stream().filter(p -> assignedPatientIds.contains(p.getId())).toList();
+        patientsTable.setItems(FXCollections.observableArrayList(filteredPatients));
+    }
+
+    private void clearDoctorDetails() {
+        nameSurname.setText("");
+        oib.setText("");
+        role.setText("");
+        email.setText("");
+        salary.setText("");
+        hospital.setText("");
+        phoneNumber.setText("");
+        address.setText("");
+        appointmentsTable.getItems().clear();
+        patientsTable.getItems().clear();
+    }
+
+    @FXML
+    private void handleAddDoctor() {
+        WindowManager.<DoctorDialogController>showModal("/com/alex/sustavzaupravljanjebolnice/doctor-dialog.fxml", "Add New Doctor Profile", c -> c.setNewDoctorContext(), c -> {
+            if (c.isSaved()) reload();
+        });
+    }
+
+    @FXML
+    private void handleEditDoctor() {
+        Doctor selected = doctorsTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            AlertBox.show("Warning", "Please select a doctor to edit.");
+            return;
+        }
+
+        WindowManager.<DoctorDialogController>showModal("/com/alex/sustavzaupravljanjebolnice/doctor-dialog.fxml", "Edit Doctor Profile", c -> c.setDoctor(selected), c -> {
+            if (c.isSaved()) reload();
+        });
+    }
+
+    @FXML
+    private void handleDeleteDoctor() {
+        Doctor selected = doctorsTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            AlertBox.show("Warning", "Please select a doctor record to delete.");
+            return;
+        }
+
+        boolean confirmed = ConfirmationBox.show("Are you sure?", "Delete doctor: " + selected.getFirstName() + " " + selected.getLastName() + "?\nThis action cannot be undone.");
+        if (!confirmed) return;
+
+        Thread.startVirtualThread(() -> {
+            try {
+                doctorRepo.deleteById((long) selected.getId());
+                log.info("Successfully deleted doctor context profile ID: {}", selected.getId());
+                Platform.runLater(() -> {
+                    reload();
+                    InfoBox.show("Success");
+                });
+            } catch (SQLException e) {
+                log.error("Failed to discard doctor record", e);
+                Platform.runLater(() -> AlertBox.show("Database Reference Conflict", e.getMessage()));
             }
         });
     }
 
-    /**
-     * Sets doctors.
-     *
-     * @param doctors the doctors
-     */
-    public void setDoctors(List<Doctor> doctors) {
-        doctorsTable.setItems(FXCollections.observableArrayList(doctors));
-
-        if (!doctors.isEmpty()) {
-            doctorsTable.getSelectionModel().selectFirst();
-        }
-    }
-
-    private void displayDoctor(Doctor doctor) {
-        nameSurname.setText(doctor.getFirstName() + " " + doctor.getLastName());
-        oib.setText(doctor.getOib());
-        role.setText(doctor.getRole() != null ? doctor.getRole().toString() : "");
-        email.setText(doctor.getEmail());
-        salary.setText(String.valueOf(doctor.getSalary()));
-        hospital.setText(doctor.getHospital() != null ? doctor.getHospital().getName() : "");
-        phoneNumber.setText(doctor.getPhoneNumber());
-        address.setText(doctor.getAddress());
-
-        List<Patient> filteredPatients = allPatients.stream().filter(patient -> patient.getAssignedDoctor() != null && Objects.equals(patient.getAssignedDoctor().getId(), doctor.getId())).toList();
-        patientsTable.setItems(FXCollections.observableArrayList(filteredPatients));
-
-        List<Appointment> filteredAppointments = allAppointments.stream().filter(appointment -> Objects.equals(appointment.doctorId(), doctor.getId())).toList();
-        appointmentsTable.setItems(FXCollections.observableArrayList(filteredAppointments));
+    private void reload() {
+        Thread.startVirtualThread(() -> {
+            try {
+                loadData();
+            } catch (SQLException e) {
+                log.error("Failed async reload", e);
+                Platform.runLater(() -> AlertBox.show("SQL Processing Failure", e.getMessage()));
+            }
+        });
     }
 }
