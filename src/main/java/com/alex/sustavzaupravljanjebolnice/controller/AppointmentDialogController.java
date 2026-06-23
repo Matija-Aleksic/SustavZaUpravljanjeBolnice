@@ -4,25 +4,24 @@ import com.alex.sustavzaupravljanjebolnice.entity.Patient;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Appointment;
 import com.alex.sustavzaupravljanjebolnice.entity.staff.Doctor;
 import com.alex.sustavzaupravljanjebolnice.repository.AppointmentRepo;
-import com.alex.sustavzaupravljanjebolnice.util.AlertBox;
-import javafx.collections.FXCollections;
+import com.alex.sustavzaupravljanjebolnice.util.boxes.AlertBox;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Map;
+import java.util.List;
 
 public class AppointmentDialogController {
 
     private final AppointmentRepo appointmentRepo = new AppointmentRepo();
+
     @FXML
     private ComboBox<Doctor> doctorCombo;
     @FXML
@@ -30,105 +29,117 @@ public class AppointmentDialogController {
     @FXML
     private DatePicker datePicker;
     @FXML
-    private TextField timeField; // Format HH:mm
-    private boolean isSaved = false;
+    private TextField timeField;
+
     private Integer currentAppointmentId = null;
+    private boolean saved = false;
 
     @FXML
     public void initialize() {
-        doctorCombo.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(Doctor d) {
-                return d == null ? "" : d.getFirstName() + " " + d.getLastName();
-            }
 
+        doctorCombo.setCellFactory(lv -> new javafx.scene.control.ListCell<>() {
             @Override
-            public Doctor fromString(String s) {
-                return null;
+            protected void updateItem(Doctor item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getFirstName() + " " + item.getLastName());
             }
         });
 
-        patientCombo.setConverter(new StringConverter<>() {
+        doctorCombo.setButtonCell(new javafx.scene.control.ListCell<>() {
             @Override
-            public String toString(Patient p) {
-                return p == null ? "" : p.getFirstName() + " " + p.getLastName() + " (" + p.getOib() + ")";
+            protected void updateItem(Doctor item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getFirstName() + " " + item.getLastName());
             }
+        });
 
+        patientCombo.setCellFactory(lv -> new javafx.scene.control.ListCell<>() {
             @Override
-            public Patient fromString(String s) {
-                return null;
+            protected void updateItem(Patient item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getFirstName() + " " + item.getLastName());
+            }
+        });
+
+        patientCombo.setButtonCell(new javafx.scene.control.ListCell<>() {
+            @Override
+            protected void updateItem(Patient item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getFirstName() + " " + item.getLastName());
             }
         });
     }
 
-    public void setMaps(Map<Integer, Doctor> doctorMap, Map<Integer, Patient> patientMap) {
-        doctorCombo.setItems(FXCollections.observableArrayList(doctorMap.values()));
-        patientCombo.setItems(FXCollections.observableArrayList(patientMap.values()));
+    public void setData(List<Doctor> doctors, List<Patient> patients) {
+        doctorCombo.getItems().setAll(doctors);
+        patientCombo.getItems().setAll(patients);
     }
 
-    public void setAppointment(Appointment appointment) {
-        this.currentAppointmentId = appointment.id();
+    public void setAppointment(Appointment a) {
+        this.currentAppointmentId = a.id();
 
-        doctorCombo.getItems().stream().filter(d -> d.getId() == appointment.doctorId()).findFirst().ifPresent(doctorCombo::setValue);
+        doctorCombo.getItems().stream().filter(d -> d.getId() == a.doctorId()).findFirst().ifPresent(doctorCombo::setValue);
 
-        patientCombo.getItems().stream().filter(p -> p.getId() == appointment.patientId()).findFirst().ifPresent(patientCombo::setValue);
+        patientCombo.getItems().stream().filter(p -> p.getId() == a.patientId()).findFirst().ifPresent(patientCombo::setValue);
 
-        datePicker.setValue(appointment.dateTime().toLocalDate());
-        timeField.setText(appointment.dateTime().toLocalTime().toString());
+        datePicker.setValue(a.dateTime().toLocalDate());
+        timeField.setText(a.dateTime().toLocalTime().toString());
+    }
+
+    public void setNewAppointmentContext() {
+        currentAppointmentId = null;
+        doctorCombo.getSelectionModel().clearSelection();
+        patientCombo.getSelectionModel().clearSelection();
+        datePicker.setValue(null);
+        timeField.clear();
     }
 
     @FXML
     public void handleSave(ActionEvent event) {
-        if (!validateInput()) return;
+
+        if (!validate()) return;
 
         try {
             LocalDate date = datePicker.getValue();
             LocalTime time = LocalTime.parse(timeField.getText().trim());
-            LocalDateTime dateTime = LocalDateTime.of(date, time);
 
-            int doctorId = doctorCombo.getValue().getId();
-            int patientId = patientCombo.getValue().getId();
-
-            Appointment newAppointment = new Appointment(currentAppointmentId == null ? 0 : currentAppointmentId, doctorId, patientId, dateTime);
+            Appointment a = new Appointment(currentAppointmentId == null ? 0 : currentAppointmentId, doctorCombo.getValue().getId(), patientCombo.getValue().getId(), LocalDateTime.of(date, time));
 
             if (currentAppointmentId == null) {
-                appointmentRepo.save(newAppointment);
+                appointmentRepo.save(a);
             } else {
-                appointmentRepo.update(newAppointment);
+                appointmentRepo.update(a);
             }
 
-            isSaved = true;
-            closeStage();
+            saved = true;
+            close();
 
         } catch (SQLException e) {
-            showAlert("Database Error", "Failed to save appointment: " + e.getMessage());
-        } catch (Exception _) {
-            showAlert("Format Error", "Please ensure the time is in HH:mm format (e.g., 14:30)");
+            AlertBox.show("Database Error", e.getMessage());
+        } catch (Exception e) {
+            AlertBox.show("Format Error", "Use HH:mm format (e.g. 14:30)");
         }
     }
 
     @FXML
     public void handleCancel(ActionEvent event) {
-        closeStage();
+        close();
     }
 
     public boolean isSaved() {
-        return isSaved;
+        return saved;
     }
 
-    private boolean validateInput() {
+    private boolean validate() {
         if (doctorCombo.getValue() == null || patientCombo.getValue() == null || datePicker.getValue() == null || timeField.getText().isBlank()) {
-            showAlert("Validation Error", "All fields must be filled out.");
+
+            AlertBox.show("Validation Error", "All fields are required.");
             return false;
         }
         return true;
     }
 
-    private void showAlert(String title, String content) {
-        AlertBox.show(title, content);
-    }
-
-    private void closeStage() {
+    private void close() {
         Stage stage = (Stage) doctorCombo.getScene().getWindow();
         stage.close();
     }

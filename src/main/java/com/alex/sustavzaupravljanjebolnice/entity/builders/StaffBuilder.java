@@ -1,6 +1,7 @@
 package com.alex.sustavzaupravljanjebolnice.entity.builders;
 
 import com.alex.sustavzaupravljanjebolnice.entity.StaffRoles;
+import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
 import com.alex.sustavzaupravljanjebolnice.entity.staff.Staff;
 
 import java.time.LocalDate;
@@ -18,6 +19,7 @@ public class StaffBuilder {
     private StaffRoles role;
     private String email;
     private double salary;
+    private Hospital hospital;
 
     /**
      * Create staff staff.
@@ -188,11 +190,13 @@ public class StaffBuilder {
         return this;
     }
 
-    public Long getHospitalId() {
-        return hospitalId;
+
+    public Hospital getHospital() {
+        return hospital;
     }
 
-    public void setHospitalId(Long hospitalId) {
-        this.hospitalId = hospitalId;
+    public StaffBuilder setHospital(Hospital hospital) {
+        this.hospital = hospital;
+        return this;
     }
 }

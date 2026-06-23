@@ -1,5 +1,6 @@
 package com.alex.sustavzaupravljanjebolnice.util;
 
+import com.alex.sustavzaupravljanjebolnice.util.boxes.AlertBox;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

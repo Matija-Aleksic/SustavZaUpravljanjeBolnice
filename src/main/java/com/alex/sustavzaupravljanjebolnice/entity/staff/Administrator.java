@@ -25,7 +25,6 @@ public final class Administrator extends Staff {
      */
     public Administrator(AdministratorBuilder administratorBuilder) {
         super(administratorBuilder);
-        this.hospitalId = administratorBuilder.getHospitalId();
         logger.info("Administrator Builder created");
     }
 

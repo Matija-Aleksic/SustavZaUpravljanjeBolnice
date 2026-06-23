@@ -1,4 +1,4 @@
-package com.alex.sustavzaupravljanjebolnice.util;
+package com.alex.sustavzaupravljanjebolnice.util.boxes;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;

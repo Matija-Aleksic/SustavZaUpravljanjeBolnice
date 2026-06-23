@@ -3,6 +3,7 @@ package com.alex.sustavzaupravljanjebolnice.entity.staff;
 import com.alex.sustavzaupravljanjebolnice.entity.Person;
 import com.alex.sustavzaupravljanjebolnice.entity.StaffRoles;
 import com.alex.sustavzaupravljanjebolnice.entity.builders.StaffBuilder;
+import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
 import com.alex.sustavzaupravljanjebolnice.entity.interfaces.Salaried;
 
 /**
@@ -21,7 +22,7 @@ public sealed class Staff extends Person implements Salaried permits Administrat
      * The Salary.
      */
     protected double salary;
-    protected Long hospitalId;
+    protected Hospital hospital;
 
 
     /**
@@ -99,11 +100,11 @@ public sealed class Staff extends Person implements Salaried permits Administrat
         super.id = Math.toIntExact(aLong);
     }
 
-    public Long getHospitalId() {
-        return hospitalId;
+    public Hospital getHospital() {
+        return hospital;
     }
 
-    public void setHospitalId(Long hospitalId) {
-        this.hospitalId = hospitalId;
+    public void setHospital(Hospital hospital) {
+        this.hospital = hospital;
     }
 }
