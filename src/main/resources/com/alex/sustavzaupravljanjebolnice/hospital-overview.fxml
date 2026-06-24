@@ -3,20 +3,18 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.*?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1"
-            xmlns="http://javafx.com/javafx/21" stylesheets="@hospital-styles.css"
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" stylesheets="@hospital-styles.css" xmlns="http://javafx.com/javafx/26"
             fx:controller="com.alex.sustavzaupravljanjebolnice.controller.HospitalOverviewController">
 
-    <BorderPane prefWidth="1294.0" prefHeight="940.0"
-                AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
-                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+    <BorderPane prefHeight="940.0" prefWidth="1294.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
         <top>
             <fx:include source="menu.fxml"/>
         </top>
 
         <left>
-            <VBox spacing="5.0" prefWidth="320.0">
+            <VBox prefWidth="320.0" spacing="5.0">
                 <styleClass>
                     <String fx:value="sidebar"/>
                     <String fx:value="panel-muted"/>
@@ -27,9 +25,9 @@
                         <String fx:value="subtitle"/>
                     </styleClass>
                 </Label>
-                <TableView fx:id="hospitalsTable" VBox.vgrow="ALWAYS">
+                <TableView fx:id="hospitalsTable" prefHeight="882.0" prefWidth="319.0" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="hospitalNameColumn" text="Hospital Name" prefWidth="298.0"/>
+                        <TableColumn fx:id="hospitalNameColumn" prefWidth="318.3999939084053" text="Hospital Name"/>
                     </columns>
                 </TableView>
             </VBox>
@@ -80,10 +78,11 @@
                             <String fx:value="subtitle"/>
                         </styleClass>
                     </Label>
-                    <TableView fx:id="departmentsTable" prefHeight="220.0">
+                    <TableView fx:id="departmentsTable" prefHeight="220.0" prefWidth="947.0">
                         <columns>
                             <TableColumn fx:id="departmentIdColumn" text="ID"/>
-                            <TableColumn fx:id="departmentNameColumn" text="Department Name" prefWidth="400.0"/>
+                            <TableColumn fx:id="departmentNameColumn" prefWidth="893.6000122070312"
+                                         text="Department Name"/>
                         </columns>
                     </TableView>
                 </VBox>
@@ -97,10 +96,12 @@
                                 <String fx:value="subtitle"/>
                             </styleClass>
                         </Label>
-                        <TableView fx:id="doctorsTable" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="doctorsTable" prefHeight="522.0" prefWidth="414.0" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="doctorNameColumn" text="Doctor Name" prefWidth="220.0"/>
-                                <TableColumn fx:id="doctorEmailColumn" text="Email Address" prefWidth="230.0"/>
+                                <TableColumn fx:id="doctorNameColumn" prefWidth="240.00006103515625"
+                                             text="Doctor Name"/>
+                                <TableColumn fx:id="doctorEmailColumn" minWidth="0.0" prefWidth="219.19996337890626"
+                                             text="Email Address"/>
                             </columns>
                         </TableView>
                     </VBox>
@@ -112,10 +113,10 @@
                                 <String fx:value="subtitle"/>
                             </styleClass>
                         </Label>
-                        <TableView fx:id="nursesTable" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="nursesTable" prefHeight="522.0" prefWidth="446.0" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="nurseNameColumn" text="Nurse Name" prefWidth="220.0"/>
-                                <TableColumn fx:id="nurseEmailColumn" text="Email Address" prefWidth="230.0"/>
+                                <TableColumn fx:id="nurseNameColumn" prefWidth="242.39996945858002" text="Nurse Name"/>
+                                <TableColumn fx:id="nurseEmailColumn" prefWidth="248.0" text="Email Address"/>
                             </columns>
                         </TableView>
                     </VBox>

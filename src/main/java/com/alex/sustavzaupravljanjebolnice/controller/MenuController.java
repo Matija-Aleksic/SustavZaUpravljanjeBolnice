@@ -24,7 +24,7 @@ public class MenuController {
      */
     @FXML
     public void handleHospital(ActionEvent event) {
-        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/hospital-overview.fxml", "Hospital Overview", 800);
+        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/hospital-overview.fxml", "Hospital Overview", 1000);
     }
 
     /**
@@ -32,7 +32,7 @@ public class MenuController {
      */
     @FXML
     public void handleDoctors(ActionEvent event) {
-        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/doctor-overview.fxml", "Doctors Overview", 900);
+        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/doctor-overview.fxml", "Doctors Overview", 1000);
     }
 
     /**
@@ -40,7 +40,7 @@ public class MenuController {
      */
     @FXML
     public void handleNurses(ActionEvent event) {
-        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/nurse-view.fxml", "Nurses Overview", 900);
+        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/nurse-view.fxml", "Nurses Overview", 1000);
     }
 
     /**
@@ -77,7 +77,7 @@ public class MenuController {
      */
     @FXML
     public void handleLogs(ActionEvent event) {
-        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/activity-log-view.fxml", "Activity Logs", 800);
+        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/activity-log-view.fxml", "Activity Logs", 1000);
     }
 
     /**

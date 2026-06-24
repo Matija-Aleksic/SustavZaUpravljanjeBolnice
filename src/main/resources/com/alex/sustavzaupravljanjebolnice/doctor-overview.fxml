@@ -5,47 +5,37 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.String?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1"
-            xmlns="http://javafx.com/javafx/21"
-            stylesheets="@hospital-styles.css"
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" stylesheets="@hospital-styles.css" xmlns="http://javafx.com/javafx/26"
             fx:controller="com.alex.sustavzaupravljanjebolnice.controller.DoctorViewController">
 
     <left>
-        <VBox spacing="10"
-              minWidth="280"
-              maxWidth="320"
-              prefWidth="300"
-              BorderPane.alignment="CENTER">
+        <VBox maxWidth="320" minWidth="280" prefWidth="300" spacing="10" BorderPane.alignment="CENTER">
 
-            <TableView fx:id="doctorsTable"
-                       VBox.vgrow="ALWAYS"
-                       maxWidth="Infinity">
+            <TableView fx:id="doctorsTable" maxWidth="Infinity" VBox.vgrow="ALWAYS">
 
                 <columns>
-                    <TableColumn fx:id="doctorColumn"
-                                 text="Doctors"
-                                 prefWidth="300"/>
+                    <TableColumn fx:id="doctorColumn" prefWidth="300" text="Doctors"/>
                 </columns>
             </TableView>
 
             <HBox alignment="CENTER" spacing="10">
                 <padding>
-                    <Insets top="5" right="5" bottom="10" left="5"/>
+                    <Insets bottom="10" left="5" right="5" top="5"/>
                 </padding>
 
-                <Button text="Add" onAction="#handleAddDoctor" prefWidth="90">
+                <Button onAction="#handleAddDoctor" prefWidth="90" text="Add">
                     <styleClass>
                         <String fx:value="btn-primary"/>
                     </styleClass>
                 </Button>
 
-                <Button text="Edit" onAction="#handleEditDoctor" prefWidth="90">
+                <Button onAction="#handleEditDoctor" prefWidth="90" text="Edit">
                     <styleClass>
                         <String fx:value="btn-warning"/>
                     </styleClass>
                 </Button>
 
-                <Button text="Delete" onAction="#handleDeleteDoctor" prefWidth="90">
+                <Button onAction="#handleDeleteDoctor" prefWidth="90" text="Delete">
                     <styleClass>
                         <String fx:value="btn-danger"/>
                     </styleClass>
@@ -60,9 +50,7 @@
     </top>
 
     <center>
-        <VBox spacing="10"
-              BorderPane.alignment="CENTER"
-              maxWidth="Infinity">
+        <VBox maxWidth="Infinity" spacing="10" BorderPane.alignment="CENTER">
 
             <GridPane maxWidth="Infinity">
                 <columnConstraints>
@@ -80,56 +68,41 @@
                     <RowConstraints vgrow="ALWAYS"/>
                 </rowConstraints>
 
-                <ImageView fx:id="picture"
-                           fitHeight="120"
-                           fitWidth="120"
-                           preserveRatio="true"
-                           GridPane.rowIndex="1"
-                           GridPane.columnIndex="0"/>
+                <ImageView fx:id="picture" fitHeight="120" fitWidth="120" preserveRatio="true" GridPane.columnIndex="0"
+                           GridPane.rowIndex="1"/>
 
-                <Label fx:id="nameSurname" text="Name Surname"
-                       GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <Label fx:id="nameSurname" text="Name Surname" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-                <Label fx:id="oib" text="OIB"
-                       GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <Label fx:id="oib" text="OIB" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
-                <Label fx:id="role" text="Role"
-                       GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                <Label fx:id="role" text="Role" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
 
-                <Label fx:id="email" text="Email"
-                       GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                <Label fx:id="email" text="Email" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
 
-                <Label fx:id="salary" text="Salary"
-                       GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+                <Label fx:id="salary" text="Salary" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
 
-                <Label fx:id="hospital" text="Hospital"
-                       GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+                <Label fx:id="hospital" text="Hospital" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
 
-                <Label fx:id="phoneNumber" text="Phone Number"
-                       GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+                <Label fx:id="phoneNumber" text="Phone Number" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
 
-                <Label fx:id="address" text="Address"
-                       GridPane.columnIndex="4" GridPane.rowIndex="2"/>
+                <Label fx:id="address" text="Address" GridPane.columnIndex="4" GridPane.rowIndex="2"/>
 
             </GridPane>
 
-            <TableView fx:id="patientsTable"
-                       VBox.vgrow="ALWAYS"
-                       maxWidth="Infinity">
+            <TableView fx:id="patientsTable" maxWidth="Infinity" VBox.vgrow="ALWAYS">
 
                 <columns>
-                    <TableColumn fx:id="patientNameColumn" text="Patient"/>
-                    <TableColumn fx:id="patientOibColumn" text="OIB"/>
+                    <TableColumn fx:id="patientNameColumn" prefWidth="187.20001220703125" text="Patient"/>
+                    <TableColumn fx:id="patientOibColumn" minWidth="0.0" prefWidth="223.20001220703125" text="OIB"/>
                 </columns>
             </TableView>
 
-            <TableView fx:id="appointmentsTable"
-                       VBox.vgrow="ALWAYS"
-                       maxWidth="Infinity">
+            <TableView fx:id="appointmentsTable" maxWidth="Infinity" VBox.vgrow="ALWAYS">
 
                 <columns>
-                    <TableColumn fx:id="appointmentDateColumn" text="Appointment"/>
-                    <TableColumn fx:id="appointmentPatientColumn" text="Patient"/>
+                    <TableColumn fx:id="appointmentPatientColumn" prefWidth="128.79998779296875" text="Patient"/>
+                    <TableColumn fx:id="appointmentDateColumn" minWidth="5.5999755859375" prefWidth="265.5999755859375"
+                                 text="Appointment"/>
                 </columns>
             </TableView>
 

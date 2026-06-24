@@ -11,10 +11,7 @@ import com.alex.sustavzaupravljanjebolnice.util.UserSession;
 import com.alex.sustavzaupravljanjebolnice.util.boxes.AlertBox;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -22,11 +19,9 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 public class LoginController {
@@ -154,15 +149,14 @@ public class LoginController {
 
     private void navigateTo(ActionEvent event, String fxmlPath, String title) {
         try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
-
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle(title);
+
+            com.alex.sustavzaupravljanjebolnice.util.WindowManager.switchScene(stage, fxmlPath, title, 1400, 850);
+
             stage.centerOnScreen();
             stage.show();
 
-        } catch (IOException _) {
+        } catch (Exception _) {
             logger.severe("Failed to transition scenes to fxml path: " + fxmlPath);
             AlertBox.show("Navigation Error", "Could not load screen: " + fxmlPath);
         }

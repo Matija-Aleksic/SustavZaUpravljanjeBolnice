@@ -50,7 +50,7 @@
     -fx-space-xl: 24px;
     -fx-space-2xl: 32px;
 
-    /* Apply root styling */
+    /* Apply root styling (Padding removed to fix menu disconnection) */
     -fx-background-color: -fx-bg-primary;
     -fx-text-fill: -fx-text-primary;
     -fx-base: -fx-bg-secondary;

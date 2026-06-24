@@ -3,9 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1"
-            xmlns="http://javafx.com/javafx/21"
-            stylesheets="@hospital-styles.css"
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="1013.0" prefWidth="1448.0"
+            stylesheets="@hospital-styles.css" xmlns="http://javafx.com/javafx/26"
             fx:controller="com.alex.sustavzaupravljanjebolnice.controller.NurseViewController">
 
     <!-- TOP MENU -->
@@ -15,35 +14,29 @@
 
     <!-- LEFT SIDEBAR -->
     <left>
-        <VBox spacing="10"
-              minWidth="280"
-              maxWidth="320"
-              prefWidth="300">
+        <VBox maxWidth="320" minWidth="280" prefWidth="300" spacing="10">
 
-            <TableView fx:id="nursesTable"
-                       VBox.vgrow="ALWAYS"
-                       maxWidth="Infinity">
+            <TableView fx:id="nursesTable" maxWidth="Infinity" VBox.vgrow="ALWAYS">
 
                 <columns>
-                    <TableColumn fx:id="nurseColumn"
-                                 text="Nurses"/>
+                    <TableColumn fx:id="nurseColumn" prefWidth="299.1999877691269" text="Nurses"/>
                 </columns>
             </TableView>
 
-            <HBox spacing="6" alignment="CENTER">
-                <Button text="Add Nurse" onAction="#handleAddNurse">
+            <HBox alignment="CENTER" spacing="6">
+                <Button onAction="#handleAddNurse" text="Add Nurse">
                     <styleClass>
                         <String fx:value="btn-success"/>
                     </styleClass>
                 </Button>
 
-                <Button text="Edit" onAction="#handleEditNurse">
+                <Button onAction="#handleEditNurse" text="Edit">
                     <styleClass>
                         <String fx:value="btn-warning"/>
                     </styleClass>
                 </Button>
 
-                <Button text="Delete" onAction="#handleDeleteNurse">
+                <Button onAction="#handleDeleteNurse" text="Delete">
                     <styleClass>
                         <String fx:value="btn-danger"/>
                     </styleClass>
@@ -55,12 +48,10 @@
 
     <!-- CENTER -->
     <center>
-        <VBox spacing="15"
-              maxWidth="Infinity">
+        <VBox maxWidth="Infinity" spacing="15">
 
             <!-- SUMMARY -->
-            <HBox spacing="25"
-                  maxWidth="Infinity">
+            <HBox maxWidth="Infinity" spacing="25">
 
                 <VBox spacing="5">
                     <Label text="Name:"/>
@@ -85,24 +76,24 @@
             </HBox>
 
             <!-- PATIENTS HEADER -->
-            <HBox spacing="10" alignment="CENTER_LEFT">
+            <HBox alignment="CENTER_LEFT" spacing="10">
                 <Label text="Patients in Assigned Wards"/>
                 <Region HBox.hgrow="ALWAYS"/>
 
                 <HBox spacing="8">
-                    <Button text="Add Patient" onAction="#handleAddPatient">
+                    <Button onAction="#handleAddPatient" text="Add Patient">
                         <styleClass>
                             <String fx:value="btn-success"/>
                         </styleClass>
                     </Button>
 
-                    <Button text="Edit Patient" onAction="#handleEditPatient">
+                    <Button onAction="#handleEditPatient" text="Edit Patient">
                         <styleClass>
                             <String fx:value="btn-warning"/>
                         </styleClass>
                     </Button>
 
-                    <Button text="Discharge Patient" onAction="#handleDeletePatient">
+                    <Button onAction="#handleDeletePatient" text="Discharge Patient">
                         <styleClass>
                             <String fx:value="btn-danger"/>
                         </styleClass>
@@ -111,36 +102,34 @@
             </HBox>
 
             <!-- PATIENT TABLE -->
-            <TableView fx:id="patientsTable"
-                       VBox.vgrow="ALWAYS"
-                       maxWidth="Infinity">
+            <TableView fx:id="patientsTable" maxWidth="Infinity" VBox.vgrow="ALWAYS">
 
                 <columns>
-                    <TableColumn fx:id="patientNameColumn" text="Patient"/>
-                    <TableColumn fx:id="patientOibColumn" text="OIB"/>
-                    <TableColumn fx:id="patientWardColumn" text="Ward"/>
+                    <TableColumn fx:id="patientNameColumn" prefWidth="247.19998168945312" text="Patient"/>
+                    <TableColumn fx:id="patientOibColumn" minWidth="0.0" prefWidth="232.7999267578125" text="OIB"/>
+                    <TableColumn fx:id="patientWardColumn" prefWidth="348.0" text="Ward"/>
                 </columns>
             </TableView>
 
             <!-- PRESCRIPTIONS HEADER -->
-            <HBox spacing="10" alignment="CENTER_LEFT">
+            <HBox alignment="CENTER_LEFT" spacing="10">
                 <Label text="Prescriptions for Patients"/>
                 <Region HBox.hgrow="ALWAYS"/>
 
                 <HBox spacing="8">
-                    <Button text="Add Prescription" onAction="#handleAddPrescription">
+                    <Button onAction="#handleAddPrescription" text="Add Prescription">
                         <styleClass>
                             <String fx:value="btn-success"/>
                         </styleClass>
                     </Button>
 
-                    <Button text="Modify Details" onAction="#handleEditPrescription">
+                    <Button onAction="#handleEditPrescription" text="Modify Details">
                         <styleClass>
                             <String fx:value="btn-warning"/>
                         </styleClass>
                     </Button>
 
-                    <Button text="Revoke" onAction="#handleDeletePrescription">
+                    <Button onAction="#handleDeletePrescription" text="Revoke">
                         <styleClass>
                             <String fx:value="btn-danger"/>
                         </styleClass>
@@ -149,14 +138,12 @@
             </HBox>
 
             <!-- PRESCRIPTION TABLE -->
-            <TableView fx:id="prescriptionsTable"
-                       VBox.vgrow="ALWAYS"
-                       maxWidth="Infinity">
+            <TableView fx:id="prescriptionsTable" maxWidth="Infinity" VBox.vgrow="ALWAYS">
 
                 <columns>
-                    <TableColumn fx:id="prescriptionNameColumn" text="Prescription"/>
-                    <TableColumn fx:id="prescriptionPatientColumn" text="Patient"/>
-                    <TableColumn fx:id="prescriptionDurationColumn" text="Duration"/>
+                    <TableColumn fx:id="prescriptionNameColumn" prefWidth="236.80001831054688" text="Prescription"/>
+                    <TableColumn fx:id="prescriptionPatientColumn" prefWidth="165.59991455078125" text="Patient"/>
+                    <TableColumn fx:id="prescriptionDurationColumn" prefWidth="309.5999755859375" text="Duration"/>
                 </columns>
             </TableView>
 
