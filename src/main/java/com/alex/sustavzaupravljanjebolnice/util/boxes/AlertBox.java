@@ -3,30 +3,28 @@ package com.alex.sustavzaupravljanjebolnice.util.boxes;
 import javafx.scene.control.Alert;
 
 /**
- * The type Alert box.
- *
- * @param <K> the type parameter
- * @param <V> the type parameter
+ * The type Alert box utility.
  */
-public class AlertBox<K, V> {
+public final class AlertBox {
 
-    private AlertBox(K title, V content) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(String.valueOf(title));
-        alert.setHeaderText(null);
-        alert.setContentText(String.valueOf(content));
-        alert.showAndWait();
+    // Defeat instantiation by throwing an exception if reflection tries to force it
+    private AlertBox() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
     /**
-     * Show.
+     * Show a warning alert box.
      *
-     * @param <K>     the type parameter
-     * @param <V>     the type parameter
+     * @param <K>     the type parameter for the title
+     * @param <V>     the type parameter for the content
      * @param title   the title
      * @param content the content
      */
     public static <K, V> void show(K title, V content) {
-        new AlertBox<>(title, content);
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title != null ? String.valueOf(title) : "Warning");
+        alert.setHeaderText(null);
+        alert.setContentText(content != null ? String.valueOf(content) : "");
+        alert.showAndWait();
     }
 }
