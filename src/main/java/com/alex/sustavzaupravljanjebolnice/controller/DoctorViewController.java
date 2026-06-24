@@ -149,7 +149,7 @@ public class DoctorViewController {
 
     @FXML
     private void handleAddDoctor() {
-        WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/doctor-dialog.fxml", "Add New Doctor Profile", DoctorDialogController::setNewDoctorContext, c -> {
+        WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/doctor-dialog.fxml", "Add New Doctor Profile", DoctorDialogController::setNewDoctorContext, c -> {
             if (c.isSaved()) reload();
         });
     }
@@ -162,7 +162,7 @@ public class DoctorViewController {
             return;
         }
 
-        WindowManager.<DoctorDialogController>showModal("/com/alex/sustavzaupravljanjebolnice/doctor-dialog.fxml", "Edit Doctor Profile", c -> c.setDoctor(selected), c -> {
+        WindowManager.<DoctorDialogController>showModal("/com/alex/sustavzaupravljanjebolnice/popup/doctor-dialog.fxml", "Edit Doctor Profile", c -> c.setDoctor(selected), c -> {
             if (c.isSaved()) reload();
         });
     }

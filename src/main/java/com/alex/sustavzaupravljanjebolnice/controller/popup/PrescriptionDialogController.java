@@ -15,6 +15,7 @@ import java.sql.SQLException;
 public class PrescriptionDialogController {
 
     private final PrescriptionRepo prescriptionRepo = new PrescriptionRepo();
+
     @FXML
     private TextField txtId;
     @FXML
@@ -29,8 +30,16 @@ public class PrescriptionDialogController {
     private DatePicker dpStartDate;
     @FXML
     private DatePicker dpEndDate;
+
     private Prescription existingPrescription = null;
     private boolean operationSaved = false;
+
+    /**
+     * Bridges the call from PatientPrescriptionHelper.
+     */
+    public void setPrescription(Prescription prescription) {
+        setPrescriptionToEdit(prescription);
+    }
 
     public void setPrescriptionToEdit(Prescription prescription) {
         this.existingPrescription = prescription;
@@ -84,8 +93,8 @@ public class PrescriptionDialogController {
 
         } catch (NumberFormatException _) {
             AlertBox.show("Input Format Misalignment", "Doctor ID and Patient ID must be written as valid whole numeric parameters.");
-        } catch (SQLException _) {
-            AlertBox.show("Persistence Database Exception", "coudnt do it");
+        } catch (SQLException e) {
+            AlertBox.show("Persistence Database Exception", "Could not persist prescription transaction to database: " + e.getMessage());
         }
     }
 
@@ -98,14 +107,18 @@ public class PrescriptionDialogController {
         return operationSaved;
     }
 
+    public boolean isSaved() {
+        return this.operationSaved;
+    }
+
     private boolean isInputInvalid() {
-        return txtId.getText().isBlank() || txtName.getText().isBlank() ||
-                txtDoctorId.getText().isBlank() || txtPatientId.getText().isBlank() ||
-                dpStartDate.getValue() == null || dpEndDate.getValue() == null;
+        return txtId.getText().isBlank() || txtName.getText().isBlank() || txtDoctorId.getText().isBlank() || txtPatientId.getText().isBlank() || dpStartDate.getValue() == null || dpEndDate.getValue() == null;
     }
 
     private void closeWindow() {
         Stage stage = (Stage) txtId.getScene().getWindow();
-        stage.close();
+        if (stage != null) {
+            stage.close();
+        }
     }
 }

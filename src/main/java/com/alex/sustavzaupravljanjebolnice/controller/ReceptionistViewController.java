@@ -99,7 +99,7 @@ public class ReceptionistViewController {
     @FXML
     private void handleAddAppointment() {
 
-        WindowManager.<AppointmentDialogController>showModal("/com/alex/sustavzaupravljanjebolnice/appointment-dialog.fxml", "Add Appointment", c -> {
+        WindowManager.<AppointmentDialogController>showModal("/com/alex/sustavzaupravljanjebolnice/popup/appointment-dialog.fxml", "Add Appointment", c -> {
             c.setData(doctors, patients);
             c.setNewAppointmentContext();
         }, c -> {
@@ -117,7 +117,7 @@ public class ReceptionistViewController {
             return;
         }
 
-        WindowManager.<AppointmentDialogController>showModal("/com/alex/sustavzaupravljanjebolnice/appointment-dialog.fxml", "Edit Appointment", c -> {
+        WindowManager.<AppointmentDialogController>showModal("/com/alex/sustavzaupravljanjebolnice/popup/appointment-dialog.fxml", "Edit Appointment", c -> {
             c.setData(doctors, patients);
             c.setAppointment(selected);
         }, c -> {

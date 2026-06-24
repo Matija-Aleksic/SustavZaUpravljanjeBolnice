@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Font?>
 <?import java.lang.String?>
 <VBox xmlns:fx="http://javafx.com/fxml/1" prefWidth="480.0" prefHeight="550.0" spacing="20.0"
-      xmlns="http://javafx.com/javafx/21" stylesheets="@hospital-styles.css"
+      xmlns="http://javafx.com/javafx/21" stylesheets="@../hospital-styles.css"
       fx:controller="com.alex.sustavzaupravljanjebolnice.controller.popup.PrescriptionDialogController">
     <padding>
         <Insets bottom="25.0" left="25.0" right="25.0" top="25.0"/>

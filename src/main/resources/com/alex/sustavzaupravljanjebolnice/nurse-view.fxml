@@ -3,54 +3,60 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="1013.0" prefWidth="1448.0"
-            stylesheets="@hospital-styles.css" xmlns="http://javafx.com/javafx/26"
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            prefHeight="1013.0"
+            prefWidth="1448.0"
+            stylesheets="@hospital-styles.css"
+            xmlns="http://javafx.com/javafx/26"
             fx:controller="com.alex.sustavzaupravljanjebolnice.controller.NurseViewController">
 
-    <!-- TOP MENU -->
     <top>
         <fx:include source="menu.fxml"/>
     </top>
 
-    <!-- LEFT SIDEBAR -->
     <left>
         <VBox maxWidth="320" minWidth="280" prefWidth="300" spacing="10">
 
             <TableView fx:id="nursesTable" maxWidth="Infinity" VBox.vgrow="ALWAYS">
-
                 <columns>
                     <TableColumn fx:id="nurseColumn" prefWidth="299.1999877691269" text="Nurses"/>
                 </columns>
             </TableView>
 
             <HBox alignment="CENTER" spacing="6">
-                <Button onAction="#handleAddNurse" text="Add Nurse">
+
+                <Button fx:id="addNurseBtn"
+                        onAction="#handleAddNurse"
+                        text="Add Nurse">
                     <styleClass>
                         <String fx:value="btn-success"/>
                     </styleClass>
                 </Button>
 
-                <Button onAction="#handleEditNurse" text="Edit">
+                <Button fx:id="editNurseBtn"
+                        onAction="#handleEditNurse"
+                        text="Edit">
                     <styleClass>
                         <String fx:value="btn-warning"/>
                     </styleClass>
                 </Button>
 
-                <Button onAction="#handleDeleteNurse" text="Delete">
+                <Button fx:id="deleteNurseBtn"
+                        onAction="#handleDeleteNurse"
+                        text="Delete">
                     <styleClass>
                         <String fx:value="btn-danger"/>
                     </styleClass>
                 </Button>
+
             </HBox>
 
         </VBox>
     </left>
 
-    <!-- CENTER -->
     <center>
         <VBox maxWidth="Infinity" spacing="15">
 
-            <!-- SUMMARY -->
             <HBox maxWidth="Infinity" spacing="25">
 
                 <VBox spacing="5">
@@ -75,7 +81,6 @@
 
             </HBox>
 
-            <!-- PATIENTS HEADER -->
             <HBox alignment="CENTER_LEFT" spacing="10">
                 <Label text="Patients in Assigned Wards"/>
                 <Region HBox.hgrow="ALWAYS"/>
@@ -101,9 +106,7 @@
                 </HBox>
             </HBox>
 
-            <!-- PATIENT TABLE -->
             <TableView fx:id="patientsTable" maxWidth="Infinity" VBox.vgrow="ALWAYS">
-
                 <columns>
                     <TableColumn fx:id="patientNameColumn" prefWidth="247.19998168945312" text="Patient"/>
                     <TableColumn fx:id="patientOibColumn" minWidth="0.0" prefWidth="232.7999267578125" text="OIB"/>
@@ -111,7 +114,6 @@
                 </columns>
             </TableView>
 
-            <!-- PRESCRIPTIONS HEADER -->
             <HBox alignment="CENTER_LEFT" spacing="10">
                 <Label text="Prescriptions for Patients"/>
                 <Region HBox.hgrow="ALWAYS"/>
@@ -137,9 +139,7 @@
                 </HBox>
             </HBox>
 
-            <!-- PRESCRIPTION TABLE -->
             <TableView fx:id="prescriptionsTable" maxWidth="Infinity" VBox.vgrow="ALWAYS">
-
                 <columns>
                     <TableColumn fx:id="prescriptionNameColumn" prefWidth="236.80001831054688" text="Prescription"/>
                     <TableColumn fx:id="prescriptionPatientColumn" prefWidth="165.59991455078125" text="Patient"/>
