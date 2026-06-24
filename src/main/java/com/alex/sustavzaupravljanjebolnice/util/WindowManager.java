@@ -15,6 +15,9 @@ import java.util.function.Consumer;
  */
 public class WindowManager {
 
+    private WindowManager() {
+    }
+
     /**
      * Switches the main scene on a given stage.
      */
@@ -30,8 +33,6 @@ public class WindowManager {
         }
     }
 
-    private WindowManager() {
-    }
     /**
      * Opens a modal dialog, allowing data injection before showing, and data retrieval after closing.
      *

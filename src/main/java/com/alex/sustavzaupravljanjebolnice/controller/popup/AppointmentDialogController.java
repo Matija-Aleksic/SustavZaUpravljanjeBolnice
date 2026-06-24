@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 
 public class AppointmentDialogController {
 
@@ -75,12 +76,14 @@ public class AppointmentDialogController {
         patientCombo.getItems().setAll(patients);
     }
 
+
     public void setAppointment(Appointment a) {
+
         this.currentAppointmentId = a.id();
 
-        doctorCombo.getItems().stream().filter(d -> d.getId() == a.doctorId()).findFirst().ifPresent(doctorCombo::setValue);
+        doctorCombo.getItems().stream().filter(d -> Objects.equals(d.getId(), a.doctorId())).findFirst().ifPresent(doctorCombo::setValue);
 
-        patientCombo.getItems().stream().filter(p -> p.getId() == a.patientId()).findFirst().ifPresent(patientCombo::setValue);
+        patientCombo.getItems().stream().filter(p -> Objects.equals(p.getId(), a.patientId())).findFirst().ifPresent(patientCombo::setValue);
 
         datePicker.setValue(a.dateTime().toLocalDate());
         timeField.setText(a.dateTime().toLocalTime().toString());

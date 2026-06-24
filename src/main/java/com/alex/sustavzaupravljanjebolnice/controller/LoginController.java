@@ -23,27 +23,32 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
 public class LoginController {
-    private final Logger logger = Logger.getLogger(String.valueOf(LoginController.class));
 
-    @FXML
-    private TextField usernameTextField;
-    @FXML
-    private PasswordField passwordTextField;
-    @FXML
-    private Button loginButton;
-    @FXML
-    private Label loginMessageLabel;
+    private final Logger logger = Logger.getLogger(LoginController.class.getName());
 
     private final DoctorRepo doctorRepo = new DoctorRepo();
     private final NurseRepo nurseRepo = new NurseRepo();
     private final AdminRepo adminRepo = new AdminRepo();
     private final ReceptionistRepo receptionistRepo = new ReceptionistRepo();
+
+    @FXML
+    private TextField usernameTextField;
+
+    @FXML
+    private PasswordField passwordTextField;
+
+    @FXML
+    private Button loginButton;
+
+    @FXML
+    private Label loginMessageLabel;
 
     public void initialize() {
         usernameTextField.setText("Alice Smith");
@@ -52,82 +57,113 @@ public class LoginController {
 
     @FXML
     public void login(ActionEvent event) throws Exception {
+
         String username = usernameTextField.getText().trim();
         String password = passwordTextField.getText();
 
-        if (username.isBlank() || password.isBlank()) {
-            loginMessageLabel.setText("Please enter a username and password.");
+        if (!validateInput(username, password)) {
             return;
         }
 
-        File credentialStorage = new File("passwords.properties");
-        PasswordManager pm = new PasswordManager(credentialStorage);
+        PasswordManager pm = new PasswordManager(new File("passwords.properties"));
 
-        if (pm.verifyPassword(username, password)) {
+        if (!pm.verifyPassword(username, password)) {
+            handleInvalidLogin();
+            return;
+        }
 
-            List<Staff> staffList = new ArrayList<>();
+        Staff loggedInStaff = findStaffByUsername(username);
+
+        if (loggedInStaff == null) {
+            handleMissingProfile();
+            return;
+        }
+
+        completeLogin(event, username, loggedInStaff);
+    }
+
+    private boolean validateInput(String username, String password) {
+
+        if (username.isBlank() || password.isBlank()) {
+            loginMessageLabel.setText("Please enter a username and password.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void handleInvalidLogin() {
+        AlertBox.show("Login Failed", "Invalid username or password.");
+        loginMessageLabel.setText("Invalid username or password.");
+    }
+
+    private void handleMissingProfile() {
+        AlertBox.show("Login Error", "Credentials verified, but profile details missing from database.");
+        loginMessageLabel.setText("Staff profile details not found.");
+    }
+
+    private Staff findStaffByUsername(String username) {
+
+        List<Staff> staffList = new ArrayList<>();
+        try {
             staffList.addAll(doctorRepo.getAll());
             staffList.addAll(nurseRepo.getAll());
             staffList.addAll(adminRepo.getAll());
             staffList.addAll(receptionistRepo.getAll());
+        } catch (SQLException _) {
+            AlertBox.show("Login Error", "Database connection error.");
+        }
 
-            Staff loggedInStaff = null;
-            for (Staff staff : staffList) {
-                String fullName = staff.getFirstName() + " " + staff.getLastName();
-                if (fullName.equalsIgnoreCase(username)) {
-                    loggedInStaff = staff;
-                    break;
-                }
-            }
 
-            if (loggedInStaff != null) {
-                UserSession.getInstance().setLoggedInStaff(loggedInStaff);
-                loginMessageLabel.setText("Login successful! Welcome " + username);
-                logger.info("User " + username + " successfully logged in. Role: " + loggedInStaff.getRole());
+        return staffList.stream().filter(staff -> (staff.getFirstName() + " " + staff.getLastName()).equalsIgnoreCase(username)).findFirst().orElse(null);
+    }
 
-                String role = loggedInStaff.getRole() != null ? loggedInStaff.getRole().toString().toUpperCase() : "";
+    private void completeLogin(ActionEvent event, String username, Staff loggedInStaff) {
 
-                switch (role) {
-                    case "DOCTOR":
-                        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/doctor-overview.fxml", "Doctor Dashboard");
-                        break;
-                    case "NURSE":
-                        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/nurse-view.fxml", "Nurse Dashboard");
-                        break;
-                    case "RECEPTIONIST":
-                        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/receptionist-view.fxml", "Receptionist Dashboard");
-                        break;
-                    case "ADMIN":
-                        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/hospital-overview.fxml", "Hospital Admin Overview");
-                        break;
-                    default:
-                        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/hello-view.fxml", "Hospital Management System");
-                        break;
-                }
+        UserSession.getInstance().setLoggedInStaff(loggedInStaff);
 
-            } else {
-                AlertBox.show("Login Error", "Credentials verified, but profile details missing from database.");
-                loginMessageLabel.setText("Staff profile details not found.");
-            }
+        loginMessageLabel.setText("Login successful! Welcome " + username);
 
-        } else {
-            AlertBox.show("Login Failed", "Invalid username or password.");
-            loginMessageLabel.setText("Invalid username or password.");
+        logger.info(() -> "User %s successfully logged in. Role: %s".formatted(username, loggedInStaff.getRole()));
+
+        navigateBasedOnRole(event, loggedInStaff);
+    }
+
+    private void navigateBasedOnRole(ActionEvent event, Staff loggedInStaff) {
+
+        String role = loggedInStaff.getRole() != null ? loggedInStaff.getRole().toString().toUpperCase() : "";
+
+        switch (role) {
+
+            case "DOCTOR" ->
+                    navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/doctor-overview.fxml", "Doctor Dashboard");
+
+            case "NURSE" ->
+                    navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/nurse-view.fxml", "Nurse Dashboard");
+
+            case "RECEPTIONIST" ->
+                    navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/receptionist-view.fxml", "Receptionist Dashboard");
+
+            case "ADMIN" ->
+                    navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/hospital-overview.fxml", "Hospital Admin Overview");
+
+            default ->
+                    navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/hello-view.fxml", "Hospital Management System");
         }
     }
 
     private void navigateTo(ActionEvent event, String fxmlPath, String title) {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
+
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
+            stage.setScene(new Scene(root));
             stage.setTitle(title);
             stage.centerOnScreen();
             stage.show();
-        } catch (IOException e) {
+
+        } catch (IOException _) {
             logger.severe("Failed to transition scenes to fxml path: " + fxmlPath);
-            e.printStackTrace();
             AlertBox.show("Navigation Error", "Could not load screen: " + fxmlPath);
         }
     }

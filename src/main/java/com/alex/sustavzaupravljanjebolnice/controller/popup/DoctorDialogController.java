@@ -81,7 +81,7 @@ public class DoctorDialogController {
             } else {
                 doc = new Doctor();
                 doc.setRole(StaffRoles.DOCTOR);
-                doc.setBirthDate(LocalDate.of(1990, Month.JANUARY.getValue(), 1));
+                doc.setBirthDate(LocalDate.of(1990, Month.JANUARY, 1));
             }
 
             doc.setId(currentDoctorId == null ? 0 : currentDoctorId);

@@ -11,7 +11,7 @@ public class Launcher {
      *
      * @param args the input arguments
      */
-    public static void main(String[] args) {
+    static void main(String[] args) {
         Application.launch(HelloApplication.class, args);
     }
 }

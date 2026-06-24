@@ -55,7 +55,7 @@ public class ReceptionistViewController {
 
     private List<Doctor> doctors = List.of();
     private List<Patient> patients = List.of();
-    private List<Appointment> appointments = List.of();
+
 
     @FXML
     public void initialize() {
@@ -85,6 +85,7 @@ public class ReceptionistViewController {
     }
 
     private void loadData() throws SQLException {
+        List<Appointment> appointments;
 
         doctors = doctorRepo.getAll().stream().filter(d -> Objects.equals(d.getHospital().getId(), loggedInStaff.getHospital().getId())).toList();
         patients = patientRepo.getAll();

@@ -11,62 +11,56 @@
     <padding>
         <Insets bottom="25.0" left="25.0" right="25.0" top="25.0"/>
     </padding>
-    <children>
-        <Label text="Patient Registration &amp; Admission">
+    <Label text="Patient Registration &amp; Admission">
+        <styleClass>
+            <String fx:value="label"/>
+            <String fx:value="title"/>
+        </styleClass>
+        <font>
+            <Font name="System Bold" size="18.0"/>
+        </font>
+    </Label>
+
+    <GridPane hgap="15.0" vgap="15.0" VBox.vgrow="ALWAYS">
+        <columnConstraints>
+            <ColumnConstraints hgrow="NEVER" minWidth="100.0" prefWidth="110.0"/>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="200.0"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="30.0" vgrow="NEVER"/>
+            <RowConstraints minHeight="30.0" vgrow="NEVER"/>
+            <RowConstraints minHeight="30.0" vgrow="NEVER"/>
+            <RowConstraints minHeight="30.0" vgrow="NEVER"/>
+            <RowConstraints minHeight="30.0" vgrow="NEVER"/>
+            <RowConstraints minHeight="30.0" vgrow="NEVER"/>
+        </rowConstraints>
+        <Label text="First Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField fx:id="txtFirstName" promptText="e.g., John" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+        <Label text="Last Name:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextField fx:id="txtLastName" promptText="e.g., Smith" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+        <Label text="OIB Number:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <TextField fx:id="txtOib" promptText="11-digit identity number" GridPane.columnIndex="1"
+                   GridPane.rowIndex="2"/>
+
+        <Label text="Assigned Ward ID:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+        <TextField fx:id="txtWardId" promptText="Leave blank if unassigned" GridPane.columnIndex="1"
+                   GridPane.rowIndex="5"/>
+    </GridPane>
+
+    <HBox alignment="CENTER_RIGHT" spacing="12.0">
+        <Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" prefWidth="90.0"
+                text="Cancel">
             <styleClass>
-                <String fx:value="label"/>
-                <String fx:value="title"/>
+                <String fx:value="btn-ghost"/>
             </styleClass>
-            <font>
-                <Font name="System Bold" size="18.0"/>
-            </font>
-        </Label>
-
-        <GridPane hgap="15.0" vgap="15.0" VBox.vgrow="ALWAYS">
-            <columnConstraints>
-                <ColumnConstraints hgrow="NEVER" minWidth="100.0" prefWidth="110.0"/>
-                <ColumnConstraints hgrow="ALWAYS" minWidth="200.0"/>
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints minHeight="30.0" vgrow="NEVER"/>
-                <RowConstraints minHeight="30.0" vgrow="NEVER"/>
-                <RowConstraints minHeight="30.0" vgrow="NEVER"/>
-                <RowConstraints minHeight="30.0" vgrow="NEVER"/>
-                <RowConstraints minHeight="30.0" vgrow="NEVER"/>
-                <RowConstraints minHeight="30.0" vgrow="NEVER"/>
-            </rowConstraints>
-            <children>
-                <Label text="First Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                <TextField fx:id="txtFirstName" promptText="e.g., John" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-
-                <Label text="Last Name:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                <TextField fx:id="txtLastName" promptText="e.g., Smith" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-
-                <Label text="OIB Number:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                <TextField fx:id="txtOib" promptText="11-digit identity number" GridPane.columnIndex="1"
-                           GridPane.rowIndex="2"/>
-
-                <Label text="Assigned Ward ID:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-                <TextField fx:id="txtWardId" promptText="Leave blank if unassigned" GridPane.columnIndex="1"
-                           GridPane.rowIndex="5"/>
-            </children>
-        </GridPane>
-
-        <HBox alignment="CENTER_RIGHT" spacing="12.0">
-            <children>
-                <Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" prefWidth="90.0"
-                        text="Cancel">
-                    <styleClass>
-                        <String fx:value="btn-ghost"/>
-                    </styleClass>
-                </Button>
-                <Button defaultButton="true" mnemonicParsing="false" onAction="#handleSave" prefWidth="90.0"
-                        text="Save">
-                    <styleClass>
-                        <String fx:value="btn-warning"/>
-                    </styleClass>
-                </Button>
-            </children>
-        </HBox>
-    </children>
+        </Button>
+        <Button defaultButton="true" mnemonicParsing="false" onAction="#handleSave" prefWidth="90.0"
+                text="Save">
+            <styleClass>
+                <String fx:value="btn-warning"/>
+            </styleClass>
+        </Button>
+    </HBox>
 </VBox>

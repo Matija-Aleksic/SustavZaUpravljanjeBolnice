@@ -10,57 +10,51 @@
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
 
-    <children>
-        <Label text="Doctor Information Profile">
+    <Label text="Doctor Information Profile">
+        <styleClass>
+            <String fx:value="label"/>
+            <String fx:value="title"/>
+        </styleClass>
+    </Label>
+
+    <GridPane vgap="12.0" hgap="10.0">
+        <columnConstraints>
+            <ColumnConstraints minWidth="100.0" prefWidth="110.0"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <Label text="First Name:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtFirstName" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Last Name:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtLastName" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="OIB:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtOib" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Email:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtEmail" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="Salary (€):" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtSalary" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+        <Label text="Phone Number:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtPhone" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+        <Label text="Address:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtAddress" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <HBox spacing="12.0" alignment="CENTER_RIGHT">
+        <Button text="Cancel" onAction="#handleCancel" prefWidth="85.0">
             <styleClass>
-                <String fx:value="label"/>
-                <String fx:value="title"/>
+                <String fx:value="btn-ghost"/>
             </styleClass>
-        </Label>
-
-        <GridPane vgap="12.0" hgap="10.0">
-            <columnConstraints>
-                <ColumnConstraints minWidth="100.0" prefWidth="110.0"/>
-                <ColumnConstraints hgrow="ALWAYS"/>
-            </columnConstraints>
-
-            <children>
-                <Label text="First Name:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                <TextField fx:id="txtFirstName" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-
-                <Label text="Last Name:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                <TextField fx:id="txtLastName" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-
-                <Label text="OIB:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                <TextField fx:id="txtOib" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-
-                <Label text="Email:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                <TextField fx:id="txtEmail" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-
-                <Label text="Salary (€):" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                <TextField fx:id="txtSalary" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-
-                <Label text="Phone Number:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                <TextField fx:id="txtPhone" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-
-                <Label text="Address:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
-                <TextField fx:id="txtAddress" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
-            </children>
-        </GridPane>
-
-        <HBox spacing="12.0" alignment="CENTER_RIGHT">
-            <children>
-                <Button text="Cancel" onAction="#handleCancel" prefWidth="85.0">
-                    <styleClass>
-                        <String fx:value="btn-ghost"/>
-                    </styleClass>
-                </Button>
-                <Button text="Save" onAction="#handleSave" prefWidth="85.0">
-                    <styleClass>
-                        <String fx:value="btn-primary"/>
-                    </styleClass>
-                </Button>
-            </children>
-        </HBox>
-    </children>
+        </Button>
+        <Button text="Save" onAction="#handleSave" prefWidth="85.0">
+            <styleClass>
+                <String fx:value="btn-primary"/>
+            </styleClass>
+        </Button>
+    </HBox>
 </VBox>
