@@ -1,9 +1,9 @@
-package com.alex.sustavzaupravljanjebolnice.controller;
+package com.alex.sustavzaupravljanjebolnice.controller.popup;
 
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Ward;
 import com.alex.sustavzaupravljanjebolnice.repository.PatientRepo;
-import com.alex.sustavzaupravljanjebolnice.util.AlertBox;
+import com.alex.sustavzaupravljanjebolnice.util.boxes.AlertBox;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -81,7 +81,7 @@ public class PatientDialogController {
             operationSaved = true;
             closeWindow();
 
-        } catch (NumberFormatException exc) {
+        } catch (NumberFormatException _) {
             AlertBox.show("Input Format Error", "Ward ID must be a valid numeric index.");
         } catch (SQLException exc) {
             AlertBox.show("Database Write Error", exc.getMessage());

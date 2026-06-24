@@ -35,9 +35,9 @@ public class LogWriter {
 
         try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(LogReader.FILE_PATH))) {
             outputStream.writeObject(currentLogs);
-        } catch (IOException e) {
+        } catch (IOException _) {
             log.error("Critical: Failed to append to binary log framework.");
-            e.printStackTrace();
+
         }
     }
 }

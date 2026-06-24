@@ -1,5 +1,6 @@
 package com.alex.sustavzaupravljanjebolnice.controller;
 
+import com.alex.sustavzaupravljanjebolnice.controller.popup.DoctorDialogController;
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Appointment;
 import com.alex.sustavzaupravljanjebolnice.entity.staff.Doctor;
@@ -24,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -101,7 +101,7 @@ public class DoctorViewController {
     }
 
     private void loadData() throws SQLException {
-        ArrayList<Doctor> doctors = doctorRepo.getAll().stream().filter(d -> d.getHospital() != null && Objects.equals(d.getHospital().getId(), loggedInStaff.getHospital().getId())).toList();
+        List<Doctor> doctors = doctorRepo.getAll().stream().filter(d -> d.getHospital() != null && Objects.equals(d.getHospital().getId(), loggedInStaff.getHospital().getId())).toList();
         patients = patientRepo.getAll();
         allAppointments = appointmentRepo.getAll();
 

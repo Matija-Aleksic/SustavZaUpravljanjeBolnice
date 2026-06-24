@@ -1,4 +1,4 @@
-package com.alex.sustavzaupravljanjebolnice.controller;
+package com.alex.sustavzaupravljanjebolnice.controller.popup;
 
 import com.alex.sustavzaupravljanjebolnice.entity.StaffRoles;
 import com.alex.sustavzaupravljanjebolnice.entity.staff.Doctor;
@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.Month;
 
 public class DoctorDialogController {
 
@@ -80,7 +81,7 @@ public class DoctorDialogController {
             } else {
                 doc = new Doctor();
                 doc.setRole(StaffRoles.DOCTOR);
-                doc.setBirthDate(LocalDate.of(1990, 1, 1));
+                doc.setBirthDate(LocalDate.of(1990, Month.JANUARY.getValue(), 1));
             }
 
             doc.setId(currentDoctorId == null ? 0 : currentDoctorId);

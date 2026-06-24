@@ -30,6 +30,8 @@ public class WindowManager {
         }
     }
 
+    private WindowManager() {
+    }
     /**
      * Opens a modal dialog, allowing data injection before showing, and data retrieval after closing.
      *

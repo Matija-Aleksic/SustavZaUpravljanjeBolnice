@@ -1,8 +1,8 @@
-package com.alex.sustavzaupravljanjebolnice.controller;
+package com.alex.sustavzaupravljanjebolnice.controller.popup;
 
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Prescription;
 import com.alex.sustavzaupravljanjebolnice.repository.PrescriptionRepo;
-import com.alex.sustavzaupravljanjebolnice.util.AlertBox;
+import com.alex.sustavzaupravljanjebolnice.util.boxes.AlertBox;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
@@ -82,10 +82,10 @@ public class PrescriptionDialogController {
             operationSaved = true;
             closeWindow();
 
-        } catch (NumberFormatException exc) {
+        } catch (NumberFormatException _) {
             AlertBox.show("Input Format Misalignment", "Doctor ID and Patient ID must be written as valid whole numeric parameters.");
-        } catch (SQLException exc) {
-            AlertBox.show("Persistence Database Exception", exc.getMessage());
+        } catch (SQLException _) {
+            AlertBox.show("Persistence Database Exception", "coudnt do it");
         }
     }
 

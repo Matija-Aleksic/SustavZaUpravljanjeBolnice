@@ -1,4 +1,4 @@
-package com.alex.sustavzaupravljanjebolnice.controller;
+package com.alex.sustavzaupravljanjebolnice.controller.popup;
 
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Appointment;
@@ -116,7 +116,7 @@ public class AppointmentDialogController {
 
         } catch (SQLException e) {
             AlertBox.show("Database Error", e.getMessage());
-        } catch (Exception e) {
+        } catch (Exception _) {
             AlertBox.show("Format Error", "Use HH:mm format (e.g. 14:30)");
         }
     }

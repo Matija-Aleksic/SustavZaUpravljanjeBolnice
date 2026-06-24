@@ -1,5 +1,6 @@
 package com.alex.sustavzaupravljanjebolnice.controller;
 
+import com.alex.sustavzaupravljanjebolnice.controller.popup.AppointmentDialogController;
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Appointment;
 import com.alex.sustavzaupravljanjebolnice.entity.staff.Doctor;
@@ -90,9 +91,7 @@ public class ReceptionistViewController {
         Set<Integer> doctorIds = doctors.stream().map(Doctor::getId).collect(Collectors.toSet());
         appointments = appointmentRepo.getAll().stream().filter(a -> doctorIds.contains(a.doctorId())).toList();
 
-        Platform.runLater(() -> {
-            appointmentsTable.setItems(FXCollections.observableArrayList(appointments));
-        });
+        Platform.runLater(() -> appointmentsTable.setItems(FXCollections.observableArrayList(appointments)));
         log.info("Receptionist data loaded");
     }
 

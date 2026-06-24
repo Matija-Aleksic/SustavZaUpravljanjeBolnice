@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import java.lang.String?>
 <VBox xmlns:fx="http://javafx.com/fxml/1" spacing="15.0" prefWidth="420.0" stylesheets="@hospital-styles.css"
-      fx:controller="com.alex.sustavzaupravljanjebolnice.controller.DoctorDialogController">
+      fx:controller="com.alex.sustavzaupravljanjebolnice.controller.popup.DoctorDialogController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
