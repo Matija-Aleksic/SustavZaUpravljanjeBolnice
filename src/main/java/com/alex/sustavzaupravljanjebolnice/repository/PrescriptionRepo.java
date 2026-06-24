@@ -10,15 +10,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The type Prescription repo.
- */
 public class PrescriptionRepo implements Repository<Prescription, String> {
 
     @Override
     public Prescription getById(String id) throws SQLException {
         String query = "SELECT id, name, description, doctor_id, patient_id, start_date, end_date FROM prescription WHERE id = ?";
-        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -34,8 +32,9 @@ public class PrescriptionRepo implements Repository<Prescription, String> {
         List<Prescription> prescriptions = new ArrayList<>();
         String sql = "SELECT id, name, description, doctor_id, patient_id, start_date, end_date FROM prescription";
 
-        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
-
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 prescriptions.add(mapPrescription(rs));
             }
@@ -47,18 +46,18 @@ public class PrescriptionRepo implements Repository<Prescription, String> {
     public void save(Prescription entity) throws SQLException {
         String sql = "INSERT INTO prescription (id, name, description, doctor_id, patient_id, start_date, end_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, entity.getId());
             ps.setString(2, entity.getName());
             ps.setString(3, entity.getDescription());
             ps.setLong(4, entity.getDoctorId());
             ps.setLong(5, entity.getPatientId());
-            ps.setDate(6, java.sql.Date.valueOf(entity.getStartDate()));
-            ps.setDate(7, java.sql.Date.valueOf(entity.getEndDate()));
+            ps.setDate(6, entity.getStartDate() != null ? java.sql.Date.valueOf(entity.getStartDate()) : null);
+            ps.setDate(7, entity.getEndDate() != null ? java.sql.Date.valueOf(entity.getEndDate()) : null);
 
             ps.executeUpdate();
-            conn.commit();
         }
     }
 
@@ -66,14 +65,15 @@ public class PrescriptionRepo implements Repository<Prescription, String> {
     public void update(Prescription entity) throws SQLException {
         String sql = "UPDATE prescription SET name = ?, description = ?, doctor_id = ?, patient_id = ?, start_date = ?, end_date = ? WHERE id = ?";
 
-        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, entity.getName());
             ps.setString(2, entity.getDescription());
             ps.setLong(3, entity.getDoctorId());
             ps.setLong(4, entity.getPatientId());
-            ps.setDate(5, java.sql.Date.valueOf(entity.getStartDate()));
-            ps.setDate(6, java.sql.Date.valueOf(entity.getEndDate()));
+            ps.setDate(5, entity.getStartDate() != null ? java.sql.Date.valueOf(entity.getStartDate()) : null);
+            ps.setDate(6, entity.getEndDate() != null ? java.sql.Date.valueOf(entity.getEndDate()) : null);
             ps.setString(7, entity.getId());
 
             ps.executeUpdate();
@@ -83,9 +83,8 @@ public class PrescriptionRepo implements Repository<Prescription, String> {
     @Override
     public void deleteById(String id) throws SQLException {
         String sql = "DELETE FROM prescription WHERE id = ?";
-
-        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, id);
             ps.executeUpdate();
         }
@@ -96,8 +95,10 @@ public class PrescriptionRepo implements Repository<Prescription, String> {
         prescription.setId(rs.getString("id"));
         prescription.setName(rs.getString("name"));
         prescription.setDescription(rs.getString("description"));
-        prescription.setStartDate(rs.getDate("start_date").toLocalDate());
-        prescription.setEndDate(rs.getDate("end_date").toLocalDate());
+        java.sql.Date start = rs.getDate("start_date");
+        if (start != null) prescription.setStartDate(start.toLocalDate());
+        java.sql.Date end = rs.getDate("end_date");
+        if (end != null) prescription.setEndDate(end.toLocalDate());
         prescription.setDoctorId(rs.getInt("doctor_id"));
         prescription.setPatientId(rs.getInt("patient_id"));
 

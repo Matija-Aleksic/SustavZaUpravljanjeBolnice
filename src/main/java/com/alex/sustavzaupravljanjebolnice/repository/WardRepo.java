@@ -10,14 +10,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The type Ward repo.
- */
 public class WardRepo implements Repository<Ward, Long> {
 
     @Override
     public Ward getById(Long id) throws SQLException {
-        String query = "SELECT id, name, max_capacity, capacity, department_id FROM ward WHERE id = ?";
+        String query = "SELECT id, name, max_capacity, capacity, department_id, nurse_id FROM ward WHERE id = ?";
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -36,7 +33,8 @@ public class WardRepo implements Repository<Ward, Long> {
     @Override
     public List<Ward> getAll() throws SQLException {
         List<Ward> wards = new ArrayList<>();
-        String sql = "SELECT id, name, max_capacity, capacity, department_id, NURSE_ID FROM ward";
+        // FIXED: Standardized case structure matching mapWard read rules
+        String sql = "SELECT id, name, max_capacity, capacity, department_id, nurse_id FROM ward";
 
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
@@ -111,7 +109,6 @@ public class WardRepo implements Repository<Ward, Long> {
         String sql = "DELETE FROM ward WHERE id = ?";
 
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-
             ps.setLong(1, id);
             ps.executeUpdate();
             conn.commit();
