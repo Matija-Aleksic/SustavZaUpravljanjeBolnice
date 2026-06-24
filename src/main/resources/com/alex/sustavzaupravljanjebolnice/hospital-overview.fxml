@@ -12,18 +12,7 @@
                 AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
 
         <top>
-            <MenuBar>
-                <Menu text="File">
-                    <MenuItem text="Main Dashboard"/>
-                    <MenuItem text="Close"/>
-                </Menu>
-                <Menu text="View">
-                    <MenuItem text="Refresh Data"/>
-                </Menu>
-                <Menu text="Help">
-                    <MenuItem text="About System"/>
-                </Menu>
-            </MenuBar>
+            <fx:include source="menu.fxml"/>
         </top>
 
         <left>

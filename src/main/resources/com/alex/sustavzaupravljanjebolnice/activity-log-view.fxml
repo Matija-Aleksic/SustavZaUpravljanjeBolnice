@@ -1,28 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             xmlns="http://javafx.com/javafx"
             fx:controller="com.alex.sustavzaupravljanjebolnice.controller.ActivityLogController">
 
     <top>
-        <HBox spacing="10" alignment="CENTER_LEFT">
-            <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
-            </padding>
-
-            <Label text="Activity Logs"
-                   style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
-
-            <Region HBox.hgrow="ALWAYS"/>
-
-            <Button text="Refresh"
-                    onAction="#handleRefresh"/>
-        </HBox>
+        <fx:include source="menu.fxml"/>
     </top>
 
     <center>

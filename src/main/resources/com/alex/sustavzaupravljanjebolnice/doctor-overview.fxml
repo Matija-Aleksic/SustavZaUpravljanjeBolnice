@@ -44,17 +44,7 @@
             </left>
 
             <top>
-                <MenuBar BorderPane.alignment="CENTER">
-                    <Menu mnemonicParsing="false" text="File">
-                        <MenuItem mnemonicParsing="false" text="Close"/>
-                    </Menu>
-                    <Menu mnemonicParsing="false" text="Edit">
-                        <MenuItem mnemonicParsing="false" text="Delete" onAction="#handleDeleteDoctor"/>
-                    </Menu>
-                    <Menu mnemonicParsing="false" text="Help">
-                        <MenuItem mnemonicParsing="false" text="About"/>
-                    </Menu>
-                </MenuBar>
+                <fx:include source="menu.fxml"/>
             </top>
 
             <center>

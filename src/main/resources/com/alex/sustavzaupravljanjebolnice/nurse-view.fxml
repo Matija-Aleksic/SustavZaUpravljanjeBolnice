@@ -11,17 +11,7 @@
     <BorderPane prefWidth="1294.0" prefHeight="940.0">
 
         <top>
-            <MenuBar>
-                <Menu text="File">
-                    <MenuItem text="Close"/>
-                </Menu>
-                <Menu text="Edit">
-                    <MenuItem text="Edit Nurse" onAction="#handleEditNurse"/>
-                </Menu>
-                <Menu text="Help">
-                    <MenuItem text="About"/>
-                </Menu>
-            </MenuBar>
+            <fx:include source="menu.fxml"/>
         </top>
 
         <left>

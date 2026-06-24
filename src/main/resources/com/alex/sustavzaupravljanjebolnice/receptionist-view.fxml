@@ -10,11 +10,7 @@
             fx:controller="com.alex.sustavzaupravljanjebolnice.controller.ReceptionistViewController">
 
     <top>
-        <MenuBar BorderPane.alignment="CENTER">
-            <Menu mnemonicParsing="false" text="File">
-                <MenuItem mnemonicParsing="false" text="Close"/>
-            </Menu>
-        </MenuBar>
+        <fx:include source="menu.fxml"/>
     </top>
 
     <center>
