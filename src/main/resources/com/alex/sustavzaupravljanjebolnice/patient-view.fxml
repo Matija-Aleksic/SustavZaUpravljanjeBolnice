@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" stylesheets="@hospital-styles.css" xmlns="http://javafx.com/javafx/26"
+            fx:controller="com.alex.sustavzaupravljanjebolnice.controller.PatientViewController">
+
+    <top>
+        <fx:include source="menu.fxml"/>
+    </top>
+
+    <left>
+        <VBox maxWidth="550" minWidth="480" prefWidth="520" spacing="15" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="20" right="10" bottom="20" left="20"/>
+            </padding>
+
+            <Label text="Hospital Registry Database Ledger"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+            <TableView fx:id="patientsTable" maxWidth="Infinity" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="nameColumn" prefWidth="170.0" text="Patient Name"/>
+                    <TableColumn fx:id="oibColumn" prefWidth="110.0" text="OIB Code"/>
+                    <TableColumn fx:id="mboColumn" prefWidth="110.0" text="MBO Number"/>
+                    <TableColumn fx:id="statusColumn" prefWidth="110.0" text="Triage Condition"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+            </TableView>
+
+            <HBox fx:id="adminActionBar" alignment="CENTER" spacing="12"
+                  style="-fx-background-color: #f8f9fa; -fx-padding: 12; -fx-background-radius: 6; -fx-border-color: #e9ecef; -fx-border-radius: 6;">
+                <Button fx:id="addPatientBtn" onAction="#handleAddPatient" prefWidth="140" text="Admit Patient">
+                    <styleClass>
+                        <String fx:value="btn-success"/>
+                    </styleClass>
+                </Button>
+                <Button fx:id="editPatientBtn" onAction="#handleEditPatient" prefWidth="140" text="Modify Details">
+                    <styleClass>
+                        <String fx:value="btn-warning"/>
+                    </styleClass>
+                </Button>
+                <Button fx:id="deletePatientBtn" onAction="#handleDeletePatient" prefWidth="140" text="Discharge/Purge">
+                    <styleClass>
+                        <String fx:value="btn-danger"/>
+                    </styleClass>
+                </Button>
+            </HBox>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="20" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="10"/>
+            </padding>
+
+            <VBox style="-fx-background-color: #ffffff; -fx-padding: 20; -fx-background-radius: 8; -fx-border-color: #dee2e6; -fx-border-radius: 8;"
+                  spacing="15">
+                <Label text="Patient Core Profile &amp; Clinical Allocation Status"
+                       style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                <Separator/>
+
+                <GridPane hgap="30" vgap="14">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="50"/>
+                        <ColumnConstraints percentWidth="50"/>
+                    </columnConstraints>
+
+                    <Label fx:id="detailName" text="Patient Full Legal Name Display"
+                           style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #16a085;"
+                           GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2"/>
+
+                    <Label fx:id="detailOib" text="OIB: N/A" style="-fx-font-size: 13px; -fx-font-weight: bold;"
+                           GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <Label fx:id="detailMbo" text="MBO: N/A" style="-fx-font-size: 13px; -fx-font-weight: bold;"
+                           GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                    <Label fx:id="detailBirthDate" text="Birth Date: N/A" style="-fx-font-size: 13px;"
+                           GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <Label fx:id="detailStatus" text="Condition Status: N/A" style="-fx-font-size: 13px;"
+                           GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                    <Label fx:id="detailDoctor" text="Assigned Practitioner: N/A" style="-fx-font-size: 13px;"
+                           GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                    <Label fx:id="detailWard" text="Care Station Unit Ward: N/A" style="-fx-font-size: 13px;"
+                           GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                    <Label fx:id="detailHospital" text="Allocated Hospital Location Instance: N/A"
+                           style="-fx-font-size: 13px;" GridPane.columnIndex="0" GridPane.rowIndex="4"
+                           GridPane.columnSpan="2"/>
+                </GridPane>
+            </VBox>
+
+            <HBox spacing="15" VBox.vgrow="ALWAYS">
+
+                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                    <Label text="Scheduled Clinical Consultation Timelines"
+                           style="-fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-font-size: 13px;"/>
+                    <ListView fx:id="appointmentsListView" VBox.vgrow="ALWAYS"
+                              style="-fx-background-radius: 6; -fx-border-color: #cbd5e1; -fx-border-radius: 6;"/>
+                </VBox>
+
+                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                    <Label text="Active Prescribed Medication Logs Protocol"
+                           style="-fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-font-size: 13px;"/>
+                    <ListView fx:id="prescriptionsListView" VBox.vgrow="ALWAYS"
+                              style="-fx-background-radius: 6; -fx-border-color: #cbd5e1; -fx-border-radius: 6;"/>
+                </VBox>
+
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>

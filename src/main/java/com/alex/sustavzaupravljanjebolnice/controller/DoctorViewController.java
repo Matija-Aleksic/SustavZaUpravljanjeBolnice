@@ -172,7 +172,6 @@ public class DoctorViewController {
         HospitalCrudHelper.deletePatient(patientsTable.getSelectionModel().getSelectedItem(), this::reload);
     }
 
-    // Prescription Actions
     @FXML
     private void handleAddPrescription() {
         HospitalCrudHelper.addPrescription(this::reload);

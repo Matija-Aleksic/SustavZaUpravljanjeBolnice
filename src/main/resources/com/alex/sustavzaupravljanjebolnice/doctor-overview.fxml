@@ -82,101 +82,98 @@
             </GridPane>
 
             <TabPane VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE" style="-fx-tab-header-background: transparent;">
-                <tabs>
+                <Tab text="Patients &amp; Prescriptions">
+                    <HBox spacing="20">
+                        <padding>
+                            <Insets top="15" right="5" bottom="5" left="5"/>
+                        </padding>
 
-                    <Tab text="Patients &amp; Prescriptions">
-                        <HBox spacing="20">
-                            <padding>
-                                <Insets top="15" right="5" bottom="5" left="5"/>
-                            </padding>
-
-                            <VBox HBox.hgrow="ALWAYS" spacing="10" maxWidth="Infinity">
-                                <HBox alignment="CENTER_LEFT" spacing="10">
-                                    <Label text="Assigned Patients"
-                                           style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
-                                    <Region HBox.hgrow="ALWAYS"/>
-                                    <HBox spacing="5">
-                                        <Button onAction="#handleAddPatient" text="Add">
-                                            <styleClass>
-                                                <String fx:value="btn-success"/>
-                                            </styleClass>
-                                        </Button>
-                                        <Button onAction="#handleEditPatient" text="Edit">
-                                            <styleClass>
-                                                <String fx:value="btn-warning"/>
-                                            </styleClass>
-                                        </Button>
-                                        <Button onAction="#handleDeletePatient" text="Discharge">
-                                            <styleClass>
-                                                <String fx:value="btn-danger"/>
-                                            </styleClass>
-                                        </Button>
-                                    </HBox>
+                        <VBox HBox.hgrow="ALWAYS" spacing="10" maxWidth="Infinity">
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label text="Assigned Patients"
+                                       style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <HBox spacing="5">
+                                    <Button onAction="#handleAddPatient" text="Add">
+                                        <styleClass>
+                                            <String fx:value="btn-success"/>
+                                        </styleClass>
+                                    </Button>
+                                    <Button onAction="#handleEditPatient" text="Edit">
+                                        <styleClass>
+                                            <String fx:value="btn-warning"/>
+                                        </styleClass>
+                                    </Button>
+                                    <Button onAction="#handleDeletePatient" text="Discharge">
+                                        <styleClass>
+                                            <String fx:value="btn-danger"/>
+                                        </styleClass>
+                                    </Button>
                                 </HBox>
-                                <TableView fx:id="patientsTable" maxWidth="Infinity" VBox.vgrow="ALWAYS">
-                                    <columns>
-                                        <TableColumn fx:id="patientNameColumn" prefWidth="240.0" text="Patient Name"/>
-                                        <TableColumn fx:id="patientOibColumn" prefWidth="220.0" text="OIB"/>
-                                    </columns>
-                                </TableView>
-                            </VBox>
-
-                            <VBox HBox.hgrow="ALWAYS" spacing="10" maxWidth="Infinity">
-                                <HBox alignment="CENTER_LEFT" spacing="10">
-                                    <Label text="Active Prescriptions Log"
-                                           style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
-                                    <Region HBox.hgrow="ALWAYS"/>
-                                    <HBox spacing="5">
-                                        <Button onAction="#handleAddPrescription" text="Prescribe">
-                                            <styleClass>
-                                                <String fx:value="btn-success"/>
-                                            </styleClass>
-                                        </Button>
-                                        <Button onAction="#handleEditPrescription" text="Modify">
-                                            <styleClass>
-                                                <String fx:value="btn-warning"/>
-                                            </styleClass>
-                                        </Button>
-                                        <Button onAction="#handleDeletePrescription" text="Revoke">
-                                            <styleClass>
-                                                <String fx:value="btn-danger"/>
-                                            </styleClass>
-                                        </Button>
-                                    </HBox>
-                                </HBox>
-                                <TableView fx:id="prescriptionsTable" maxWidth="Infinity" VBox.vgrow="ALWAYS">
-                                    <columns>
-                                        <TableColumn fx:id="prescriptionNameColumn" prefWidth="200.0"
-                                                     text="Medication"/>
-                                        <TableColumn fx:id="prescriptionPatientColumn" prefWidth="160.0"
-                                                     text="Patient Target"/>
-                                        <TableColumn fx:id="prescriptionDurationColumn" prefWidth="200.0"
-                                                     text="Duration Cycle"/>
-                                    </columns>
-                                </TableView>
-                            </VBox>
-                        </HBox>
-                    </Tab>
-
-                    <Tab text="Appointments Calendar">
-                        <VBox spacing="10">
-                            <padding>
-                                <Insets top="15" right="5" bottom="5" left="5"/>
-                            </padding>
-                            <Label text="Scheduled Appointments Timeline"
-                                   style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
-                            <TableView fx:id="appointmentsTable" maxWidth="Infinity" VBox.vgrow="ALWAYS">
+                            </HBox>
+                            <TableView fx:id="patientsTable" maxWidth="Infinity" VBox.vgrow="ALWAYS">
                                 <columns>
-                                    <TableColumn fx:id="appointmentPatientColumn" prefWidth="350.0"
-                                                 text="Patient Name"/>
-                                    <TableColumn fx:id="appointmentDateColumn" prefWidth="650.0"
-                                                 text="Appointment Date &amp; Scheduled Time Timestamp"/>
+                                    <TableColumn fx:id="patientNameColumn" prefWidth="240.0" text="Patient Name"/>
+                                    <TableColumn fx:id="patientOibColumn" prefWidth="220.0" text="OIB"/>
                                 </columns>
                             </TableView>
                         </VBox>
-                    </Tab>
 
-                </tabs>
+                        <VBox HBox.hgrow="ALWAYS" spacing="10" maxWidth="Infinity">
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label text="Active Prescriptions Log"
+                                       style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <HBox spacing="5">
+                                    <Button onAction="#handleAddPrescription" text="Prescribe">
+                                        <styleClass>
+                                            <String fx:value="btn-success"/>
+                                        </styleClass>
+                                    </Button>
+                                    <Button onAction="#handleEditPrescription" text="Modify">
+                                        <styleClass>
+                                            <String fx:value="btn-warning"/>
+                                        </styleClass>
+                                    </Button>
+                                    <Button onAction="#handleDeletePrescription" text="Revoke">
+                                        <styleClass>
+                                            <String fx:value="btn-danger"/>
+                                        </styleClass>
+                                    </Button>
+                                </HBox>
+                            </HBox>
+                            <TableView fx:id="prescriptionsTable" maxWidth="Infinity" VBox.vgrow="ALWAYS">
+                                <columns>
+                                    <TableColumn fx:id="prescriptionNameColumn" prefWidth="200.0"
+                                                 text="Medication"/>
+                                    <TableColumn fx:id="prescriptionPatientColumn" prefWidth="160.0"
+                                                 text="Patient Target"/>
+                                    <TableColumn fx:id="prescriptionDurationColumn" prefWidth="200.0"
+                                                 text="Duration Cycle"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+                    </HBox>
+                </Tab>
+
+                <Tab text="Appointments Calendar">
+                    <VBox spacing="10">
+                        <padding>
+                            <Insets top="15" right="5" bottom="5" left="5"/>
+                        </padding>
+                        <Label text="Scheduled Appointments Timeline"
+                               style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                        <TableView fx:id="appointmentsTable" maxWidth="Infinity" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="appointmentPatientColumn" prefWidth="350.0"
+                                             text="Patient Name"/>
+                                <TableColumn fx:id="appointmentDateColumn" prefWidth="650.0"
+                                             text="Appointment Date &amp; Scheduled Time Timestamp"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </Tab>
+
             </TabPane>
 
         </VBox>

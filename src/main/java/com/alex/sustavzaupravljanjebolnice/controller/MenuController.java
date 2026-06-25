@@ -48,9 +48,9 @@ public class MenuController {
      * (Placeholder for future implementation)
      */
     @FXML
-    public void handlePatients() {
-        AlertBox.show("Patients", "Patients module coming soon!");
-        logger.info("Patients navigation requested");
+    public void handlePatients(ActionEvent event) {
+        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/patient-view.fxml", "Patients", 1000);
+
     }
 
     /**
