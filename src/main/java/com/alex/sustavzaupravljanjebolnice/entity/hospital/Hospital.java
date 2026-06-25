@@ -120,6 +120,7 @@ public class Hospital implements Conactable, Serializable {
      * Sets id.
      *
      * @param id the id
+     * @return
      */
     public void setId(Long id) {
         this.id = id;

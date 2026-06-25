@@ -45,6 +45,4 @@ public final class Administrator extends Staff {
     public void setPermissions(Permissions permissions) {
         this.permissions = permissions;
     }
-
-
 }

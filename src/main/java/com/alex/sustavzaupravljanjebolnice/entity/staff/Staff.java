@@ -37,11 +37,12 @@ public sealed class Staff extends Person implements Salaried permits Administrat
      *
      * @param b the b
      */
-    public Staff(StaffBuilder b) {
+    public Staff(StaffBuilder<?> b) {
         super(b.getId(), b.getFirstName(), b.getLastName(), b.getOib(), b.getBirthDate());
         this.role = b.getRole();
         this.email = b.getEmail();
         this.salary = b.getSalary();
+        this.hospital = b.getHospital();
     }
 
 

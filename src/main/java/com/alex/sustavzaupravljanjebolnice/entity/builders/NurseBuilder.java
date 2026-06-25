@@ -1,7 +1,6 @@
 package com.alex.sustavzaupravljanjebolnice.entity.builders;
 
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Department;
-import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Ward;
 import com.alex.sustavzaupravljanjebolnice.entity.staff.Nurse;
 
@@ -10,31 +9,10 @@ import java.util.List;
 /**
  * The type Nurse builder.
  */
-public class NurseBuilder extends StaffBuilder {
+public class NurseBuilder extends StaffBuilder<NurseBuilder> {
 
-    private Hospital hospital;
     private Department department;
     private List<Ward> wards;
-
-    /**
-     * Gets hospital.
-     *
-     * @return the hospital
-     */
-    public Hospital getHospital() {
-        return hospital;
-    }
-
-    /**
-     * Sets hospital.
-     *
-     * @param hospital the hospital
-     * @return the hospital
-     */
-    public NurseBuilder setHospital(Hospital hospital) {
-        this.hospital = hospital;
-        return this;
-    }
 
     /**
      * Gets department.
