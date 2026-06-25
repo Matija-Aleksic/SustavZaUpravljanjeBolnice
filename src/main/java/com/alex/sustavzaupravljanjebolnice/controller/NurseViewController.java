@@ -1,13 +1,16 @@
 package com.alex.sustavzaupravljanjebolnice.controller;
 
-import com.alex.sustavzaupravljanjebolnice.entity.Nurse;
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
-import com.alex.sustavzaupravljanjebolnice.entity.Prescription;
+import com.alex.sustavzaupravljanjebolnice.entity.hospital.Prescription;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Ward;
+import com.alex.sustavzaupravljanjebolnice.entity.staff.Nurse;
 import com.alex.sustavzaupravljanjebolnice.repository.NurseRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.PatientRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.PrescriptionRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.WardRepo;
+import com.alex.sustavzaupravljanjebolnice.util.PatientPrescriptionHelper; // Our extracted logic
+import com.alex.sustavzaupravljanjebolnice.util.boxes.AlertBox;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -16,16 +19,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * The type Nurse view controller.
- */
 public class NurseViewController {
-
     private final NurseRepo nurseRepo = new NurseRepo();
     private final PrescriptionRepo prescriptionRepo = new PrescriptionRepo();
     private final PatientRepo patientRepo = new PatientRepo();
@@ -35,85 +35,40 @@ public class NurseViewController {
     private TableView<Nurse> nursesTable;
     @FXML
     private TableColumn<Nurse, String> nurseColumn;
-
     @FXML
     private TableView<Patient> patientsTable;
     @FXML
-    private TableColumn<Patient, String> patientNameColumn;
-    @FXML
-    private TableColumn<Patient, String> patientOibColumn;
-    @FXML
-    private TableColumn<Patient, String> patientWardColumn;
-
+    private TableColumn<Patient, String> patientNameColumn, patientOibColumn, patientWardColumn;
     @FXML
     private TableView<Prescription> prescriptionsTable;
     @FXML
-    private TableColumn<Prescription, String> prescriptionNameColumn;
+    private TableColumn<Prescription, String> prescriptionNameColumn, prescriptionPatientColumn, prescriptionDurationColumn;
     @FXML
-    private TableColumn<Prescription, String> prescriptionPatientColumn;
-    @FXML
-    private TableColumn<Prescription, String> prescriptionDurationColumn;
+    private Label nameSurname, oib, email, salary;
+
+    private List<Prescription> allPrescriptions = List.of();
+    private List<Patient> allPatients = List.of();
+    private List<Ward> allWards = List.of();
 
     @FXML
-    private Label nameSurname;
-    @FXML
-    private Label oib;
-    @FXML
-    private Label email;
-    @FXML
-    private Label salary;
+    public void initialize() {
+        nurseColumn.setCellValueFactory(d -> new ReadOnlyStringWrapper(d.getValue().getFirstName() + " " + d.getValue().getLastName()));
+        patientNameColumn.setCellValueFactory(d -> new ReadOnlyStringWrapper(d.getValue().getFirstName() + " " + d.getValue().getLastName()));
+        patientOibColumn.setCellValueFactory(d -> new ReadOnlyStringWrapper(d.getValue().getOib()));
+        patientWardColumn.setCellValueFactory(d -> new ReadOnlyStringWrapper(resolveWardName(d.getValue())));
 
-    private List<Prescription> allPrescriptions;
-    private List<Patient> allPatients;
-    private List<Ward> allWards;
-
-    /**
-     * Initialize.
-     *
-     * @throws SQLException the sql exception
-     */
-    @FXML
-    public void initialize() throws SQLException {
-        // Load data once to keep memory lookups performant
-        allPrescriptions = prescriptionRepo.getAll();
-        allPatients = patientRepo.getAll();
-        allWards = wardRepo.getAll();
-        List<Nurse> nurses = nurseRepo.getAll();
-
-        nurseColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getFirstName() + " " + data.getValue().getLastName()));
-
-        patientNameColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getFirstName() + " " + data.getValue().getLastName()));
-
-        patientOibColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getOib()));
-
-        patientWardColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(resolveWardName(data.getValue())));
-
-        prescriptionNameColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getName()));
-
-        prescriptionPatientColumn.setCellValueFactory(data -> {
-            Patient p = findPatient(data.getValue().getPatientId());
+        prescriptionNameColumn.setCellValueFactory(d -> new ReadOnlyStringWrapper(d.getValue().getName()));
+        prescriptionPatientColumn.setCellValueFactory(d -> {
+            Patient p = findPatient(d.getValue().getPatientId());
             return new ReadOnlyStringWrapper(p != null ? p.getFirstName() + " " + p.getLastName() : "Unknown");
         });
+        prescriptionDurationColumn.setCellValueFactory(d -> new ReadOnlyStringWrapper(d.getValue().getStartDate() + " - " + d.getValue().getEndDate()));
 
-        prescriptionDurationColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getStartDate() + " - " + data.getValue().getEndDate()));
-
-        nursesTable.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
+        nursesTable.getSelectionModel().selectedItemProperty().addListener((o, oldV, newV) -> {
             if (newV != null) displayNurse(newV);
         });
 
-        setNurses(nurses);
-    }
-
-    /**
-     * Sets nurses.
-     *
-     * @param nurses the nurses
-     */
-    public void setNurses(List<Nurse> nurses) {
-        nursesTable.setItems(FXCollections.observableArrayList(nurses));
-        if (!nurses.isEmpty()) {
-            nursesTable.getSelectionModel().selectFirst();
-        }
+        reload();
     }
 
     private void displayNurse(Nurse nurse) {
@@ -122,33 +77,87 @@ public class NurseViewController {
         email.setText(nurse.getEmail());
         salary.setText(String.format("%.2f €", nurse.getSalary()));
 
-
-        List<Patient> patients = new ArrayList<>();
-        for (Ward ward : nurse.getWards()) {
-            patients.addAll(ward.getPatients());
-        }
-
+        List<Patient> patients = Objects.requireNonNullElse(nurse.getWards(), Collections.<Ward>emptyList()).stream().flatMap(w -> w.getPatients().stream()).toList();
         patientsTable.setItems(FXCollections.observableArrayList(patients));
 
         Set<Long> patientIds = patients.stream().map(p -> p.getId().longValue()).collect(Collectors.toSet());
-
         List<Prescription> prescriptions = allPrescriptions.stream().filter(p -> p.getPatientId() != null && patientIds.contains(p.getPatientId().longValue())).toList();
-
         prescriptionsTable.setItems(FXCollections.observableArrayList(prescriptions));
     }
 
-    private String resolveWardName(Patient patient) {
-        if (patient == null || patient.getAssignedWard() == null || patient.getAssignedWard().getId() == null) {
-            return "No Ward Assigned";
-        }
+    public void reload() {
+        Thread.startVirtualThread(() -> {
+            try {
+                List<Prescription> prs = prescriptionRepo.getAll();
+                List<Patient> pts = patientRepo.getAll();
+                List<Ward> wrds = wardRepo.getAll();
+                List<Nurse> nrs = nurseRepo.getAll();
+                Platform.runLater(() -> {
+                    this.allPrescriptions = prs;
+                    this.allPatients = pts;
+                    this.allWards = wrds;
+                    int idx = nursesTable.getSelectionModel().getSelectedIndex();
+                    nursesTable.setItems(FXCollections.observableArrayList(nrs));
+                    nursesTable.getSelectionModel().select(idx >= 0 && idx < nrs.size() ? idx : 0);
+                });
+            } catch (SQLException e) {
+                Platform.runLater(() -> AlertBox.show("Sync Error", e.getMessage()));
+            }
+        });
+    }
 
-        long wardId = patient.getAssignedWard().getId();
-        return allWards.stream().filter(w -> w.getId() != null && w.getId() == wardId).map(Ward::getName).findFirst().orElse("Unknown Ward");
+    private String resolveWardName(Patient p) {
+        if (p == null || p.getAssignedWard() == null || p.getAssignedWard().getId() == null) return "No Ward Assigned";
+        return allWards.stream().filter(w -> w.getId() != null && w.getId().equals(p.getAssignedWard().getId())).map(Ward::getName).findFirst().orElse("Unknown Ward");
     }
 
     private Patient findPatient(Number id) {
-        if (id == null) return null;
-        long targetId = id.longValue();
-        return allPatients.stream().filter(p -> p.getId() != null && p.getId().longValue() == targetId).findFirst().orElse(null);
+        return id == null ? null : allPatients.stream().filter(p -> p.getId() != null && p.getId().longValue() == id.longValue()).findFirst().orElse(null);
+    }
+
+    // Extracted Routing Handlers
+    @FXML
+    private void handleAddNurse() {
+        PatientPrescriptionHelper.addNurse(this::reload);
+    }
+
+    @FXML
+    private void handleEditNurse() {
+        PatientPrescriptionHelper.editNurse(nursesTable.getSelectionModel().getSelectedItem(), this::reload);
+    }
+
+    @FXML
+    private void handleDeleteNurse() {
+        PatientPrescriptionHelper.deleteNurse(nursesTable.getSelectionModel().getSelectedItem(), this::reload);
+    }
+
+    @FXML
+    private void handleAddPatient() {
+        PatientPrescriptionHelper.addPatient(this::reload);
+    }
+
+    @FXML
+    private void handleEditPatient() {
+        PatientPrescriptionHelper.editPatient(patientsTable.getSelectionModel().getSelectedItem(), this::reload);
+    }
+
+    @FXML
+    private void handleDeletePatient() {
+        PatientPrescriptionHelper.deletePatient(patientsTable.getSelectionModel().getSelectedItem(), this::reload);
+    }
+
+    @FXML
+    private void handleAddPrescription() {
+        PatientPrescriptionHelper.addPrescription(this::reload);
+    }
+
+    @FXML
+    private void handleEditPrescription() {
+        PatientPrescriptionHelper.editPrescription(prescriptionsTable.getSelectionModel().getSelectedItem(), this::reload);
+    }
+
+    @FXML
+    private void handleDeletePrescription() {
+        PatientPrescriptionHelper.deletePrescription(prescriptionsTable.getSelectionModel().getSelectedItem(), this::reload);
     }
 }

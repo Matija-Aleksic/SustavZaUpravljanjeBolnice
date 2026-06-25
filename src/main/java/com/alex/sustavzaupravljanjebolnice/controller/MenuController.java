@@ -57,9 +57,8 @@ public class MenuController {
      * Navigates to the Appointments view
      */
     @FXML
-    public void handleAppointments() {
-        logger.info("Appointments navigation requested");
-        AlertBox.show("Appointments", "Appointments module coming soon!");
+    public void handleAppointments(ActionEvent event) {
+        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/receptionist-view.fxml", "Appointment Overview", 1000);
     }
 
     /**
@@ -67,9 +66,8 @@ public class MenuController {
      * (Placeholder for future implementation)
      */
     @FXML
-    public void handlePrescriptions() {
-        logger.info("Prescriptions navigation requested");
-        AlertBox.show("Prescriptions", "Prescriptions module coming soon!");
+    public void handlePrescriptions(ActionEvent event) {
+        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/prescription-view.fxml", "Perscriptions", 1000);
     }
 
     /**

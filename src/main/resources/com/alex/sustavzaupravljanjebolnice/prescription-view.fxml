@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            stylesheets="@hospital-styles.css"
+            xmlns="http://javafx.com/javafx/26"
+            fx:controller="com.alex.sustavzaupravljanjebolnice.controller.PrescriptionViewController">
+
+    <top>
+        <fx:include source="menu.fxml"/>
+    </top>
+
+    <left>
+        <VBox maxWidth="320" minWidth="280" prefWidth="300" spacing="10" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="10" right="5" bottom="10" left="10"/>
+            </padding>
+            <Label text="Hospital Patients" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+            <TableView fx:id="patientsTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="patientNameColumn" prefWidth="280" text="Patient Name"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="10" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="5"/>
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Prescriptions Ledger" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <CheckBox fx:id="chkShowAllPatients" text="Show all hospital prescriptions" selected="true"/>
+            </HBox>
+
+            <TableView fx:id="prescriptionsTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colId" prefWidth="90" text="ID"/>
+                    <TableColumn fx:id="colMedication" prefWidth="180" text="Medication Name"/>
+                    <TableColumn fx:id="colPatient" prefWidth="150" text="Patient"/>
+                    <TableColumn fx:id="colStartDate" prefWidth="110" text="Start Date"/>
+                    <TableColumn fx:id="colEndDate" prefWidth="110" text="End Date"/>
+                    <TableColumn fx:id="colDescription" prefWidth="200" text="Dosage Instructions"/>
+                </columns>
+            </TableView>
+
+            <HBox alignment="CENTER_RIGHT" spacing="10">
+                <padding>
+                    <Insets bottom="5" left="5" right="5" top="5"/>
+                </padding>
+
+                <Button onAction="#handleAddPrescription" prefWidth="100" text="Create New">
+                    <styleClass>
+                        <String fx:value="btn-primary"/>
+                    </styleClass>
+                </Button>
+
+                <Button onAction="#handleEditPrescription" prefWidth="100" text="Modify">
+                    <styleClass>
+                        <String fx:value="btn-warning"/>
+                    </styleClass>
+                </Button>
+
+                <Button onAction="#handleDeletePrescription" prefWidth="100" text="Revoke">
+                    <styleClass>
+                        <String fx:value="btn-danger"/>
+                    </styleClass>
+                </Button>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

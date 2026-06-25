@@ -44,10 +44,8 @@ public class PrescriptionDialogController {
     public void setPrescriptionToEdit(Prescription prescription) {
         this.existingPrescription = prescription;
 
-        // Disable editing the Primary Key (ID) when modifying records
         txtId.setText(prescription.getId());
         txtId.setDisable(true);
-
         txtName.setText(prescription.getName());
         txtDescription.setText(prescription.getDescription());
         txtDoctorId.setText(String.valueOf(prescription.getDoctorId()));
