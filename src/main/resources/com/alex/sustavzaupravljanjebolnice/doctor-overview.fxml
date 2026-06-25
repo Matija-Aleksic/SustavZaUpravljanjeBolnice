@@ -19,18 +19,18 @@
                 </columns>
             </TableView>
 
-            <HBox alignment="CENTER" spacing="10">
-                <Button onAction="#handleAddDoctor" prefWidth="85" text="Add">
+            <HBox fx:id="doctorCrudContainer" alignment="CENTER" spacing="10">
+                <Button fx:id="addDoctorBtn" onAction="#handleAddDoctor" prefWidth="85" text="Add">
                     <styleClass>
                         <String fx:value="btn-primary"/>
                     </styleClass>
                 </Button>
-                <Button onAction="#handleEditDoctor" prefWidth="85" text="Edit">
+                <Button fx:id="editDoctorBtn" onAction="#handleEditDoctor" prefWidth="85" text="Edit">
                     <styleClass>
                         <String fx:value="btn-warning"/>
                     </styleClass>
                 </Button>
-                <Button onAction="#handleDeleteDoctor" prefWidth="85" text="Delete">
+                <Button fx:id="deleteDoctorBtn" onAction="#handleDeleteDoctor" prefWidth="85" text="Delete">
                     <styleClass>
                         <String fx:value="btn-danger"/>
                     </styleClass>
@@ -173,9 +173,7 @@
                         </TableView>
                     </VBox>
                 </Tab>
-
             </TabPane>
-
         </VBox>
     </center>
 

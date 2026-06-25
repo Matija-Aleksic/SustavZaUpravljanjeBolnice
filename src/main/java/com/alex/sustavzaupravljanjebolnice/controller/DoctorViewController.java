@@ -16,10 +16,12 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -58,16 +60,28 @@ public class DoctorViewController {
     @FXML
     private ImageView picture;
 
+    @FXML
+    private HBox doctorCrudContainer;
+    @FXML
+    private Button addDoctorBtn;
+    @FXML
+    private Button editDoctorBtn;
+    @FXML
+    private Button deleteDoctorBtn;
+
     private List<Patient> allPatients = List.of();
     private List<Appointment> allAppointments = List.of();
     private List<Prescription> allPrescriptions = List.of();
 
     @FXML
     public void initialize() {
+        configureRoleBasedAccess();
+
         doctorColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFirstName() + " " + c.getValue().getLastName()));
         patientNameColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFirstName() + " " + c.getValue().getLastName()));
         patientOibColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getOib()));
         appointmentDateColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().dateTime().toString()));
+
         appointmentPatientColumn.setCellValueFactory(c -> {
             Patient p = allPatients.stream().filter(pt -> Objects.equals(pt.getId(), c.getValue().patientId())).findFirst().orElse(null);
             return new SimpleStringProperty(p != null ? p.getFirstName() + " " + p.getLastName() : "Unknown");
@@ -84,8 +98,23 @@ public class DoctorViewController {
             if (newV != null) showDoctorDetails(newV);
             else clearDoctorDetails();
         });
-
         reload();
+    }
+
+
+    private void configureRoleBasedAccess() {
+        boolean isAdmin = loggedInStaff != null && loggedInStaff.getRole() != null && "ADMIN".equalsIgnoreCase(loggedInStaff.getRole().toString());
+        if (doctorCrudContainer != null) {
+            doctorCrudContainer.setVisible(isAdmin);
+            doctorCrudContainer.setManaged(isAdmin);
+        } else {
+            Arrays.asList(addDoctorBtn, editDoctorBtn, deleteDoctorBtn).forEach(btn -> {
+                if (btn != null) {
+                    btn.setVisible(isAdmin);
+                    btn.setManaged(isAdmin);
+                }
+            });
+        }
     }
 
     private void showDoctorDetails(Doctor doctor) {
@@ -120,7 +149,8 @@ public class DoctorViewController {
     private void reload() {
         Thread.startVirtualThread(() -> {
             try {
-                List<Doctor> docs = doctorRepo.getAll().stream().filter(d -> d.getHospital() != null && Objects.equals(d.getHospital().getId(), loggedInStaff.getHospital().getId())).toList();
+                Long currentHospitalId = (loggedInStaff != null && loggedInStaff.getHospital() != null) ? loggedInStaff.getHospital().getId() : null;
+                List<Doctor> docs = doctorRepo.getAll().stream().filter(d -> d.getHospital() != null && Objects.equals(d.getHospital().getId(), currentHospitalId)).toList();
                 List<Patient> pts = patientRepo.getAll();
                 List<Appointment> appts = appointmentRepo.getAll();
                 List<Prescription> scripts = prescriptionRepo.getAll();
