@@ -8,7 +8,7 @@ import com.alex.sustavzaupravljanjebolnice.repository.NurseRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.PatientRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.PrescriptionRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.WardRepo;
-import com.alex.sustavzaupravljanjebolnice.util.PatientPrescriptionHelper; // Our extracted logic
+import com.alex.sustavzaupravljanjebolnice.util.HospitalCrudHelper; // Our extracted logic
 import com.alex.sustavzaupravljanjebolnice.util.boxes.AlertBox;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -118,46 +118,46 @@ public class NurseViewController {
     // Extracted Routing Handlers
     @FXML
     private void handleAddNurse() {
-        PatientPrescriptionHelper.addNurse(this::reload);
+        HospitalCrudHelper.addNurse(this::reload);
     }
 
     @FXML
     private void handleEditNurse() {
-        PatientPrescriptionHelper.editNurse(nursesTable.getSelectionModel().getSelectedItem(), this::reload);
+        HospitalCrudHelper.editNurse(nursesTable.getSelectionModel().getSelectedItem(), this::reload);
     }
 
     @FXML
     private void handleDeleteNurse() {
-        PatientPrescriptionHelper.deleteNurse(nursesTable.getSelectionModel().getSelectedItem(), this::reload);
+        HospitalCrudHelper.deleteNurse(nursesTable.getSelectionModel().getSelectedItem(), this::reload);
     }
 
     @FXML
     private void handleAddPatient() {
-        PatientPrescriptionHelper.addPatient(this::reload);
+        HospitalCrudHelper.addPatient(this::reload);
     }
 
     @FXML
     private void handleEditPatient() {
-        PatientPrescriptionHelper.editPatient(patientsTable.getSelectionModel().getSelectedItem(), this::reload);
+        HospitalCrudHelper.editPatient(patientsTable.getSelectionModel().getSelectedItem(), this::reload);
     }
 
     @FXML
     private void handleDeletePatient() {
-        PatientPrescriptionHelper.deletePatient(patientsTable.getSelectionModel().getSelectedItem(), this::reload);
+        HospitalCrudHelper.deletePatient(patientsTable.getSelectionModel().getSelectedItem(), this::reload);
     }
 
     @FXML
     private void handleAddPrescription() {
-        PatientPrescriptionHelper.addPrescription(this::reload);
+        HospitalCrudHelper.addPrescription(this::reload);
     }
 
     @FXML
     private void handleEditPrescription() {
-        PatientPrescriptionHelper.editPrescription(prescriptionsTable.getSelectionModel().getSelectedItem(), this::reload);
+        HospitalCrudHelper.editPrescription(prescriptionsTable.getSelectionModel().getSelectedItem(), this::reload);
     }
 
     @FXML
     private void handleDeletePrescription() {
-        PatientPrescriptionHelper.deletePrescription(prescriptionsTable.getSelectionModel().getSelectedItem(), this::reload);
+        HospitalCrudHelper.deletePrescription(prescriptionsTable.getSelectionModel().getSelectedItem(), this::reload);
     }
 }

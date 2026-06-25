@@ -1,18 +1,17 @@
 package com.alex.sustavzaupravljanjebolnice.controller;
 
-import com.alex.sustavzaupravljanjebolnice.controller.popup.DoctorDialogController;
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Appointment;
+import com.alex.sustavzaupravljanjebolnice.entity.hospital.Prescription;
 import com.alex.sustavzaupravljanjebolnice.entity.staff.Doctor;
 import com.alex.sustavzaupravljanjebolnice.entity.staff.Staff;
 import com.alex.sustavzaupravljanjebolnice.repository.AppointmentRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.DoctorRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.PatientRepo;
+import com.alex.sustavzaupravljanjebolnice.repository.PrescriptionRepo;
+import com.alex.sustavzaupravljanjebolnice.util.HospitalCrudHelper;
 import com.alex.sustavzaupravljanjebolnice.util.UserSession;
-import com.alex.sustavzaupravljanjebolnice.util.WindowManager;
 import com.alex.sustavzaupravljanjebolnice.util.boxes.AlertBox;
-import com.alex.sustavzaupravljanjebolnice.util.boxes.ConfirmationBox;
-import com.alex.sustavzaupravljanjebolnice.util.boxes.InfoBox;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -21,61 +20,47 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class DoctorViewController {
-    private static final Logger log = LoggerFactory.getLogger(DoctorViewController.class);
     private final Staff loggedInStaff = UserSession.getInstance().getLoggedInStaff();
     private final DoctorRepo doctorRepo = new DoctorRepo();
     private final PatientRepo patientRepo = new PatientRepo();
     private final AppointmentRepo appointmentRepo = new AppointmentRepo();
+    private final PrescriptionRepo prescriptionRepo = new PrescriptionRepo();
+
     @FXML
     private TableView<Doctor> doctorsTable;
     @FXML
     private TableColumn<Doctor, String> doctorColumn;
     @FXML
-    private ImageView picture;
-    @FXML
-    private Label nameSurname;
-    @FXML
-    private Label oib;
-    @FXML
-    private Label role;
-    @FXML
-    private Label email;
-    @FXML
-    private Label salary;
-    @FXML
-    private Label hospital;
-    @FXML
-    private Label phoneNumber;
-    @FXML
-    private Label address;
-
-    // Sub-tables
-    @FXML
     private TableView<Patient> patientsTable;
     @FXML
-    private TableColumn<Patient, String> patientNameColumn;
-    @FXML
-    private TableColumn<Patient, String> patientOibColumn;
-
+    private TableColumn<Patient, String> patientNameColumn, patientOibColumn;
     @FXML
     private TableView<Appointment> appointmentsTable;
     @FXML
-    private TableColumn<Appointment, String> appointmentDateColumn;
-    @FXML
-    private TableColumn<Appointment, String> appointmentPatientColumn;
+    private TableColumn<Appointment, String> appointmentDateColumn, appointmentPatientColumn;
 
-    private List<Patient> patients = List.of();
+    @FXML
+    private TableView<Prescription> prescriptionsTable;
+    @FXML
+    private TableColumn<Prescription, String> prescriptionNameColumn, prescriptionPatientColumn, prescriptionDurationColumn;
+
+    @FXML
+    private Label nameSurname, oib, role, email, salary, hospital, phoneNumber, address;
+    @FXML
+    private ImageView picture;
+
+    private List<Patient> allPatients = List.of();
     private List<Appointment> allAppointments = List.of();
+    private List<Prescription> allPrescriptions = List.of();
 
     @FXML
     public void initialize() {
@@ -84,37 +69,23 @@ public class DoctorViewController {
         patientOibColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getOib()));
         appointmentDateColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().dateTime().toString()));
         appointmentPatientColumn.setCellValueFactory(c -> {
-            Appointment a = c.getValue();
-            String pName = patients.stream().filter(p -> Objects.equals(p.getId(), a.patientId())).map(p -> p.getFirstName() + " " + p.getLastName()).findFirst().orElse("Unknown");
-            return new SimpleStringProperty(pName);
+            Patient p = allPatients.stream().filter(pt -> Objects.equals(pt.getId(), c.getValue().patientId())).findFirst().orElse(null);
+            return new SimpleStringProperty(p != null ? p.getFirstName() + " " + p.getLastName() : "Unknown");
         });
 
-        doctorsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                showDoctorDetails(newSelection);
-            } else {
-                clearDoctorDetails();
-            }
+        prescriptionNameColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getName()));
+        prescriptionPatientColumn.setCellValueFactory(c -> {
+            Patient p = allPatients.stream().filter(pt -> pt.getId() != null && pt.getId().longValue() == c.getValue().getPatientId().longValue()).findFirst().orElse(null);
+            return new SimpleStringProperty(p != null ? p.getFirstName() + " " + p.getLastName() : "Unknown");
+        });
+        prescriptionDurationColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStartDate() + " - " + c.getValue().getEndDate()));
+
+        doctorsTable.getSelectionModel().selectedItemProperty().addListener((o, oldV, newV) -> {
+            if (newV != null) showDoctorDetails(newV);
+            else clearDoctorDetails();
         });
 
         reload();
-    }
-
-    private void loadData() throws SQLException {
-        List<Doctor> doctors = doctorRepo.getAll().stream().filter(d -> d.getHospital() != null && Objects.equals(d.getHospital().getId(), loggedInStaff.getHospital().getId())).toList();
-        patients = patientRepo.getAll();
-        allAppointments = appointmentRepo.getAll();
-
-        Platform.runLater(() -> {
-            doctorsTable.setItems(FXCollections.observableArrayList(doctors));
-            Doctor selected = doctorsTable.getSelectionModel().getSelectedItem();
-            if (selected != null) {
-                showDoctorDetails(selected);
-            } else {
-                clearDoctorDetails();
-            }
-        });
-        log.info("Doctors overview data synchronized securely.");
     }
 
     private void showDoctorDetails(Doctor doctor) {
@@ -127,80 +98,93 @@ public class DoctorViewController {
         phoneNumber.setText("Phone: " + doctor.getPhoneNumber());
         address.setText("Address: " + doctor.getAddress());
 
-        List<Appointment> filteredAppointments = allAppointments.stream().filter(a -> Objects.equals(a.doctorId(), doctor.getId())).toList();
-        appointmentsTable.setItems(FXCollections.observableArrayList(filteredAppointments));
-        Set<Integer> assignedPatientIds = filteredAppointments.stream().map(Appointment::patientId).collect(Collectors.toSet());
-        List<Patient> filteredPatients = patients.stream().filter(p -> assignedPatientIds.contains(p.getId())).toList();
+        List<Appointment> filteredAppts = allAppointments.stream().filter(a -> Objects.equals(a.doctorId(), doctor.getId())).toList();
+        appointmentsTable.setItems(FXCollections.observableArrayList(filteredAppts));
+
+        Set<Integer> assignedPatientIds = filteredAppts.stream().map(Appointment::patientId).collect(Collectors.toSet());
+        List<Patient> filteredPatients = allPatients.stream().filter(p -> assignedPatientIds.contains(p.getId())).toList();
         patientsTable.setItems(FXCollections.observableArrayList(filteredPatients));
+
+        Set<Long> patientLongIds = filteredPatients.stream().map(p -> p.getId().longValue()).collect(Collectors.toSet());
+        List<Prescription> filteredScripts = allPrescriptions.stream().filter(p -> p.getPatientId() != null && patientLongIds.contains(p.getPatientId().longValue())).toList();
+        prescriptionsTable.setItems(FXCollections.observableArrayList(filteredScripts));
     }
 
     private void clearDoctorDetails() {
-        nameSurname.setText("");
-        oib.setText("");
-        role.setText("");
-        email.setText("");
-        salary.setText("");
-        hospital.setText("");
-        phoneNumber.setText("");
-        address.setText("");
+        Arrays.asList(nameSurname, oib, role, email, salary, hospital, phoneNumber, address).forEach(l -> l.setText(""));
         appointmentsTable.getItems().clear();
         patientsTable.getItems().clear();
-    }
-
-    @FXML
-    private void handleAddDoctor() {
-        WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/doctor-dialog.fxml", "Add New Doctor Profile", DoctorDialogController::setNewDoctorContext, c -> {
-            if (c.isSaved()) reload();
-        });
-    }
-
-    @FXML
-    private void handleEditDoctor() {
-        Doctor selected = doctorsTable.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            AlertBox.show("Warning", "Please select a doctor to edit.");
-            return;
-        }
-
-        WindowManager.<DoctorDialogController>showModal("/com/alex/sustavzaupravljanjebolnice/popup/doctor-dialog.fxml", "Edit Doctor Profile", c -> c.setDoctor(selected), c -> {
-            if (c.isSaved()) reload();
-        });
-    }
-
-    @FXML
-    private void handleDeleteDoctor() {
-        Doctor selected = doctorsTable.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            AlertBox.show("Warning", "Please select a doctor record to delete.");
-            return;
-        }
-
-        boolean confirmed = ConfirmationBox.show("Are you sure?", "Delete doctor: " + selected.getFirstName() + " " + selected.getLastName() + "?\nThis action cannot be undone.");
-        if (!confirmed) return;
-
-        Thread.startVirtualThread(() -> {
-            try {
-                doctorRepo.deleteById((long) selected.getId());
-                log.info("Successfully deleted doctor context profile ID: {}", selected.getId());
-                Platform.runLater(() -> {
-                    reload();
-                    InfoBox.show("Success");
-                });
-            } catch (SQLException e) {
-                log.error("Failed to discard doctor record", e);
-                Platform.runLater(() -> AlertBox.show("Database Reference Conflict", e.getMessage()));
-            }
-        });
+        prescriptionsTable.getItems().clear();
     }
 
     private void reload() {
         Thread.startVirtualThread(() -> {
             try {
-                loadData();
+                List<Doctor> docs = doctorRepo.getAll().stream().filter(d -> d.getHospital() != null && Objects.equals(d.getHospital().getId(), loggedInStaff.getHospital().getId())).toList();
+                List<Patient> pts = patientRepo.getAll();
+                List<Appointment> appts = appointmentRepo.getAll();
+                List<Prescription> scripts = prescriptionRepo.getAll();
+
+                Platform.runLater(() -> {
+                    this.allPatients = pts;
+                    this.allAppointments = appts;
+                    this.allPrescriptions = scripts;
+                    doctorsTable.setItems(FXCollections.observableArrayList(docs));
+                    Doctor currentSelection = doctorsTable.getSelectionModel().getSelectedItem();
+                    if (currentSelection != null) showDoctorDetails(currentSelection);
+                    else clearDoctorDetails();
+                });
             } catch (SQLException e) {
-                log.error("Failed async reload", e);
                 Platform.runLater(() -> AlertBox.show("SQL Processing Failure", e.getMessage()));
             }
         });
+    }
+
+    // Doctor Actions
+    @FXML
+    private void handleAddDoctor() {
+        HospitalCrudHelper.addDoctor(this::reload);
+    }
+
+    @FXML
+    private void handleEditDoctor() {
+        HospitalCrudHelper.editDoctor(doctorsTable.getSelectionModel().getSelectedItem(), this::reload);
+    }
+
+    @FXML
+    private void handleDeleteDoctor() {
+        HospitalCrudHelper.deleteDoctor(doctorsTable.getSelectionModel().getSelectedItem(), this::reload);
+    }
+
+    // Patient Actions
+    @FXML
+    private void handleAddPatient() {
+        HospitalCrudHelper.addPatient(this::reload);
+    }
+
+    @FXML
+    private void handleEditPatient() {
+        HospitalCrudHelper.editPatient(patientsTable.getSelectionModel().getSelectedItem(), this::reload);
+    }
+
+    @FXML
+    private void handleDeletePatient() {
+        HospitalCrudHelper.deletePatient(patientsTable.getSelectionModel().getSelectedItem(), this::reload);
+    }
+
+    // Prescription Actions
+    @FXML
+    private void handleAddPrescription() {
+        HospitalCrudHelper.addPrescription(this::reload);
+    }
+
+    @FXML
+    private void handleEditPrescription() {
+        HospitalCrudHelper.editPrescription(prescriptionsTable.getSelectionModel().getSelectedItem(), this::reload);
+    }
+
+    @FXML
+    private void handleDeletePrescription() {
+        HospitalCrudHelper.deletePrescription(prescriptionsTable.getSelectionModel().getSelectedItem(), this::reload);
     }
 }

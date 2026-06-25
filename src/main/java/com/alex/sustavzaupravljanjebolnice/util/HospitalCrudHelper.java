@@ -1,28 +1,68 @@
 package com.alex.sustavzaupravljanjebolnice.util;
 
+import com.alex.sustavzaupravljanjebolnice.controller.popup.DoctorDialogController;
 import com.alex.sustavzaupravljanjebolnice.controller.popup.NurseDialogController;
 import com.alex.sustavzaupravljanjebolnice.controller.popup.PrescriptionDialogController;
 import com.alex.sustavzaupravljanjebolnice.entity.Activity;
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Prescription;
+import com.alex.sustavzaupravljanjebolnice.entity.staff.Doctor;
 import com.alex.sustavzaupravljanjebolnice.entity.staff.Nurse;
 import com.alex.sustavzaupravljanjebolnice.entity.staff.Staff;
+import com.alex.sustavzaupravljanjebolnice.repository.DoctorRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.NurseRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.PatientRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.PrescriptionRepo;
 import com.alex.sustavzaupravljanjebolnice.util.boxes.AlertBox;
 import com.alex.sustavzaupravljanjebolnice.util.boxes.ConfirmationBox;
+import com.alex.sustavzaupravljanjebolnice.util.boxes.InfoBox;
 import javafx.application.Platform;
 
 import java.sql.SQLException;
 
-public class PatientPrescriptionHelper {
+public class HospitalCrudHelper {
     private static final NurseRepo nurseRepo = new NurseRepo();
+    private static final DoctorRepo doctorRepo = new DoctorRepo();
     private static final PatientRepo patientRepo = new PatientRepo();
     private static final PrescriptionRepo prescriptionRepo = new PrescriptionRepo();
     private static final Staff currentStaff = UserSession.getInstance().getLoggedInStaff();
     private static final String operator = currentStaff.getFirstName() + " " + currentStaff.getLastName();
 
+    // ==========================================
+    //           DOCTOR CRUD ACTIONS
+    // ==========================================
+    public static void addDoctor(Runnable refresh) {
+        WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/doctor-dialog.fxml", "Add New Doctor Profile", DoctorDialogController::setNewDoctorContext, c -> {
+            if (c.isSaved()) refresh.run();
+        });
+    }
+
+    public static void editDoctor(Doctor selection, Runnable refresh) {
+        if (selection == null) {
+            AlertBox.show("Warning", "Please select a doctor to edit.");
+            return;
+        }
+        WindowManager.<DoctorDialogController>showModal("/com/alex/sustavzaupravljanjebolnice/popup/doctor-dialog.fxml", "Edit Doctor Profile", c -> c.setDoctor(selection), c -> {
+            if (c.isSaved()) refresh.run();
+        });
+    }
+
+    public static void deleteDoctor(Doctor selection, Runnable refresh) {
+        if (selection == null) {
+            AlertBox.show("Warning", "Please select a doctor record to delete.");
+            return;
+        }
+        if (ConfirmationBox.show("Are you sure?", "Delete doctor: " + selection.getFirstName() + " " + selection.getLastName() + "?\nThis action cannot be undone.")) {
+            executeAsync(() -> doctorRepo.deleteById((long) selection.getId()), "Deleted Doctor Profile: " + selection.getLastName(), () -> {
+                refresh.run();
+                InfoBox.show("Success");
+            });
+        }
+    }
+
+    // ==========================================
+    //           NURSE CRUD ACTIONS
+    // ==========================================
     public static void addNurse(Runnable refresh) {
         WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/nurse-dialog.fxml", "Register Nurse", c -> ((NurseDialogController) c).setNewNurseContext(), c -> {
             if (((NurseDialogController) c).isSaved()) refresh.run();
@@ -49,6 +89,9 @@ public class PatientPrescriptionHelper {
         }
     }
 
+    // ==========================================
+    //           PATIENT CRUD ACTIONS
+    // ==========================================
     public static void addPatient(Runnable refresh) {
         WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/patient-dialog.fxml", "Admit Patient", null, c -> refresh.run());
     }
@@ -72,6 +115,9 @@ public class PatientPrescriptionHelper {
         }
     }
 
+    // ==========================================
+    //         PRESCRIPTION CRUD ACTIONS
+    // ==========================================
     public static void addPrescription(Runnable refresh) {
         WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/prescription-dialog.fxml", "Issue Prescription", null, c -> {
             if (((PrescriptionDialogController) c).isSaved()) refresh.run();
@@ -94,7 +140,7 @@ public class PatientPrescriptionHelper {
             return;
         }
         if (ConfirmationBox.show("Revoke Script", "Erase completely medication record ID: " + selection.getId() + "?")) {
-            executeAsync(() -> prescriptionRepo.deleteById(selection.getId()), "Revoked prescription transaction row matching mapping index identifier: " + selection.getId(), refresh);
+            executeAsync(() -> prescriptionRepo.deleteById(selection.getId()), "Revoked prescription sequence ID: " + selection.getId(), refresh);
         }
     }
 
@@ -105,7 +151,7 @@ public class PatientPrescriptionHelper {
                 LogWriter.writeLogAsync(new Activity(activityLog, operator));
                 Platform.runLater(completeCallback);
             } catch (SQLException e) {
-                Platform.runLater(() -> AlertBox.show("Database Interruption Fault", e.getMessage()));
+                Platform.runLater(() -> AlertBox.show("Database Fault", e.getMessage()));
             }
         });
     }
