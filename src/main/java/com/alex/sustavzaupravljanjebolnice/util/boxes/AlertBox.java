@@ -7,7 +7,6 @@ import javafx.scene.control.Alert;
  */
 public final class AlertBox {
 
-    // Defeat instantiation by throwing an exception if reflection tries to force it
     private AlertBox() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }

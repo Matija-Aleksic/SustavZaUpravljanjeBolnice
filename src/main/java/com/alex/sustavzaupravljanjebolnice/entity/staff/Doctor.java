@@ -3,7 +3,6 @@ package com.alex.sustavzaupravljanjebolnice.entity.staff;
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
 import com.alex.sustavzaupravljanjebolnice.entity.builders.DoctorBuilder;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Appointment;
-import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
 import com.alex.sustavzaupravljanjebolnice.entity.interfaces.Conactable;
 import com.alex.sustavzaupravljanjebolnice.entity.interfaces.Schedulable;
 
@@ -13,7 +12,6 @@ import java.util.List;
  * The type Doctor.
  */
 public non-sealed class Doctor extends Staff implements Schedulable, Conactable {
-    private Hospital hospital;
     private List<Patient> assignedPatients;
     private List<Appointment> appointments;
     private String phoneNumber;
@@ -40,23 +38,6 @@ public non-sealed class Doctor extends Staff implements Schedulable, Conactable 
     public Doctor() {
     }
 
-    /**
-     * Gets hospital.
-     *
-     * @return the hospital
-     */
-    public Hospital getHospital() {
-        return hospital;
-    }
-
-    /**
-     * Sets hospital.
-     *
-     * @param hospital the hospital
-     */
-    public void setHospital(Hospital hospital) {
-        this.hospital = hospital;
-    }
 
     /**
      * Gets assigned patients.

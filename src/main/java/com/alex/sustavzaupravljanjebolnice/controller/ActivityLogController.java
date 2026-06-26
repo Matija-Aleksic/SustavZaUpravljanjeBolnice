@@ -15,10 +15,8 @@ import java.util.List;
 
 public class ActivityLogController {
 
-    private static final DateTimeFormatter FORMATTER =
-            DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
-    private final ObservableList<Activity> activityList =
-            FXCollections.observableArrayList();
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
+    private final ObservableList<Activity> activityList = FXCollections.observableArrayList();
     @FXML
     private TableView<Activity> activityTable;
     @FXML
@@ -31,25 +29,9 @@ public class ActivityLogController {
     @FXML
     public void initialize() {
 
-        dateColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(
-                        cellData.getValue()
-                                .getMadeOn()
-                                .format(FORMATTER)
-                )
-        );
-
-        descriptionColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(
-                        cellData.getValue().getDesc()
-                )
-        );
-
-        madeByColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(
-                        cellData.getValue().getMadeBy()
-                )
-        );
+        dateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMadeOn().format(FORMATTER)));
+        descriptionColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDesc()));
+        madeByColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMadeBy()));
 
         loadLogs();
     }
@@ -62,11 +44,7 @@ public class ActivityLogController {
     private void loadLogs() {
 
         List<Activity> logs = LogReader.readLogsFromFile();
-
-        logs.sort(
-                Comparator.comparing(Activity::getMadeOn).reversed()
-        );
-
+        logs.sort(Comparator.comparing(Activity::getMadeOn).reversed());
         activityList.clear();
         activityList.addAll(logs);
 

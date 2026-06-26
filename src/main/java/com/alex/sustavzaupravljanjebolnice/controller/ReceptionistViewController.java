@@ -1,6 +1,7 @@
 package com.alex.sustavzaupravljanjebolnice.controller;
 
 import com.alex.sustavzaupravljanjebolnice.controller.popup.AppointmentDialogController;
+import com.alex.sustavzaupravljanjebolnice.entity.Activity;
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Appointment;
 import com.alex.sustavzaupravljanjebolnice.entity.staff.Doctor;
@@ -8,6 +9,7 @@ import com.alex.sustavzaupravljanjebolnice.entity.staff.Staff;
 import com.alex.sustavzaupravljanjebolnice.repository.AppointmentRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.DoctorRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.PatientRepo;
+import com.alex.sustavzaupravljanjebolnice.util.LogWriter;
 import com.alex.sustavzaupravljanjebolnice.util.UserSession;
 import com.alex.sustavzaupravljanjebolnice.util.WindowManager;
 import com.alex.sustavzaupravljanjebolnice.util.boxes.AlertBox;
@@ -33,9 +35,8 @@ import java.util.stream.Collectors;
 public class ReceptionistViewController {
 
     private static final Logger log = LoggerFactory.getLogger(ReceptionistViewController.class);
-
     private final Staff loggedInStaff = UserSession.getInstance().getLoggedInStaff();
-
+    private final String operator = loggedInStaff.getFirstName() + " " + loggedInStaff.getLastName();
     private final DoctorRepo doctorRepo = new DoctorRepo();
     private final PatientRepo patientRepo = new PatientRepo();
     private final AppointmentRepo appointmentRepo = new AppointmentRepo();
@@ -98,18 +99,19 @@ public class ReceptionistViewController {
 
     @FXML
     private void handleAddAppointment() {
-
         WindowManager.<AppointmentDialogController>showModal("/com/alex/sustavzaupravljanjebolnice/popup/appointment-dialog.fxml", "Add Appointment", c -> {
             c.setData(doctors, patients);
             c.setNewAppointmentContext();
         }, c -> {
-            if (c.isSaved()) reload();
+            if (c.isSaved()) {
+                logActionAsync("Scheduled a new Patient Appointment");
+                reload();
+            }
         });
     }
 
     @FXML
     private void handleEditAppointment() {
-
         Appointment selected = appointmentsTable.getSelectionModel().getSelectedItem();
 
         if (selected == null) {
@@ -121,13 +123,15 @@ public class ReceptionistViewController {
             c.setData(doctors, patients);
             c.setAppointment(selected);
         }, c -> {
-            if (c.isSaved()) reload();
+            if (c.isSaved()) {
+                logActionAsync("Modified Appointment sequence ID: " + selected.id());
+                reload();
+            }
         });
     }
 
     @FXML
     private void handleDeleteAppointment() {
-
         Appointment selected = appointmentsTable.getSelectionModel().getSelectedItem();
 
         if (selected == null) {
@@ -136,14 +140,14 @@ public class ReceptionistViewController {
         }
 
         boolean confirmed = ConfirmationBox.show("Are you sure?", "This cannot be undone");
-
         if (!confirmed) return;
 
         Thread.startVirtualThread(() -> {
             try {
                 appointmentRepo.deleteById((long) selected.id());
-
                 log.info("Deleted appointment {}", selected.id());
+
+                LogWriter.writeLogAsync(new Activity("Cancelled Appointment ID: " + selected.id(), operator));
 
                 Platform.runLater(() -> {
                     reload();
@@ -151,9 +155,7 @@ public class ReceptionistViewController {
                 });
 
             } catch (SQLException e) {
-
                 log.error("Delete failed", e);
-
                 Platform.runLater(() -> AlertBox.show("Error", e.getMessage()));
             }
         });
@@ -167,5 +169,9 @@ public class ReceptionistViewController {
                 Platform.runLater(() -> AlertBox.show("SQL Error", e.getMessage()));
             }
         });
+    }
+
+    private void logActionAsync(String message) {
+        Thread.startVirtualThread(() -> LogWriter.writeLogAsync(new Activity(message, operator)));
     }
 }

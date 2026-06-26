@@ -2,16 +2,16 @@ package com.alex.sustavzaupravljanjebolnice.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 public class Activity implements Serializable {
-    //   private static final long serialVersionUID = 1L; // Essential for binary serialization
 
     private LocalDateTime madeOn;
     private String desc;
     private String madeBy;
 
     public Activity(String desc, String madeBy) {
-        this.madeOn = LocalDateTime.now();
+        this.madeOn = LocalDateTime.now(ZoneId.of("Europe/Zagreb"));
         this.desc = desc;
         this.madeBy = madeBy;
     }

@@ -80,7 +80,7 @@ public class PrescriptionViewController {
         });
 
         chkShowAllPatients.selectedProperty().addListener((obs, wasAll, isAll) -> {
-            if (isAll) {
+            if (Boolean.TRUE.equals(isAll)) {
                 patientsTable.getSelectionModel().clearSelection();
             }
             applyPrescriptionFilter();

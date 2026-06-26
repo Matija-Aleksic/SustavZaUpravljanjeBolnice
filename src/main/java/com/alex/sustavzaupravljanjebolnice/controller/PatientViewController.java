@@ -27,7 +27,6 @@ import java.util.Objects;
 public class PatientViewController {
     private final Staff loggedInStaff = UserSession.getInstance().getLoggedInStaff();
 
-    // Instantiate all required relational repositories
     private final PatientRepo patientRepo = new PatientRepo();
     private final DoctorRepo doctorRepo = new DoctorRepo();
     private final AppointmentRepo appointmentRepo = new AppointmentRepo();
@@ -46,17 +45,14 @@ public class PatientViewController {
     @FXML
     private TableColumn<Patient, String> statusColumn;
 
-    // Detailed View Labels
     @FXML
     private Label detailName, detailOib, detailMbo, detailBirthDate, detailStatus, detailDoctor, detailWard, detailHospital;
 
-    // Inner relational detail lists for the selected patient
     @FXML
     private ListView<String> appointmentsListView;
     @FXML
     private ListView<String> prescriptionsListView;
 
-    // Action Control Buttons
     @FXML
     private Button addPatientBtn;
     @FXML
@@ -68,13 +64,11 @@ public class PatientViewController {
 
     @FXML
     public void initialize() {
-        // Table Column Cell Factories
         nameColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFirstName() + " " + c.getValue().getLastName()));
         oibColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getOib()));
         mboColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getMbo()));
         statusColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStatus() != null ? c.getValue().getStatus().name() : "N/A"));
 
-        // Security layer checking: Only enable CRUD utilities if role equals ADMIN
         boolean isAdmin = loggedInStaff != null && loggedInStaff.getRole() != null && "ADMIN".equalsIgnoreCase(loggedInStaff.getRole().toString());
 
         if (!isAdmin) {
@@ -85,7 +79,6 @@ public class PatientViewController {
             adminActionBar.setManaged(false);
         }
 
-        // Selection row listener
         patientsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) showPatientDetails(newVal);
             else clearPatientDetails();
@@ -101,18 +94,16 @@ public class PatientViewController {
         detailBirthDate.setText("Birth Date: " + (patient.getBirthDate() != null ? patient.getBirthDate().toString() : "N/A"));
         detailStatus.setText("Status: " + (patient.getStatus() != null ? patient.getStatus().name() : "N/A"));
 
-        // Safely extract names from fully hydrated reference objects
         detailHospital.setText("Hospital: " + (patient.getHospital() != null && patient.getHospital().getName() != null ? patient.getHospital().getName() : "N/A"));
 
         detailDoctor.setText("Assigned Doctor: " + (patient.getAssignedDoctor() != null && patient.getAssignedDoctor().getLastName() != null ? "Dr. " + patient.getAssignedDoctor().getFirstName() + " " + patient.getAssignedDoctor().getLastName() : "Unassigned"));
 
         detailWard.setText("Ward Unit: " + (patient.getAssignedWard() != null && patient.getAssignedWard().getName() != null ? patient.getAssignedWard().getName() : "Outpatient"));
 
-        // Populating sub-collections directly from the patient object
         appointmentsListView.getItems().clear();
         if (patient.getAppointments() != null && !patient.getAppointments().isEmpty()) {
             for (Appointment appt : patient.getAppointments()) {
-                appointmentsListView.getItems().add("📅 " + appt.dateTime().toString() + " - Clinic Session");
+                appointmentsListView.getItems().add(appt.dateTime().toString() + " - Clinic Session");
             }
         } else {
             appointmentsListView.getItems().add("No upcoming scheduled clinical appointments.");
@@ -121,7 +112,7 @@ public class PatientViewController {
         prescriptionsListView.getItems().clear();
         if (patient.getPrescription() != null && !patient.getPrescription().isEmpty()) {
             for (Prescription rx : patient.getPrescription()) {
-                prescriptionsListView.getItems().add("💊 " + rx.getName() + " [" + rx.getStartDate() + " to " + rx.getEndDate() + "]");
+                prescriptionsListView.getItems().add(rx.getName() + " [" + rx.getStartDate() + " to " + rx.getEndDate() + "]");
             }
         } else {
             prescriptionsListView.getItems().add("No active medication or prescription cycles.");
@@ -137,7 +128,6 @@ public class PatientViewController {
     private void reload() {
         Thread.startVirtualThread(() -> {
             try {
-                // 1. Fetch raw entity datasets from database layer repositories
                 List<Patient> basePatients = patientRepo.getAll();
                 List<Doctor> allDoctors = doctorRepo.getAll();
                 List<Hospital> allHospitals = hospitalRepo.getAll();
@@ -145,25 +135,20 @@ public class PatientViewController {
                 List<Appointment> allAppointments = appointmentRepo.getAll();
                 List<Prescription> allPrescriptions = prescriptionRepo.getAll();
 
-                // 2. Perform deep relational object hydration via stream mapping
                 for (Patient patient : basePatients) {
 
-                    // Hydrate target Hospital object properties
                     if (patient.getHospital() != null && patient.getHospital().getId() != null) {
                         allHospitals.stream().filter(h -> Objects.equals(h.getId(), patient.getHospital().getId())).findFirst().ifPresent(patient::setHospital);
                     }
 
-                    // Hydrate target assigned Doctor entity context
                     if (patient.getAssignedDoctor() != null && patient.getAssignedDoctor().getId() != null) {
                         allDoctors.stream().filter(d -> Objects.equals(d.getId(), patient.getAssignedDoctor().getId())).findFirst().ifPresent(patient::setAssignedDoctor);
                     }
 
-                    // Hydrate target Ward location structure
                     if (patient.getAssignedWard() != null && patient.getAssignedWard().getId() != null) {
                         allWards.stream().filter(w -> Objects.equals(w.getId(), patient.getAssignedWard().getId())).findFirst().ifPresent(patient::setAssignedWard);
                     }
 
-                    // Filter and map relational list arrays
                     List<Appointment> patientAppts = allAppointments.stream().filter(a -> a.patientId() != null && a.patientId().longValue() == patient.getId().longValue()).toList();
                     patient.setAppointments(new ArrayList<>(patientAppts));
 
@@ -171,15 +156,12 @@ public class PatientViewController {
                     patient.setPrescriptions(new ArrayList<>(patientScripts));
                 }
 
-                // 3. Filter fully-hydrated array to only show matching local hospital contexts
                 List<Patient> localizedPatients = basePatients.stream().filter(p -> p.getHospital() != null && loggedInStaff != null && loggedInStaff.getHospital() != null && Objects.equals(p.getHospital().getId(), loggedInStaff.getHospital().getId())).toList();
 
-                // 4. Update the JavaFX application thread view components
                 Platform.runLater(() -> {
                     patientsTable.setItems(FXCollections.observableArrayList(localizedPatients));
                     Patient currentSelection = patientsTable.getSelectionModel().getSelectedItem();
                     if (currentSelection != null) {
-                        // Re-trigger visual detail panels with updated references
                         showPatientDetails(currentSelection);
                     } else {
                         clearPatientDetails();

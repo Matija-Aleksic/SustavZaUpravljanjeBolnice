@@ -29,4 +29,15 @@ public class HelloApplication extends Application {
 
         WindowManager.switchScene(stage, "/com/alex/sustavzaupravljanjebolnice/login.fxml", "Hello!", 400, 600);
     }
+
+    @Override
+    public void stop() {
+        logger.info("JavaFX UI has closed. Shutting down database engine...");
+        try {
+            H2Server.stop();
+            logger.info("Database successfully stopped.");
+        } catch (Exception _) {
+            logger.log(Level.SEVERE, "Failed to clean stop H2 Server");
+        }
+    }
 }

@@ -170,7 +170,6 @@ public class DoctorViewController {
         });
     }
 
-    // Doctor Actions
     @FXML
     private void handleAddDoctor() {
         HospitalCrudHelper.addDoctor(this::reload);
@@ -186,7 +185,6 @@ public class DoctorViewController {
         HospitalCrudHelper.deleteDoctor(doctorsTable.getSelectionModel().getSelectedItem(), this::reload);
     }
 
-    // Patient Actions
     @FXML
     private void handleAddPatient() {
         HospitalCrudHelper.addPatient(this::reload);

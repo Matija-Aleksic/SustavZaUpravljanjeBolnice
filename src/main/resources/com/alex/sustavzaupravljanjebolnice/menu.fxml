@@ -14,66 +14,57 @@
         <String fx:value="@hospital-styles.css"/>
     </stylesheets>
 
-    <!-- Hospital Button -->
-    <Button text="🏥 Hospital" onAction="#handleHospital"
+    <Button text="Hospital" onAction="#handleHospital"
             style="-fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px;">
         <styleClass>
             <String fx:value="menu-button"/>
         </styleClass>
     </Button>
 
-    <!-- Doctors Button -->
-    <Button text="👨‍⚕️ Doctors" onAction="#handleDoctors"
+    <Button text="Doctors" onAction="#handleDoctors"
             style="-fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px;">
         <styleClass>
             <String fx:value="menu-button"/>
         </styleClass>
     </Button>
 
-    <!-- Nurses Button -->
-    <Button text="👩‍⚕️ Nurses" onAction="#handleNurses"
+    <Button text="Nurses" onAction="#handleNurses"
             style="-fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px;">
         <styleClass>
             <String fx:value="menu-button"/>
         </styleClass>
     </Button>
 
-    <!-- Patients Button -->
-    <Button text="🧑‍🤝‍🧑 Patients" onAction="#handlePatients"
+    <Button text="Patients" onAction="#handlePatients"
             style="-fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px;">
         <styleClass>
             <String fx:value="menu-button"/>
         </styleClass>
     </Button>
 
-    <!-- Appointments Button -->
-    <Button text="📅 Appointments" onAction="#handleAppointments"
+    <Button text="Appointments" onAction="#handleAppointments"
             style="-fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px;">
         <styleClass>
             <String fx:value="menu-button"/>
         </styleClass>
     </Button>
 
-    <!-- Prescriptions Button -->
-    <Button text="💊 Prescriptions" onAction="#handlePrescriptions"
+    <Button text="Prescriptions" onAction="#handlePrescriptions"
             style="-fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px;">
         <styleClass>
             <String fx:value="menu-button"/>
         </styleClass>
     </Button>
 
-    <!-- Logs Button -->
-    <Button text="📋 Logs" onAction="#handleLogs"
+    <Button text="Logs" onAction="#handleLogs"
             style="-fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px;">
         <styleClass>
             <String fx:value="menu-button"/>
         </styleClass>
     </Button>
 
-    <!-- Spacer -->
     <Pane HBox.hgrow="ALWAYS"/>
 
-    <!-- Logout Button -->
     <Button text="🚪 Logout" onAction="#handleLogout"
             style="-fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-background-color: #d64541;">
         <styleClass>

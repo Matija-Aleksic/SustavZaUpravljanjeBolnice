@@ -2,7 +2,6 @@ package com.alex.sustavzaupravljanjebolnice.entity.staff;
 
 import com.alex.sustavzaupravljanjebolnice.entity.builders.NurseBuilder;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Department;
-import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Ward;
 
 import java.util.List;
@@ -11,7 +10,6 @@ import java.util.List;
  * The type Nurse.
  */
 public non-sealed class Nurse extends Staff {
-    private transient Hospital hospital;
     private Department department;
     private List<Ward> wards;
 
@@ -27,24 +25,6 @@ public non-sealed class Nurse extends Staff {
         this.hospital = b.getHospital();
         this.department = b.getDepartment();
         this.wards = b.getWards();
-    }
-
-    /**
-     * Gets hospital.
-     *
-     * @return the hospital
-     */
-    public Hospital getHospital() {
-        return hospital;
-    }
-
-    /**
-     * Sets hospital.
-     *
-     * @param hospital the hospital
-     */
-    public void setHospital(Hospital hospital) {
-        this.hospital = hospital;
     }
 
     /**

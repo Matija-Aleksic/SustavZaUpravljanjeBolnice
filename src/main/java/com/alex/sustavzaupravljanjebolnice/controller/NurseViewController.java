@@ -4,28 +4,30 @@ import com.alex.sustavzaupravljanjebolnice.entity.Patient;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Prescription;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Ward;
 import com.alex.sustavzaupravljanjebolnice.entity.staff.Nurse;
+import com.alex.sustavzaupravljanjebolnice.entity.staff.Staff;
 import com.alex.sustavzaupravljanjebolnice.repository.NurseRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.PatientRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.PrescriptionRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.WardRepo;
-import com.alex.sustavzaupravljanjebolnice.util.HospitalCrudHelper; // Our extracted logic
+import com.alex.sustavzaupravljanjebolnice.util.HospitalCrudHelper;
+import com.alex.sustavzaupravljanjebolnice.util.UserSession;
 import com.alex.sustavzaupravljanjebolnice.util.boxes.AlertBox;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.HBox;
 
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class NurseViewController {
+    private final Staff loggedInStaff = UserSession.getInstance().getLoggedInStaff();
     private final NurseRepo nurseRepo = new NurseRepo();
     private final PrescriptionRepo prescriptionRepo = new PrescriptionRepo();
     private final PatientRepo patientRepo = new PatientRepo();
@@ -46,12 +48,23 @@ public class NurseViewController {
     @FXML
     private Label nameSurname, oib, email, salary;
 
+    @FXML
+    private HBox nurseCrudContainer;
+    @FXML
+    private Button addNurseBtn;
+    @FXML
+    private Button editNurseBtn;
+    @FXML
+    private Button deleteNurseBtn;
+
     private List<Prescription> allPrescriptions = List.of();
     private List<Patient> allPatients = List.of();
     private List<Ward> allWards = List.of();
 
     @FXML
     public void initialize() {
+        configureRoleBasedAccess();
+
         nurseColumn.setCellValueFactory(d -> new ReadOnlyStringWrapper(d.getValue().getFirstName() + " " + d.getValue().getLastName()));
         patientNameColumn.setCellValueFactory(d -> new ReadOnlyStringWrapper(d.getValue().getFirstName() + " " + d.getValue().getLastName()));
         patientOibColumn.setCellValueFactory(d -> new ReadOnlyStringWrapper(d.getValue().getOib()));
@@ -69,6 +82,22 @@ public class NurseViewController {
         });
 
         reload();
+    }
+
+    private void configureRoleBasedAccess() {
+        boolean isAdmin = loggedInStaff != null && loggedInStaff.getRole() != null && "ADMIN".equalsIgnoreCase(loggedInStaff.getRole().toString());
+
+        if (nurseCrudContainer != null) {
+            nurseCrudContainer.setVisible(isAdmin);
+            nurseCrudContainer.setManaged(isAdmin);
+        } else {
+            Arrays.asList(addNurseBtn, editNurseBtn, deleteNurseBtn).forEach(btn -> {
+                if (btn != null) {
+                    btn.setVisible(isAdmin);
+                    btn.setManaged(isAdmin);
+                }
+            });
+        }
     }
 
     private void displayNurse(Nurse nurse) {
@@ -115,7 +144,6 @@ public class NurseViewController {
         return id == null ? null : allPatients.stream().filter(p -> p.getId() != null && p.getId().longValue() == id.longValue()).findFirst().orElse(null);
     }
 
-    // Extracted Routing Handlers
     @FXML
     private void handleAddNurse() {
         HospitalCrudHelper.addNurse(this::reload);

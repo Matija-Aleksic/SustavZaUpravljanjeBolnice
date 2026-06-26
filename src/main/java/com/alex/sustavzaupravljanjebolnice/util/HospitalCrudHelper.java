@@ -29,12 +29,12 @@ public class HospitalCrudHelper {
     private static final Staff currentStaff = UserSession.getInstance().getLoggedInStaff();
     private static final String OPERATOR = currentStaff.getFirstName() + " " + currentStaff.getLastName();
 
-    // ==========================================
-    //            DOCTOR CRUD ACTIONS
-    // ==========================================
     public static void addDoctor(Runnable refresh) {
         WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/doctor-dialog.fxml", "Add New Doctor Profile", DoctorDialogController::setNewDoctorContext, c -> {
-            if (c.isSaved()) refresh.run();
+            if (c.isSaved()) {
+                logActionAsync("Added a new Doctor profile");
+                refresh.run();
+            }
         });
     }
 
@@ -44,7 +44,10 @@ public class HospitalCrudHelper {
             return;
         }
         WindowManager.<DoctorDialogController>showModal("/com/alex/sustavzaupravljanjebolnice/popup/doctor-dialog.fxml", "Edit Doctor Profile", c -> c.setDoctor(selection), c -> {
-            if (c.isSaved()) refresh.run();
+            if (c.isSaved()) {
+                logActionAsync("Modified Doctor profile: " + selection.getLastName());
+                refresh.run();
+            }
         });
     }
 
@@ -61,12 +64,13 @@ public class HospitalCrudHelper {
         }
     }
 
-    // ==========================================
-    //            NURSE CRUD ACTIONS
-    // ==========================================
+
     public static void addNurse(Runnable refresh) {
         WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/nurse-dialog.fxml", "Register Nurse", c -> ((NurseDialogController) c).setNewNurseContext(), c -> {
-            if (((NurseDialogController) c).isSaved()) refresh.run();
+            if (((NurseDialogController) c).isSaved()) {
+                logActionAsync("Registered a new Nurse profile");
+                refresh.run();
+            }
         });
     }
 
@@ -76,7 +80,10 @@ public class HospitalCrudHelper {
             return;
         }
         WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/nurse-dialog.fxml", "Update Nurse", c -> ((NurseDialogController) c).setNurse(selection), c -> {
-            if (((NurseDialogController) c).isSaved()) refresh.run();
+            if (((NurseDialogController) c).isSaved()) {
+                logActionAsync("Updated Nurse profile: " + selection.getLastName());
+                refresh.run();
+            }
         });
     }
 
@@ -90,12 +97,13 @@ public class HospitalCrudHelper {
         }
     }
 
-    // ==========================================
-    //            PATIENT CRUD ACTIONS
-    // ==========================================
+
     public static void addPatient(Runnable refresh) {
         WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/patient-dialog.fxml", "Admit Patient", null, c -> {
-            if (((PatientDialogController) c).isOperationSaved()) refresh.run();
+            if (((PatientDialogController) c).isOperationSaved()) {
+                logActionAsync("Admitted a new Patient record");
+                refresh.run();
+            }
         });
     }
 
@@ -105,7 +113,10 @@ public class HospitalCrudHelper {
             return;
         }
         WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/patient-dialog.fxml", "Modify Patient", c -> ((PatientDialogController) c).setPatientToEdit(selection), c -> {
-            if (((PatientDialogController) c).isOperationSaved()) refresh.run();
+            if (((PatientDialogController) c).isOperationSaved()) {
+                logActionAsync("Modified Patient record: " + selection.getLastName());
+                refresh.run();
+            }
         });
     }
 
@@ -119,12 +130,12 @@ public class HospitalCrudHelper {
         }
     }
 
-    // ==========================================
-    //           PRESCRIPTION CRUD ACTIONS
-    // ==========================================
     public static void addPrescription(Runnable refresh) {
         WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/prescription-dialog.fxml", "Issue Prescription", null, c -> {
-            if (((PrescriptionDialogController) c).isSaved()) refresh.run();
+            if (((PrescriptionDialogController) c).isSaved()) {
+                logActionAsync("Issued a new medication prescription");
+                refresh.run();
+            }
         });
     }
 
@@ -134,7 +145,10 @@ public class HospitalCrudHelper {
             return;
         }
         WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/prescription-dialog.fxml", "Modify Orders", c -> ((PrescriptionDialogController) c).setPrescription(selection), c -> {
-            if (((PrescriptionDialogController) c).isSaved()) refresh.run();
+            if (((PrescriptionDialogController) c).isSaved()) {
+                logActionAsync("Modified Prescription ID: " + selection.getId());
+                refresh.run();
+            }
         });
     }
 
@@ -146,6 +160,11 @@ public class HospitalCrudHelper {
         if (ConfirmationBox.show("Revoke Script", "Erase completely medication record ID: " + selection.getId() + "?")) {
             executeAsync(() -> prescriptionRepo.deleteById(selection.getId()), "Revoked prescription sequence ID: " + selection.getId(), refresh);
         }
+    }
+
+
+    private static void logActionAsync(String activityLog) {
+        Thread.startVirtualThread(() -> LogWriter.writeLogAsync(new Activity(activityLog, OPERATOR)));
     }
 
     private static void executeAsync(SqlRunnable action, String activityLog, Runnable completeCallback) {
