@@ -2,6 +2,7 @@ package com.alex.sustavzaupravljanjebolnice.util;
 
 import com.alex.sustavzaupravljanjebolnice.controller.popup.DoctorDialogController;
 import com.alex.sustavzaupravljanjebolnice.controller.popup.NurseDialogController;
+import com.alex.sustavzaupravljanjebolnice.controller.popup.PatientDialogController;
 import com.alex.sustavzaupravljanjebolnice.controller.popup.PrescriptionDialogController;
 import com.alex.sustavzaupravljanjebolnice.entity.Activity;
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
@@ -26,10 +27,10 @@ public class HospitalCrudHelper {
     private static final PatientRepo patientRepo = new PatientRepo();
     private static final PrescriptionRepo prescriptionRepo = new PrescriptionRepo();
     private static final Staff currentStaff = UserSession.getInstance().getLoggedInStaff();
-    private static final String operator = currentStaff.getFirstName() + " " + currentStaff.getLastName();
+    private static final String OPERATOR = currentStaff.getFirstName() + " " + currentStaff.getLastName();
 
     // ==========================================
-    //           DOCTOR CRUD ACTIONS
+    //            DOCTOR CRUD ACTIONS
     // ==========================================
     public static void addDoctor(Runnable refresh) {
         WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/doctor-dialog.fxml", "Add New Doctor Profile", DoctorDialogController::setNewDoctorContext, c -> {
@@ -61,7 +62,7 @@ public class HospitalCrudHelper {
     }
 
     // ==========================================
-    //           NURSE CRUD ACTIONS
+    //            NURSE CRUD ACTIONS
     // ==========================================
     public static void addNurse(Runnable refresh) {
         WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/nurse-dialog.fxml", "Register Nurse", c -> ((NurseDialogController) c).setNewNurseContext(), c -> {
@@ -90,10 +91,12 @@ public class HospitalCrudHelper {
     }
 
     // ==========================================
-    //           PATIENT CRUD ACTIONS
+    //            PATIENT CRUD ACTIONS
     // ==========================================
     public static void addPatient(Runnable refresh) {
-        WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/patient-dialog.fxml", "Admit Patient", null, c -> refresh.run());
+        WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/patient-dialog.fxml", "Admit Patient", null, c -> {
+            if (((PatientDialogController) c).isOperationSaved()) refresh.run();
+        });
     }
 
     public static void editPatient(Patient selection, Runnable refresh) {
@@ -101,8 +104,9 @@ public class HospitalCrudHelper {
             AlertBox.show("Missing Selection", "Select a patient row entry.");
             return;
         }
-        WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/patient-dialog.fxml", "Modify Patient", c -> {
-        }, c -> refresh.run());
+        WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/patient-dialog.fxml", "Modify Patient", c -> ((PatientDialogController) c).setPatientToEdit(selection), c -> {
+            if (((PatientDialogController) c).isOperationSaved()) refresh.run();
+        });
     }
 
     public static void deletePatient(Patient selection, Runnable refresh) {
@@ -116,7 +120,7 @@ public class HospitalCrudHelper {
     }
 
     // ==========================================
-    //         PRESCRIPTION CRUD ACTIONS
+    //           PRESCRIPTION CRUD ACTIONS
     // ==========================================
     public static void addPrescription(Runnable refresh) {
         WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/prescription-dialog.fxml", "Issue Prescription", null, c -> {
@@ -148,7 +152,7 @@ public class HospitalCrudHelper {
         Thread.startVirtualThread(() -> {
             try {
                 action.run();
-                LogWriter.writeLogAsync(new Activity(activityLog, operator));
+                LogWriter.writeLogAsync(new Activity(activityLog, OPERATOR));
                 Platform.runLater(completeCallback);
             } catch (SQLException e) {
                 Platform.runLater(() -> AlertBox.show("Database Fault", e.getMessage()));

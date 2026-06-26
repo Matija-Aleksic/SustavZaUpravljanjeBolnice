@@ -5,12 +5,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import java.lang.String?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" prefWidth="460.0" prefHeight="460.0" spacing="20.0"
+<VBox xmlns:fx="http://javafx.com/fxml/1" prefWidth="460.0" prefHeight="520.0" spacing="20.0"
       xmlns="http://javafx.com/javafx/21" stylesheets="@../hospital-styles.css"
       fx:controller="com.alex.sustavzaupravljanjebolnice.controller.popup.PatientDialogController">
     <padding>
         <Insets bottom="25.0" left="25.0" right="25.0" top="25.0"/>
     </padding>
+
     <Label text="Patient Registration &amp; Admission">
         <styleClass>
             <String fx:value="label"/>
@@ -34,6 +35,7 @@
             <RowConstraints minHeight="30.0" vgrow="NEVER"/>
             <RowConstraints minHeight="30.0" vgrow="NEVER"/>
         </rowConstraints>
+
         <Label text="First Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
         <TextField fx:id="txtFirstName" promptText="e.g., John" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
@@ -41,8 +43,15 @@
         <TextField fx:id="txtLastName" promptText="e.g., Smith" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
         <Label text="OIB Number:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-        <TextField fx:id="txtOib" promptText="11-digit identity number" GridPane.columnIndex="1"
-                   GridPane.rowIndex="2"/>
+        <TextField fx:id="txtOib" promptText="11-digit identity number" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+        <Label text="Birth Date:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <DatePicker fx:id="dpBirthDate" promptText="Select date" maxWidth="Infinity" GridPane.columnIndex="1"
+                    GridPane.rowIndex="3"/>
+
+        <Label text="MBO Number:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+        <TextField fx:id="txtMbo" promptText="9-digit health insurance number" GridPane.columnIndex="1"
+                   GridPane.rowIndex="4"/>
 
         <Label text="Assigned Ward ID:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
         <TextField fx:id="txtWardId" promptText="Leave blank if unassigned" GridPane.columnIndex="1"
@@ -50,14 +59,12 @@
     </GridPane>
 
     <HBox alignment="CENTER_RIGHT" spacing="12.0">
-        <Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" prefWidth="90.0"
-                text="Cancel">
+        <Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" prefWidth="90.0" text="Cancel">
             <styleClass>
                 <String fx:value="btn-ghost"/>
             </styleClass>
         </Button>
-        <Button defaultButton="true" mnemonicParsing="false" onAction="#handleSave" prefWidth="90.0"
-                text="Save">
+        <Button defaultButton="true" mnemonicParsing="false" onAction="#handleSave" prefWidth="90.0" text="Save">
             <styleClass>
                 <String fx:value="btn-warning"/>
             </styleClass>

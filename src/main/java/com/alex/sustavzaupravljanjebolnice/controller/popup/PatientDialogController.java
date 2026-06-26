@@ -1,19 +1,23 @@
 package com.alex.sustavzaupravljanjebolnice.controller.popup;
 
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
+import com.alex.sustavzaupravljanjebolnice.entity.PatientStatus;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Ward;
 import com.alex.sustavzaupravljanjebolnice.repository.PatientRepo;
 import com.alex.sustavzaupravljanjebolnice.util.boxes.AlertBox;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class PatientDialogController {
 
     private final PatientRepo patientRepo = new PatientRepo();
+
     @FXML
     private TextField txtFirstName;
     @FXML
@@ -21,11 +25,12 @@ public class PatientDialogController {
     @FXML
     private TextField txtOib;
     @FXML
-    private TextField txtPhone;
+    private DatePicker dpBirthDate;
     @FXML
-    private TextField txtAddress;
+    private TextField txtMbo;
     @FXML
     private TextField txtWardId;
+
     private Patient existingPatient = null;
     private boolean operationSaved = false;
 
@@ -34,16 +39,20 @@ public class PatientDialogController {
         txtFirstName.setText(patient.getFirstName());
         txtLastName.setText(patient.getLastName());
         txtOib.setText(patient.getOib());
+        dpBirthDate.setValue(patient.getBirthDate());
+        txtMbo.setText(patient.getMbo());
 
         if (patient.getAssignedWard() != null && patient.getAssignedWard().getId() != null) {
             txtWardId.setText(String.valueOf(patient.getAssignedWard().getId()));
+        } else {
+            txtWardId.clear();
         }
     }
 
     @FXML
     public void handleSave(ActionEvent event) {
         if (isInputInvalid()) {
-            AlertBox.show("Validation Missing", "Please fulfill all required text fields.");
+            AlertBox.show("Validation Missing", "Please fulfill all required text fields (Name, OIB, MBO, and Birth Date).");
             return;
         }
 
@@ -51,9 +60,10 @@ public class PatientDialogController {
             String fName = txtFirstName.getText().trim();
             String lName = txtLastName.getText().trim();
             String oibNum = txtOib.getText().trim();
+            LocalDate birthDate = dpBirthDate.getValue();
+            String mboNum = txtMbo.getText().trim();
 
             Long wardId = txtWardId.getText().isBlank() ? null : Long.parseLong(txtWardId.getText().trim());
-
             Ward assignedWard = null;
             if (wardId != null) {
                 assignedWard = new Ward();
@@ -65,7 +75,9 @@ public class PatientDialogController {
                 freshPatient.setFirstName(fName);
                 freshPatient.setLastName(lName);
                 freshPatient.setOib(oibNum);
-
+                freshPatient.setBirthDate(birthDate);
+                freshPatient.setMbo(mboNum);
+                freshPatient.setStatus(PatientStatus.STABLE);
                 freshPatient.setAssignedWard(assignedWard);
 
                 patientRepo.save(freshPatient);
@@ -73,6 +85,8 @@ public class PatientDialogController {
                 existingPatient.setFirstName(fName);
                 existingPatient.setLastName(lName);
                 existingPatient.setOib(oibNum);
+                existingPatient.setBirthDate(birthDate);
+                existingPatient.setMbo(mboNum);
                 existingPatient.setAssignedWard(assignedWard);
 
                 patientRepo.update(existingPatient);
@@ -98,7 +112,7 @@ public class PatientDialogController {
     }
 
     private boolean isInputInvalid() {
-        return txtFirstName.getText().isBlank() || txtLastName.getText().isBlank() || txtOib.getText().isBlank();
+        return txtFirstName.getText().isBlank() || txtLastName.getText().isBlank() || txtOib.getText().isBlank() || dpBirthDate.getValue() == null || txtMbo.getText().isBlank();
     }
 
     private void closeWindow() {

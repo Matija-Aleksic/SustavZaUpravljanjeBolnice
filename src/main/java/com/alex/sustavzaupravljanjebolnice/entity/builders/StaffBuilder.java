@@ -21,6 +21,7 @@ public class StaffBuilder<T extends StaffBuilder<T>> {
     private Hospital hospital;
 
     protected final T self() {
+        //noinspection unchecked
         return (T) this;
     }
 
