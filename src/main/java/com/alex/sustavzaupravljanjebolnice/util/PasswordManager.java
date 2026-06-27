@@ -1,5 +1,8 @@
 package com.alex.sustavzaupravljanjebolnice.util;
 
+import com.alex.sustavzaupravljanjebolnice.entity.exception.CryptoAlgorithmException;
+import com.alex.sustavzaupravljanjebolnice.entity.exception.PasswordManagerException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -14,6 +17,8 @@ import java.util.Properties;
  * The type Password manager.
  */
 public class PasswordManager {
+    private static final SecureRandom RANDOM = new SecureRandom();
+
     private final Properties properties = new Properties();
     private final File file;
 
@@ -26,7 +31,10 @@ public class PasswordManager {
     public PasswordManager(File file) throws IOException {
         this.file = file;
         if (!file.exists()) {
-            file.createNewFile();
+            boolean created = file.createNewFile();
+            if (!created) {
+                throw new IOException("Failed to create user credentials storage file.");
+            }
         } else {
             try (FileInputStream fis = new FileInputStream(file)) {
                 properties.load(fis);
@@ -39,9 +47,9 @@ public class PasswordManager {
      *
      * @param username the username
      * @param password the password
-     * @throws Exception the exception
+     * @throws PasswordManagerException the specific custom exception replacing generic Exception
      */
-    public void savePassword(String username, String password) throws Exception {
+    public void savePassword(String username, String password) throws PasswordManagerException, IOException {
         String salt = generateSalt();
         String hash = hashPassword(password, salt);
         String value = salt + ":" + hash;
@@ -55,9 +63,9 @@ public class PasswordManager {
      * @param username the username
      * @param password the password
      * @return the boolean
-     * @throws Exception the exception
+     * @throws PasswordManagerException the specific custom exception replacing generic Exception
      */
-    public boolean verifyPassword(String username, String password) throws Exception {
+    public boolean verifyPassword(String username, String password) throws PasswordManagerException {
         String stored = properties.getProperty(username);
         if (stored == null) {
             return false;
@@ -81,14 +89,18 @@ public class PasswordManager {
 
     private String generateSalt() {
         byte[] salt = new byte[16];
-        new SecureRandom().nextBytes(salt);
+        RANDOM.nextBytes(salt);
         return Base64.getEncoder().encodeToString(salt);
     }
 
-    private String hashPassword(String password, String salt) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-        md.update(Base64.getDecoder().decode(salt));
-        byte[] hashed = md.digest(password.getBytes());
-        return Base64.getEncoder().encodeToString(hashed);
+    private String hashPassword(String password, String salt) throws CryptoAlgorithmException {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(Base64.getDecoder().decode(salt));
+            byte[] hashed = md.digest(password.getBytes());
+            return Base64.getEncoder().encodeToString(hashed);
+        } catch (NoSuchAlgorithmException e) {
+            throw new CryptoAlgorithmException("Encryption algorithm SHA-256 unavailable", e);
+        }
     }
 }

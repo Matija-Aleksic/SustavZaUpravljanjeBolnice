@@ -43,14 +43,27 @@ public class NurseViewController {
     @FXML
     private TableView<Patient> patientsTable;
     @FXML
-    private TableColumn<Patient, String> patientNameColumn, patientOibColumn, patientWardColumn;
+    private TableColumn<Patient, String> patientNameColumn;
+    @FXML
+    private TableColumn<Patient, String> patientOibColumn;
+    @FXML
+    private TableColumn<Patient, String> patientWardColumn;
     @FXML
     private TableView<Prescription> prescriptionsTable;
     @FXML
-    private TableColumn<Prescription, String> prescriptionNameColumn, prescriptionPatientColumn, prescriptionDurationColumn;
+    private TableColumn<Prescription, String> prescriptionNameColumn;
     @FXML
-    private Label nameSurname, oib, email, salary;
-
+    private TableColumn<Prescription, String> prescriptionPatientColumn;
+    @FXML
+    private TableColumn<Prescription, String> prescriptionDurationColumn;
+    @FXML
+    private Label nameSurname;
+    @FXML
+    private Label oib;
+    @FXML
+    private Label email;
+    @FXML
+    private Label salary;
     @FXML
     private HBox nurseCrudContainer;
     @FXML

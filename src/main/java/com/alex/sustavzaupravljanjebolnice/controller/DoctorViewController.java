@@ -47,22 +47,41 @@ public class DoctorViewController {
     @FXML
     private TableView<Patient> patientsTable;
     @FXML
-    private TableColumn<Patient, String> patientNameColumn, patientOibColumn;
+    private TableColumn<Patient, String> patientNameColumn;
+    @FXML
+    private TableColumn<Patient, String> patientOibColumn;
     @FXML
     private TableView<Appointment> appointmentsTable;
     @FXML
-    private TableColumn<Appointment, String> appointmentDateColumn, appointmentPatientColumn;
-
+    private TableColumn<Appointment, String> appointmentDateColumn;
+    @FXML
+    private TableColumn<Appointment, String> appointmentPatientColumn;
     @FXML
     private TableView<Prescription> prescriptionsTable;
     @FXML
-    private TableColumn<Prescription, String> prescriptionNameColumn, prescriptionPatientColumn, prescriptionDurationColumn;
-
+    private TableColumn<Prescription, String> prescriptionNameColumn;
     @FXML
-    private Label nameSurname, oib, role, email, salary, hospital, phoneNumber, address;
+    private TableColumn<Prescription, String> prescriptionPatientColumn;
+    @FXML
+    private TableColumn<Prescription, String> prescriptionDurationColumn;
+    @FXML
+    private Label nameSurname;
+    @FXML
+    private Label oib;
+    @FXML
+    private Label role;
+    @FXML
+    private Label email;
+    @FXML
+    private Label salary;
+    @FXML
+    private Label hospital;
+    @FXML
+    private Label phoneNumber;
+    @FXML
+    private Label address;
     @FXML
     private ImageView picture;
-
     @FXML
     private HBox doctorCrudContainer;
     @FXML

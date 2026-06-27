@@ -31,6 +31,8 @@ public class HospitalCrudHelper {
     private static final PrescriptionRepo prescriptionRepo = new PrescriptionRepo();
     private static final Staff currentStaff = UserSession.getInstance().getLoggedInStaff();
     private static final String OPERATOR = currentStaff.getFirstName() + " " + currentStaff.getLastName();
+    private static final String MISSING_SELECTION = "Missing Selection";
+
 
     /**
      * Add doctor.
@@ -107,7 +109,7 @@ public class HospitalCrudHelper {
      */
     public static void editNurse(Nurse selection, Runnable refresh) {
         if (selection == null) {
-            AlertBox.show("Missing Selection", "Select a nurse profile.");
+            AlertBox.show(MISSING_SELECTION, "Select a nurse profile.");
             return;
         }
         WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/nurse-dialog.fxml", "Update Nurse", c -> ((NurseDialogController) c).setNurse(selection), c -> {
@@ -126,7 +128,7 @@ public class HospitalCrudHelper {
      */
     public static void deleteNurse(Nurse selection, Runnable refresh) {
         if (selection == null) {
-            AlertBox.show("Missing Selection", "Select a nurse profile.");
+            AlertBox.show(MISSING_SELECTION, "Select a nurse profile.");
             return;
         }
         if (ConfirmationBox.show("Erase Record", "Remove nurse profile: " + selection.getFirstName() + "?")) {
@@ -157,7 +159,7 @@ public class HospitalCrudHelper {
      */
     public static void editPatient(Patient selection, Runnable refresh) {
         if (selection == null) {
-            AlertBox.show("Missing Selection", "Select a patient row entry.");
+            AlertBox.show(MISSING_SELECTION, "Select a patient row entry.");
             return;
         }
         WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/patient-dialog.fxml", "Modify Patient", c -> ((PatientDialogController) c).setPatientToEdit(selection), c -> {
@@ -176,7 +178,7 @@ public class HospitalCrudHelper {
      */
     public static void deletePatient(Patient selection, Runnable refresh) {
         if (selection == null) {
-            AlertBox.show("Missing Selection", "Select a patient to discharge.");
+            AlertBox.show(MISSING_SELECTION, "Select a patient to discharge.");
             return;
         }
         if (ConfirmationBox.show("Discharge Case", "Clear patient profile: " + selection.getFirstName() + "?")) {
@@ -206,7 +208,7 @@ public class HospitalCrudHelper {
      */
     public static void editPrescription(Prescription selection, Runnable refresh) {
         if (selection == null) {
-            AlertBox.show("Missing Selection", "Select a prescription item row.");
+            AlertBox.show(MISSING_SELECTION, "Select a prescription item row.");
             return;
         }
         WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/prescription-dialog.fxml", "Modify Orders", c -> ((PrescriptionDialogController) c).setPrescription(selection), c -> {
@@ -225,7 +227,7 @@ public class HospitalCrudHelper {
      */
     public static void deletePrescription(Prescription selection, Runnable refresh) {
         if (selection == null) {
-            AlertBox.show("Missing Selection", "Select a prescription ledger target.");
+            AlertBox.show(MISSING_SELECTION, "Select a prescription ledger target.");
             return;
         }
         if (ConfirmationBox.show("Revoke Script", "Erase completely medication record ID: " + selection.getId() + "?")) {
