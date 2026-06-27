@@ -1,6 +1,7 @@
 package com.alex.sustavzaupravljanjebolnice.entity.builders;
 
 import com.alex.sustavzaupravljanjebolnice.entity.StaffRoles;
+import com.alex.sustavzaupravljanjebolnice.entity.exception.InvalidBuilderStateException;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
 import com.alex.sustavzaupravljanjebolnice.entity.staff.Staff;
 
@@ -36,8 +37,19 @@ public class StaffBuilder<T extends StaffBuilder<T>> {
      * Create staff staff.
      *
      * @return the staff
+     * @throws InvalidBuilderStateException if mandatory fields are missing
      */
     public Staff createStaff() {
+        if (this.oib == null || this.oib.trim().isEmpty()) {
+            throw new InvalidBuilderStateException("Cannot build Staff: OIB is mandatory.");
+        }
+        if (this.email == null || !this.email.contains("@")) {
+            throw new InvalidBuilderStateException("Cannot build Staff: A valid email address is required.");
+        }
+        if (this.salary < 0) {
+            throw new InvalidBuilderStateException("Cannot build Staff: Salary cannot be negative.");
+        }
+
         return new Staff(this);
     }
 

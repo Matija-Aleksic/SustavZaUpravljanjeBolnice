@@ -1,5 +1,7 @@
 package com.alex.sustavzaupravljanjebolnice.db;
 
+import com.alex.sustavzaupravljanjebolnice.entity.exception.DatabaseInitializationException;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,9 +57,8 @@ public class DatabaseManager {
         return DriverManager.getConnection(JDBC_URL, USER, PASS);
     }
 
-    private static void initDatabase() {
+    private static void initDatabase() throws DatabaseInitializationException {
         try (Connection conn = getConnection()) {
-
             conn.setAutoCommit(false);
 
             if (databaseExists(conn)) {
@@ -72,7 +73,7 @@ public class DatabaseManager {
             logger.info("Database generation and initialization completed successfully.");
 
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Database initialization failed", e);
+            throw new DatabaseInitializationException("Failed to seed or verify database structures", e);
         }
     }
 
