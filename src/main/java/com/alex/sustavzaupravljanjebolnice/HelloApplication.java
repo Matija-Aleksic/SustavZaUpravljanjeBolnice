@@ -6,7 +6,6 @@ import com.alex.sustavzaupravljanjebolnice.util.WindowManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.sql.Connection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,7 +20,7 @@ public class HelloApplication extends Application {
     public void start(Stage stage) {
         H2Server.start();
 
-        try (Connection conn = DatabaseManager.getConnection()) {
+        try (var _ = DatabaseManager.getConnection()) {
             logger.info("Connected to database.");
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage(), e);

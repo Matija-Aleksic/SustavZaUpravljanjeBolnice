@@ -25,8 +25,6 @@ public class ActivityLogController {
 
     private final ObservableList<Activity> activityList = FXCollections.observableArrayList();
 
-    private Map<String, Activity> activityMap = Map.of();
-
     @FXML
     private TableView<Activity> activityTable;
 
@@ -66,7 +64,7 @@ public class ActivityLogController {
 
         List<Activity> logs = LogReader.readLogsFromFile();
         Set<String> uniqueKeys = logs.stream().map(this::buildActivityKey).collect(Collectors.toSet());
-        activityMap = logs.stream().collect(Collectors.toMap(this::buildActivityKey, activity -> activity, (existing, replacement) -> existing));
+        Map<String, Activity> activityMap = logs.stream().collect(Collectors.toMap(this::buildActivityKey, activity -> activity, (existing, replacement) -> existing));
         List<Activity> sortedLogs = uniqueKeys.stream().map(activityMap::get).sorted(Comparator.comparing(Activity::getMadeOn).reversed()).toList();
 
         activityList.setAll(sortedLogs);

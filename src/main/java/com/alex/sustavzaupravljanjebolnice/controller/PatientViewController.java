@@ -29,7 +29,6 @@ import java.util.Objects;
  */
 public class PatientViewController {
     private final Staff loggedInStaff = UserSession.getInstance().getLoggedInStaff();
-
     private final PatientRepo patientRepo = new PatientRepo();
     private final DoctorRepo doctorRepo = new DoctorRepo();
     private final AppointmentRepo appointmentRepo = new AppointmentRepo();
@@ -37,6 +36,18 @@ public class PatientViewController {
     private final HospitalRepo hospitalRepo = new HospitalRepo();
     private final WardRepo wardRepo = new WardRepo();
 
+    @FXML
+    Label detailMbo;
+    @FXML
+    Label detailBirthDate;
+    @FXML
+    Label detailStatus;
+    @FXML
+    Label detailDoctor;
+    @FXML
+    Label detailWard;
+    @FXML
+    Label detailHospital;
     @FXML
     private TableView<Patient> patientsTable;
     @FXML
@@ -47,15 +58,14 @@ public class PatientViewController {
     private TableColumn<Patient, String> mboColumn;
     @FXML
     private TableColumn<Patient, String> statusColumn;
-
     @FXML
-    private Label detailName, detailOib, detailMbo, detailBirthDate, detailStatus, detailDoctor, detailWard, detailHospital;
-
+    private Label detailName;
+    @FXML
+    private Label detailOib;
     @FXML
     private ListView<String> appointmentsListView;
     @FXML
     private ListView<String> prescriptionsListView;
-
     @FXML
     private Button addPatientBtn;
     @FXML
@@ -99,13 +109,16 @@ public class PatientViewController {
         detailMbo.setText("MBO: " + patient.getMbo());
         detailBirthDate.setText("Birth Date: " + (patient.getBirthDate() != null ? patient.getBirthDate().toString() : "N/A"));
         detailStatus.setText("Status: " + (patient.getStatus() != null ? patient.getStatus().name() : "N/A"));
-
         detailHospital.setText("Hospital: " + (patient.getHospital() != null && patient.getHospital().getName() != null ? patient.getHospital().getName() : "N/A"));
-
         detailDoctor.setText("Assigned Doctor: " + (patient.getAssignedDoctor() != null && patient.getAssignedDoctor().getLastName() != null ? "Dr. " + patient.getAssignedDoctor().getFirstName() + " " + patient.getAssignedDoctor().getLastName() : "Unassigned"));
-
         detailWard.setText("Ward Unit: " + (patient.getAssignedWard() != null && patient.getAssignedWard().getName() != null ? patient.getAssignedWard().getName() : "Outpatient"));
 
+        loadAppointmentsList(patient);
+        loadPrescriptionsList(patient);
+    }
+
+
+    private void loadAppointmentsList(Patient patient) {
         appointmentsListView.getItems().clear();
         if (patient.getAppointments() != null && !patient.getAppointments().isEmpty()) {
             for (Appointment appt : patient.getAppointments()) {
@@ -114,7 +127,9 @@ public class PatientViewController {
         } else {
             appointmentsListView.getItems().add("No upcoming scheduled clinical appointments.");
         }
+    }
 
+    private void loadPrescriptionsList(Patient patient) {
         prescriptionsListView.getItems().clear();
         if (patient.getPrescription() != null && !patient.getPrescription().isEmpty()) {
             for (Prescription rx : patient.getPrescription()) {
@@ -124,6 +139,7 @@ public class PatientViewController {
             prescriptionsListView.getItems().add("No active medication or prescription cycles.");
         }
     }
+
 
     private void clearPatientDetails() {
         Arrays.asList(detailName, detailOib, detailMbo, detailBirthDate, detailStatus, detailDoctor, detailWard, detailHospital).forEach(label -> label.setText(""));
@@ -142,24 +158,7 @@ public class PatientViewController {
                 List<Prescription> allPrescriptions = prescriptionRepo.getAll();
 
                 for (Patient patient : basePatients) {
-
-                    if (patient.getHospital() != null && patient.getHospital().getId() != null) {
-                        allHospitals.stream().filter(h -> Objects.equals(h.getId(), patient.getHospital().getId())).findFirst().ifPresent(patient::setHospital);
-                    }
-
-                    if (patient.getAssignedDoctor() != null && patient.getAssignedDoctor().getId() != null) {
-                        allDoctors.stream().filter(d -> Objects.equals(d.getId(), patient.getAssignedDoctor().getId())).findFirst().ifPresent(patient::setAssignedDoctor);
-                    }
-
-                    if (patient.getAssignedWard() != null && patient.getAssignedWard().getId() != null) {
-                        allWards.stream().filter(w -> Objects.equals(w.getId(), patient.getAssignedWard().getId())).findFirst().ifPresent(patient::setAssignedWard);
-                    }
-
-                    List<Appointment> patientAppts = allAppointments.stream().filter(a -> a.patientId() != null && a.patientId().longValue() == patient.getId().longValue()).toList();
-                    patient.setAppointments(new ArrayList<>(patientAppts));
-
-                    List<Prescription> patientScripts = allPrescriptions.stream().filter(p -> p.getPatientId() != null && p.getPatientId().longValue() == patient.getId().longValue()).toList();
-                    patient.setPrescriptions(new ArrayList<>(patientScripts));
+                    linkDataToPatient(patient, allDoctors, allHospitals, allWards, allAppointments, allPrescriptions);
                 }
 
                 List<Patient> localizedPatients = basePatients.stream().filter(p -> p.getHospital() != null && loggedInStaff != null && loggedInStaff.getHospital() != null && Objects.equals(p.getHospital().getId(), loggedInStaff.getHospital().getId())).toList();
@@ -179,6 +178,28 @@ public class PatientViewController {
             }
         });
     }
+
+
+    private void linkDataToPatient(Patient patient, List<Doctor> allDoctors, List<Hospital> allHospitals, List<Ward> allWards, List<Appointment> allAppointments, List<Prescription> allPrescriptions) {
+        if (patient.getHospital() != null && patient.getHospital().getId() != null) {
+            allHospitals.stream().filter(h -> Objects.equals(h.getId(), patient.getHospital().getId())).findFirst().ifPresent(patient::setHospital);
+        }
+
+        if (patient.getAssignedDoctor() != null && patient.getAssignedDoctor().getId() != null) {
+            allDoctors.stream().filter(d -> Objects.equals(d.getId(), patient.getAssignedDoctor().getId())).findFirst().ifPresent(patient::setAssignedDoctor);
+        }
+
+        if (patient.getAssignedWard() != null && patient.getAssignedWard().getId() != null) {
+            allWards.stream().filter(w -> Objects.equals(w.getId(), patient.getAssignedWard().getId())).findFirst().ifPresent(patient::setAssignedWard);
+        }
+
+        List<Appointment> patientAppts = allAppointments.stream().filter(a -> a.patientId() != null && a.patientId().longValue() == patient.getId().longValue()).toList();
+        patient.setAppointments(new ArrayList<>(patientAppts));
+
+        List<Prescription> patientScripts = allPrescriptions.stream().filter(p -> p.getPatientId() != null && p.getPatientId().longValue() == patient.getId().longValue()).toList();
+        patient.setPrescriptions(new ArrayList<>(patientScripts));
+    }
+
 
     @FXML
     private void handleAddPatient() {

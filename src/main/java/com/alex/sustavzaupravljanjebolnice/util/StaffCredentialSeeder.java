@@ -20,6 +20,9 @@ public class StaffCredentialSeeder {
 
     private static final Logger log = LoggerFactory.getLogger(StaffCredentialSeeder.class);
 
+    private StaffCredentialSeeder() {
+    }
+
     /**
      * Seed staff credentials.
      */
@@ -71,7 +74,7 @@ public class StaffCredentialSeeder {
 
         } catch (Exception e) {
             log.error("Security error while hashing passwords: {}", e.getMessage());
-            e.printStackTrace();
+
         }
     }
 }
