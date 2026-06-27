@@ -26,6 +26,9 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The type Nurse view controller.
+ */
 public class NurseViewController {
     private final Staff loggedInStaff = UserSession.getInstance().getLoggedInStaff();
     private final NurseRepo nurseRepo = new NurseRepo();
@@ -61,6 +64,9 @@ public class NurseViewController {
     private List<Patient> allPatients = List.of();
     private List<Ward> allWards = List.of();
 
+    /**
+     * Initialize.
+     */
     @FXML
     public void initialize() {
         configureRoleBasedAccess();
@@ -114,6 +120,9 @@ public class NurseViewController {
         prescriptionsTable.setItems(FXCollections.observableArrayList(prescriptions));
     }
 
+    /**
+     * Reload.
+     */
     public void reload() {
         Thread.startVirtualThread(() -> {
             try {

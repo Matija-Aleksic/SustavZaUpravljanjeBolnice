@@ -30,6 +30,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * The type Doctor view controller.
+ */
 public class DoctorViewController {
     private final Staff loggedInStaff = UserSession.getInstance().getLoggedInStaff();
     private final DoctorRepo doctorRepo = new DoctorRepo();
@@ -73,6 +76,9 @@ public class DoctorViewController {
     private List<Appointment> allAppointments = List.of();
     private List<Prescription> allPrescriptions = List.of();
 
+    /**
+     * Initialize.
+     */
     @FXML
     public void initialize() {
         configureRoleBasedAccess();

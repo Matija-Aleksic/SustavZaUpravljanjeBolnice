@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 /**
- * Utility class to manage scene transitions and modal dialogs.
+ * The type Window manager.
  */
 public class WindowManager {
 
@@ -19,7 +19,13 @@ public class WindowManager {
     }
 
     /**
-     * Switches the main scene on a given stage.
+     * Switch scene.
+     *
+     * @param stage    the stage
+     * @param fxmlPath the fxml path
+     * @param title    the title
+     * @param width    the width
+     * @param height   the height
      */
     public static void switchScene(Stage stage, String fxmlPath, String title, int width, int height) {
         try {
@@ -34,13 +40,13 @@ public class WindowManager {
     }
 
     /**
-     * Opens a modal dialog, allowing data injection before showing, and data retrieval after closing.
+     * Show modal.
      *
-     * @param fxmlPath The absolute path to the FXML file.
-     * @param title    The window title.
-     * @param onInit   Executes before showAndWait() - used to pass data TO the controller.
-     * @param onClose  Executes after showAndWait() - used to read data FROM the controller.
-     * @param <C>      The type of the Controller.
+     * @param <C>      the type parameter
+     * @param fxmlPath the fxml path
+     * @param title    the title
+     * @param onInit   the on init
+     * @param onClose  the on close
      */
     public static <C> void showModal(String fxmlPath, String title, Consumer<C> onInit, Consumer<C> onClose) {
         try {

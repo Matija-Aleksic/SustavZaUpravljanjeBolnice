@@ -25,6 +25,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * The type Prescription view controller.
+ */
 public class PrescriptionViewController {
     private static final Logger log = LoggerFactory.getLogger(PrescriptionViewController.class);
 
@@ -56,6 +59,9 @@ public class PrescriptionViewController {
     private List<Patient> hospitalPatients = List.of();
     private List<Prescription> allPrescriptions = List.of();
 
+    /**
+     * Initialize.
+     */
     @FXML
     public void initialize() {
         patientNameColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFirstName() + " " + c.getValue().getLastName()));

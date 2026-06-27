@@ -3,7 +3,7 @@ package com.alex.sustavzaupravljanjebolnice.util.boxes;
 import javafx.scene.control.Alert;
 
 /**
- * The type Alert box utility.
+ * The type Alert box.
  */
 public final class AlertBox {
 
@@ -12,10 +12,10 @@ public final class AlertBox {
     }
 
     /**
-     * Show a warning alert box.
+     * Show.
      *
-     * @param <K>     the type parameter for the title
-     * @param <V>     the type parameter for the content
+     * @param <K>     the type parameter
+     * @param <V>     the type parameter
      * @param title   the title
      * @param content the content
      */

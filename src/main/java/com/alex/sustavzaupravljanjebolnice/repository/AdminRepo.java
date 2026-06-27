@@ -10,6 +10,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Admin repo.
+ */
 public class AdminRepo implements Repository<Administrator, Integer> {
 
     @Override

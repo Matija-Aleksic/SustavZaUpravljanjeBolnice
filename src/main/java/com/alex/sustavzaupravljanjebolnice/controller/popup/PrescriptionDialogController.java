@@ -12,6 +12,9 @@ import javafx.stage.Stage;
 
 import java.sql.SQLException;
 
+/**
+ * The type Prescription dialog controller.
+ */
 public class PrescriptionDialogController {
 
     private final PrescriptionRepo prescriptionRepo = new PrescriptionRepo();
@@ -35,12 +38,19 @@ public class PrescriptionDialogController {
     private boolean operationSaved = false;
 
     /**
-     * Bridges the call from PatientPrescriptionHelper.
+     * Sets prescription.
+     *
+     * @param prescription the prescription
      */
     public void setPrescription(Prescription prescription) {
         setPrescriptionToEdit(prescription);
     }
 
+    /**
+     * Sets prescription to edit.
+     *
+     * @param prescription the prescription
+     */
     public void setPrescriptionToEdit(Prescription prescription) {
         this.existingPrescription = prescription;
 
@@ -54,6 +64,11 @@ public class PrescriptionDialogController {
         dpEndDate.setValue(prescription.getEndDate());
     }
 
+    /**
+     * Handle save.
+     *
+     * @param event the event
+     */
     @FXML
     public void handleSave(ActionEvent event) {
         if (isInputInvalid()) {
@@ -96,15 +111,30 @@ public class PrescriptionDialogController {
         }
     }
 
+    /**
+     * Handle cancel.
+     *
+     * @param event the event
+     */
     @FXML
     public void handleCancel(ActionEvent event) {
         closeWindow();
     }
 
+    /**
+     * Is operation saved boolean.
+     *
+     * @return the boolean
+     */
     public boolean isOperationSaved() {
         return operationSaved;
     }
 
+    /**
+     * Is saved boolean.
+     *
+     * @return the boolean
+     */
     public boolean isSaved() {
         return this.operationSaved;
     }

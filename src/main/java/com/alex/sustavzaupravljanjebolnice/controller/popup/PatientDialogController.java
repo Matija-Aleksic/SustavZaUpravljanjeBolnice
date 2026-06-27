@@ -14,6 +14,9 @@ import javafx.stage.Stage;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
+/**
+ * The type Patient dialog controller.
+ */
 public class PatientDialogController {
 
     private final PatientRepo patientRepo = new PatientRepo();
@@ -34,6 +37,11 @@ public class PatientDialogController {
     private Patient existingPatient = null;
     private boolean operationSaved = false;
 
+    /**
+     * Sets patient to edit.
+     *
+     * @param patient the patient
+     */
     public void setPatientToEdit(Patient patient) {
         this.existingPatient = patient;
         txtFirstName.setText(patient.getFirstName());
@@ -49,6 +57,11 @@ public class PatientDialogController {
         }
     }
 
+    /**
+     * Handle save.
+     *
+     * @param event the event
+     */
     @FXML
     public void handleSave(ActionEvent event) {
         if (isInputInvalid()) {
@@ -102,11 +115,21 @@ public class PatientDialogController {
         }
     }
 
+    /**
+     * Handle cancel.
+     *
+     * @param event the event
+     */
     @FXML
     public void handleCancel(ActionEvent event) {
         closeWindow();
     }
 
+    /**
+     * Is operation saved boolean.
+     *
+     * @return the boolean
+     */
     public boolean isOperationSaved() {
         return operationSaved;
     }

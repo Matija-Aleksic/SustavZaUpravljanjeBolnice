@@ -3,7 +3,7 @@ package com.alex.sustavzaupravljanjebolnice.util.boxes;
 import javafx.scene.control.Alert;
 
 /**
- * The type Info box utility.
+ * The type Info box.
  */
 public final class InfoBox {
 
@@ -12,10 +12,10 @@ public final class InfoBox {
     }
 
     /**
-     * Show an information alert box.
+     * Show.
      *
-     * @param <T>     the type parameter of the message
-     * @param message the message to display
+     * @param <T>     the type parameter
+     * @param message the message
      */
     public static <T> void show(T message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

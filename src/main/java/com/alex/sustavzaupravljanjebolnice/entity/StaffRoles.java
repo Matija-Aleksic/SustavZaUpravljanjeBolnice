@@ -21,5 +21,8 @@ public enum StaffRoles {
      * Doctor staff roles.
      */
     DOCTOR,
+    /**
+     * Admin staff roles.
+     */
     ADMIN,
 }

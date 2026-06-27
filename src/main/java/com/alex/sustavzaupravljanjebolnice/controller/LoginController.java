@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * The type Login controller.
+ */
 public class LoginController {
 
     private final Logger logger = Logger.getLogger(LoginController.class.getName());
@@ -45,11 +48,21 @@ public class LoginController {
     @FXML
     private Label loginMessageLabel;
 
+    /**
+     * Initialize.
+     */
     public void initialize() {
-        usernameTextField.setText("Alice Smith");
+        usernameTextField.setText("Zrinka Krpan");
+        passwordTextField.setText("Zrinka");
         StaffCredentialSeeder.seedStaffCredentials();
     }
 
+    /**
+     * Login.
+     *
+     * @param event the event
+     * @throws Exception the exception
+     */
     @FXML
     public void login(ActionEvent event) throws Exception {
 

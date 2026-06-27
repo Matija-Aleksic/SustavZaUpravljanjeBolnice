@@ -18,10 +18,9 @@ public class PasswordManager {
     private final File file;
 
     /**
-     * Instantiates a new Password manager using a standardized File object.
-     * Pass an external file path (e.g., "passwords.properties" or System.getProperty("user.home") + "/passwords.properties")
+     * Instantiates a new Password manager.
      *
-     * @param file the file reference to use for reading/writing storage
+     * @param file the file
      * @throws IOException the io exception
      */
     public PasswordManager(File file) throws IOException {
@@ -51,7 +50,7 @@ public class PasswordManager {
     }
 
     /**
-     * Verify password boolean safely using constant-time evaluation.
+     * Verify password boolean.
      *
      * @param username the username
      * @param password the password

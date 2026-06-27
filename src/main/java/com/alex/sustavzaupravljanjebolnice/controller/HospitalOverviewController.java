@@ -20,6 +20,9 @@ import javafx.scene.control.TableView;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * The type Hospital overview controller.
+ */
 public class HospitalOverviewController {
 
     private final HospitalRepo hospitalRepo = new HospitalRepo();
@@ -60,6 +63,9 @@ public class HospitalOverviewController {
     @FXML
     private TableColumn<Nurse, String> nurseEmailColumn;
 
+    /**
+     * Initialize.
+     */
     @FXML
     public void initialize() {
         setupTableColumns();
@@ -103,6 +109,11 @@ public class HospitalOverviewController {
         });
     }
 
+    /**
+     * Sets hospitals.
+     *
+     * @param hospitals the hospitals
+     */
     public void setHospitals(List<Hospital> hospitals) {
         hospitalsTable.setItems(FXCollections.observableArrayList(hospitals));
         if (!hospitals.isEmpty()) {

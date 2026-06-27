@@ -17,6 +17,9 @@ import javafx.stage.Stage;
 
 import java.sql.SQLException;
 
+/**
+ * The type Nurse dialog controller.
+ */
 public class NurseDialogController {
 
     private final NurseRepo nurseRepo = new NurseRepo();
@@ -37,11 +40,17 @@ public class NurseDialogController {
     private Nurse existingNurse = null;
     private boolean saved = false;
 
+    /**
+     * Initialize.
+     */
     @FXML
     public void initialize() {
         // Initialization configuration logic if required
     }
 
+    /**
+     * Sets new nurse context.
+     */
     public void setNewNurseContext() {
         this.currentNurseId = null;
         this.existingNurse = null;
@@ -54,6 +63,11 @@ public class NurseDialogController {
         dpBirthDate.setValue(null);
     }
 
+    /**
+     * Sets nurse.
+     *
+     * @param nurse the nurse
+     */
     public void setNurse(Nurse nurse) {
         this.existingNurse = nurse;
         this.currentNurseId = nurse.getId();
@@ -66,6 +80,11 @@ public class NurseDialogController {
         dpBirthDate.setValue(nurse.getBirthDate());
     }
 
+    /**
+     * Handle save.
+     *
+     * @param event the event
+     */
     @FXML
     public void handleSave(ActionEvent event) {
         if (!validateForm()) return;
@@ -111,11 +130,21 @@ public class NurseDialogController {
         }
     }
 
+    /**
+     * Handle cancel.
+     *
+     * @param event the event
+     */
     @FXML
     public void handleCancel(ActionEvent event) {
         closeStage();
     }
 
+    /**
+     * Is saved boolean.
+     *
+     * @return the boolean
+     */
     public boolean isSaved() {
         return saved;
     }

@@ -22,6 +22,9 @@ public sealed class Staff extends Person implements Salaried permits Administrat
      * The Salary.
      */
     protected double salary;
+    /**
+     * The Hospital.
+     */
     protected Hospital hospital;
 
 
@@ -101,10 +104,20 @@ public sealed class Staff extends Person implements Salaried permits Administrat
         super.id = Math.toIntExact(aLong);
     }
 
+    /**
+     * Gets hospital.
+     *
+     * @return the hospital
+     */
     public Hospital getHospital() {
         return hospital;
     }
 
+    /**
+     * Sets hospital.
+     *
+     * @param hospital the hospital
+     */
     public void setHospital(Hospital hospital) {
         this.hospital = hospital;
     }

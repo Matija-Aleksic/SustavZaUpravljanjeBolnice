@@ -19,6 +19,9 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * The type Appointment dialog controller.
+ */
 public class AppointmentDialogController {
 
     private final AppointmentRepo appointmentRepo = new AppointmentRepo();
@@ -35,6 +38,9 @@ public class AppointmentDialogController {
     private Integer currentAppointmentId = null;
     private boolean saved = false;
 
+    /**
+     * Initialize.
+     */
     @FXML
     public void initialize() {
 
@@ -71,12 +77,23 @@ public class AppointmentDialogController {
         });
     }
 
+    /**
+     * Sets data.
+     *
+     * @param doctors  the doctors
+     * @param patients the patients
+     */
     public void setData(List<Doctor> doctors, List<Patient> patients) {
         doctorCombo.getItems().setAll(doctors);
         patientCombo.getItems().setAll(patients);
     }
 
 
+    /**
+     * Sets appointment.
+     *
+     * @param a the a
+     */
     public void setAppointment(Appointment a) {
 
         this.currentAppointmentId = a.id();
@@ -89,6 +106,9 @@ public class AppointmentDialogController {
         timeField.setText(a.dateTime().toLocalTime().toString());
     }
 
+    /**
+     * Sets new appointment context.
+     */
     public void setNewAppointmentContext() {
         currentAppointmentId = null;
         doctorCombo.getSelectionModel().clearSelection();
@@ -97,6 +117,11 @@ public class AppointmentDialogController {
         timeField.clear();
     }
 
+    /**
+     * Handle save.
+     *
+     * @param event the event
+     */
     @FXML
     public void handleSave(ActionEvent event) {
 
@@ -124,11 +149,21 @@ public class AppointmentDialogController {
         }
     }
 
+    /**
+     * Handle cancel.
+     *
+     * @param event the event
+     */
     @FXML
     public void handleCancel(ActionEvent event) {
         close();
     }
 
+    /**
+     * Is saved boolean.
+     *
+     * @return the boolean
+     */
     public boolean isSaved() {
         return saved;
     }

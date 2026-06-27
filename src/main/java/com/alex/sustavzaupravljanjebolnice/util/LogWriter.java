@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.List;
 
+/**
+ * The type Log writer.
+ */
 public class LogWriter {
 
     private static final Logger log = LoggerFactory.getLogger(LogWriter.class);
@@ -18,6 +21,11 @@ public class LogWriter {
     private LogWriter() {
     }
 
+    /**
+     * Write log async.
+     *
+     * @param newActivity the new activity
+     */
     public static void writeLogAsync(Activity newActivity) {
         if (newActivity == null) return;
 

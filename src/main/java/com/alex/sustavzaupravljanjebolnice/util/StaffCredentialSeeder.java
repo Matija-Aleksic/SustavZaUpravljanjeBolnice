@@ -13,12 +13,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Staff credential seeder.
+ */
 public class StaffCredentialSeeder {
 
     private static final Logger log = LoggerFactory.getLogger(StaffCredentialSeeder.class);
 
     /**
-     * Pulls all categories of staff from the database and initializes credentials if missing.
+     * Seed staff credentials.
      */
     public static void seedStaffCredentials() {
         File credentialStorage = new File("passwords.properties");

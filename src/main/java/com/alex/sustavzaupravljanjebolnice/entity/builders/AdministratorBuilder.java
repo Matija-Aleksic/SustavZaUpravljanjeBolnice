@@ -7,6 +7,12 @@ import com.alex.sustavzaupravljanjebolnice.entity.staff.Administrator;
  */
 public class AdministratorBuilder extends StaffBuilder<AdministratorBuilder> {
 
+    /**
+     * Build administrator.
+     *
+     * @return the administrator
+     */
+
     public Administrator build() {
         return new Administrator(this);
     }

@@ -11,16 +11,16 @@ import javafx.stage.Stage;
 import java.util.logging.Logger;
 
 /**
- * Controller for managing menu navigation and user logout functionality.
- * This controller is used in the menu.fxml and handles all menu item click events
- * as well as the logout functionality.
+ * The type Menu controller.
  */
 public class MenuController {
 
     private static final Logger logger = Logger.getLogger(MenuController.class.getName());
 
     /**
-     * Navigates to the Hospital view
+     * Handle hospital.
+     *
+     * @param event the event
      */
     @FXML
     public void handleHospital(ActionEvent event) {
@@ -28,7 +28,9 @@ public class MenuController {
     }
 
     /**
-     * Navigates to the Doctors view
+     * Handle doctors.
+     *
+     * @param event the event
      */
     @FXML
     public void handleDoctors(ActionEvent event) {
@@ -36,7 +38,9 @@ public class MenuController {
     }
 
     /**
-     * Navigates to the Nurses view
+     * Handle nurses.
+     *
+     * @param event the event
      */
     @FXML
     public void handleNurses(ActionEvent event) {
@@ -44,8 +48,9 @@ public class MenuController {
     }
 
     /**
-     * Navigates to the Patients view
-     * (Placeholder for future implementation)
+     * Handle patients.
+     *
+     * @param event the event
      */
     @FXML
     public void handlePatients(ActionEvent event) {
@@ -54,7 +59,9 @@ public class MenuController {
     }
 
     /**
-     * Navigates to the Appointments view
+     * Handle appointments.
+     *
+     * @param event the event
      */
     @FXML
     public void handleAppointments(ActionEvent event) {
@@ -62,8 +69,9 @@ public class MenuController {
     }
 
     /**
-     * Navigates to the Prescriptions view
-     * (Placeholder for future implementation)
+     * Handle prescriptions.
+     *
+     * @param event the event
      */
     @FXML
     public void handlePrescriptions(ActionEvent event) {
@@ -71,7 +79,9 @@ public class MenuController {
     }
 
     /**
-     * Navigates to the Activity Logs view
+     * Handle logs.
+     *
+     * @param event the event
      */
     @FXML
     public void handleLogs(ActionEvent event) {
@@ -79,10 +89,9 @@ public class MenuController {
     }
 
     /**
-     * Handles logout functionality:
-     * 1. Clears the UserSession
-     * 2. Displays confirmation message
-     * 3. Redirects to login page
+     * Handle logout.
+     *
+     * @param event the event
      */
     @FXML
     public void handleLogout(ActionEvent event) {
@@ -95,14 +104,6 @@ public class MenuController {
         WindowManager.switchScene(stage, "/com/alex/sustavzaupravljanjebolnice/login.fxml", "Hospital Management System - Login", 400, 600);
     }
 
-    /**
-     * Generic navigation method that loads a scene and switches to it.
-     *
-     * @param event    The ActionEvent that triggered the navigation
-     * @param fxmlPath The path to the FXML file to load
-     * @param title    The title for the stage
-     * @param height   The height of the window
-     */
     private void navigateTo(ActionEvent event, String fxmlPath, String title, int height) {
         try {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

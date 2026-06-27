@@ -21,6 +21,9 @@ import javafx.application.Platform;
 
 import java.sql.SQLException;
 
+/**
+ * The type Hospital crud helper.
+ */
 public class HospitalCrudHelper {
     private static final NurseRepo nurseRepo = new NurseRepo();
     private static final DoctorRepo doctorRepo = new DoctorRepo();
@@ -29,6 +32,11 @@ public class HospitalCrudHelper {
     private static final Staff currentStaff = UserSession.getInstance().getLoggedInStaff();
     private static final String OPERATOR = currentStaff.getFirstName() + " " + currentStaff.getLastName();
 
+    /**
+     * Add doctor.
+     *
+     * @param refresh the refresh
+     */
     public static void addDoctor(Runnable refresh) {
         WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/doctor-dialog.fxml", "Add New Doctor Profile", DoctorDialogController::setNewDoctorContext, c -> {
             if (c.isSaved()) {
@@ -38,6 +46,12 @@ public class HospitalCrudHelper {
         });
     }
 
+    /**
+     * Edit doctor.
+     *
+     * @param selection the selection
+     * @param refresh   the refresh
+     */
     public static void editDoctor(Doctor selection, Runnable refresh) {
         if (selection == null) {
             AlertBox.show("Warning", "Please select a doctor to edit.");
@@ -51,6 +65,12 @@ public class HospitalCrudHelper {
         });
     }
 
+    /**
+     * Delete doctor.
+     *
+     * @param selection the selection
+     * @param refresh   the refresh
+     */
     public static void deleteDoctor(Doctor selection, Runnable refresh) {
         if (selection == null) {
             AlertBox.show("Warning", "Please select a doctor record to delete.");
@@ -65,6 +85,11 @@ public class HospitalCrudHelper {
     }
 
 
+    /**
+     * Add nurse.
+     *
+     * @param refresh the refresh
+     */
     public static void addNurse(Runnable refresh) {
         WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/nurse-dialog.fxml", "Register Nurse", c -> ((NurseDialogController) c).setNewNurseContext(), c -> {
             if (((NurseDialogController) c).isSaved()) {
@@ -74,6 +99,12 @@ public class HospitalCrudHelper {
         });
     }
 
+    /**
+     * Edit nurse.
+     *
+     * @param selection the selection
+     * @param refresh   the refresh
+     */
     public static void editNurse(Nurse selection, Runnable refresh) {
         if (selection == null) {
             AlertBox.show("Missing Selection", "Select a nurse profile.");
@@ -87,6 +118,12 @@ public class HospitalCrudHelper {
         });
     }
 
+    /**
+     * Delete nurse.
+     *
+     * @param selection the selection
+     * @param refresh   the refresh
+     */
     public static void deleteNurse(Nurse selection, Runnable refresh) {
         if (selection == null) {
             AlertBox.show("Missing Selection", "Select a nurse profile.");
@@ -98,6 +135,11 @@ public class HospitalCrudHelper {
     }
 
 
+    /**
+     * Add patient.
+     *
+     * @param refresh the refresh
+     */
     public static void addPatient(Runnable refresh) {
         WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/patient-dialog.fxml", "Admit Patient", null, c -> {
             if (((PatientDialogController) c).isOperationSaved()) {
@@ -107,6 +149,12 @@ public class HospitalCrudHelper {
         });
     }
 
+    /**
+     * Edit patient.
+     *
+     * @param selection the selection
+     * @param refresh   the refresh
+     */
     public static void editPatient(Patient selection, Runnable refresh) {
         if (selection == null) {
             AlertBox.show("Missing Selection", "Select a patient row entry.");
@@ -120,6 +168,12 @@ public class HospitalCrudHelper {
         });
     }
 
+    /**
+     * Delete patient.
+     *
+     * @param selection the selection
+     * @param refresh   the refresh
+     */
     public static void deletePatient(Patient selection, Runnable refresh) {
         if (selection == null) {
             AlertBox.show("Missing Selection", "Select a patient to discharge.");
@@ -130,6 +184,11 @@ public class HospitalCrudHelper {
         }
     }
 
+    /**
+     * Add prescription.
+     *
+     * @param refresh the refresh
+     */
     public static void addPrescription(Runnable refresh) {
         WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/prescription-dialog.fxml", "Issue Prescription", null, c -> {
             if (((PrescriptionDialogController) c).isSaved()) {
@@ -139,6 +198,12 @@ public class HospitalCrudHelper {
         });
     }
 
+    /**
+     * Edit prescription.
+     *
+     * @param selection the selection
+     * @param refresh   the refresh
+     */
     public static void editPrescription(Prescription selection, Runnable refresh) {
         if (selection == null) {
             AlertBox.show("Missing Selection", "Select a prescription item row.");
@@ -152,6 +217,12 @@ public class HospitalCrudHelper {
         });
     }
 
+    /**
+     * Delete prescription.
+     *
+     * @param selection the selection
+     * @param refresh   the refresh
+     */
     public static void deletePrescription(Prescription selection, Runnable refresh) {
         if (selection == null) {
             AlertBox.show("Missing Selection", "Select a prescription ledger target.");
@@ -179,8 +250,16 @@ public class HospitalCrudHelper {
         });
     }
 
+    /**
+     * The interface Sql runnable.
+     */
     @FunctionalInterface
     public interface SqlRunnable {
+        /**
+         * Run.
+         *
+         * @throws SQLException the sql exception
+         */
         void run() throws SQLException;
     }
 }

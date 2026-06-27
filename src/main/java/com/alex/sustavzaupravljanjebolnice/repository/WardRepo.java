@@ -10,6 +10,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Ward repo.
+ */
 public class WardRepo implements Repository<Ward, Long> {
 
     @Override

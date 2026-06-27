@@ -14,6 +14,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Month;
 
+/**
+ * The type Doctor dialog controller.
+ */
 public class DoctorDialogController {
 
     private final DoctorRepo doctorRepo = new DoctorRepo();
@@ -37,11 +40,17 @@ public class DoctorDialogController {
     private Doctor existingDoctor = null;
     private boolean saved = false;
 
+    /**
+     * Initialize.
+     */
     @FXML
     public void initialize() {
         //intellij complains if not commented
     }
 
+    /**
+     * Sets new doctor context.
+     */
     public void setNewDoctorContext() {
         this.currentDoctorId = null;
         this.existingDoctor = null;
@@ -55,6 +64,11 @@ public class DoctorDialogController {
         txtAddress.clear();
     }
 
+    /**
+     * Sets doctor.
+     *
+     * @param doctor the doctor
+     */
     public void setDoctor(Doctor doctor) {
         this.existingDoctor = doctor;
         this.currentDoctorId = doctor.getId();
@@ -68,6 +82,11 @@ public class DoctorDialogController {
         txtAddress.setText(doctor.getAddress());
     }
 
+    /**
+     * Handle save.
+     *
+     * @param event the event
+     */
     @FXML
     public void handleSave(ActionEvent event) {
         if (!validateForm()) return;
@@ -113,11 +132,21 @@ public class DoctorDialogController {
         }
     }
 
+    /**
+     * Handle cancel.
+     *
+     * @param event the event
+     */
     @FXML
     public void handleCancel(ActionEvent event) {
         closeStage();
     }
 
+    /**
+     * Is saved boolean.
+     *
+     * @return the boolean
+     */
     public boolean isSaved() {
         return saved;
     }

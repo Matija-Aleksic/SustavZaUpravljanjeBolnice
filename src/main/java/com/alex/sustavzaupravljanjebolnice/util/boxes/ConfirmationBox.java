@@ -25,9 +25,9 @@ public class ConfirmationBox<K, V> {
      *
      * @param <K>     the type parameter
      * @param <V>     the type parameter
-     * @param title   the title/header
-     * @param content the content text
-     * @return true if the user clicked YES, false otherwise
+     * @param title   the title
+     * @param content the content
+     * @return the boolean
      */
     public static <K, V> boolean show(K title, V content) {
         return new ConfirmationBox<>(title, content).isConfirmed();

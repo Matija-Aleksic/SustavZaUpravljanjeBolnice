@@ -24,6 +24,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * The type Patient view controller.
+ */
 public class PatientViewController {
     private final Staff loggedInStaff = UserSession.getInstance().getLoggedInStaff();
 
@@ -62,6 +65,9 @@ public class PatientViewController {
     @FXML
     private HBox adminActionBar;
 
+    /**
+     * Initialize.
+     */
     @FXML
     public void initialize() {
         nameColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFirstName() + " " + c.getValue().getLastName()));

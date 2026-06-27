@@ -10,8 +10,14 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Log reader.
+ */
 public class LogReader {
 
+    /**
+     * The constant FILE_PATH.
+     */
     protected static final String FILE_PATH = "logs/changes.dat";
     private static final Logger log = LoggerFactory.getLogger(LogReader.class);
 
@@ -19,6 +25,11 @@ public class LogReader {
     }
 
 
+    /**
+     * Read logs from file list.
+     *
+     * @return the list
+     */
     public static synchronized List<Activity> readLogsFromFile() {
         File file = new File(FILE_PATH);
         if (!file.exists() || file.length() == 0) {

@@ -32,6 +32,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * The type Receptionist view controller.
+ */
 public class ReceptionistViewController {
 
     private static final Logger log = LoggerFactory.getLogger(ReceptionistViewController.class);
@@ -58,6 +61,9 @@ public class ReceptionistViewController {
     private List<Patient> patients = List.of();
 
 
+    /**
+     * Initialize.
+     */
     @FXML
     public void initialize() {
 

@@ -10,6 +10,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Doctor repo.
+ */
 public class DoctorRepo implements Repository<Doctor, Long> {
 
     @Override
