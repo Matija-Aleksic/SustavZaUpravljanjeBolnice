@@ -1,5 +1,6 @@
 package com.alex.sustavzaupravljanjebolnice.controller;
 
+import com.alex.sustavzaupravljanjebolnice.entity.exception.PasswordManagerException;
 import com.alex.sustavzaupravljanjebolnice.entity.staff.Staff;
 import com.alex.sustavzaupravljanjebolnice.repository.AdminRepo;
 import com.alex.sustavzaupravljanjebolnice.repository.DoctorRepo;
@@ -17,8 +18,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,7 @@ import java.util.logging.Logger;
  */
 public class LoginController {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(LoginController.class);
     private final Logger logger = Logger.getLogger(LoginController.class.getName());
 
     private final DoctorRepo doctorRepo = new DoctorRepo();
@@ -64,7 +68,7 @@ public class LoginController {
      * @throws Exception the exception
      */
     @FXML
-    public void login(ActionEvent event) throws Exception {
+    public void login(ActionEvent event) {
 
         String username = usernameTextField.getText().trim();
         String password = passwordTextField.getText();
@@ -72,13 +76,18 @@ public class LoginController {
         if (!validateInput(username, password)) {
             return;
         }
+        try {
+            PasswordManager pm = new PasswordManager(new File("passwords.properties"));
 
-        PasswordManager pm = new PasswordManager(new File("passwords.properties"));
-
-        if (!pm.verifyPassword(username, password)) {
-            handleInvalidLogin();
-            return;
+            if (!pm.verifyPassword(username, password)) {
+                handleInvalidLogin();
+                return;
+            }
+        } catch (PasswordManagerException | IOException e) {
+            AlertBox.show("Unable to find passwords file", "or unable to save password");
+            log.error(e.getMessage());
         }
+
 
         Staff loggedInStaff = findStaffByUsername(username);
 
@@ -154,9 +163,9 @@ public class LoginController {
 
             case "ADMIN" ->
                     navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/hospital-overview.fxml", "Hospital Admin Overview");
-
             default ->
-                    navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/hello-view.fxml", "Hospital Management System");
+                    navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/hospital-overview.fxml", "Hospital Admin Overview");
+
         }
     }
 

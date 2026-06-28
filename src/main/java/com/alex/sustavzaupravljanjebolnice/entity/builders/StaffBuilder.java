@@ -12,7 +12,7 @@ import java.time.LocalDate;
  *
  * @param <T> the type parameter
  */
-public class StaffBuilder<T extends StaffBuilder<T>> {
+public abstract class StaffBuilder<T extends StaffBuilder<T>> {
     private Integer id;
     private String firstName;
     private String lastName;
