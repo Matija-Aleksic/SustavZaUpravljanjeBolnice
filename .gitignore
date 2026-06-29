@@ -4,3 +4,7 @@
 /src/main/resources/design/stitch_hospital_management_system/
 /src/main/resources/docs/predavanja/
 /src/main/resources/docs/requirements/
+/data/
+/logs/
+/.zed/
+/passwords.properties
