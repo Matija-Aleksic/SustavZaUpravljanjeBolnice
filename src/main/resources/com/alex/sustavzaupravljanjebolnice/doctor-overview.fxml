@@ -77,8 +77,7 @@
                 <Label fx:id="phoneNumber" text="Phone Number" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
                 <Label fx:id="address" text="Address" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
 
-                <Label fx:id="hospital" text="Hospital" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
-                <Label fx:id="salary" text="Salary" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                <Label fx:id="salary" text="Salary" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
             </GridPane>
 
             <TabPane VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE" style="-fx-tab-header-background: transparent;">

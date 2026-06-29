@@ -75,8 +75,6 @@ public class DoctorViewController {
     @FXML
     private Label salary;
     @FXML
-    private Label hospital;
-    @FXML
     private Label phoneNumber;
     @FXML
     private Label address;
@@ -148,7 +146,6 @@ public class DoctorViewController {
         role.setText("Role: Doctor");
         email.setText("Email: " + doctor.getEmail());
         salary.setText("Salary: " + doctor.getSalary() + " €");
-        hospital.setText("Hospital: " + (doctor.getHospital() != null ? doctor.getHospital().getName() : "N/A"));
         phoneNumber.setText("Phone: " + doctor.getPhoneNumber());
         address.setText("Address: " + doctor.getAddress());
 
@@ -165,7 +162,7 @@ public class DoctorViewController {
     }
 
     private void clearDoctorDetails() {
-        Arrays.asList(nameSurname, oib, role, email, salary, hospital, phoneNumber, address).forEach(l -> l.setText(""));
+        Arrays.asList(nameSurname, oib, role, email, salary, phoneNumber, address).forEach(l -> l.setText(""));
         appointmentsTable.getItems().clear();
         patientsTable.getItems().clear();
         prescriptionsTable.getItems().clear();

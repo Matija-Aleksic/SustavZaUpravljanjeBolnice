@@ -5,6 +5,8 @@ import com.alex.sustavzaupravljanjebolnice.entity.StaffRoles;
 import com.alex.sustavzaupravljanjebolnice.entity.builders.DoctorBuilder;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
 import com.alex.sustavzaupravljanjebolnice.entity.staff.Doctor;
+import com.alex.sustavzaupravljanjebolnice.entity.staff.Staff;
+import com.alex.sustavzaupravljanjebolnice.util.UserSession;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.List;
  * The type Doctor repo.
  */
 public class DoctorRepo implements Repository<Doctor, Long> {
+    Staff loggedStaff = UserSession.getInstance().getLoggedInStaff();
 
     @Override
     public Doctor getById(Long id) throws SQLException {
