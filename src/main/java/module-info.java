@@ -4,6 +4,7 @@ module com.alex.sustavzaupravljanjebolnice {
     requires org.slf4j;
     requires java.sql;
     requires com.h2database;
+    requires org.jetbrains.annotations;
 
     opens com.alex.sustavzaupravljanjebolnice to javafx.fxml;
     opens com.alex.sustavzaupravljanjebolnice.controller to javafx.fxml;

@@ -48,6 +48,7 @@ public class PasswordManager {
      * @param username the username
      * @param password the password
      * @throws PasswordManagerException the specific custom exception replacing generic Exception
+     * @throws IOException              the io exception
      */
     public void savePassword(String username, String password) throws PasswordManagerException, IOException {
         String salt = generateSalt();

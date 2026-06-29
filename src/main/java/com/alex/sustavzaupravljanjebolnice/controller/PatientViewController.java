@@ -36,16 +36,34 @@ public class PatientViewController {
     private final HospitalRepo hospitalRepo = new HospitalRepo();
     private final WardRepo wardRepo = new WardRepo();
 
+    /**
+     * The Detail mbo.
+     */
     @FXML
     Label detailMbo;
+    /**
+     * The Detail birth date.
+     */
     @FXML
     Label detailBirthDate;
+    /**
+     * The Detail status.
+     */
     @FXML
     Label detailStatus;
+    /**
+     * The Detail doctor.
+     */
     @FXML
     Label detailDoctor;
+    /**
+     * The Detail ward.
+     */
     @FXML
     Label detailWard;
+    /**
+     * The Detail hospital.
+     */
     @FXML
     Label detailHospital;
     @FXML

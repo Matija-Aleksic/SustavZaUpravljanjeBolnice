@@ -65,7 +65,6 @@ public class LoginController {
      * Login.
      *
      * @param event the event
-     * @throws Exception the exception
      */
     @FXML
     public void login(ActionEvent event) {

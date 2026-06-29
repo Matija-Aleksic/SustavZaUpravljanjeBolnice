@@ -12,7 +12,6 @@ public class AdministratorBuilder extends StaffBuilder<AdministratorBuilder> {
      *
      * @return the administrator
      */
-
     public Administrator build() {
         return new Administrator(this);
     }

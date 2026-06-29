@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -94,27 +95,7 @@ public class DoctorDialogController {
         try {
             double salaryVal = Double.parseDouble(txtSalary.getText().trim());
 
-            Doctor doc;
-            if (existingDoctor != null) {
-                doc = existingDoctor;
-            } else {
-                doc = new Doctor();
-                doc.setRole(StaffRoles.DOCTOR);
-                doc.setBirthDate(LocalDate.of(1990, Month.JANUARY, 1));
-            }
-
-            doc.setId(currentDoctorId == null ? 0 : currentDoctorId);
-            doc.setFirstName(txtFirstName.getText().trim());
-            doc.setLastName(txtLastName.getText().trim());
-            doc.setOib(txtOib.getText().trim());
-            doc.setEmail(txtEmail.getText().trim());
-            doc.setSalary(salaryVal);
-            doc.setPhoneNumber(txtPhone.getText().trim());
-            doc.setAddress(txtAddress.getText().trim());
-
-            if (existingDoctor == null) {
-                doc.setHospital(UserSession.getInstance().getLoggedInStaff().getHospital());
-            }
+            Doctor doc = getDoctor(salaryVal);
 
             if (currentDoctorId == null) {
                 doctorRepo.save(doc);
@@ -130,6 +111,31 @@ public class DoctorDialogController {
         } catch (SQLException e) {
             AlertBox.show("Persistence Fail", "Database engine rejected updating: " + e.getMessage());
         }
+    }
+
+    private @NotNull Doctor getDoctor(double salaryVal) {
+        Doctor doc;
+        if (existingDoctor != null) {
+            doc = existingDoctor;
+        } else {
+            doc = new Doctor();
+            doc.setRole(StaffRoles.DOCTOR);
+            doc.setBirthDate(LocalDate.of(1990, Month.JANUARY, 1));
+        }
+
+        doc.setId(currentDoctorId == null ? 0 : currentDoctorId);
+        doc.setFirstName(txtFirstName.getText().trim());
+        doc.setLastName(txtLastName.getText().trim());
+        doc.setOib(txtOib.getText().trim());
+        doc.setEmail(txtEmail.getText().trim());
+        doc.setSalary(salaryVal);
+        doc.setPhoneNumber(txtPhone.getText().trim());
+        doc.setAddress(txtAddress.getText().trim());
+
+        if (existingDoctor == null) {
+            doc.setHospital(UserSession.getInstance().getLoggedInStaff().getHospital());
+        }
+        return doc;
     }
 
     /**

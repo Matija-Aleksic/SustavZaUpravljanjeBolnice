@@ -16,6 +16,9 @@ import java.util.List;
  * The type Doctor repo.
  */
 public class DoctorRepo implements Repository<Doctor, Long> {
+    /**
+     * The Logged staff.
+     */
     Staff loggedStaff = UserSession.getInstance().getLoggedInStaff();
 
     @Override

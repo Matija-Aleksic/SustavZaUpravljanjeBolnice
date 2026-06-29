@@ -18,7 +18,7 @@ COPY target/SustavZaUpravljanjeBolnice-1.0-SNAPSHOT.jar app.jar
 
 EXPOSE 6080
 
-CMD Xvfb :99 -screen 0 1400x1000x24 & \
+CMD Xvfb :99 -screen 0 1400x1100x24 & \
     x11vnc -forever -shared -display :99 -nopw -listen localhost & \
     websockify --web=/usr/share/novnc/ 6080 localhost:5900 & \
     sleep 2 && \

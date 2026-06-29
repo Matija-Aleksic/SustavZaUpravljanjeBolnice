@@ -9,11 +9,10 @@ import org.slf4j.LoggerFactory;
  */
 public class H2Server {
     private static final Logger log = LoggerFactory.getLogger(H2Server.class);
-
+    private static Server tcpServer;
 
     private H2Server() {
     }
-    private static Server tcpServer;
 
     /**
      * Start.

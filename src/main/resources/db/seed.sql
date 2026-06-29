@@ -1,6 +1,4 @@
---- ==========================================
---- 1. SEED HOSPITALS (5 rows)
---- ==========================================
+
 INSERT INTO hospital (name, address, phone_number, email)
 SELECT CASE CAST(X AS INT)
            WHEN 1 THEN 'KBC Zagreb'
@@ -14,9 +12,7 @@ SELECT CASE CAST(X AS INT)
        CONCAT('hospital_', X, '@hospital.hr')                              AS email
 FROM SYSTEM_RANGE(1, 5) AS target(X);
 
---- ==========================================
---- 2. SEED DEPARTMENTS (~35 rows)
---- ==========================================
+
 INSERT INTO department (name, hospital_id)
 SELECT dept.name,
        h.id
@@ -35,9 +31,6 @@ FROM hospital h
                      UNION ALL
                      SELECT 'Oncology') dept;
 
---- ==========================================
---- 3. SEED STAFF (200 rows)
---- ==========================================
 INSERT INTO staff (first_name, last_name, oib, birth_date, role, permissions, email, salary, phone_number, address,
                    hospital_id)
 SELECT CASE CAST(MOD(X, 15) + 1 AS INT)
@@ -91,13 +84,10 @@ SELECT CASE CAST(MOD(X, 15) + 1 AS INT)
        ROUND(RAND() * (3500 - 1200) + 1200, 2)                                  AS salary,
        CONCAT('+385 91 ', CAST(FLOOR(RAND() * 9000000 + 1000000) AS INT))       AS phone_number,
        CONCAT('Staff Address ', X)                                              AS address,
-       -- FIXED: Direct math bypasses subquery caching entirely for true row-level randomness
        CAST(FLOOR(RAND() * 5) + 1 AS INT)                                       AS hospital_id
 FROM SYSTEM_RANGE(1, 200) AS target(X);
 
---- ==========================================
---- 4. SEED WARDS (~70 rows)
---- ==========================================
+
 INSERT INTO ward (name, max_capacity, capacity, department_id, nurse_id)
 SELECT CONCAT(w_names.name, ' - Sec ', w_sec.sec)                                                   AS name,
        30                                                                                           AS max_capacity,
@@ -110,9 +100,7 @@ FROM department d
          CROSS JOIN (SELECT 1 AS sec UNION ALL SELECT 2 AS sec) w_sec
 LIMIT 70;
 
---- ==========================================
---- 5. SEED PATIENTS (2,000 rows)
---- ==========================================
+
 INSERT INTO patient (first_name, last_name, oib, birth_date, status, mbo, hospital_id, assigned_doctor_id, ward_id)
 SELECT CASE CAST(FLOOR(RAND() * 10) + 1 AS INT)
            WHEN 1 THEN 'Ivan'
@@ -151,7 +139,6 @@ SELECT CASE CAST(FLOOR(RAND() * 10) + 1 AS INT)
            END                                                                     AS status,
        CAST(900000000 + X AS VARCHAR)                                              AS mbo,
        CAST(FLOOR(RAND() * 5) + 1 AS INT)                                          AS hospital_id, -- FIXED: Random distribution across all 5 hospitals
-       -- FIXED: Dummy correlation via 'target.X' breaks optimization blocks for true random row matching
        (SELECT id
         FROM staff
         WHERE role = 'DOCTOR'
@@ -159,11 +146,9 @@ SELECT CASE CAST(FLOOR(RAND() * 10) + 1 AS INT)
         ORDER BY RAND()
         LIMIT 1)                                                                   AS assigned_doctor_id,
        (SELECT id FROM ward WHERE ward.id <> target.X * 0 ORDER BY RAND() LIMIT 1) AS ward_id
-FROM SYSTEM_RANGE(1, 2000) AS target(X);
+FROM SYSTEM_RANGE(1, 1000) AS target(X);
 
---- ==========================================
---- 6. CALIBRATE WARD CAPACITIES
---- ==========================================
+
 MERGE INTO ward KEY (id)
     SELECT w.id,
            w.name,
@@ -173,22 +158,16 @@ MERGE INTO ward KEY (id)
            w.nurse_id
     FROM ward w;
 
---- ==========================================
---- 7. SEED APPOINTMENTS (5,000 rows)
---- ==========================================
+
 INSERT INTO appointment (doctor_id, patient_id, date_time)
-SELECT
-    -- Automatically randomizes because each patient now points to a unique, randomized doctor
-    (SELECT assigned_doctor_id FROM patient WHERE id = r.patient_id) AS doctor_id,
+SELECT (SELECT assigned_doctor_id FROM patient WHERE id = r.patient_id) AS doctor_id,
     r.patient_id,
     DATEADD('DAY', CAST(FLOOR(RAND() * 30 - 15) AS INT), CURRENT_TIMESTAMP) AS date_time
 FROM (SELECT CAST(FLOOR(RAND() * 2000) + 1 AS INT) AS patient_id
-      FROM SYSTEM_RANGE(1, 5000)) r
+      FROM SYSTEM_RANGE(1, 2000)) r
 WHERE (SELECT assigned_doctor_id FROM patient WHERE id = r.patient_id) IS NOT NULL;
 
---- ==========================================
---- 8. SEED PRESCRIPTIONS (3,000 rows)
---- ==========================================
+
 INSERT INTO prescription (id, name, description, doctor_id, patient_id, start_date, end_date)
 SELECT CONCAT('RX-', r.X, '-', CAST(FLOOR(RAND() * 10000) AS INT))        AS id,
        CASE CAST(FLOOR(RAND() * 6) + 1 AS INT)
@@ -209,9 +188,7 @@ FROM (SELECT X, CAST(FLOOR(RAND() * 2000) + 1 AS INT) AS patient_id
       FROM SYSTEM_RANGE(1, 3000)) r
 WHERE (SELECT assigned_doctor_id FROM patient WHERE id = r.patient_id) IS NOT NULL;
 
---- ==========================================
---- 9. SEED MANUAL ADMINS
---- ==========================================
+
 INSERT INTO staff (first_name, last_name, oib, birth_date, role, permissions, email, salary, phone_number, address,
                    hospital_id)
 VALUES ('Goran', 'Radić', '12345678901', '1985-04-12', 'ADMIN', 'FULL', 'goran.radic@hospital.com', 2500.00,
