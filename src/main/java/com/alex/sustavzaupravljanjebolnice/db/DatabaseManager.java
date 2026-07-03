@@ -11,6 +11,9 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * The type Database manager.
+ */
 public class DatabaseManager {
 
     private static final Logger logger = Logger.getLogger(DatabaseManager.class.getName());
@@ -78,10 +81,21 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Gets connection.
+     *
+     * @return the connection
+     * @throws SQLException the sql exception
+     */
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS);
     }
 
+    /**
+     * Is using fallback database boolean.
+     *
+     * @return the boolean
+     */
     public static boolean isUsingFallbackDatabase() {
         return isUsingFallback;
     }
