@@ -1,7 +1,6 @@
 package com.alex.sustavzaupravljanjebolnice;
 
 import com.alex.sustavzaupravljanjebolnice.db.DatabaseManager;
-import com.alex.sustavzaupravljanjebolnice.db.H2Server;
 import com.alex.sustavzaupravljanjebolnice.util.WindowManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -18,7 +17,7 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) {
-        H2Server.start();
+
 
         try (var _ = DatabaseManager.getConnection()) {
             logger.info("Connected to database.");
@@ -33,7 +32,7 @@ public class HelloApplication extends Application {
     public void stop() {
         logger.info("JavaFX UI has closed. Shutting down database engine...");
         try {
-            H2Server.stop();
+
             logger.info("Database successfully stopped.");
         } catch (Exception _) {
             logger.log(Level.SEVERE, "Failed to clean stop H2 Server");
