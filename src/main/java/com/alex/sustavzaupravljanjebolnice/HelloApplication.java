@@ -35,13 +35,6 @@ public class HelloApplication extends Application {
 
     @Override
     public void stop() {
-        logger.info("JavaFX UI has closed. Shutting down database engine...");
-
-        try {
-            logger.info("Database successfully stopped.");
-        } catch (Exception _) {
-            logger.log(Level.SEVERE, "Failed to clean stop H2 Server");
-        }
 
         try {
             Path passwordsFile = Paths.get("passwords.properties");
