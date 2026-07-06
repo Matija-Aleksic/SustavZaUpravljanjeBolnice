@@ -68,18 +68,6 @@ public class HospitalOverviewController {
      */
     @FXML
     public void initialize() {
-        setupTableColumns();
-
-        Thread.startVirtualThread(() -> {
-            try {
-                loadAndPopulateData();
-            } catch (SQLException e) {
-                Platform.runLater(() -> AlertBox.show("Greška baze podataka", e.getMessage()));
-            }
-        });
-    }
-
-    private void setupTableColumns() {
         hospitalNameColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getName()));
         departmentIdColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(String.valueOf(data.getValue().getId())));
         departmentNameColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getName()));
@@ -87,9 +75,17 @@ public class HospitalOverviewController {
         doctorEmailColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getEmail()));
         nurseNameColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getFirstName() + " " + data.getValue().getLastName()));
         nurseEmailColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getEmail()));
+
+        Thread.startVirtualThread(() -> {
+            try {
+                load();
+            } catch (SQLException e) {
+                Platform.runLater(() -> AlertBox.show("Sql Fail", e.getMessage()));
+            }
+        });
     }
 
-    private void loadAndPopulateData() throws SQLException {
+    private void load() throws SQLException {
         List<Hospital> hospitals = hospitalRepo.getAll();
         List<Department> departments = List.copyOf(departmentRepo.getAll());
         List<Doctor> doctors = List.copyOf(doctorRepo.getAll());
@@ -98,13 +94,13 @@ public class HospitalOverviewController {
         Platform.runLater(() -> {
             hospitalsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
                 if (newVal != null) {
-                    displayHospitalWithContext(newVal, departments, doctors, nurses);
+                    displayHospital(newVal, departments, doctors, nurses);
                 }
             });
 
             setHospitals(hospitals);
             if (!hospitals.isEmpty()) {
-                displayHospitalWithContext(hospitalsTable.getSelectionModel().getSelectedItem(), departments, doctors, nurses);
+                displayHospital(hospitalsTable.getSelectionModel().getSelectedItem(), departments, doctors, nurses);
             }
         });
     }
@@ -121,20 +117,19 @@ public class HospitalOverviewController {
         }
     }
 
-    private void displayHospitalWithContext(Hospital hospital, List<Department> contextDeps, List<Doctor> contextDocs, List<Nurse> contextNurses) {
+    private void displayHospital(Hospital hospital, List<Department> departments, List<Doctor> doctors, List<Nurse> nurses) {
         lblHospitalName.setText(hospital.getName());
-        lblHospitalAddress.setText(hospital.getAddress() != null ? hospital.getAddress() : "N/A");
-        lblHospitalPhone.setText(hospital.getPhoneNumber() != null ? hospital.getPhoneNumber() : "N/A");
-
+        lblHospitalAddress.setText(hospital.getAddress());
+        lblHospitalPhone.setText(hospital.getPhoneNumber());
         long targetHospitalId = hospital.getId();
 
-        List<Department> hospitalDepartments = contextDeps.stream().filter(d -> d.getHospital() != null && d.getHospital().getId() != null && d.getHospital().getId() == targetHospitalId).toList();
+        List<Department> hospitalDepartments = departments.stream().filter(d -> d.getHospital().getId() == targetHospitalId).toList();
         departmentsTable.setItems(FXCollections.observableArrayList(hospitalDepartments));
 
-        List<Doctor> hospitalDoctors = contextDocs.stream().filter(doc -> doc.getHospital() != null && doc.getHospital().getId() != null && doc.getHospital().getId() == targetHospitalId).toList();
+        List<Doctor> hospitalDoctors = doctors.stream().filter(doc -> doc.getHospital().getId() == targetHospitalId).toList();
         doctorsTable.setItems(FXCollections.observableArrayList(hospitalDoctors));
 
-        List<Nurse> hospitalNurses = contextNurses.stream().filter(nurse -> nurse.getHospital() != null && nurse.getHospital().getId() != null && nurse.getHospital().getId() == targetHospitalId).toList();
+        List<Nurse> hospitalNurses = nurses.stream().filter(nurse -> nurse.getHospital() != null && nurse.getHospital().getId() != null && nurse.getHospital().getId() == targetHospitalId).toList();
         nursesTable.setItems(FXCollections.observableArrayList(hospitalNurses));
     }
 }

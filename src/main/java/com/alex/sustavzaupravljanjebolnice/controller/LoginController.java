@@ -58,7 +58,7 @@ public class LoginController {
     public void initialize() {
         usernameTextField.setText("Zrinka Krpan");
         passwordTextField.setText("Zrinka");
-        StaffCredentialSeeder.seedStaffCredentials();
+        StaffCredentialSeeder.seed();
     }
 
     /**
@@ -72,14 +72,14 @@ public class LoginController {
         String username = usernameTextField.getText().trim();
         String password = passwordTextField.getText();
 
-        if (!validateInput(username, password)) {
+        if (!validate(username, password)) {
             return;
         }
         try {
             PasswordManager pm = new PasswordManager(new File("passwords.properties"));
 
             if (!pm.verifyPassword(username, password)) {
-                handleInvalidLogin();
+                invalidLogin();
                 return;
             }
         } catch (PasswordManagerException | IOException e) {
@@ -91,14 +91,14 @@ public class LoginController {
         Staff loggedInStaff = findStaffByUsername(username);
 
         if (loggedInStaff == null) {
-            handleMissingProfile();
+            missingProfile();
             return;
         }
 
         completeLogin(event, username, loggedInStaff);
     }
 
-    private boolean validateInput(String username, String password) {
+    private boolean validate(String username, String password) {
 
         if (username.isBlank() || password.isBlank()) {
             loginMessageLabel.setText("Please enter a username and password.");
@@ -108,12 +108,12 @@ public class LoginController {
         return true;
     }
 
-    private void handleInvalidLogin() {
+    private void invalidLogin() {
         AlertBox.show("Login Failed", "Invalid username or password.");
         loginMessageLabel.setText("Invalid username or password.");
     }
 
-    private void handleMissingProfile() {
+    private void missingProfile() {
         AlertBox.show("Login Error", "Credentials verified, but profile details missing from database.");
         loginMessageLabel.setText("Staff profile details not found.");
     }
@@ -130,22 +130,14 @@ public class LoginController {
             AlertBox.show("Login Error", "Database connection error.");
         }
 
-
         return staffList.stream().filter(staff -> (staff.getFirstName() + " " + staff.getLastName()).equalsIgnoreCase(username)).findFirst().orElse(null);
     }
 
     private void completeLogin(ActionEvent event, String username, Staff loggedInStaff) {
 
         UserSession.getInstance().setLoggedInStaff(loggedInStaff);
-
         loginMessageLabel.setText("Login successful! Welcome " + username);
-
         logger.info(() -> "User %s successfully logged in. Role: %s".formatted(username, loggedInStaff.getRole()));
-
-        navigateBasedOnRole(event, loggedInStaff);
-    }
-
-    private void navigateBasedOnRole(ActionEvent event, Staff loggedInStaff) {
 
         String role = loggedInStaff.getRole() != null ? loggedInStaff.getRole().toString().toUpperCase() : "";
 
@@ -160,20 +152,18 @@ public class LoginController {
             case "RECEPTIONIST" ->
                     navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/receptionist-view.fxml", "Receptionist Dashboard");
 
-            case "ADMIN" ->
-                    navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/hospital-overview.fxml", "Hospital Admin Overview");
             default ->
                     navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/hospital-overview.fxml", "Hospital Admin Overview");
 
         }
     }
 
+
     private void navigateTo(ActionEvent event, String fxmlPath, String title) {
         try {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
             com.alex.sustavzaupravljanjebolnice.util.WindowManager.switchScene(stage, fxmlPath, title, 1400, 850);
-
             stage.centerOnScreen();
             stage.show();
 

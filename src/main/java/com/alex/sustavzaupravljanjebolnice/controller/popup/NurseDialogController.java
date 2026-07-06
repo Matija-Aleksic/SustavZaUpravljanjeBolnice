@@ -45,13 +45,13 @@ public class NurseDialogController {
      */
     @FXML
     public void initialize() {
-        // Initialization configuration logic if required
+        //for sonsrqube
     }
 
     /**
      * Sets new nurse context.
      */
-    public void setNewNurseContext() {
+    public void setNewNurse() {
         this.currentNurseId = null;
         this.existingNurse = null;
 
@@ -87,12 +87,12 @@ public class NurseDialogController {
      */
     @FXML
     public void handleSave(ActionEvent event) {
-        if (!validateForm()) return;
+        if (!validate()) return;
 
         try {
             double salaryVal = Double.parseDouble(txtSalary.getText().trim());
-
             Nurse nurse;
+
             if (existingNurse != null) {
                 nurse = existingNurse;
             } else {
@@ -124,9 +124,9 @@ public class NurseDialogController {
             closeStage();
 
         } catch (NumberFormatException _) {
-            AlertBox.show("Validation Format Error", "Salary field configuration demands numerical precision values.");
+            AlertBox.show("Validation Format Error", "Something is wrong.");
         } catch (SQLException e) {
-            AlertBox.show("Persistence Fail", "Database engine rejected updating: " + e.getMessage());
+            AlertBox.show("Persistence Fail", "Database rejected updating: " + e.getMessage());
         }
     }
 
@@ -149,7 +149,7 @@ public class NurseDialogController {
         return saved;
     }
 
-    private boolean validateForm() {
+    private boolean validate() {
         if (txtFirstName.getText().isBlank() ||
                 txtLastName.getText().isBlank() ||
                 txtOib.getText().isBlank() ||

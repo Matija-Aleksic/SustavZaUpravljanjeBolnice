@@ -25,8 +25,7 @@ public class DoctorRepo implements Repository<Doctor, Long> {
     public Doctor getById(Long id) throws SQLException {
         String query = "SELECT id, first_name, last_name, oib, birth_date, role, permissions, email, salary, phone_number, address, hospital_id FROM STAFF WHERE id = ?";
 
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query)) {
+        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
 
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -43,9 +42,7 @@ public class DoctorRepo implements Repository<Doctor, Long> {
         List<Doctor> doctors = new ArrayList<>();
         String sql = "SELECT id, first_name, last_name, oib, birth_date, role, permissions, email, salary, phone_number, address, hospital_id FROM STAFF WHERE role = 'DOCTOR'";
 
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 doctors.add(mapDoctor(rs));
@@ -58,8 +55,7 @@ public class DoctorRepo implements Repository<Doctor, Long> {
     public void save(Doctor entity) throws SQLException {
         String sql = "INSERT INTO staff (first_name, last_name, oib, birth_date, role, email, salary, hospital_id, phone_number, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(1, entity.getFirstName());
             ps.setString(2, entity.getLastName());
@@ -92,8 +88,7 @@ public class DoctorRepo implements Repository<Doctor, Long> {
     public void update(Doctor entity) throws SQLException {
         String sql = "UPDATE STAFF SET first_name = ?, last_name = ?, oib = ?, birth_date = ?, role = ?, email = ?, salary = ?, hospital_id = ?, phone_number = ?, address = ? WHERE id = ?";
 
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, entity.getFirstName());
             ps.setString(2, entity.getLastName());
@@ -120,8 +115,7 @@ public class DoctorRepo implements Repository<Doctor, Long> {
     @Override
     public void deleteById(Long id) throws SQLException {
         String sql = "DELETE FROM STAFF WHERE id = ?";
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, id);
             ps.executeUpdate();
         }
@@ -134,21 +128,6 @@ public class DoctorRepo implements Repository<Doctor, Long> {
             hospital = new Hospital();
             hospital.setId(hospitalId);
         }
-        return new DoctorBuilder()
-                .setId(rs.getInt("id"))
-                .setFirstName(rs.getString("first_name"))
-                .setLastName(rs.getString("last_name"))
-                .setOib(rs.getString("oib"))
-                .setBirthDate(rs.getDate("birth_date").toLocalDate())
-                .setRole(StaffRoles.valueOf(rs.getString("role")))
-                .setEmail(rs.getString("email"))
-                .setSalary(rs.getDouble("salary"))
-                .setHospital(hospital)
-                .setRole(StaffRoles.DOCTOR)
-                .setPhoneNumber(rs.getString("phone_number"))
-                .setAddress(rs.getString("address"))
-                .setAssignedPatients(new ArrayList<>())
-                .setAppointments(new ArrayList<>())
-                .build();
+        return new DoctorBuilder().setId(rs.getInt("id")).setFirstName(rs.getString("first_name")).setLastName(rs.getString("last_name")).setOib(rs.getString("oib")).setBirthDate(rs.getDate("birth_date").toLocalDate()).setRole(StaffRoles.valueOf(rs.getString("role"))).setEmail(rs.getString("email")).setSalary(rs.getDouble("salary")).setHospital(hospital).setRole(StaffRoles.DOCTOR).setPhoneNumber(rs.getString("phone_number")).setAddress(rs.getString("address")).setAssignedPatients(new ArrayList<>()).setAppointments(new ArrayList<>()).build();
     }
 }

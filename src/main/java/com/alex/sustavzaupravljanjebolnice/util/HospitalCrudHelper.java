@@ -21,10 +21,8 @@ import javafx.application.Platform;
 
 import java.sql.SQLException;
 
-/**
- * The type Hospital crud helper.
- */
 public class HospitalCrudHelper {
+
     private static final NurseRepo nurseRepo = new NurseRepo();
     private static final DoctorRepo doctorRepo = new DoctorRepo();
     private static final PatientRepo patientRepo = new PatientRepo();
@@ -33,235 +31,175 @@ public class HospitalCrudHelper {
     private static final String OPERATOR = currentStaff.getFirstName() + " " + currentStaff.getLastName();
     private static final String MISSING_SELECTION = "Missing Selection";
 
+    private HospitalCrudHelper() {
+    }
 
-    /**
-     * Add doctor.
-     *
-     * @param refresh the refresh
-     */
     public static void addDoctor(Runnable refresh) {
-        WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/doctor-dialog.fxml", "Add New Doctor Profile", DoctorDialogController::setNewDoctorContext, c -> {
+        WindowManager.showPopup("/com/alex/sustavzaupravljanjebolnice/popup/doctor-dialog.fxml", "Add New Doctor Profile", DoctorDialogController::setNewDoctorContext, c -> {
             if (c.isSaved()) {
-                logActionAsync("Added a new Doctor profile");
+                LogWriter.writeLogAsync(new Activity("Added a new doctor", OPERATOR));
                 refresh.run();
             }
         });
     }
 
-    /**
-     * Edit doctor.
-     *
-     * @param selection the selection
-     * @param refresh   the refresh
-     */
     public static void editDoctor(Doctor selection, Runnable refresh) {
         if (selection == null) {
             AlertBox.show("Warning", "Please select a doctor to edit.");
             return;
         }
-        WindowManager.<DoctorDialogController>showModal("/com/alex/sustavzaupravljanjebolnice/popup/doctor-dialog.fxml", "Edit Doctor Profile", c -> c.setDoctor(selection), c -> {
+        WindowManager.<DoctorDialogController>showPopup("/com/alex/sustavzaupravljanjebolnice/popup/doctor-dialog.fxml", "Edit Doctor Profile", c -> c.setDoctor(selection), c -> {
             if (c.isSaved()) {
-                logActionAsync("Modified Doctor profile: " + selection.getLastName());
+                LogWriter.writeLogAsync(new Activity("Modified doctor : " + selection.getLastName(), OPERATOR));
                 refresh.run();
             }
         });
     }
 
-    /**
-     * Delete doctor.
-     *
-     * @param selection the selection
-     * @param refresh   the refresh
-     */
     public static void deleteDoctor(Doctor selection, Runnable refresh) {
         if (selection == null) {
-            AlertBox.show("Warning", "Please select a doctor record to delete.");
+            AlertBox.show("Warning", "Please select record.");
             return;
         }
-        if (ConfirmationBox.show("Are you sure?", "Delete doctor: " + selection.getFirstName() + " " + selection.getLastName() + "?\nThis action cannot be undone.")) {
-            executeAsync(() -> doctorRepo.deleteById((long) selection.getId()), "Deleted Doctor Profile: " + selection.getLastName(), () -> {
-                refresh.run();
-                InfoBox.show("Success");
-            });
+
+        if (!ConfirmationBox.show("Are you sure?", "Delete doctor: " + selection.getFirstName() + " " + selection.getLastName() + "?\nThis action cannot be undone.")) {
+            return;
         }
+
+        Thread.startVirtualThread(() -> {
+            try {
+                doctorRepo.deleteById((long) selection.getId());
+                LogWriter.writeLogAsync(new Activity("Deleted Doctor Profile: " + selection.getLastName(), OPERATOR));
+                Platform.runLater(() -> {
+                    refresh.run();
+                    InfoBox.show("Success");
+                });
+            } catch (SQLException e) {
+                AlertBox.show("Database Fail", e.getMessage());
+            }
+        });
     }
 
-
-    /**
-     * Add nurse.
-     *
-     * @param refresh the refresh
-     */
     public static void addNurse(Runnable refresh) {
-        WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/nurse-dialog.fxml", "Register Nurse", c -> ((NurseDialogController) c).setNewNurseContext(), c -> {
+        WindowManager.showPopup("/com/alex/sustavzaupravljanjebolnice/popup/nurse-dialog.fxml", "Register Nurse", c -> ((NurseDialogController) c).setNewNurse(), c -> {
             if (((NurseDialogController) c).isSaved()) {
-                logActionAsync("Registered a new Nurse profile");
+                LogWriter.writeLogAsync(new Activity("Registered a new nurse ", OPERATOR));
                 refresh.run();
             }
         });
     }
 
-    /**
-     * Edit nurse.
-     *
-     * @param selection the selection
-     * @param refresh   the refresh
-     */
     public static void editNurse(Nurse selection, Runnable refresh) {
         if (selection == null) {
             AlertBox.show(MISSING_SELECTION, "Select a nurse profile.");
             return;
         }
-        WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/nurse-dialog.fxml", "Update Nurse", c -> ((NurseDialogController) c).setNurse(selection), c -> {
+        WindowManager.showPopup("/com/alex/sustavzaupravljanjebolnice/popup/nurse-dialog.fxml", "Update Nurse", c -> ((NurseDialogController) c).setNurse(selection), c -> {
             if (((NurseDialogController) c).isSaved()) {
-                logActionAsync("Updated Nurse profile: " + selection.getLastName());
+                LogWriter.writeLogAsync(new Activity("Updated Nurse: " + selection.getLastName(), OPERATOR));
                 refresh.run();
             }
         });
     }
 
-    /**
-     * Delete nurse.
-     *
-     * @param selection the selection
-     * @param refresh   the refresh
-     */
     public static void deleteNurse(Nurse selection, Runnable refresh) {
         if (selection == null) {
             AlertBox.show(MISSING_SELECTION, "Select a nurse profile.");
             return;
         }
-        if (ConfirmationBox.show("Erase Record", "Remove nurse profile: " + selection.getFirstName() + "?")) {
-            executeAsync(() -> nurseRepo.deleteById(Long.valueOf(selection.getId())), "Removed Nurse: " + selection.getLastName(), refresh);
+        if (!ConfirmationBox.show("Erase Record", "Remove nurse : " + selection.getFirstName() + "?")) {
+            return;
         }
+        Thread.startVirtualThread(() -> {
+            try {
+                nurseRepo.deleteById(Long.valueOf(selection.getId()));
+                LogWriter.writeLogAsync(new Activity("Removed Nurse: " + selection.getLastName(), OPERATOR));
+                refresh.run();
+            } catch (SQLException e) {
+                AlertBox.show("Database fail", e.getMessage());
+            }
+        });
     }
 
-
-    /**
-     * Add patient.
-     *
-     * @param refresh the refresh
-     */
     public static void addPatient(Runnable refresh) {
-        WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/patient-dialog.fxml", "Admit Patient", null, c -> {
-            if (((PatientDialogController) c).isOperationSaved()) {
-                logActionAsync("Admitted a new Patient record");
+        WindowManager.showPopup("/com/alex/sustavzaupravljanjebolnice/popup/patient-dialog.fxml", "Admit Patient", null, c -> {
+            if (((PatientDialogController) c).isSaved()) {
+                LogWriter.writeLogAsync(new Activity("Admitted a new patient", OPERATOR));
                 refresh.run();
             }
         });
     }
 
-    /**
-     * Edit patient.
-     *
-     * @param selection the selection
-     * @param refresh   the refresh
-     */
     public static void editPatient(Patient selection, Runnable refresh) {
         if (selection == null) {
             AlertBox.show(MISSING_SELECTION, "Select a patient row entry.");
             return;
         }
-        WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/patient-dialog.fxml", "Modify Patient", c -> ((PatientDialogController) c).setPatientToEdit(selection), c -> {
-            if (((PatientDialogController) c).isOperationSaved()) {
-                logActionAsync("Modified Patient record: " + selection.getLastName());
+        WindowManager.showPopup("/com/alex/sustavzaupravljanjebolnice/popup/patient-dialog.fxml", "Modify Patient", c -> ((PatientDialogController) c).setPatientToEdit(selection), c -> {
+            if (((PatientDialogController) c).isSaved()) {
+                LogWriter.writeLogAsync(new Activity("Modified Patient record: " + selection.getLastName(), OPERATOR));
                 refresh.run();
             }
         });
     }
 
-    /**
-     * Delete patient.
-     *
-     * @param selection the selection
-     * @param refresh   the refresh
-     */
     public static void deletePatient(Patient selection, Runnable refresh) {
         if (selection == null) {
             AlertBox.show(MISSING_SELECTION, "Select a patient to discharge.");
             return;
         }
-        if (ConfirmationBox.show("Discharge Case", "Clear patient profile: " + selection.getFirstName() + "?")) {
-            executeAsync(() -> patientRepo.deleteById(Long.valueOf(selection.getId())), "Discharged Patient: " + selection.getFirstName(), refresh);
-        }
-    }
-
-    /**
-     * Add prescription.
-     *
-     * @param refresh the refresh
-     */
-    public static void addPrescription(Runnable refresh) {
-        WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/prescription-dialog.fxml", "Issue Prescription", null, c -> {
-            if (((PrescriptionDialogController) c).isSaved()) {
-                logActionAsync("Issued a new medication prescription");
-                refresh.run();
-            }
-        });
-    }
-
-    /**
-     * Edit prescription.
-     *
-     * @param selection the selection
-     * @param refresh   the refresh
-     */
-    public static void editPrescription(Prescription selection, Runnable refresh) {
-        if (selection == null) {
-            AlertBox.show(MISSING_SELECTION, "Select a prescription item row.");
+        if (!ConfirmationBox.show("Discharge Case", "Clear patient profile: " + selection.getFirstName() + "?")) {
             return;
         }
-        WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/prescription-dialog.fxml", "Modify Orders", c -> ((PrescriptionDialogController) c).setPrescription(selection), c -> {
-            if (((PrescriptionDialogController) c).isSaved()) {
-                logActionAsync("Modified Prescription ID: " + selection.getId());
-                refresh.run();
-            }
-        });
-    }
-
-    /**
-     * Delete prescription.
-     *
-     * @param selection the selection
-     * @param refresh   the refresh
-     */
-    public static void deletePrescription(Prescription selection, Runnable refresh) {
-        if (selection == null) {
-            AlertBox.show(MISSING_SELECTION, "Select a prescription ledger target.");
-            return;
-        }
-        if (ConfirmationBox.show("Revoke Script", "Erase completely medication record ID: " + selection.getId() + "?")) {
-            executeAsync(() -> prescriptionRepo.deleteById(selection.getId()), "Revoked prescription sequence ID: " + selection.getId(), refresh);
-        }
-    }
-
-
-    private static void logActionAsync(String activityLog) {
-        Thread.startVirtualThread(() -> LogWriter.writeLogAsync(new Activity(activityLog, OPERATOR)));
-    }
-
-    private static void executeAsync(SqlRunnable action, String activityLog, Runnable completeCallback) {
         Thread.startVirtualThread(() -> {
             try {
-                action.run();
-                LogWriter.writeLogAsync(new Activity(activityLog, OPERATOR));
-                Platform.runLater(completeCallback);
+                patientRepo.deleteById(Long.valueOf(selection.getId()));
+                LogWriter.writeLogAsync(new Activity("Discharged Patient: " + selection.getFirstName(), OPERATOR));
+                refresh.run();
             } catch (SQLException e) {
                 Platform.runLater(() -> AlertBox.show("Database Fault", e.getMessage()));
             }
         });
     }
 
-    /**
-     * The interface Sql runnable.
-     */
-    @FunctionalInterface
-    public interface SqlRunnable {
-        /**
-         * Run.
-         *
-         * @throws SQLException the sql exception
-         */
-        void run() throws SQLException;
+    public static void addPrescription(Runnable refresh) {
+        WindowManager.showPopup("/com/alex/sustavzaupravljanjebolnice/popup/prescription-dialog.fxml", "Issue Prescription", null, c -> {
+            if (((PrescriptionDialogController) c).isSaved()) {
+                LogWriter.writeLogAsync(new Activity("Issued a new medication prescription", OPERATOR));
+                refresh.run();
+            }
+        });
+    }
+
+    public static void editPrescription(Prescription selection, Runnable refresh) {
+        if (selection == null) {
+            AlertBox.show(MISSING_SELECTION, "Select a prescription item row.");
+            return;
+        }
+        WindowManager.showPopup("/com/alex/sustavzaupravljanjebolnice/popup/prescription-dialog.fxml", "Modify Orders", c -> ((PrescriptionDialogController) c).setPrescription(selection), c -> {
+            if (((PrescriptionDialogController) c).isSaved()) {
+                LogWriter.writeLogAsync(new Activity("Modified Prescription ID: " + selection.getId(), OPERATOR));
+                refresh.run();
+            }
+        });
+    }
+
+    public static void deletePrescription(Prescription selection, Runnable refresh) {
+        if (selection == null) {
+            AlertBox.show(MISSING_SELECTION, "Select a prescription ledger target.");
+            return;
+        }
+        if (!ConfirmationBox.show("Revoke Script", "Erase completely medication record ID: " + selection.getId() + "?")) {
+            return;
+        }
+        Thread.startVirtualThread(() -> {
+            try {
+                prescriptionRepo.deleteById(selection.getId());
+                LogWriter.writeLogAsync(new Activity("Revoked prescription sequence ID: " + selection.getId(), OPERATOR));
+                refresh.run();
+            } catch (SQLException e) {
+                AlertBox.show("Database Fault", e.getMessage());
+            }
+        });
     }
 }

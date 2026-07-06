@@ -81,7 +81,7 @@ public class PrescriptionViewController {
         patientsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 chkShowAllPatients.setSelected(false);
-                applyPrescriptionFilter();
+                filterPerscriptions();
             }
         });
 
@@ -89,13 +89,13 @@ public class PrescriptionViewController {
             if (Boolean.TRUE.equals(isAll)) {
                 patientsTable.getSelectionModel().clearSelection();
             }
-            applyPrescriptionFilter();
+            filterPerscriptions();
         });
 
         reload();
     }
 
-    private void loadData() throws SQLException {
+    private void load() throws SQLException {
         if (loggedInStaff == null || loggedInStaff.getHospital() == null) {
             log.warn("Unauthorized data load attempt or context lacking hospital association.");
             return;
@@ -107,11 +107,11 @@ public class PrescriptionViewController {
         allPrescriptions = prescriptionRepo.getAll().stream().filter(pr -> validPatientIds.contains((long) pr.getPatientId())).toList();
         Platform.runLater(() -> {
             patientsTable.setItems(FXCollections.observableArrayList(hospitalPatients));
-            applyPrescriptionFilter();
+            filterPerscriptions();
         });
     }
 
-    private void applyPrescriptionFilter() {
+    private void filterPerscriptions() {
         if (chkShowAllPatients.isSelected()) {
             prescriptionsTable.setItems(FXCollections.observableArrayList(allPrescriptions));
         } else {
@@ -126,27 +126,27 @@ public class PrescriptionViewController {
     }
 
     @FXML
-    private void handleAddPrescription() {
-        WindowManager.showModal("/com/alex/sustavzaupravljanjebolnice/popup/prescription-dialog.fxml", "Issue Prescription", null, c -> {
+    private void addPrescription() {
+        WindowManager.showPopup("/com/alex/sustavzaupravljanjebolnice/popup/prescription-dialog.fxml", "Issue Prescription", null, c -> {
             if (((PrescriptionDialogController) c).isSaved()) reload();
         });
     }
 
     @FXML
-    private void handleEditPrescription() {
+    private void editPrescription() {
         Prescription selected = prescriptionsTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
             AlertBox.show("Selection Missing", "Please choose a prescription record to modify.");
             return;
         }
 
-        WindowManager.<PrescriptionDialogController>showModal("/com/alex/sustavzaupravljanjebolnice/popup/prescription-dialog.fxml", "Update Prescription Order", c -> c.setPrescription(selected), c -> {
+        WindowManager.<PrescriptionDialogController>showPopup("/com/alex/sustavzaupravljanjebolnice/popup/prescription-dialog.fxml", "Update Prescription Order", c -> c.setPrescription(selected), c -> {
             if (c.isSaved()) reload();
         });
     }
 
     @FXML
-    private void handleDeletePrescription() {
+    private void deletePrescription() {
         Prescription selected = prescriptionsTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
             AlertBox.show("Selection Missing", "Please pinpoint a prescription target to revoke.");
@@ -174,7 +174,7 @@ public class PrescriptionViewController {
     private void reload() {
         Thread.startVirtualThread(() -> {
             try {
-                loadData();
+                load();
             } catch (SQLException e) {
                 log.error("Asynchronous processing exception encountered during reload initialization execution data chain link", e);
                 Platform.runLater(() -> AlertBox.show("Sync Error", e.getMessage()));

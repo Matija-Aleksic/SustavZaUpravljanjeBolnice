@@ -1,7 +1,11 @@
 package com.alex.sustavzaupravljanjebolnice.controller.popup;
 
+import com.alex.sustavzaupravljanjebolnice.entity.Activity;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Prescription;
+import com.alex.sustavzaupravljanjebolnice.entity.staff.Staff;
 import com.alex.sustavzaupravljanjebolnice.repository.PrescriptionRepo;
+import com.alex.sustavzaupravljanjebolnice.util.LogWriter;
+import com.alex.sustavzaupravljanjebolnice.util.UserSession;
 import com.alex.sustavzaupravljanjebolnice.util.boxes.AlertBox;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,6 +22,7 @@ import java.sql.SQLException;
 public class PrescriptionDialogController {
 
     private final PrescriptionRepo prescriptionRepo = new PrescriptionRepo();
+    private final Staff loggedInStaff = UserSession.getInstance().getLoggedInStaff();
 
     @FXML
     private TextField txtId;
@@ -100,7 +105,7 @@ public class PrescriptionDialogController {
                 existingPrescription.setEndDate(dpEndDate.getValue());
                 prescriptionRepo.update(existingPrescription);
             }
-
+            LogWriter.writeLogAsync(new Activity("Prescription Saved", loggedInStaff.getFirstName() + " " + loggedInStaff.getLastName()));
             operationSaved = true;
             closeWindow();
 
@@ -121,14 +126,6 @@ public class PrescriptionDialogController {
         closeWindow();
     }
 
-    /**
-     * Is operation saved boolean.
-     *
-     * @return the boolean
-     */
-    public boolean isOperationSaved() {
-        return operationSaved;
-    }
 
     /**
      * Is saved boolean.

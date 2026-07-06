@@ -26,7 +26,7 @@
             <HBox alignment="CENTER" spacing="6">
 
                 <Button fx:id="addNurseBtn"
-                        onAction="#handleAddNurse"
+                        onAction="#addNurse"
                         text="Add Nurse">
                     <styleClass>
                         <String fx:value="btn-success"/>
@@ -34,7 +34,7 @@
                 </Button>
 
                 <Button fx:id="editNurseBtn"
-                        onAction="#handleEditNurse"
+                        onAction="#editNurse"
                         text="Edit">
                     <styleClass>
                         <String fx:value="btn-warning"/>
@@ -42,7 +42,7 @@
                 </Button>
 
                 <Button fx:id="deleteNurseBtn"
-                        onAction="#handleDeleteNurse"
+                        onAction="#deleteNurse"
                         text="Delete">
                     <styleClass>
                         <String fx:value="btn-danger"/>
@@ -86,19 +86,19 @@
                 <Region HBox.hgrow="ALWAYS"/>
 
                 <HBox spacing="8">
-                    <Button onAction="#handleAddPatient" text="Add Patient">
+                    <Button onAction="#addPatient" text="Add Patient">
                         <styleClass>
                             <String fx:value="btn-success"/>
                         </styleClass>
                     </Button>
 
-                    <Button onAction="#handleEditPatient" text="Edit Patient">
+                    <Button onAction="#editPatient" text="Edit Patient">
                         <styleClass>
                             <String fx:value="btn-warning"/>
                         </styleClass>
                     </Button>
 
-                    <Button onAction="#handleDeletePatient" text="Discharge Patient">
+                    <Button onAction="#deletePatient" text="Discharge Patient">
                         <styleClass>
                             <String fx:value="btn-danger"/>
                         </styleClass>
@@ -119,19 +119,19 @@
                 <Region HBox.hgrow="ALWAYS"/>
 
                 <HBox spacing="8">
-                    <Button onAction="#handleAddPrescription" text="Add Prescription">
+                    <Button onAction="#addPrescription" text="Add Prescription">
                         <styleClass>
                             <String fx:value="btn-success"/>
                         </styleClass>
                     </Button>
 
-                    <Button onAction="#handleEditPrescription" text="Modify Details">
+                    <Button onAction="#editPrescription" text="Modify Details">
                         <styleClass>
                             <String fx:value="btn-warning"/>
                         </styleClass>
                     </Button>
 
-                    <Button onAction="#handleDeletePrescription" text="Revoke">
+                    <Button onAction="#deletePrescription" text="Revoke">
                         <styleClass>
                             <String fx:value="btn-danger"/>
                         </styleClass>

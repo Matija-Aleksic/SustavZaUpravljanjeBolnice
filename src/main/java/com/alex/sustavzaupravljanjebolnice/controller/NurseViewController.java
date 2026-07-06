@@ -1,6 +1,7 @@
 package com.alex.sustavzaupravljanjebolnice.controller;
 
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
+import com.alex.sustavzaupravljanjebolnice.entity.StaffRoles;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Prescription;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Ward;
 import com.alex.sustavzaupravljanjebolnice.entity.staff.Nurse;
@@ -82,20 +83,18 @@ public class NurseViewController {
      */
     @FXML
     public void initialize() {
-        configureRoleBasedAccess();
+        adminAccess();
 
         nurseColumn.setCellValueFactory(d -> new ReadOnlyStringWrapper(d.getValue().getFirstName() + " " + d.getValue().getLastName()));
         patientNameColumn.setCellValueFactory(d -> new ReadOnlyStringWrapper(d.getValue().getFirstName() + " " + d.getValue().getLastName()));
         patientOibColumn.setCellValueFactory(d -> new ReadOnlyStringWrapper(d.getValue().getOib()));
         patientWardColumn.setCellValueFactory(d -> new ReadOnlyStringWrapper(resolveWardName(d.getValue())));
-
         prescriptionNameColumn.setCellValueFactory(d -> new ReadOnlyStringWrapper(d.getValue().getName()));
         prescriptionPatientColumn.setCellValueFactory(d -> {
             Patient p = findPatient(d.getValue().getPatientId());
-            return new ReadOnlyStringWrapper(p != null ? p.getFirstName() + " " + p.getLastName() : "Unknown");
+            return new ReadOnlyStringWrapper(p.getFirstName() + " " + p.getLastName());
         });
         prescriptionDurationColumn.setCellValueFactory(d -> new ReadOnlyStringWrapper(d.getValue().getStartDate() + " - " + d.getValue().getEndDate()));
-
         nursesTable.getSelectionModel().selectedItemProperty().addListener((o, oldV, newV) -> {
             if (newV != null) displayNurse(newV);
         });
@@ -103,8 +102,8 @@ public class NurseViewController {
         reload();
     }
 
-    private void configureRoleBasedAccess() {
-        boolean isAdmin = loggedInStaff != null && loggedInStaff.getRole() != null && "ADMIN".equalsIgnoreCase(loggedInStaff.getRole().toString());
+    private void adminAccess() {
+        boolean isAdmin = loggedInStaff.getRole().equals(StaffRoles.ADMIN);
 
         if (nurseCrudContainer != null) {
             nurseCrudContainer.setVisible(isAdmin);
@@ -124,10 +123,8 @@ public class NurseViewController {
         oib.setText(nurse.getOib());
         email.setText(nurse.getEmail());
         salary.setText(String.format("%.2f €", nurse.getSalary()));
-
         List<Patient> patients = Objects.requireNonNullElse(nurse.getWards(), Collections.<Ward>emptyList()).stream().flatMap(w -> w.getPatients().stream()).toList();
         patientsTable.setItems(FXCollections.observableArrayList(patients));
-
         Set<Long> patientIds = patients.stream().map(p -> p.getId().longValue()).collect(Collectors.toSet());
         List<Prescription> prescriptions = allPrescriptions.stream().filter(p -> p.getPatientId() != null && patientIds.contains(p.getPatientId().longValue())).toList();
         prescriptionsTable.setItems(FXCollections.observableArrayList(prescriptions));
@@ -167,47 +164,47 @@ public class NurseViewController {
     }
 
     @FXML
-    private void handleAddNurse() {
+    private void addNurse() {
         HospitalCrudHelper.addNurse(this::reload);
     }
 
     @FXML
-    private void handleEditNurse() {
+    private void editNurse() {
         HospitalCrudHelper.editNurse(nursesTable.getSelectionModel().getSelectedItem(), this::reload);
     }
 
     @FXML
-    private void handleDeleteNurse() {
+    private void deleteNurse() {
         HospitalCrudHelper.deleteNurse(nursesTable.getSelectionModel().getSelectedItem(), this::reload);
     }
 
     @FXML
-    private void handleAddPatient() {
+    private void addPatient() {
         HospitalCrudHelper.addPatient(this::reload);
     }
 
     @FXML
-    private void handleEditPatient() {
+    private void editPatient() {
         HospitalCrudHelper.editPatient(patientsTable.getSelectionModel().getSelectedItem(), this::reload);
     }
 
     @FXML
-    private void handleDeletePatient() {
+    private void deletePatient() {
         HospitalCrudHelper.deletePatient(patientsTable.getSelectionModel().getSelectedItem(), this::reload);
     }
 
     @FXML
-    private void handleAddPrescription() {
+    private void addPrescription() {
         HospitalCrudHelper.addPrescription(this::reload);
     }
 
     @FXML
-    private void handleEditPrescription() {
+    private void editPrescription() {
         HospitalCrudHelper.editPrescription(prescriptionsTable.getSelectionModel().getSelectedItem(), this::reload);
     }
 
     @FXML
-    private void handleDeletePrescription() {
+    private void deletePrescription() {
         HospitalCrudHelper.deletePrescription(prescriptionsTable.getSelectionModel().getSelectedItem(), this::reload);
     }
 }

@@ -27,12 +27,10 @@ public class LogWriter {
      * @param newActivity the new activity
      */
     public static void writeLogAsync(Activity newActivity) {
-        if (newActivity == null) return;
-
-        Thread.startVirtualThread(() -> performFileWrite(newActivity));
+        Thread.startVirtualThread(() -> fileWrite(newActivity));
     }
 
-    private static synchronized void performFileWrite(Activity newActivity) {
+    private static synchronized void fileWrite(Activity newActivity) {
         File directory = new File("logs");
         if (!directory.exists()) {
             directory.mkdir();

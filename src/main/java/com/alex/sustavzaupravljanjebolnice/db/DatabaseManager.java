@@ -22,7 +22,6 @@ public class DatabaseManager {
     private static final String JDBC_URL;
     private static final String DB_USER;
     private static final String DB_PASS;
-    private static boolean isUsingFallback = false;
 
     static {
         try (InputStream input = DatabaseManager.class.getClassLoader().getResourceAsStream("db.properties")) {
@@ -49,7 +48,6 @@ public class DatabaseManager {
                 JDBC_URL = remoteUrl;
                 DB_USER = remoteUser;
                 DB_PASS = remotePass;
-                isUsingFallback = false;
 
                 logger.info("Connected to REMOTE DB");
             } else {
@@ -59,7 +57,6 @@ public class DatabaseManager {
                 JDBC_URL = localUrl;
                 DB_USER = localUser;
                 DB_PASS = localPass;
-                isUsingFallback = true;
             }
 
             initDatabase();
@@ -85,19 +82,10 @@ public class DatabaseManager {
      * Gets connection.
      *
      * @return the connection
-     * @throws SQLException the sql exception
+     * @throws SQLException the SQL exception
      */
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS);
-    }
-
-    /**
-     * Is using fallback database boolean.
-     *
-     * @return the boolean
-     */
-    public static boolean isUsingFallbackDatabase() {
-        return isUsingFallback;
     }
 
     private static void initDatabase() throws DatabaseInitializationException {

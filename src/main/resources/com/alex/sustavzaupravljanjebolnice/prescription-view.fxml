@@ -55,19 +55,19 @@
                     <Insets bottom="5" left="5" right="5" top="5"/>
                 </padding>
 
-                <Button onAction="#handleAddPrescription" prefWidth="100" text="Create New">
+                <Button onAction="#addPrescription" prefWidth="100" text="Create New">
                     <styleClass>
                         <String fx:value="btn-primary"/>
                     </styleClass>
                 </Button>
 
-                <Button onAction="#handleEditPrescription" prefWidth="100" text="Modify">
+                <Button onAction="#editPrescription" prefWidth="100" text="Modify">
                     <styleClass>
                         <String fx:value="btn-warning"/>
                     </styleClass>
                 </Button>
 
-                <Button onAction="#handleDeletePrescription" prefWidth="100" text="Revoke">
+                <Button onAction="#deletePrescription" prefWidth="100" text="Revoke">
                     <styleClass>
                         <String fx:value="btn-danger"/>
                     </styleClass>

@@ -5,7 +5,6 @@ import com.alex.sustavzaupravljanjebolnice.entity.staff.Staff;
 /**
  * The type User session.
  */
-@SuppressWarnings("java:S6548")
 public class UserSession {
     private static final UserSession INSTANCE = new UserSession();
     private Staff loggedInStaff;

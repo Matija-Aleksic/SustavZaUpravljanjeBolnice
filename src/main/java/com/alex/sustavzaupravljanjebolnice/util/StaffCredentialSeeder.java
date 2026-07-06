@@ -26,7 +26,7 @@ public class StaffCredentialSeeder {
     /**
      * Seed staff credentials.
      */
-    public static void seedStaffCredentials() {
+    public static void seed() {
         File credentialStorage = new File("passwords.properties");
         List<Staff> staffList = new ArrayList<>();
 
@@ -47,7 +47,7 @@ public class StaffCredentialSeeder {
         try {
             PasswordManager pm = new PasswordManager(credentialStorage);
 
-            log.info("--- Starting Staff Credential Seeding ---");
+            log.info("Starting Staff Credential Seeding");
             int accountsCreated = 0;
 
             for (Staff staff : staffList) {
@@ -57,7 +57,7 @@ public class StaffCredentialSeeder {
                 String username = firstName + " " + lastName;
 
                 if (username.isBlank()) {
-                    log.info("SKIPPED: Staff ID {} has no name.", staff.getId()); // DEBUG
+                    log.info("SKIPPED: Staff ID {} has no name.", staff.getId());
                     continue;
                 }
 
@@ -70,7 +70,7 @@ public class StaffCredentialSeeder {
                 }
             }
 
-            log.info("--- Seeding Finished. Accounts created/updated: {} ---", accountsCreated);
+            log.info("Seeding Finished. Accounts created/updated: {}", accountsCreated);
 
         } catch (Exception e) {
             log.error("Security error while hashing passwords: {}", e.getMessage());

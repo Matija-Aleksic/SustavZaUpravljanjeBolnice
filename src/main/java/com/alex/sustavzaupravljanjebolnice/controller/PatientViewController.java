@@ -1,6 +1,7 @@
 package com.alex.sustavzaupravljanjebolnice.controller;
 
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
+import com.alex.sustavzaupravljanjebolnice.entity.StaffRoles;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Appointment;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Hospital;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Prescription;
@@ -36,34 +37,16 @@ public class PatientViewController {
     private final HospitalRepo hospitalRepo = new HospitalRepo();
     private final WardRepo wardRepo = new WardRepo();
 
-    /**
-     * The Detail mbo.
-     */
     @FXML
     Label detailMbo;
-    /**
-     * The Detail birth date.
-     */
     @FXML
     Label detailBirthDate;
-    /**
-     * The Detail status.
-     */
     @FXML
     Label detailStatus;
-    /**
-     * The Detail doctor.
-     */
     @FXML
     Label detailDoctor;
-    /**
-     * The Detail ward.
-     */
     @FXML
     Label detailWard;
-    /**
-     * The Detail hospital.
-     */
     @FXML
     Label detailHospital;
     @FXML
@@ -101,9 +84,8 @@ public class PatientViewController {
         nameColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFirstName() + " " + c.getValue().getLastName()));
         oibColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getOib()));
         mboColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getMbo()));
-        statusColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStatus() != null ? c.getValue().getStatus().name() : "N/A"));
-
-        boolean isAdmin = loggedInStaff != null && loggedInStaff.getRole() != null && "ADMIN".equalsIgnoreCase(loggedInStaff.getRole().toString());
+        statusColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStatus().name()));
+        boolean isAdmin = loggedInStaff.getRole().equals(StaffRoles.ADMIN);
 
         if (!isAdmin) {
             addPatientBtn.setDisable(true);
@@ -125,11 +107,11 @@ public class PatientViewController {
         detailName.setText(patient.getFirstName() + " " + patient.getLastName());
         detailOib.setText("OIB: " + patient.getOib());
         detailMbo.setText("MBO: " + patient.getMbo());
-        detailBirthDate.setText("Birth Date: " + (patient.getBirthDate() != null ? patient.getBirthDate().toString() : "N/A"));
-        detailStatus.setText("Status: " + (patient.getStatus() != null ? patient.getStatus().name() : "N/A"));
-        detailHospital.setText("Hospital: " + (patient.getHospital() != null && patient.getHospital().getName() != null ? patient.getHospital().getName() : "N/A"));
-        detailDoctor.setText("Assigned Doctor: " + (patient.getAssignedDoctor() != null && patient.getAssignedDoctor().getLastName() != null ? "Dr. " + patient.getAssignedDoctor().getFirstName() + " " + patient.getAssignedDoctor().getLastName() : "Unassigned"));
-        detailWard.setText("Ward Unit: " + (patient.getAssignedWard() != null && patient.getAssignedWard().getName() != null ? patient.getAssignedWard().getName() : "Outpatient"));
+        detailBirthDate.setText("Birth Date: " + (patient.getBirthDate().toString()));
+        detailStatus.setText("Status: " + (patient.getStatus().name()));
+        detailHospital.setText("Hospital: " + (patient.getHospital().getName()));
+        detailDoctor.setText("Assigned Doctor: " + ("Dr. " + patient.getAssignedDoctor().getFirstName() + " " + patient.getAssignedDoctor().getLastName()));
+        detailWard.setText("Ward Unit: " + (patient.getAssignedWard().getName()));
 
         loadAppointmentsList(patient);
         loadPrescriptionsList(patient);
@@ -140,10 +122,10 @@ public class PatientViewController {
         appointmentsListView.getItems().clear();
         if (patient.getAppointments() != null && !patient.getAppointments().isEmpty()) {
             for (Appointment appt : patient.getAppointments()) {
-                appointmentsListView.getItems().add(appt.dateTime().toString() + " - Clinic Session");
+                appointmentsListView.getItems().add(appt.dateTime().toString());
             }
         } else {
-            appointmentsListView.getItems().add("No upcoming scheduled clinical appointments.");
+            appointmentsListView.getItems().add("No appointments.");
         }
     }
 
@@ -154,7 +136,7 @@ public class PatientViewController {
                 prescriptionsListView.getItems().add(rx.getName() + " [" + rx.getStartDate() + " to " + rx.getEndDate() + "]");
             }
         } else {
-            prescriptionsListView.getItems().add("No active medication or prescription cycles.");
+            prescriptionsListView.getItems().add("No active medication or prescription.");
         }
     }
 
@@ -191,8 +173,8 @@ public class PatientViewController {
                     }
                 });
 
-            } catch (SQLException e) {
-                Platform.runLater(() -> AlertBox.show("Database Loading Failure", "Could not synchronize operational matrix fields: " + e.getMessage()));
+            } catch (SQLException _) {
+                AlertBox.show("Database Loading Failure", "");
             }
         });
     }
@@ -202,43 +184,39 @@ public class PatientViewController {
         if (patient.getHospital() != null && patient.getHospital().getId() != null) {
             allHospitals.stream().filter(h -> Objects.equals(h.getId(), patient.getHospital().getId())).findFirst().ifPresent(patient::setHospital);
         }
-
         if (patient.getAssignedDoctor() != null && patient.getAssignedDoctor().getId() != null) {
             allDoctors.stream().filter(d -> Objects.equals(d.getId(), patient.getAssignedDoctor().getId())).findFirst().ifPresent(patient::setAssignedDoctor);
         }
-
         if (patient.getAssignedWard() != null && patient.getAssignedWard().getId() != null) {
             allWards.stream().filter(w -> Objects.equals(w.getId(), patient.getAssignedWard().getId())).findFirst().ifPresent(patient::setAssignedWard);
         }
-
         List<Appointment> patientAppts = allAppointments.stream().filter(a -> a.patientId() != null && a.patientId().longValue() == patient.getId().longValue()).toList();
         patient.setAppointments(new ArrayList<>(patientAppts));
-
         List<Prescription> patientScripts = allPrescriptions.stream().filter(p -> p.getPatientId() != null && p.getPatientId().longValue() == patient.getId().longValue()).toList();
         patient.setPrescriptions(new ArrayList<>(patientScripts));
     }
 
 
     @FXML
-    private void handleAddPatient() {
+    private void addPatient() {
         HospitalCrudHelper.addPatient(this::reload);
     }
 
     @FXML
-    private void handleEditPatient() {
+    private void editPatient() {
         Patient selected = patientsTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            AlertBox.show("Selection Missing", "Please select a patient row to modify data.");
+            AlertBox.show("Selection Missing", "Please select a patient row");
             return;
         }
         HospitalCrudHelper.editPatient(selected, this::reload);
     }
 
     @FXML
-    private void handleDeletePatient() {
+    private void deletePatient() {
         Patient selected = patientsTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            AlertBox.show("Selection Missing", "Please select a patient row to complete system removal.");
+            AlertBox.show("Selection Missing", "Please select a patient row ");
             return;
         }
         HospitalCrudHelper.deletePatient(selected, this::reload);

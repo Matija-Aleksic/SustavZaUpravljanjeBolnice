@@ -1,5 +1,4 @@
 package com.alex.sustavzaupravljanjebolnice.controller;
-
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Appointment;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Prescription;
@@ -22,7 +21,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +37,6 @@ public class DoctorViewController {
     private final PatientRepo patientRepo = new PatientRepo();
     private final AppointmentRepo appointmentRepo = new AppointmentRepo();
     private final PrescriptionRepo prescriptionRepo = new PrescriptionRepo();
-
     @FXML
     private TableView<Doctor> doctorsTable;
     @FXML
@@ -88,35 +85,27 @@ public class DoctorViewController {
     private Button editDoctorBtn;
     @FXML
     private Button deleteDoctorBtn;
-
     private List<Patient> allPatients = List.of();
     private List<Appointment> allAppointments = List.of();
     private List<Prescription> allPrescriptions = List.of();
 
-    /**
-     * Initialize.
-     */
     @FXML
     public void initialize() {
-        configureRoleBasedAccess();
-
+        adminAccess();
         doctorColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFirstName() + " " + c.getValue().getLastName()));
         patientNameColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFirstName() + " " + c.getValue().getLastName()));
         patientOibColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getOib()));
         appointmentDateColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().dateTime().toString()));
-
         appointmentPatientColumn.setCellValueFactory(c -> {
             Patient p = allPatients.stream().filter(pt -> Objects.equals(pt.getId(), c.getValue().patientId())).findFirst().orElse(null);
             return new SimpleStringProperty(p != null ? p.getFirstName() + " " + p.getLastName() : "Unknown");
         });
-
         prescriptionNameColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getName()));
         prescriptionPatientColumn.setCellValueFactory(c -> {
             Patient p = allPatients.stream().filter(pt -> pt.getId() != null && pt.getId().longValue() == c.getValue().getPatientId().longValue()).findFirst().orElse(null);
             return new SimpleStringProperty(p != null ? p.getFirstName() + " " + p.getLastName() : "Unknown");
         });
         prescriptionDurationColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStartDate() + " - " + c.getValue().getEndDate()));
-
         doctorsTable.getSelectionModel().selectedItemProperty().addListener((o, oldV, newV) -> {
             if (newV != null) showDoctorDetails(newV);
             else clearDoctorDetails();
@@ -124,9 +113,8 @@ public class DoctorViewController {
         reload();
     }
 
-
-    private void configureRoleBasedAccess() {
-        boolean isAdmin = loggedInStaff != null && loggedInStaff.getRole() != null && "ADMIN".equalsIgnoreCase(loggedInStaff.getRole().toString());
+    private void adminAccess() {
+        boolean isAdmin = loggedInStaff.getRole() != null && "ADMIN".equalsIgnoreCase(loggedInStaff.getRole().toString());
         if (doctorCrudContainer != null) {
             doctorCrudContainer.setVisible(isAdmin);
             doctorCrudContainer.setManaged(isAdmin);
@@ -148,20 +136,18 @@ public class DoctorViewController {
         salary.setText("Salary: " + doctor.getSalary() + " €");
         phoneNumber.setText("Phone: " + doctor.getPhoneNumber());
         address.setText("Address: " + doctor.getAddress());
-
         List<Appointment> filteredAppts = allAppointments.stream().filter(a -> Objects.equals(a.doctorId(), doctor.getId())).toList();
         appointmentsTable.setItems(FXCollections.observableArrayList(filteredAppts));
-
         Set<Integer> assignedPatientIds = filteredAppts.stream().map(Appointment::patientId).collect(Collectors.toSet());
         List<Patient> filteredPatients = allPatients.stream().filter(p -> assignedPatientIds.contains(p.getId())).toList();
         patientsTable.setItems(FXCollections.observableArrayList(filteredPatients));
-
         Set<Long> patientLongIds = filteredPatients.stream().map(p -> p.getId().longValue()).collect(Collectors.toSet());
         List<Prescription> filteredScripts = allPrescriptions.stream().filter(p -> p.getPatientId() != null && patientLongIds.contains(p.getPatientId().longValue())).toList();
         prescriptionsTable.setItems(FXCollections.observableArrayList(filteredScripts));
     }
 
     private void clearDoctorDetails() {
+        //sve da se smanji ispod 200 linija koda
         Arrays.asList(nameSurname, oib, role, email, salary, phoneNumber, address).forEach(l -> l.setText(""));
         appointmentsTable.getItems().clear();
         patientsTable.getItems().clear();
@@ -172,11 +158,10 @@ public class DoctorViewController {
         Thread.startVirtualThread(() -> {
             try {
                 Long currentHospitalId = (loggedInStaff != null && loggedInStaff.getHospital() != null) ? loggedInStaff.getHospital().getId() : null;
-                List<Doctor> docs = doctorRepo.getAll().stream().filter(d -> d.getHospital() != null && Objects.equals(d.getHospital().getId(), currentHospitalId)).toList();
+                List<Doctor> docs = doctorRepo.getAll().stream().filter(d -> d.getHospital().getId().equals(currentHospitalId)).toList();
                 List<Patient> pts = patientRepo.getAll();
                 List<Appointment> appts = appointmentRepo.getAll();
                 List<Prescription> scripts = prescriptionRepo.getAll();
-
                 Platform.runLater(() -> {
                     this.allPatients = pts;
                     this.allAppointments = appts;
@@ -187,53 +172,44 @@ public class DoctorViewController {
                     else clearDoctorDetails();
                 });
             } catch (SQLException e) {
-                Platform.runLater(() -> AlertBox.show("SQL Processing Failure", e.getMessage()));
+                Platform.runLater(() -> AlertBox.show("SQL Fail", e.getMessage()));
             }
         });
     }
-
     @FXML
-    private void handleAddDoctor() {
+    private void addDoctor() {
         HospitalCrudHelper.addDoctor(this::reload);
     }
-
     @FXML
-    private void handleEditDoctor() {
+    private void editDoctor() {
         HospitalCrudHelper.editDoctor(doctorsTable.getSelectionModel().getSelectedItem(), this::reload);
     }
-
     @FXML
-    private void handleDeleteDoctor() {
+    private void deleteDoctor() {
         HospitalCrudHelper.deleteDoctor(doctorsTable.getSelectionModel().getSelectedItem(), this::reload);
     }
-
     @FXML
-    private void handleAddPatient() {
+    private void addPatient() {
         HospitalCrudHelper.addPatient(this::reload);
     }
-
     @FXML
-    private void handleEditPatient() {
+    private void editPatient() {
         HospitalCrudHelper.editPatient(patientsTable.getSelectionModel().getSelectedItem(), this::reload);
     }
-
     @FXML
-    private void handleDeletePatient() {
+    private void deletePatient() {
         HospitalCrudHelper.deletePatient(patientsTable.getSelectionModel().getSelectedItem(), this::reload);
     }
-
     @FXML
-    private void handleAddPrescription() {
+    private void addPrescription() {
         HospitalCrudHelper.addPrescription(this::reload);
     }
-
     @FXML
-    private void handleEditPrescription() {
+    private void editPrescription() {
         HospitalCrudHelper.editPrescription(prescriptionsTable.getSelectionModel().getSelectedItem(), this::reload);
     }
-
     @FXML
-    private void handleDeletePrescription() {
+    private void deletePrescription() {
         HospitalCrudHelper.deletePrescription(prescriptionsTable.getSelectionModel().getSelectedItem(), this::reload);
     }
 }

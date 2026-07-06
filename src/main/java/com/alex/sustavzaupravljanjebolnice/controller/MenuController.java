@@ -23,8 +23,8 @@ public class MenuController {
      * @param event the event
      */
     @FXML
-    public void handleHospital(ActionEvent event) {
-        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/hospital-overview.fxml", "Hospital Overview", 1000);
+    public void hospitals(ActionEvent event) {
+        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/hospital-overview.fxml", "Hospital Overview");
     }
 
     /**
@@ -33,8 +33,8 @@ public class MenuController {
      * @param event the event
      */
     @FXML
-    public void handleDoctors(ActionEvent event) {
-        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/doctor-overview.fxml", "Doctors Overview", 1000);
+    public void doctors(ActionEvent event) {
+        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/doctor-overview.fxml", "Doctors Overview");
     }
 
     /**
@@ -43,8 +43,8 @@ public class MenuController {
      * @param event the event
      */
     @FXML
-    public void handleNurses(ActionEvent event) {
-        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/nurse-view.fxml", "Nurses Overview", 1000);
+    public void nurses(ActionEvent event) {
+        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/nurse-view.fxml", "Nurses Overview");
     }
 
     /**
@@ -53,8 +53,8 @@ public class MenuController {
      * @param event the event
      */
     @FXML
-    public void handlePatients(ActionEvent event) {
-        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/patient-view.fxml", "Patients", 1000);
+    public void patients(ActionEvent event) {
+        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/patient-view.fxml", "Patients");
 
     }
 
@@ -64,8 +64,8 @@ public class MenuController {
      * @param event the event
      */
     @FXML
-    public void handleAppointments(ActionEvent event) {
-        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/receptionist-view.fxml", "Appointment Overview", 1000);
+    public void appointments(ActionEvent event) {
+        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/receptionist-view.fxml", "Appointment Overview");
     }
 
     /**
@@ -74,8 +74,8 @@ public class MenuController {
      * @param event the event
      */
     @FXML
-    public void handlePrescriptions(ActionEvent event) {
-        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/prescription-view.fxml", "Perscriptions", 1000);
+    public void prescriptions(ActionEvent event) {
+        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/prescription-view.fxml", "Perscriptions");
     }
 
     /**
@@ -84,8 +84,8 @@ public class MenuController {
      * @param event the event
      */
     @FXML
-    public void handleLogs(ActionEvent event) {
-        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/activity-log-view.fxml", "Activity Logs", 1000);
+    public void logs(ActionEvent event) {
+        navigateTo(event, "/com/alex/sustavzaupravljanjebolnice/activity-log-view.fxml", "Activity Logs");
     }
 
     /**
@@ -94,20 +94,18 @@ public class MenuController {
      * @param event the event
      */
     @FXML
-    public void handleLogout(ActionEvent event) {
-        logger.info("Logout requested by user: " + (UserSession.getInstance().getLoggedInStaff() != null ? UserSession.getInstance().getLoggedInStaff().getFirstName() + " " + UserSession.getInstance().getLoggedInStaff().getLastName() : "Unknown"));
+    public void logout(ActionEvent event) {
+        logger.info("Logout requested by user: " + (UserSession.getInstance().getLoggedInStaff().getFirstName() + " " + UserSession.getInstance().getLoggedInStaff().getLastName()));
         UserSession.getInstance().cleanUserSession();
-
         AlertBox.show("Logout Successful", "You have been logged out successfully.");
-
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         WindowManager.switchScene(stage, "/com/alex/sustavzaupravljanjebolnice/login.fxml", "Hospital Management System - Login", 400, 600);
     }
 
-    private void navigateTo(ActionEvent event, String fxmlPath, String title, int height) {
+    private void navigateTo(ActionEvent event, String fxmlPath, String title) {
         try {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            WindowManager.switchScene(stage, fxmlPath, title, 1400, height);
+            WindowManager.switchScene(stage, fxmlPath, title, 1400, 1000);
             logger.info(() -> "Successfully navigated to: %s".formatted(fxmlPath));
         } catch (Exception _) {
             logger.severe(() -> "Failed to navigate to: %s".formatted(fxmlPath));
@@ -115,8 +113,3 @@ public class MenuController {
         }
     }
 }
-
-
-
-
-

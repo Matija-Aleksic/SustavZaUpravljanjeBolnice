@@ -64,8 +64,8 @@ public class PatientDialogController {
      */
     @FXML
     public void handleSave(ActionEvent event) {
-        if (isInputInvalid()) {
-            AlertBox.show("Validation Missing", "Please fulfill all required text fields (Name, OIB, MBO, and Birth Date).");
+        if (validate()) {
+            AlertBox.show("Validation Missing", "Please fill all required  fields.");
             return;
         }
 
@@ -104,7 +104,6 @@ public class PatientDialogController {
 
                 patientRepo.update(existingPatient);
             }
-
             operationSaved = true;
             closeWindow();
 
@@ -130,11 +129,11 @@ public class PatientDialogController {
      *
      * @return the boolean
      */
-    public boolean isOperationSaved() {
+    public boolean isSaved() {
         return operationSaved;
     }
 
-    private boolean isInputInvalid() {
+    private boolean validate() {
         return txtFirstName.getText().isBlank() || txtLastName.getText().isBlank() || txtOib.getText().isBlank() || dpBirthDate.getValue() == null || txtMbo.getText().isBlank();
     }
 

@@ -1,9 +1,13 @@
 package com.alex.sustavzaupravljanjebolnice.controller.popup;
 
+import com.alex.sustavzaupravljanjebolnice.entity.Activity;
 import com.alex.sustavzaupravljanjebolnice.entity.Patient;
 import com.alex.sustavzaupravljanjebolnice.entity.hospital.Appointment;
 import com.alex.sustavzaupravljanjebolnice.entity.staff.Doctor;
+import com.alex.sustavzaupravljanjebolnice.entity.staff.Staff;
 import com.alex.sustavzaupravljanjebolnice.repository.AppointmentRepo;
+import com.alex.sustavzaupravljanjebolnice.util.LogWriter;
+import com.alex.sustavzaupravljanjebolnice.util.UserSession;
 import com.alex.sustavzaupravljanjebolnice.util.boxes.AlertBox;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,6 +29,7 @@ import java.util.Objects;
 public class AppointmentDialogController {
 
     private final AppointmentRepo appointmentRepo = new AppointmentRepo();
+    private final Staff loggedInStaff = UserSession.getInstance().getLoggedInStaff();
 
     @FXML
     private ComboBox<Doctor> doctorCombo;
@@ -97,9 +102,7 @@ public class AppointmentDialogController {
     public void setAppointment(Appointment a) {
 
         this.currentAppointmentId = a.id();
-
         doctorCombo.getItems().stream().filter(d -> Objects.equals(d.getId(), a.doctorId())).findFirst().ifPresent(doctorCombo::setValue);
-
         patientCombo.getItems().stream().filter(p -> Objects.equals(p.getId(), a.patientId())).findFirst().ifPresent(patientCombo::setValue);
 
         datePicker.setValue(a.dateTime().toLocalDate());
@@ -109,7 +112,7 @@ public class AppointmentDialogController {
     /**
      * Sets new appointment context.
      */
-    public void setNewAppointmentContext() {
+    public void setNewAppointment() {
         currentAppointmentId = null;
         doctorCombo.getSelectionModel().clearSelection();
         patientCombo.getSelectionModel().clearSelection();
@@ -130,7 +133,6 @@ public class AppointmentDialogController {
         try {
             LocalDate date = datePicker.getValue();
             LocalTime time = LocalTime.parse(timeField.getText().trim());
-
             Appointment a = new Appointment(currentAppointmentId == null ? 0 : currentAppointmentId, doctorCombo.getValue().getId(), patientCombo.getValue().getId(), LocalDateTime.of(date, time));
 
             if (currentAppointmentId == null) {
@@ -138,7 +140,7 @@ public class AppointmentDialogController {
             } else {
                 appointmentRepo.update(a);
             }
-
+            LogWriter.writeLogAsync(new Activity("appointment added or edite by", loggedInStaff.getFirstName() + " " + loggedInStaff.getLastName()));
             saved = true;
             close();
 

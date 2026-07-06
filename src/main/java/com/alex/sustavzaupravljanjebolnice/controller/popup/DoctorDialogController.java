@@ -9,7 +9,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -66,6 +65,57 @@ public class DoctorDialogController {
     }
 
     /**
+     * Handle save.
+     *
+     * @param event the event
+     */
+    @FXML
+    public void handleSave(ActionEvent event) {
+        if (!validateForm()) return;
+
+        try {
+            Doctor doc = getDoctor();
+            if (currentDoctorId == null) {
+                doctorRepo.save(doc);
+            } else {
+                doctorRepo.update(doc);
+            }
+
+            saved = true;
+            closeStage();
+
+        } catch (NumberFormatException _) {
+            AlertBox.show("Validation Format Error", "Salary field.");
+        } catch (SQLException e) {
+            AlertBox.show("Persistence Fail", "Database engine rejected updating: " + e.getMessage());
+        }
+    }
+
+    private Doctor getDoctor() {
+        Doctor doc;
+        if (existingDoctor != null) {
+            doc = existingDoctor;
+        } else {
+            doc = new Doctor();
+            doc.setRole(StaffRoles.DOCTOR);
+            doc.setBirthDate(LocalDate.of(1990, Month.JANUARY, 1));
+        }
+        doc.setId(currentDoctorId == null ? 0 : currentDoctorId);
+        doc.setFirstName(txtFirstName.getText().trim());
+        doc.setLastName(txtLastName.getText().trim());
+        doc.setOib(txtOib.getText().trim());
+        doc.setEmail(txtEmail.getText().trim());
+        doc.setSalary(Double.parseDouble(txtSalary.getText().trim()));
+        doc.setPhoneNumber(txtPhone.getText().trim());
+        doc.setAddress(txtAddress.getText().trim());
+
+        if (existingDoctor == null) {
+            doc.setHospital(UserSession.getInstance().getLoggedInStaff().getHospital());
+        }
+        return doc;
+    }
+
+    /**
      * Sets doctor.
      *
      * @param doctor the doctor
@@ -81,61 +131,6 @@ public class DoctorDialogController {
         txtSalary.setText(String.valueOf(doctor.getSalary()));
         txtPhone.setText(doctor.getPhoneNumber());
         txtAddress.setText(doctor.getAddress());
-    }
-
-    /**
-     * Handle save.
-     *
-     * @param event the event
-     */
-    @FXML
-    public void handleSave(ActionEvent event) {
-        if (!validateForm()) return;
-
-        try {
-            double salaryVal = Double.parseDouble(txtSalary.getText().trim());
-
-            Doctor doc = getDoctor(salaryVal);
-
-            if (currentDoctorId == null) {
-                doctorRepo.save(doc);
-            } else {
-                doctorRepo.update(doc);
-            }
-
-            saved = true;
-            closeStage();
-
-        } catch (NumberFormatException _) {
-            AlertBox.show("Validation Format Error", "Salary field configuration demands numerical precision values.");
-        } catch (SQLException e) {
-            AlertBox.show("Persistence Fail", "Database engine rejected updating: " + e.getMessage());
-        }
-    }
-
-    private @NotNull Doctor getDoctor(double salaryVal) {
-        Doctor doc;
-        if (existingDoctor != null) {
-            doc = existingDoctor;
-        } else {
-            doc = new Doctor();
-            doc.setRole(StaffRoles.DOCTOR);
-            doc.setBirthDate(LocalDate.of(1990, Month.JANUARY, 1));
-        }
-
-        doc.setId(currentDoctorId == null ? 0 : currentDoctorId);
-        doc.setFirstName(txtFirstName.getText().trim());
-        doc.setLastName(txtLastName.getText().trim());
-        doc.setOib(txtOib.getText().trim());
-        doc.setEmail(txtEmail.getText().trim());
-        doc.setSalary(salaryVal);
-        doc.setPhoneNumber(txtPhone.getText().trim());
-        doc.setAddress(txtAddress.getText().trim());
-
-        if (existingDoctor == null) {
-            doc.setHospital(UserSession.getInstance().getLoggedInStaff().getHospital());
-        }
-        return doc;
     }
 
     /**
@@ -158,15 +153,9 @@ public class DoctorDialogController {
     }
 
     private boolean validateForm() {
-        if (txtFirstName.getText().isBlank() ||
-                txtLastName.getText().isBlank() ||
-                txtOib.getText().isBlank() ||
-                txtEmail.getText().isBlank() ||
-                txtSalary.getText().isBlank() ||
-                txtPhone.getText().isBlank() ||
-                txtAddress.getText().isBlank()) {
+        if (txtFirstName.getText().isBlank() || txtLastName.getText().isBlank() || txtOib.getText().isBlank() || txtEmail.getText().isBlank() || txtSalary.getText().isBlank() || txtPhone.getText().isBlank() || txtAddress.getText().isBlank()) {
 
-            AlertBox.show("Validation Failure", "Every data field configuration value must explicitly be set.");
+            AlertBox.show("Validation Failure", "Something is missing or wrong.");
             return false;
         }
         return true;

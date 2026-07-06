@@ -48,7 +48,7 @@ public class WindowManager {
      * @param onInit   the on init
      * @param onClose  the on close
      */
-    public static <C> void showModal(String fxmlPath, String title, Consumer<C> onInit, Consumer<C> onClose) {
+    public static <C> void showPopup(String fxmlPath, String title, Consumer<C> onInit, Consumer<C> onClose) {
         try {
             FXMLLoader loader = new FXMLLoader(WindowManager.class.getResource(fxmlPath));
             Parent root = loader.load();
