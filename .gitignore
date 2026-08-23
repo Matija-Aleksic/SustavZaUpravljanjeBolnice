@@ -8,3 +8,4 @@
 /logs/
 /.zed/
 /passwords.properties
+dependency-reduced-pom.xml
