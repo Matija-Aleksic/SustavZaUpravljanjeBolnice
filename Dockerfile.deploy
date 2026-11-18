@@ -1,0 +1,52 @@
+FROM maven:3.9-eclipse-temurin-25 AS build
+
+WORKDIR /build
+
+COPY pom.xml ./
+RUN mvn -B -e dependency:go-offline
+
+COPY src ./src
+RUN mvn -B -e clean package -DskipTests
+
+
+FROM eclipse-temurin:25-jre-noble
+
+ENV DISPLAY=:99
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        xvfb \
+        x11vnc \
+        x11-utils \
+        novnc \
+        websockify \
+        libxrender1 \
+        libxtst6 \
+        libx11-xcb1 \
+        fontconfig \
+        fonts-dejavu-core \
+    && (apt-get install -y --no-install-recommends libgtk-3-0t64 \
+        || apt-get install -y --no-install-recommends libgtk-3-0) \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN printf '%s\n' \
+    '<!doctype html><meta charset="utf-8">' \
+    '<title>Sustav za Upravljanje Bolnicom</title>' \
+    '<meta http-equiv="refresh" content="0; url=vnc.html?autoconnect=true&resize=scale">' \
+    > /usr/share/novnc/index.html
+
+WORKDIR /app
+
+COPY --from=build /build/target/SustavZaUpravljanjeBolnice-1.0-SNAPSHOT.jar app.jar
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+
+RUN chmod +x /usr/local/bin/entrypoint.sh \
+    && (userdel -r ubuntu 2>/dev/null || true) \
+    && useradd -u 1000 -m -s /usr/sbin/nologin app \
+    && mkdir -p /app/data \
+    && chown -R app:app /app
+
+USER app
+
+EXPOSE 6080
+
+CMD ["/usr/local/bin/entrypoint.sh"]
